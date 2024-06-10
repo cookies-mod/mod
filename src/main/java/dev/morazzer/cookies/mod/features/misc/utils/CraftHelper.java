@@ -67,7 +67,6 @@ public class CraftHelper {
 
             ScreenEvents.afterRender(screen).register(this::afterRender);
         });
-        setSelectedItem(RepositoryItem.of("terminator"));
     }
 
     /**
