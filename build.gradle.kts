@@ -16,7 +16,7 @@ fabricApi {
 }
 
 loom {
-    accessWidenerPath.set(rootProject.rootDir.resolve("cookies.accesswidener"))
+    accessWidenerPath.set(rootProject.rootDir.resolve("src/main/resources/cookies.accesswidener"))
 }
 
 dependencies {
