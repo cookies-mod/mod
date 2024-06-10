@@ -12,5 +12,6 @@
     "client": [
       "dev.morazzer.cookies.mod.CookiesMod"
     ]
-  }
+  },
+  "accessWidener": "cookies.accesswidener"
 }

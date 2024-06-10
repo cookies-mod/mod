@@ -27,9 +27,16 @@ public class Repository {
 
     @SuppressWarnings("MissingJavadoc")
     public static void loadRepository() {
+        if (!Files.exists(ROOT)) {
+            try {
+                Files.createDirectories(ROOT);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         JsonObject index;
         try {
-
             index = JsonUtils.CLEAN_GSON.fromJson(download("index"), JsonObject.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
