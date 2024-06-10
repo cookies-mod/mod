@@ -31,7 +31,6 @@ public class ForgeRecipe implements Recipe {
         if (jsonObject.has("time")) {
             this.duration = jsonObject.get("time").getAsLong();
         } else {
-            System.err.println("No time found");
             this.duration = -1;
         }
         JsonArray ingredients = jsonObject.get("ingredients").getAsJsonArray();
