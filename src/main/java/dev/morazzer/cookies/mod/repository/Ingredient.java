@@ -24,9 +24,6 @@ public class Ingredient implements RecipeResult<Ingredient> {
     public Ingredient(String id, int amount) {
         this.id = id;
         this.amount = amount;
-        if (id.contains("null_ovoid")) {
-            System.out.println("l");
-        }
         this.repositoryItem = RepositoryItem.of(id);
     }
 

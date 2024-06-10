@@ -63,7 +63,6 @@ public interface Recipe {
             ingredient.getRepositoryItem().getUsedInRecipeAsIngredient().add(recipe);
         }
         if (recipe.getOutput() == null || recipe.getOutput().getRepositoryItem() == null) {
-            System.err.println("Recipe output was not found");
             return;
         }
         recipe.getOutput().getRepositoryItem().getRecipes().add(recipe);

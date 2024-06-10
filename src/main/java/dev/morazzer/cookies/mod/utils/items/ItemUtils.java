@@ -13,10 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ItemUtils {
 
-    private static final ItemFunctions MAIN_HAND = () -> {
-        System.out.println("Accessing main hand stack!");
-        return MinecraftClient.getInstance().player.getMainHandStack();
-    };
+    private static final ItemFunctions MAIN_HAND = () -> MinecraftClient.getInstance().player.getMainHandStack();
     private static final ItemFunctions OFF_HAND = () -> MinecraftClient.getInstance().player.getOffHandStack();
 
     /**
