@@ -1,0 +1,16 @@
+{
+  "id": "cookies-mod",
+  "version": "${version}",
+  "schemaVersion": 1,
+  "mixins": [
+    "cookies-mod.mixins.json",
+    "cookies-mod.utils.mixins.json",
+    "cookies-mod.render.mixins.json",
+    "cookies-mod.events.mixins.json"
+  ],
+  "entrypoints": {
+    "client": [
+      "dev.morazzer.cookies.mod.CookiesMod"
+    ]
+  }
+}

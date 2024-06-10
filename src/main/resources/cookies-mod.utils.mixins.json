@@ -1,0 +1,8 @@
+{
+  "package": "dev.morazzer.cookies.mod.utils.mixins",
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "ComponentMapImplMixin",
+    "ItemStackMixin"
+  ]
+}

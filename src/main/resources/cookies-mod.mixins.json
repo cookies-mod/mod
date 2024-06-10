@@ -1,0 +1,11 @@
+{
+  "package": "dev.morazzer.cookies.mod.mixins",
+  "client": [
+    "render.ArmorFeatureRenderMixin",
+    "render.HeadFeatureRenderMixin",
+    "render.HideLightningBoltMixin",
+    "render.EntityRenderDispatcherMixin",
+    "ui.PotionEffectMixin",
+    "ui.InGameHudMixin"
+  ]
+}
