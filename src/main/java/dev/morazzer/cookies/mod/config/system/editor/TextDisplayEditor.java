@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
+import dev.morazzer.cookies.mod.config.utils.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ public class TextDisplayEditor extends ConfigOptionEditor<Object, TextDisplayOpt
                        final int mouseY,
                        final float tickDelta,
                        final int optionWidth) {
-        super.render(drawContext, mouseX, mouseY, tickDelta, optionWidth);
+        RenderUtils.renderFilledBox(drawContext, 0, 0, optionWidth, this.getHeight(optionWidth));
         final int centerX = optionWidth / 2;
         final int centerY = this.getHeight() / 2;
 

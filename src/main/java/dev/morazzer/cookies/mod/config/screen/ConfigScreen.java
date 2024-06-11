@@ -76,14 +76,22 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         this.categoryScrollbar.tick();
         this.optionsScrollbar.tick();
 
+        RenderUtils.renderFilledBox(
+            drawContext,
+            this.optionsLeft - 1,
+            this.optionsTop - 1,
+            this.optionsRight + 1,
+            this.optionsBottom + 1
+        );
+
         this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> {
             final ConfigOptionEditor<?, ?> editor = processedOption.getEditor();
 
             drawContext.enableScissor(
                 this.optionsLeft - 1,
-                this.optionsTop + 1,
+                this.optionsTop - 1,
                 this.optionsRight + 1,
-                this.optionsBottom - 1
+                this.optionsBottom + 1
             );
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(positionX, positionY, 1);
@@ -260,7 +268,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             }
 
             final int finalX = this.optionsLeft - 1;
-            final int finalY = this.optionsTop + optionsY - 1;
+            final int finalY = this.optionsTop + optionsY + 1;
 
             if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1))
                 && (finalY < (this.optionsBottom - 1))) {
@@ -514,7 +522,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             return;
         }
 
-        this.optionsAllSize = 5;
+        this.optionsAllSize = 0;
         for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
             if ((processedOption.getFoldable() >= 0 &&
                  !this.activeFoldables.containsKey(processedOption.getFoldable()))
@@ -522,7 +530,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
                 continue;
             }
             final int optionWidth = this.getOptionSize(processedOption);
-            this.optionsAllSize += processedOption.getEditor().getHeight(optionWidth) + 5;
+            this.optionsAllSize += processedOption.getEditor().getHeight(optionWidth);
         }
 
         final int scrollbarHeight = (this.optionsBottom - this.optionsTop - 10);

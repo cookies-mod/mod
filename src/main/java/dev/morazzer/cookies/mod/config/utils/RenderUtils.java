@@ -39,6 +39,23 @@ public class RenderUtils {
     }
 
     /**
+     * Renders a box in minecraft's style.
+     *
+     * @param drawContext The draw context.
+     * @param x           The start of the box.
+     * @param y           The start of the box.
+     * @param width       The width of the box.
+     * @param height      The height of the box.
+     */
+    public static void renderFilledBox(final DrawContext drawContext,
+                                 final int x,
+                                 final int y,
+                                 final int width,
+                                 final int height) {
+        drawContext.fill(x, y, width, height, 0xFFC6C6C6);
+    }
+
+    /**
      * Draws a text with a max width.
      *
      * @param drawContext The current draw context.
