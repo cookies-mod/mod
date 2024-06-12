@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;

@@ -1,5 +1,6 @@
-package dev.morazzer.cookies.mod.utils;
+package dev.morazzer.cookies.mod.utils.dev;
 
+import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;

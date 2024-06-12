@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.commands.dev.tools;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookies.mod.commands.arguments.RealIdentifierArgument;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.util.Identifier;
 

@@ -3,6 +3,7 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "ComponentMapImplMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "HandledScreenMixin"
   ]
 }

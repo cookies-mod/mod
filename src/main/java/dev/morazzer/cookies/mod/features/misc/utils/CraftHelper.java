@@ -11,7 +11,7 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.Constants;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;

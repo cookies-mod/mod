@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.events;
 
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.UUID;
 import net.minecraft.text.Text;
 

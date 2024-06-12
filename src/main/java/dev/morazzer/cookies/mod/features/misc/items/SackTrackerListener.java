@@ -4,7 +4,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

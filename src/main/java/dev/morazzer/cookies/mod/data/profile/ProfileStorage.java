@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.data.profile;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
-import dev.morazzer.cookies.mod.utils.DevUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
