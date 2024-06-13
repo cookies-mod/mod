@@ -17,6 +17,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
@@ -44,7 +45,7 @@ public class CraftHelper {
     private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
 
     private static CraftHelper instance;
-    private final NumberFormat numberFormat = new DecimalFormat();
+    private final NumberFormat numberFormat = DecimalFormat.getNumberInstance(Locale.ENGLISH);
     @Getter
     private RepositoryItem selectedItem;
     private RecipeCalculationResult calculation;
@@ -65,6 +66,7 @@ public class CraftHelper {
                 return;
             }
 
+            this.recalculate();
             ScreenEvents.afterRender(screen).register(this::afterRender);
         });
     }
@@ -91,7 +93,7 @@ public class CraftHelper {
             return;
         }
         instance.selectedItem = item;
-        instance.calculation = RecipeCalculator.calculate(item.getRecipes().stream().findFirst().get());
+        instance.calculation = RecipeCalculator.calculate(item);
         ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
         instance.recalculate();
     }
@@ -139,9 +141,6 @@ public class CraftHelper {
     private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
-        if (this.lastCalculation + 10000 < System.currentTimeMillis()) {
-            this.recalculate();
-        }
         if (this.calculation == null || this.tooltip.isEmpty()) {
             return;
         }
@@ -150,7 +149,7 @@ public class CraftHelper {
             MinecraftClient.getInstance().textRenderer,
             this.tooltip,
             HoveredTooltipPositioner.INSTANCE,
-            handledScreen.x + handledScreen.backgroundWidth * 2 + 64,
+            handledScreen.x + handledScreen.backgroundWidth + 2,
             handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset
         );
     }
@@ -194,7 +193,14 @@ public class CraftHelper {
 
             boolean childrenFinished = true;
             stackCountContext.integers.push(amount);
+            if (amount == calculationResult.getAmount()) {
+                DevUtils.runIf(DEBUG_INFO,
+                    () -> text.add(Text.literal("Skipping childs, parent full").asOrderedText()));
+            }
             for (int i = 0; i < subResult.getRequired().size(); i++) {
+                if (amount == calculationResult.getAmount()) {
+                    continue;
+                }
                 RecipeResult recipeResult = subResult.getRequired().get(i);
                 String newPrefix;
                 boolean isLast = i + 1 == subResult.getRequired().size();

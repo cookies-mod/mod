@@ -44,7 +44,7 @@ public class CalculationContext {
      */
     public boolean canVisit(String item) {
         for (String s : blacklist) {
-            if (item.equals(s)) {
+            if (item.equalsIgnoreCase(s)) {
                 return false;
             }
         }

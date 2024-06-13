@@ -13,12 +13,19 @@ public class RecipeCalculator {
 
     private static final String[] defaultBlacklist = {
         "hay_block",
+        "wheat",
         "lapis_block",
+        "lapis_lazuli",
         "redstone_block",
+        "redstone",
         "diamond_block",
+        "diamond",
         "emerald_block",
+        "emerald",
         "coal_block",
-        "iron_block"
+        "coal",
+        "iron_block",
+        "iron"
     };
 
     /**
@@ -29,6 +36,16 @@ public class RecipeCalculator {
      */
     public static RecipeCalculationResult calculate(Recipe recipe) {
         return calculate(recipe, new CalculationContext(defaultBlacklist));
+    }
+
+    /**
+     * Calculates the ingredients required to craft a certain item.
+     *
+     * @param repositoryItem The item.
+     * @return The result.
+     */
+    public static RecipeCalculationResult calculate(RepositoryItem repositoryItem) {
+        return calculate(getBestRecipe(repositoryItem, false));
     }
 
     /**
@@ -48,18 +65,13 @@ public class RecipeCalculator {
             }
 
             final RepositoryItem repositoryItem = ingredient.getRepositoryItem();
-            if (repositoryItem.getRecipes().isEmpty()) {
+            if (repositoryItem.getRecipes().isEmpty() || !context.canVisit(ingredient.getId())) {
                 list.add(ingredient);
                 continue;
             }
 
 
-            final Recipe recipe1 = repositoryItem.getRecipes().stream().sorted((o1, o2) -> {
-                int distanceOne = distance(o1, ingredient.getAmount());
-                int distanceTwo = distance(o2, ingredient.getAmount());
-
-                return -1 * Integer.compare(distanceTwo, distanceOne);
-            }).findFirst().get();
+            final Recipe recipe1 = getBestRecipe(repositoryItem, true);
             if (context.hasBeenVisited(ingredient.getId())) {
                 continue;
             }
@@ -71,6 +83,15 @@ public class RecipeCalculator {
         }
 
         return new RecipeCalculationResult(recipe.getOutput(), list);
+    }
+
+    private static Recipe getBestRecipe(RepositoryItem repositoryItem, boolean flip) {
+        return repositoryItem.getRecipes().stream().min((o1, o2) -> {
+            int distanceOne = o1.getOutput().getAmount();
+            int distanceTwo = o2.getOutput().getAmount();
+
+            return (flip ? -1 : 1) * Integer.compare(distanceOne, distanceTwo);
+        }).orElse(null);
     }
 
     private static int distance(Recipe recipe, int amount) {
