@@ -145,6 +145,8 @@ public class CraftHelper {
             return;
         }
 
+        drawContext.getMatrices().push();
+        drawContext.getMatrices().translate(0,0,-100);
         drawContext.drawTooltip(
             MinecraftClient.getInstance().textRenderer,
             this.tooltip,
@@ -152,6 +154,7 @@ public class CraftHelper {
             handledScreen.x + handledScreen.backgroundWidth + 2,
             handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset
         );
+        drawContext.getMatrices().pop();
     }
 
     private void recalculate() {

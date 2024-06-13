@@ -4,6 +4,7 @@
     "ClientPlayNetworkHandlerMixin",
     "ComponentMapImplMixin",
     "ItemStackMixin",
-    "HandledScreenMixin"
+    "HandledScreenMixin",
+    "SlotMixin"
   ]
 }
