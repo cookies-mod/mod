@@ -46,6 +46,16 @@ public class SackTracker implements JsonSerializable {
     }
 
     /**
+     * Sets the amount of the item to the specified value.
+     *
+     * @param item  The item to set.
+     * @param value The amount of the item.
+     */
+    public void set(RepositoryItem item, int value) {
+        items.put(item, value);
+    }
+
+    /**
      * Adds the specified value to the specified item.
      *
      * @param item  The item.

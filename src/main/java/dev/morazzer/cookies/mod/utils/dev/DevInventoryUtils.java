@@ -95,6 +95,13 @@ public class DevInventoryUtils {
      * @return The path it was saved to.
      */
     public static <T extends ScreenHandler> Path saveInventory(HandledScreen<T> handledScreen) {
+        if (!Files.exists(saved)) {
+            try {
+                Files.createDirectories(saved);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         final JsonObject slots = getSlots(handledScreen.getScreenHandler().slots);
 
         JsonObject screenValues = new JsonObject();
@@ -122,6 +129,9 @@ public class DevInventoryUtils {
     private static @NotNull JsonObject getSlots(DefaultedList<Slot> slots) {
         JsonObject slotsObject = new JsonObject();
         slots.forEach(slot -> {
+            if (slot.inventory == MinecraftClient.getInstance().player.getInventory()) {
+                return;
+            }
             final DataResult<JsonElement> jsonElementDataResult =
                 ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, slot.getStack());
             final Optional<JsonElement> result = jsonElementDataResult.result();
