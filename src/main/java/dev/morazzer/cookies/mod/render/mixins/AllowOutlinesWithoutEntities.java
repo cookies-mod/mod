@@ -39,7 +39,7 @@ public abstract class AllowOutlinesWithoutEntities {
     public void render(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera,
                        GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f,
                        Matrix4f matrix4f2, CallbackInfo ci, TickManager tickManager, float f, Profiler profiler,
-                       Vec3d vec3d, double d, double e, double g, boolean b, Frustum frustum,
+                       Vec3d vec3d, double d, double e, double g, boolean bl, Frustum frustum, float h, boolean bl2,
                        Matrix4fStack matrix4fStack, boolean bl3) {
         if (!bl3 && WorldRender.isHasOutlines()) {
             this.entityOutlinePostProcessor.render(tickCounter.getLastFrameDuration());

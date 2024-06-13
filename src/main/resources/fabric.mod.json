@@ -13,5 +13,11 @@
       "dev.morazzer.cookies.mod.CookiesMod"
     ]
   },
-  "accessWidener": "cookies.accesswidener"
+  "accessWidener": "cookies.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
 }

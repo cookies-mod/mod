@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import java.util.List;
@@ -40,7 +41,10 @@ public class SackInventoryTracker {
         if (!genericContainerScreen.getTitle().getString().contains("Sack")) {
             return;
         }
-        ScreenEvents.remove(screen).register(this::remove);
+        if (genericContainerScreen.getTitle().getString().equalsIgnoreCase("Sack of Sacks")) {
+            return;
+        }
+        ScreenEvents.remove(screen).register(ExceptionHandler.wrap(this::remove));
     }
 
     private void remove(Screen screen) {
@@ -68,7 +72,9 @@ public class SackInventoryTracker {
         final Optional<? extends LoreComponent> loreComponent =
             stack.getComponentChanges().get(DataComponentTypes.LORE);
 
-        if (loreComponent.isEmpty()) {
+        // Minecraft can return null in some cases, so even though it's an optional the null check is required
+        //noinspection OptionalAssignedToNull
+        if (loreComponent == null || loreComponent.isEmpty()) {
             return;
         }
 
@@ -125,6 +131,11 @@ public class SackInventoryTracker {
         final String storedString = storedLine.getString();
 
         final String count = storedString.replaceAll("Stored: ([\\d,]+)/\\d+.*", "$1").replaceAll("\\D", "");
+
+        if (count.isEmpty()) {
+            DevUtils.log(LOGGER_KEY, "No count found, skipping!");
+            return;
+        }
 
         final int amount = Integer.parseInt(count);
         final RepositoryItem item = ItemUtils.getData(stack, SkyblockDataComponentTypes.REPOSITORY_ITEM);
