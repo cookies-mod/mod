@@ -23,6 +23,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 
@@ -105,18 +106,22 @@ public class DevInventoryUtils {
         final JsonObject slots = getSlots(handledScreen.getScreenHandler().slots);
 
         JsonObject screenValues = new JsonObject();
-        screenValues.addProperty(
+        screenValues.add(
             "name",
-            Text.Serialization.toJsonString(handledScreen.getTitle(),
-                MinecraftClient.getInstance().world.getRegistryManager())
+            TextCodecs.CODEC.encodeStart(JsonOps.INSTANCE, handledScreen.getTitle()).getOrThrow()
         );
         screenValues.addProperty("type",
             Registries.SCREEN_HANDLER.getEntry(handledScreen.getScreenHandler().getType())
                 .getIdAsString());
         screenValues.add("slots", slots);
 
-        final Path path =
-            saved.resolve(System.currentTimeMillis() + "-" + handledScreen.getTitle().getString() + ".json");
+        final String fileName = "%s-%s.json".formatted(
+            System.currentTimeMillis(),
+            handledScreen.getTitle().getString().replaceAll("[^\\w\\-. ]", "")
+        );
+
+        final Path path = saved.resolve(fileName);
+
         try {
             Files.writeString(path, JsonUtils.CLEAN_GSON.toJson(screenValues), StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
