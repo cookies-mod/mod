@@ -16,6 +16,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Map;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Repository related methods.
@@ -24,6 +26,7 @@ public class Repository {
 
     private static final String indexLocation = "https://raw.githubusercontent.com/cookies-mod/data/main";
     private static final Path ROOT = Path.of("cookies");
+    private static final Logger LOGGER = LoggerFactory.getLogger("repository");
 
     @SuppressWarnings("MissingJavadoc")
     public static void loadRepository() {
@@ -38,11 +41,10 @@ public class Repository {
         JsonObject index;
         try {
             index = JsonUtils.CLEAN_GSON.fromJson(download("index"), JsonObject.class);
+            index.entrySet().forEach(Repository::isUpToDate);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Error while loading cookies repository, continuing with old data.", e);
         }
-
-        index.entrySet().forEach(Repository::isUpToDate);
 
         RepositoryItem.load(ROOT.resolve("items.json"));
         Recipe.load(ROOT.resolve("recipes.json"));
