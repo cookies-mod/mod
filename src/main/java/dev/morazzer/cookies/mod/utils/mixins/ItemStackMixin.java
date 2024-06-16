@@ -1,12 +1,23 @@
 package dev.morazzer.cookies.mod.utils.mixins;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import dev.morazzer.cookies.mod.config.ConfigManager;
+import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,6 +50,16 @@ public abstract class ItemStackMixin {
     ) {
         this.cookies$setComponents();
         SkyblockDataComponentTypes.getDataTypes().forEach(this::cookies$registerType);
+
+        NbtComponent nbtComponent = componentMapImpl.get(DataComponentTypes.CUSTOM_DATA);
+        NbtCompound nbtCompound = nbtComponent == null ? null : nbtComponent.copyNbt();
+
+        if (!ConfigManager.isLoaded()) {
+            return;
+        }
+
+
+        this.cookies$setPetLevel(nbtCompound, componentMapImpl);
     }
 
     @Unique
@@ -56,6 +77,38 @@ public abstract class ItemStackMixin {
                 break;
             }
         }
+    }
+
+    private void cookies$setPetLevel(NbtCompound nbtCompound, ComponentMapImpl componentMapImpl) {
+        if (nbtCompound == null) {
+            return;
+        }
+        if (!ConfigManager.getConfig().miscConfig.showPetLevelAsStackSize.getValue()) {
+            return;
+        }
+        if (!nbtCompound.contains("petInfo")) {
+            return;
+        }
+
+        final Text text = componentMapImpl.get(DataComponentTypes.CUSTOM_NAME);
+
+        if (text == null) {
+            return;
+        }
+
+
+        final String level = text.getString().replaceAll("\\[Lvl (\\d+)].*", "$1");
+
+        final Formatting tier;
+        if (ConfigManager.getConfig().miscConfig.showPetRarityInLevelText.getValue()) {
+            JsonObject jsonObject = JsonParser.parseString(nbtCompound.getString("petInfo")).getAsJsonObject();
+            tier =
+                RepositoryItem.Tier.valueOf(jsonObject.get("tier").getAsString()).getFormatting();
+        } else {
+            tier = Formatting.WHITE;
+        }
+
+        set(SkyblockDataComponentTypes.CUSTOM_SLOT_TEXT, tier.toString() + level);
     }
 
     @Unique

@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.config.system;
 
 import com.google.gson.JsonElement;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
+import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
 import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
     private final List<OrderedText> descriptionOrdered;
     private final Text description;
     protected T value;
+    protected boolean active = true;
     protected List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
 
@@ -161,6 +163,27 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
         return false;
     }
 
+    /**
+     * Only shows this option if the other option is true.
+     * @param booleanOption The option to depend on.
+     * @return The option.
+     */
+    public O onlyIf(BooleanOption booleanOption) {
+        this.active = booleanOption.active;
+        booleanOption.withCallback((oldValue, newValue) -> this.active = newValue);
+        return this.asOption();
+    }
+
+    /**
+     * Only shows this option if the other option is false.
+     * @param booleanOption The option to depend on.
+     * @return The option.
+     */
+    public O onlyIfNot(BooleanOption booleanOption) {
+        this.active = !booleanOption.active;
+        booleanOption.withCallback((oldValue, newValue) -> this.active = !newValue);
+        return this.asOption();
+    }
 
     /**
      * Functional interface to listen to value changes.

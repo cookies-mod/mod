@@ -102,6 +102,24 @@ public class MiscConfig extends Category {
         false
     );
 
+    @Parent
+    public TextDisplayOption renderInventoryCategory =
+        new TextDisplayOption(Text.literal("Render - Inventory"), Text.literal(""));
+
+    @Expose
+    public BooleanOption showPetLevelAsStackSize = new BooleanOption(
+        Text.literal("Show pet level"),
+        Text.literal("Shows the pet level as stack size."),
+        false
+    );
+
+    @Expose
+    public BooleanOption showPetRarityInLevelText = new BooleanOption(
+        Text.literal("Show rarity in level"),
+        Text.literal("Shows the pet level in the color of the rarity"),
+        false
+    ).onlyIf(this.showPetLevelAsStackSize);
+
     public MiscConfig() {
         super(new ItemStack(Items.COMPASS));
     }

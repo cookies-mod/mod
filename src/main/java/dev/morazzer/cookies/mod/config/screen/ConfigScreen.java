@@ -52,7 +52,6 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     private int optionDefaultWidth;
     private int innerPadding;
     private int optionsAllSize;
-    private float optionScrollbarScale;
 
     /**
      * Creates a new option screen.
@@ -161,6 +160,11 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     public boolean keyPressed(final int keyCode,
                               final int scanCode,
                               final int modifiers) {
+        if (keyCode == InputUtil.GLFW_KEY_DOWN) {
+            this.mouseScrolled(this.optionsLeft + 1, this.optionsTop + 1, 0, -1);
+        } else if (keyCode == InputUtil.GLFW_KEY_UP) {
+            this.mouseScrolled(this.optionsLeft + 1, this.optionsTop + 1, 0, 1);
+        }
         if (keyCode == InputUtil.GLFW_KEY_ENTER && this.searchField.active) {
             this.searchField.active = false;
             this.searchField.setFocused(false);
@@ -223,9 +227,6 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
                        final int height) {
         final int scaleFactor = (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-        final int sizeY =
-            Math.min(MinecraftClient.getInstance().getWindow().getScaledHeight() - 100 / scaleFactor, 400);
-
         this.x = (width - BACKGROUND_WIDTH) / 2;
         this.y = (height - BACKGROUND_HEIGHT) / 2;
 
@@ -242,60 +243,6 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
 
         this.recalculateOptionBarSize();
         this.setSearchBarWidth();
-    }
-
-    /**
-     * Executes an operation for all options that are in the current category that are visible and not hidden.
-     *
-     * @param executor The executor to be called.
-     */
-    private void executeForEachVisibleNotHidden(final ProcessedOptionExecutor executor) {
-        if (this.selectedCategory == null) {
-            return;
-        }
-        int optionsY = -this.optionsScrollbar.getValue();
-        for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
-            final int optionWidth = this.getOptionSize(processedOption);
-            if (optionWidth == -1) {
-                continue;
-            }
-            final ConfigOptionEditor<?, ?> editor = processedOption.getEditor();
-            if (editor == null) {
-                continue;
-            }
-            if (this.hiddenOptions.contains(processedOption)) {
-                continue;
-            }
-
-            final int finalX = this.optionsLeft - 1;
-            final int finalY = this.optionsTop + optionsY + 1;
-
-            if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1))
-                && (finalY < (this.optionsBottom - 1))) {
-                executor.execute(processedOption, finalX, finalY, optionWidth + 1);
-            }
-
-            optionsY += editor.getHeight(optionWidth);
-        }
-    }
-
-    /**
-     * Gets the size that an option has to be rendered in.
-     *
-     * @param processedOption The option to get the size for.
-     * @return The size the option has to be rendered in.
-     */
-    private int getOptionSize(final ProcessedOption<?, ?> processedOption) {
-        if (processedOption.getFoldable() >= 0) {
-            if (!this.activeFoldables.containsKey(processedOption.getFoldable())) {
-                return -1;
-            }
-
-            final int foldableDepth = this.activeFoldables.get(processedOption.getFoldable());
-            return this.optionDefaultWidth - (2 * this.innerPadding) * (foldableDepth + 1);
-        }
-
-        return this.optionDefaultWidth;
     }
 
     private void renderTabIcon(@NotNull final DrawContext drawContext,
@@ -388,8 +335,10 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             });
         }
 
-
         this.repopulateActiveFoldables();
+        this.updateSearchResults();
+        this.setSearchBarWidth();
+        this.repopulateHiddenOptions();
         this.recalculateOptionBarSize();
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -402,6 +351,63 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             .getEditor()
             .mouseReleased(mouseX - positionX, mouseY - positionY, button));
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    /**
+     * Executes an operation for all options that are in the current category that are visible and not hidden.
+     *
+     * @param executor The executor to be called.
+     */
+    private void executeForEachVisibleNotHidden(final ProcessedOptionExecutor executor) {
+        if (this.selectedCategory == null) {
+            return;
+        }
+        int optionsY = -this.optionsScrollbar.getValue();
+        for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
+            final int optionWidth = this.getOptionSize(processedOption);
+            if (optionWidth == -1) {
+                continue;
+            }
+            final ConfigOptionEditor<?, ?> editor = processedOption.getEditor();
+            if (editor == null) {
+                continue;
+            }
+            if (this.hiddenOptions.contains(processedOption)) {
+                continue;
+            }
+            if (!processedOption.getOption().isActive()) {
+                continue;
+            }
+
+            final int finalX = this.optionsLeft - 1;
+            final int finalY = this.optionsTop + optionsY + 1;
+
+            if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1))
+                && (finalY < (this.optionsBottom - 1))) {
+                executor.execute(processedOption, finalX, finalY, optionWidth + 1);
+            }
+
+            optionsY += editor.getHeight(optionWidth);
+        }
+    }
+
+    /**
+     * Gets the size that an option has to be rendered in.
+     *
+     * @param processedOption The option to get the size for.
+     * @return The size the option has to be rendered in.
+     */
+    private int getOptionSize(final ProcessedOption<?, ?> processedOption) {
+        if (processedOption.getFoldable() >= 0) {
+            if (!this.activeFoldables.containsKey(processedOption.getFoldable())) {
+                return -1;
+            }
+
+            final int foldableDepth = this.activeFoldables.get(processedOption.getFoldable());
+            return this.optionDefaultWidth - (2 * this.innerPadding) * (foldableDepth + 1);
+        }
+
+        return this.optionDefaultWidth;
     }
 
     @Override
@@ -529,13 +535,12 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
                 || this.hiddenOptions.contains(processedOption)) {
                 continue;
             }
+            if (!processedOption.getOption().isActive()) {
+                continue;
+            }
             final int optionWidth = this.getOptionSize(processedOption);
             this.optionsAllSize += processedOption.getEditor().getHeight(optionWidth);
         }
-
-        final int scrollbarHeight = (this.optionsBottom - this.optionsTop - 10);
-
-        this.optionScrollbarScale = scrollbarHeight / (float) this.optionsAllSize;
 
         this.optionsScrollbar.setValue(Math.max(
             0,
@@ -547,7 +552,6 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
      * Sets the search bar width to a newly calculated value.
      */
     private void setSearchBarWidth() {
-        final int length = this.textRenderer.getWidth(this.searchField.getText());
         this.searchField.setWidth(90);
         this.searchField.setPosition(
             this.x + 82,
@@ -615,6 +619,10 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         final List<Integer> matchedFoldables = new ArrayList<>();
         if (this.selectedCategory != null) {
             for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
+                if (!processedOption.getOption().isActive()) {
+                    this.hiddenOptions.add(processedOption);
+                    continue;
+                }
                 if (!processedOption.getEditor()
                     .doesMatchSearch(search.toLowerCase(Locale.ROOT)) &&
                     !matchedFoldables.contains(processedOption.getFoldable())) {

@@ -43,6 +43,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
             return;
         }
         this.value = jsonElement.getAsBoolean();
+        this.setValue(value);
     }
 
     @Override

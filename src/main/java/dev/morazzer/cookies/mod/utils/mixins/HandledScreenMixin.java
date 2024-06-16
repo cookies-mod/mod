@@ -4,8 +4,11 @@ import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevInventoryUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import java.nio.file.Path;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.ClickEvent;
@@ -14,8 +17,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 /**
  * Allows for saving of screens/inventories.
@@ -55,6 +60,15 @@ public abstract class HandledScreenMixin {
         }
         if (SlotAccessor.getItem(slot) != null) {
             cir.setReturnValue(true);
+        }
+    }
+
+    @ModifyArgs(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
+    private void drawItem$drawItemInSlot(Args args) {
+        final ItemStack itemStack = args.get(1);
+        String text;
+        if ((text = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
+            args.set(4, text);
         }
     }
 }

@@ -50,6 +50,13 @@ public class ConfigManager {
     }
 
     /**
+     * @return Whether the config is loader or not.
+     */
+    public static boolean isLoaded() {
+        return config != null;
+    }
+
+    /**
      * Processes the config.
      */
     public static void processConfig() {

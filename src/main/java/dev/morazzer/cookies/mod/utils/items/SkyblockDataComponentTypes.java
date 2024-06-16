@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
@@ -53,6 +54,8 @@ public class SkyblockDataComponentTypes {
     public static final ComponentType<Integer> STACKING_ENCHANT_XP;
     @GenerateAccessor
     public static final ComponentType<RepositoryItem> REPOSITORY_ITEM;
+
+    public static final ComponentType<String> CUSTOM_SLOT_TEXT;
 
     private static final List<ComponentType<?>> list = new ArrayList<>();
     @Getter
@@ -170,6 +173,7 @@ public class SkyblockDataComponentTypes {
             value(true),
             (skyblockId, key) -> RepositoryItem.of(skyblockId)
         );
+        CUSTOM_SLOT_TEXT = register(builder -> builder.codec(Codec.STRING));
     }
 
     private static <T, D> ComponentType<T> register(
@@ -193,6 +197,13 @@ public class SkyblockDataComponentTypes {
         final ComponentType<T> build = operator.apply(builder).build();
         list.add(build);
         dataTypes.add(new DataType<>(build, key, source, test, mapper));
+        return build;
+    }
+
+    public static <T> ComponentType<T> register(UnaryOperator<ComponentType.Builder<T>> operator) {
+        final ComponentType.Builder<T> builder = ComponentType.builder();
+        final ComponentType<T> build = operator.apply(builder).build();
+        list.add(build);
         return build;
     }
 
