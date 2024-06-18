@@ -53,7 +53,8 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
             );
 
         final ClassOrInterfaceDeclaration classOrInterfaceDeclaration = compilationUnit.addInterface("ItemAccessor");
-        classOrInterfaceDeclaration.addAnnotation(new SingleMemberAnnotationExpr(new Name("SuppressWarnings"), new StringLiteralExpr("MissingJavadoc")));
+        classOrInterfaceDeclaration.addAnnotation(
+            new SingleMemberAnnotationExpr(new Name("SuppressWarnings"), new StringLiteralExpr("MissingJavadoc")));
         final ClassOrInterfaceDeclaration source = readSource();
         source.findAll(ImportDeclaration.class).forEach(importDeclaration -> {
             compilationUnit.addImport(importDeclaration.getNameAsString());
@@ -89,12 +90,12 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
     private ClassOrInterfaceDeclaration readSource() throws IOException {
         final ParseResult<CompilationUnit> parse = new JavaParser().parse(
             this.getProject().getLayout().getProjectDirectory().getAsFile().toPath()
-                .resolve("src/main/java/dev/morazzer/cookies/mod/utils/items/SkyblockDataComponentTypes.java")
+                .resolve("src/main/java/dev/morazzer/cookies/mod/utils/items/CookiesDataComponentTypes.java")
         );
 
         final CompilationUnit compilationUnit = parse.getResult().orElseThrow();
         final Optional<ClassOrInterfaceDeclaration> skyblockDataComponentTypes =
-            compilationUnit.getClassByName("SkyblockDataComponentTypes");
+            compilationUnit.getClassByName("CookiesDataComponentTypes");
         return skyblockDataComponentTypes.orElseThrow();
     }
 
@@ -128,7 +129,7 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
         methodDeclaration.setType(type);
         methodDeclaration.addParameter("ItemStack", "itemStack");
         final BlockStmt body = methodDeclaration.createBody();
-        body.addStatement(new ReturnStmt("ItemUtils.getData(itemStack, SkyblockDataComponentTypes.%s)".formatted(
+        body.addStatement(new ReturnStmt("ItemUtils.getData(itemStack, CookiesDataComponentTypes.%s)".formatted(
             variableDeclarator.getNameAsString()
         )));
 
@@ -142,7 +143,7 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
         methodDeclaration.addParameter("ItemStack", "itemStack");
         final BlockStmt body = methodDeclaration.createBody();
         body.addStatement(
-            new ReturnStmt("() -> ItemUtils.getData(itemStack, SkyblockDataComponentTypes.%s)".formatted(
+            new ReturnStmt("() -> ItemUtils.getData(itemStack, CookiesDataComponentTypes.%s)".formatted(
                 variableDeclarator.getNameAsString()
             )));
     }

@@ -7,8 +7,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.component.ComponentMap;
@@ -16,8 +16,6 @@ import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -56,7 +54,7 @@ public abstract class ItemStackMixin {
         CallbackInfo ci
     ) {
         this.cookies$setComponents();
-        SkyblockDataComponentTypes.getDataTypes().forEach(this::cookies$registerType);
+        CookiesDataComponentTypes.getDataTypes().forEach(this::cookies$registerType);
 
         NbtComponent nbtComponent = componentMapImpl.get(DataComponentTypes.CUSTOM_DATA);
         NbtCompound nbtCompound = nbtComponent == null ? null : nbtComponent.copyNbt();
@@ -76,7 +74,7 @@ public abstract class ItemStackMixin {
             return;
         }
 
-        final List<Text> data = ItemUtils.getData(instance, SkyblockDataComponentTypes.CUSTOM_LORE);
+        final List<Text> data = ItemUtils.getData(instance, CookiesDataComponentTypes.CUSTOM_LORE);
         if (data == null) {
             original.call(instance, componentType, context, textConsumer, type);
             return;
@@ -91,7 +89,7 @@ public abstract class ItemStackMixin {
     }
 
     @Unique
-    private <T, D> void cookies$registerType(SkyblockDataComponentTypes.DataType<T, D> dataType) {
+    private <T, D> void cookies$registerType(CookiesDataComponentTypes.DataType<T, D> dataType) {
         for (String key : dataType.key()) {
             if (this.cookies$performeTest(dataType, key)) {
                 final D data = getComponents().get(dataType.source());
@@ -131,11 +129,11 @@ public abstract class ItemStackMixin {
             tier = Formatting.WHITE;
         }
 
-        set(SkyblockDataComponentTypes.CUSTOM_SLOT_TEXT, tier.toString() + level);
+        set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, tier.toString() + level);
     }
 
     @Unique
-    private <D, T> boolean cookies$performeTest(SkyblockDataComponentTypes.DataType<T, D> dataType, String key) {
+    private <D, T> boolean cookies$performeTest(CookiesDataComponentTypes.DataType<T, D> dataType, String key) {
         final D data = this.components.get(dataType.source());
         if (data == null) {
             return false;

@@ -4,8 +4,8 @@ import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.Value;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -44,12 +44,12 @@ public class ItemStats {
         }
 
         final List<Text> list = new ArrayList<>();
-        final RepositoryItem repositoryItem = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.REPOSITORY_ITEM);
+        final RepositoryItem repositoryItem = ItemUtils.getData(itemStack, CookiesDataComponentTypes.REPOSITORY_ITEM);
 
         final Instant time;
         if (
             ConfigManager.getConfig().miscConfig.showItemCreationDate.getValue()
-            && (time = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.TIMESTAMP)) != null
+            && (time = ItemUtils.getData(itemStack, CookiesDataComponentTypes.TIMESTAMP)) != null
         ) {
             list.add(Text.literal("Obtained: %s".formatted(dateTimeFormatter.format(time))).formatted(
                 Formatting.LIGHT_PURPLE));
@@ -59,7 +59,7 @@ public class ItemStats {
             ConfigManager.getConfig().miscConfig.showItemDonatedToMuseum.getValue()
             && repositoryItem != null && repositoryItem.isMuseumable()
         ) {
-            Boolean donatedMuseum = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.DONATED_MUSEUM);
+            Boolean donatedMuseum = ItemUtils.getData(itemStack, CookiesDataComponentTypes.DONATED_MUSEUM);
             if (donatedMuseum == null) {
                 donatedMuseum = false;
             }

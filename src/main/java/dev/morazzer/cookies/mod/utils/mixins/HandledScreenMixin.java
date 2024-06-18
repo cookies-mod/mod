@@ -4,8 +4,10 @@ import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevInventoryUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import java.io.IOException;
 import java.nio.file.Path;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -38,12 +40,20 @@ public abstract class HandledScreenMixin {
             if (keyCode != 83) {
                 return;
             }
-            final Path path = DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
-            CookiesUtils.sendMessage(
-                CookiesUtils.createPrefix().append("Saved inventory to file %s".formatted(path.getFileName()))
-                    .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        path.getFileName().toString().split("\\.")[0]))));
-            cir.setReturnValue(true);
+            try {
+                final Path path =
+                    DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
+                CookiesUtils.sendMessage(
+                    CookiesUtils.createPrefix().append("Saved inventory to file %s".formatted(path.getFileName()))
+                        .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
+                            path.getFileName().toString().split("\\.")[0]))));
+                cir.setReturnValue(true);
+            } catch (IOException ioException) {
+                CookiesUtils.sendFailedMessage("Failed to writing inventory file");
+                ExceptionHandler.handleException(ioException);
+            } catch (Exception exception) {
+                ExceptionHandler.handleException(exception);
+            }
         }
     }
 
@@ -67,7 +77,7 @@ public abstract class HandledScreenMixin {
     private void drawItem$drawItemInSlot(Args args) {
         final ItemStack itemStack = args.get(1);
         String text;
-        if ((text = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
+        if ((text = ItemUtils.getData(itemStack, CookiesDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
             args.set(4, text);
         }
     }

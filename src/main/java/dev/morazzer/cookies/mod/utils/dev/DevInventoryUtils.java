@@ -17,6 +17,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -99,13 +100,9 @@ public class DevInventoryUtils {
      * @param <T>           The type of the inventory.
      * @return The path it was saved to.
      */
-    public static <T extends ScreenHandler> Path saveInventory(HandledScreen<T> handledScreen) {
+    public static <T extends ScreenHandler> Path saveInventory(HandledScreen<T> handledScreen) throws IOException {
         if (!Files.exists(saved)) {
-            try {
-                Files.createDirectories(saved);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Files.createDirectories(saved);
         }
         final JsonObject slots = getSlots(handledScreen.getScreenHandler().slots);
 
@@ -114,6 +111,7 @@ public class DevInventoryUtils {
             "name",
             TextCodecs.CODEC.encodeStart(JsonOps.INSTANCE, handledScreen.getTitle()).getOrThrow()
         );
+
         screenValues.addProperty("type",
             Registries.SCREEN_HANDLER.getEntry(handledScreen.getScreenHandler().getType())
                 .getIdAsString());
@@ -126,12 +124,8 @@ public class DevInventoryUtils {
 
         final Path path = saved.resolve(fileName);
 
-        try {
-            Files.writeString(path, JsonUtils.CLEAN_GSON.toJson(screenValues), StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Files.writeString(path, JsonUtils.CLEAN_GSON.toJson(screenValues), StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         return path;
     }
 
@@ -141,10 +135,18 @@ public class DevInventoryUtils {
             if (slot.inventory == MinecraftClient.getInstance().player.getInventory()) {
                 return;
             }
+            final ItemStack copy = slot.getStack().copy();
+            copy.remove(DataComponentTypes.ENCHANTMENTS);
             final DataResult<JsonElement> jsonElementDataResult =
-                ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, slot.getStack());
+                ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, copy);
             final Optional<JsonElement> result = jsonElementDataResult.result();
             if (result.isEmpty()) {
+                if (jsonElementDataResult.isError()) {
+                    jsonElementDataResult.ifError(jsonElementError -> {
+                        final String message = jsonElementError.message();
+                        System.err.println(message);
+                    });
+                }
                 return;
             }
             slotsObject.add(slot.getIndex() + "", result.get());

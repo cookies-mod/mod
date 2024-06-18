@@ -2,7 +2,6 @@ package dev.morazzer.cookies.mod.utils.items;
 
 import com.mojang.serialization.Codec;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
-import dev.morazzer.cookies.mod.utils.json.FakeCodec;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,6 +22,7 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Uuids;
 import net.minecraft.util.dynamic.Codecs;
 
@@ -30,7 +30,7 @@ import net.minecraft.util.dynamic.Codecs;
  * All custom data component types.
  */
 @SuppressWarnings("MissingJavadoc")
-public class SkyblockDataComponentTypes {
+public class CookiesDataComponentTypes {
 
     @GenerateAccessor
     public static final ComponentType<String> SKYBLOCK_ID;
@@ -59,11 +59,6 @@ public class SkyblockDataComponentTypes {
 
     public static final ComponentType<String> CUSTOM_SLOT_TEXT;
     public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
-    public static final ComponentType<Integer> HOTM_PERK_LEVEL;
-    public static final ComponentType<Integer> HOTM_COST_NEXT_10;
-    public static final ComponentType<Integer> HOTM_COST_ALL;
-    public static final ComponentType<Boolean> HOTM_DISABLED;
-    public static final ComponentType<String> HOTM_PERK_TYPE;
     public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
     public static final ComponentType<List<Text>> CUSTOM_LORE;
 
@@ -183,15 +178,10 @@ public class SkyblockDataComponentTypes {
             value(true),
             (skyblockId, key) -> RepositoryItem.of(skyblockId)
         );
-        CUSTOM_SLOT_TEXT = register(builder -> builder.codec(Codec.STRING));
-        OVERRIDE_RENDER_ITEM = register(builder -> builder.codec(ItemStack.CODEC));
-        HOTM_PERK_LEVEL = register(builder -> builder.codec(Codec.INT));
-        HOTM_COST_NEXT_10 = register(builder -> builder.codec(Codec.INT));
-        HOTM_COST_ALL = register(builder -> builder.codec(Codec.INT));
-        HOTM_DISABLED = register(builder -> builder.codec(Codec.BOOL));
-        HOTM_PERK_TYPE = register(builder -> builder.codec(Codec.STRING));
-        ITEM_BACKGROUND_COLOR = register(builder -> builder.codec(Codec.INT));
-        CUSTOM_LORE = register(builder -> builder.codec(FakeCodec.get()));
+        CUSTOM_SLOT_TEXT = new CookiesDataComponent<>(Identifier.of("cookies:custom_slot_text"));
+        OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));
+        ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
+        CUSTOM_LORE = new CookiesDataComponent<>(Identifier.of("cookies:custom_lore"));
     }
 
     private static <T, D> ComponentType<T> register(
@@ -218,13 +208,6 @@ public class SkyblockDataComponentTypes {
         return build;
     }
 
-    public static <T> ComponentType<T> register(UnaryOperator<ComponentType.Builder<T>> operator) {
-        final ComponentType.Builder<T> builder = ComponentType.builder();
-        final ComponentType<T> build = operator.apply(builder).build();
-        list.add(build);
-        return build;
-    }
-
     private static BiFunction<NbtComponent, String, Boolean> defaultTest() {
         return NbtComponent::contains;
     }
@@ -234,6 +217,9 @@ public class SkyblockDataComponentTypes {
     }
 
     public static boolean isCustomType(ComponentType<?> type) {
+        if (type instanceof CookiesDataComponent<?>) {
+            return true;
+        }
         return list.contains(type);
     }
 

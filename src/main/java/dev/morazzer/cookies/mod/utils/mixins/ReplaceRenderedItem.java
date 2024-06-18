@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.utils.mixins;
 
 
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.entity.LivingEntity;
@@ -27,7 +27,7 @@ public abstract class ReplaceRenderedItem {
     @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
     private void getModel(ItemStack stack, World world, LivingEntity entity, int seed,
                           CallbackInfoReturnable<BakedModel> cir) {
-        final ItemStack data = ItemUtils.getData(stack, SkyblockDataComponentTypes.OVERRIDE_RENDER_ITEM);
+        final ItemStack data = ItemUtils.getData(stack, CookiesDataComponentTypes.OVERRIDE_RENDER_ITEM);
         if (data == null) {
             return;
         }

@@ -3,13 +3,11 @@ package dev.morazzer.cookies.mod.features.misc.utils;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.sound.SoundUtils;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -20,7 +18,6 @@ import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -71,7 +68,7 @@ public class ModifyRecipeScreen {
         if (stack == null) {
             return null;
         }
-        return ItemUtils.getData(stack, SkyblockDataComponentTypes.REPOSITORY_ITEM);
+        return ItemUtils.getData(stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
     }
 
     private Runnable setSelectedItem(GenericContainerScreen genericContainerScreen) {

@@ -1,7 +1,7 @@
 package dev.morazzer.cookies.mod.utils.mixins;
 
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
         @Nullable T object,
         CallbackInfoReturnable<T> cir
     ) {
-        if (this.cookies$componentMap != null && SkyblockDataComponentTypes.isCustomType(dataComponentType)) {
+        if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
             this.cookies$componentMap.set(dataComponentType, object);
             cir.setReturnValue(null);
         }
@@ -51,7 +51,7 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
         ComponentType<? extends T> dataComponentType,
         CallbackInfoReturnable<T> cir
     ) {
-        if (this.cookies$componentMap != null && SkyblockDataComponentTypes.isCustomType(dataComponentType)) {
+        if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
             cir.setReturnValue(this.cookies$componentMap.remove(dataComponentType));
         }
     }
@@ -68,7 +68,7 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
         ComponentType<? extends T> dataComponentType,
         CallbackInfoReturnable<T> cir
     ) {
-        if (this.cookies$componentMap != null && SkyblockDataComponentTypes.isCustomType(dataComponentType)) {
+        if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
             cir.setReturnValue(this.cookies$componentMap.get(dataComponentType));
         }
     }

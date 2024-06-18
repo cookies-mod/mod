@@ -1,15 +1,15 @@
 package dev.morazzer.cookies.mod.features.farming.jacob;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
-import dev.morazzer.cookies.mod.events.api.ItemBackgroundRenderCallback;
+import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.utils.Constants;
-import java.util.Optional;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 /**
@@ -29,35 +29,30 @@ public class HighlightUnclaimedJacobsContest {
             if (!handledScreen.getTitle().getString().equals("Your Contests")) {
                 return;
             }
-            ItemBackgroundRenderCallback.register(handledScreen,
-                HighlightUnclaimedJacobsContest::renderBackgroundIfNotClaimed);
+
+            InventoryContentUpdateEvent.register(((HandledScreen<?>) screen).getScreenHandler(),
+                HighlightUnclaimedJacobsContest::updateItem);
         });
     }
 
-    private static void renderBackgroundIfNotClaimed(DrawContext drawContext, Slot slot) {
-        if (slot.getStack().isEmpty()) {
+    private static void updateItem(int i, ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
             return;
         }
 
-        final Optional<? extends LoreComponent> loreComponent =
-            slot.getStack().getComponentChanges().get(DataComponentTypes.LORE);
-        //noinspection OptionalAssignedToNull
-        if (loreComponent == null || loreComponent.isEmpty()) {
+
+        final LoreComponent loreComponent = ItemUtils.getData(itemStack, DataComponentTypes.LORE);
+        if (loreComponent == null || loreComponent.lines() == null ||loreComponent.lines().isEmpty()    ) {
             return;
         }
 
-        final Text last = loreComponent.get().lines().getLast();
+
+        final Text last = loreComponent.lines().getLast();
 
         if (!last.getString().equals("Click to claim reward!")) {
             return;
         }
 
-        drawContext.fill(
-            slot.x,
-            slot.y,
-            slot.x + 16,
-            slot.y + 16,
-            Constants.MAIN_COLOR
-        );
+        itemStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, Constants.MAIN_COLOR);
     }
 }

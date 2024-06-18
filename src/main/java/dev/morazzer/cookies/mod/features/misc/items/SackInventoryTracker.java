@@ -5,8 +5,8 @@ import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -117,7 +117,7 @@ public class SackInventoryTracker {
         int flawedAmount = Integer.parseInt(flawed.replaceAll(GEMSTONE_PATTER, "$1").replaceAll("\\D", ""));
         int fineAmount = Integer.parseInt(fine.replaceAll(GEMSTONE_PATTER, "$1").replaceAll("\\D", ""));
 
-        final String internalId = ItemUtils.getData(stack, SkyblockDataComponentTypes.SKYBLOCK_ID);
+        final String internalId = ItemUtils.getData(stack, CookiesDataComponentTypes.SKYBLOCK_ID);
 
         ProfileStorage.getCurrentProfile().ifPresent(profileData -> {
             this.set(profileData, RepositoryItem.of(internalId), roughAmount);
@@ -138,11 +138,11 @@ public class SackInventoryTracker {
         }
 
         final int amount = Integer.parseInt(count);
-        final RepositoryItem item = ItemUtils.getData(stack, SkyblockDataComponentTypes.REPOSITORY_ITEM);
+        final RepositoryItem item = ItemUtils.getData(stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
 
         if (item == null) {
             DevUtils.log(LOGGER_KEY, "Couldn't find item with id %s",
-                ItemUtils.getData(stack, SkyblockDataComponentTypes.SKYBLOCK_ID));
+                ItemUtils.getData(stack, CookiesDataComponentTypes.SKYBLOCK_ID));
             return;
         }
 

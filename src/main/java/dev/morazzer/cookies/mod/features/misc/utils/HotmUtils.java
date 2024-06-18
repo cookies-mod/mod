@@ -5,8 +5,9 @@ import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.constants.Hotm;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.types.HotmDataComponentTypes;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -73,15 +74,15 @@ public class HotmUtils {
 
         final int level = getLevel(lines.getFirst());
         if (level > 0) {
-            itemStack.set(SkyblockDataComponentTypes.HOTM_PERK_LEVEL, level);
+            itemStack.set(HotmDataComponentTypes.HOTM_PERK_LEVEL, level);
         }
-        itemStack.set(SkyblockDataComponentTypes.HOTM_DISABLED, isDisabled(lines));
+        itemStack.set(HotmDataComponentTypes.HOTM_DISABLED, isDisabled(lines));
         final Text name = ItemUtils.getData(itemStack, DataComponentTypes.CUSTOM_NAME);
         if (name == null) {
             return;
         }
         final String type = name.getString().toLowerCase(Locale.ROOT).replaceAll(" ", "_").replaceAll("\\W", "");
-        itemStack.set(SkyblockDataComponentTypes.HOTM_PERK_TYPE, type);
+        itemStack.set(HotmDataComponentTypes.HOTM_PERK_TYPE, type);
     }
 
     private void setPerkLevelAsStackSize(ItemStack itemStack) {
@@ -89,20 +90,20 @@ public class HotmUtils {
             return;
         }
 
-        final Integer data = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.HOTM_PERK_LEVEL);
+        final Integer data = ItemUtils.getData(itemStack, HotmDataComponentTypes.HOTM_PERK_LEVEL);
         if (data == null) {
             return;
         }
-        itemStack.set(SkyblockDataComponentTypes.CUSTOM_SLOT_TEXT, String.valueOf(data));
+        itemStack.set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, String.valueOf(data));
     }
 
     private void setBackgroundColor(ItemStack itemStack) {
-        final Boolean data = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.HOTM_DISABLED);
+        final Boolean data = ItemUtils.getData(itemStack, HotmDataComponentTypes.HOTM_DISABLED);
         if (data == null || !data) {
             return;
         }
 
-        itemStack.set(SkyblockDataComponentTypes.OVERRIDE_RENDER_ITEM, new ItemStack(Items.REDSTONE));
+        itemStack.set(CookiesDataComponentTypes.OVERRIDE_RENDER_ITEM, new ItemStack(Items.REDSTONE));
     }
 
     private void setCost(ItemStack itemStack) {
@@ -111,8 +112,8 @@ public class HotmUtils {
         if (data == null || data.lines().isEmpty()) {
             return;
         }
-        String perkType = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.HOTM_PERK_TYPE);
-        Integer perkLevel = ItemUtils.getData(itemStack, SkyblockDataComponentTypes.HOTM_PERK_LEVEL);
+        String perkType = ItemUtils.getData(itemStack, HotmDataComponentTypes.HOTM_PERK_TYPE);
+        Integer perkLevel = ItemUtils.getData(itemStack, HotmDataComponentTypes.HOTM_PERK_LEVEL);
         if (perkType == null || perkLevel == null) {
             return;
         }
@@ -159,7 +160,7 @@ public class HotmUtils {
             break;
         }
 
-        itemStack.set(SkyblockDataComponentTypes.CUSTOM_LORE, lines);
+        itemStack.set(CookiesDataComponentTypes.CUSTOM_LORE, lines);
     }
 
     private int getLevel(Text text) {
