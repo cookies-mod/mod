@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.utils.items;
 
 import com.mojang.serialization.Codec;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.json.FakeCodec;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,11 +17,12 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
-import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.Uuids;
 import net.minecraft.util.dynamic.Codecs;
 
@@ -56,6 +58,14 @@ public class SkyblockDataComponentTypes {
     public static final ComponentType<RepositoryItem> REPOSITORY_ITEM;
 
     public static final ComponentType<String> CUSTOM_SLOT_TEXT;
+    public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
+    public static final ComponentType<Integer> HOTM_PERK_LEVEL;
+    public static final ComponentType<Integer> HOTM_COST_NEXT_10;
+    public static final ComponentType<Integer> HOTM_COST_ALL;
+    public static final ComponentType<Boolean> HOTM_DISABLED;
+    public static final ComponentType<String> HOTM_PERK_TYPE;
+    public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
+    public static final ComponentType<List<Text>> CUSTOM_LORE;
 
     private static final List<ComponentType<?>> list = new ArrayList<>();
     @Getter
@@ -174,6 +184,14 @@ public class SkyblockDataComponentTypes {
             (skyblockId, key) -> RepositoryItem.of(skyblockId)
         );
         CUSTOM_SLOT_TEXT = register(builder -> builder.codec(Codec.STRING));
+        OVERRIDE_RENDER_ITEM = register(builder -> builder.codec(ItemStack.CODEC));
+        HOTM_PERK_LEVEL = register(builder -> builder.codec(Codec.INT));
+        HOTM_COST_NEXT_10 = register(builder -> builder.codec(Codec.INT));
+        HOTM_COST_ALL = register(builder -> builder.codec(Codec.INT));
+        HOTM_DISABLED = register(builder -> builder.codec(Codec.BOOL));
+        HOTM_PERK_TYPE = register(builder -> builder.codec(Codec.STRING));
+        ITEM_BACKGROUND_COLOR = register(builder -> builder.codec(Codec.INT));
+        CUSTOM_LORE = register(builder -> builder.codec(FakeCodec.get()));
     }
 
     private static <T, D> ComponentType<T> register(

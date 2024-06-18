@@ -12,6 +12,7 @@ public class UtilsFeatures {
     public static void load() {
         Loader.load("CraftHelper", CraftHelper::new);
         Loader.load("ModifiedRecipeScreen", ModifyRecipeScreen::new);
+        Loader.load("HotmUtils", HotmUtils::new);
     }
 
 

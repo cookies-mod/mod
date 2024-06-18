@@ -2,19 +2,26 @@ package dev.morazzer.cookies.mod.utils.mixins;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
-import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
-import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
+import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -62,6 +69,21 @@ public abstract class ItemStackMixin {
         this.cookies$setPetLevel(nbtCompound, componentMapImpl);
     }
 
+    @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 5))
+    private <T> void getLore(ItemStack instance, ComponentType<T> componentType, Item.TooltipContext context,
+                             Consumer<Text> textConsumer, TooltipType type, Operation<Void> original) {
+        if (!componentType.equals(DataComponentTypes.LORE)) {
+            return;
+        }
+
+        final List<Text> data = ItemUtils.getData(instance, SkyblockDataComponentTypes.CUSTOM_LORE);
+        if (data == null) {
+            original.call(instance, componentType, context, textConsumer, type);
+            return;
+        }
+        data.forEach(textConsumer);
+    }
+
     @Unique
     private void cookies$setComponents() {
         ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(
@@ -79,6 +101,7 @@ public abstract class ItemStackMixin {
         }
     }
 
+    @Unique
     private void cookies$setPetLevel(NbtCompound nbtCompound, ComponentMapImpl componentMapImpl) {
         if (nbtCompound == null) {
             return;

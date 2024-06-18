@@ -61,10 +61,15 @@ tasks.register("generateDatacomponentAccessors", cm.tasks.GenerateDataComponentM
     this.outputDir.set(this.project.layout.buildDirectory.dir("generated/data-component-accessors"))
 }
 
+tasks.register("generateBuildInfo", cm.tasks.CreateBuildInfo::class) {
+    this.outputDir.set(this.project.layout.buildDirectory.dir("generated/buildinfo"))
+}
+
 sourceSets {
     main {
         java {
             srcDir(tasks.getByName("generateDatacomponentAccessors"))
+            srcDir(tasks.getByName("generateBuildInfo"))
         }
     }
 }

@@ -5,6 +5,7 @@
     "ComponentMapImplMixin",
     "ItemStackMixin",
     "HandledScreenMixin",
-    "SlotMixin"
+    "SlotMixin",
+    "ReplaceRenderedItem"
   ]
 }

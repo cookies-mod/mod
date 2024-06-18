@@ -60,17 +60,21 @@ public class DevInventoryUtils {
             GenericContainerScreenHandler.createGeneric9x6(-1, MinecraftClient.getInstance().player.getInventory());
 
         final Map<Integer, ItemStack> slots = getSlots(jsonObject.get("slots").getAsJsonObject());
-        slots.forEach((integer, itemStack) -> {
-            generic9x6.setStackInSlot(integer, 0, itemStack);
-        });
 
         final GenericContainerScreen screen = new GenericContainerScreen(
             generic9x6,
             MinecraftClient.getInstance().player.getInventory(),
             Text.Serialization.fromJsonTree(jsonObject.get("name"),
                 MinecraftClient.getInstance().world.getRegistryManager())
-        );
-
+        ) {
+            @Override
+            protected void init() {
+                super.init();
+                slots.forEach((integer, itemStack) -> {
+                    generic9x6.setStackInSlot(integer, 0, itemStack);
+                });
+            }
+        };
 
         return Optional.of(screen);
     }

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import dev.morazzer.cookies.mod.config.categories.DevConfig;
 import dev.morazzer.cookies.mod.config.categories.FarmingConfig;
 import dev.morazzer.cookies.mod.config.categories.HelpersConfig;
+import dev.morazzer.cookies.mod.config.categories.MiningConfig;
 import dev.morazzer.cookies.mod.config.categories.MiscConfig;
 import dev.morazzer.cookies.mod.config.system.Config;
 import dev.morazzer.cookies.mod.config.system.SearchCategory;
@@ -20,6 +21,8 @@ public class CookiesConfig extends Config<CookiesConfig> {
     public MiscConfig miscConfig = new MiscConfig();
     @Expose
     public FarmingConfig farmingConfig = new FarmingConfig();
+    @Expose
+    public MiningConfig miningConfig = new MiningConfig();
     @Expose
     public HelpersConfig helpersConfig = new HelpersConfig();
 

@@ -2,10 +2,13 @@ package dev.morazzer.cookies.mod.events.mixins;
 
 import dev.morazzer.cookies.mod.events.api.ItemBackgroundRenderCallback;
 import dev.morazzer.cookies.mod.events.api.accessors.ItemBackgroundAccessor;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import dev.morazzer.cookies.mod.utils.items.SkyblockDataComponentTypes;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -44,6 +47,21 @@ public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
     )
     private void renderBackground(DrawContext context, Slot slot, CallbackInfo ci) {
         this.backgroundCallbacks.invoker().renderBackground(context, slot);
+        final ItemStack stack = slot.getStack();
+        if (stack == null) {
+            return;
+        }
+        final Integer data = ItemUtils.getData(stack, SkyblockDataComponentTypes.ITEM_BACKGROUND_COLOR);
+        if (data == null) {
+            return;
+        }
+        context.fill(
+            slot.x,
+            slot.y,
+            slot.x + 16,
+            slot.y + 16,
+            data
+        );
     }
 
     /**

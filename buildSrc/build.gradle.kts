@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation(project.libs.fabric.loom)
-    //implementation(project.libs.indra.git)
+    implementation(project.libs.indra.git)
     //implementation(project.libs.quilt.parsers.json)
     //implementation(project.libs.yumi.gradle.licenser)
 
