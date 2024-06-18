@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.farming;
 
 import dev.morazzer.cookies.mod.features.Loader;
+import dev.morazzer.cookies.mod.features.farming.inventory.RancherBootsNumbers;
 import dev.morazzer.cookies.mod.features.farming.jacob.HighlightUnclaimedJacobsContest;
 
 /**
@@ -8,7 +9,8 @@ import dev.morazzer.cookies.mod.features.farming.jacob.HighlightUnclaimedJacobsC
  */
 @SuppressWarnings("MissingJavadoc")
 public class FarmingFeatures {
-    public void load() {
+    public static void load() {
         Loader.load("HighlightUnclaimedJacobContest", HighlightUnclaimedJacobsContest::load);
+        Loader.load("ShowSpeedOnRancherBoots", RancherBootsNumbers::new);
     }
 }

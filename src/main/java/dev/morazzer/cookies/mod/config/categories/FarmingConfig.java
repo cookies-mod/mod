@@ -24,6 +24,12 @@ public class FarmingConfig extends Category {
         false
     );
 
+    public BooleanOption showRancherSpeed = new BooleanOption(
+        Text.literal("Show rancher speed"),
+        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
+        false
+    );
+
     public FarmingConfig() {
         super(new ItemStack(Items.WHEAT));
     }
