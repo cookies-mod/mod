@@ -11,7 +11,7 @@ public class Features {
 
     public static void load() {
         Loader.load("MiscFeatures", MiscFeatures::load);
-        Loader.load("FamingFeatures", FarmingFeatures::load);
+        Loader.load("FarmingFeatures", FarmingFeatures::load);
     }
 
 }
