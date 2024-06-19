@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.misc.utils;
 
 import dev.morazzer.cookies.mod.CookiesMod;
+import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
@@ -41,9 +42,14 @@ public class ModifyRecipeScreen {
             ).map(it -> it.formatted(Formatting.GRAY).styled(style -> style.withItalic(false)))
             .map(Text.class::cast).toList()));
         itemStack.set(DataComponentTypes.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-        itemStack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, new AttributeModifiersComponent(Collections.emptyList(), false));
+        itemStack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS,
+            new AttributeModifiersComponent(Collections.emptyList(), false));
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof GenericContainerScreen genericContainerScreen) {
+                if (!ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
+                    return;
+                }
+
                 CookiesMod.getExecutorService().schedule(() -> {
                     if (screen.getTitle().getString().trim().endsWith("Recipe")) {
                         final Slot craftingTable = genericContainerScreen.getScreenHandler().slots.get(23);
