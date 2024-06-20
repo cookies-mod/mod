@@ -6,6 +6,7 @@ import dev.morazzer.cookies.mod.commands.dev.debug.RecipeCalculationDebugCommand
 import dev.morazzer.cookies.mod.commands.dev.debug.RecipeDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.RenderDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.SackMessageDebugCommand;
+import dev.morazzer.cookies.mod.commands.dev.debug.SendMessageDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.SetSelectedCraftHelperItemDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.SwapProfilesDebugCommand;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
@@ -27,7 +28,8 @@ public class DebugSubCommand extends ClientCommand {
             new SwapProfilesDebugCommand(),
             new SetSelectedCraftHelperItemDebugCommand(),
             new SackMessageDebugCommand(),
-            new LoadScreenDebugCommand()
+            new LoadScreenDebugCommand(),
+            new SendMessageDebugCommand()
         };
 
         for (ClientCommand clientCommand : clientCommands) {
