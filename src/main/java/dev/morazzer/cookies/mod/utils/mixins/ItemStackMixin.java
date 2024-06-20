@@ -5,16 +5,19 @@ import com.google.gson.JsonParser;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.morazzer.cookies.mod.config.ConfigManager;
+import dev.morazzer.cookies.mod.events.ItemLoreEvent;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -65,6 +68,25 @@ public abstract class ItemStackMixin {
 
 
         this.cookies$setPetLevel(nbtCompound, componentMapImpl);
+
+        final LoreComponent loreComponent = componentMapImpl.get(DataComponentTypes.LORE);
+        if (loreComponent == null || loreComponent.lines() == null || loreComponent.lines().isEmpty()) {
+            return;
+        }
+
+        final List<Text> lines = new ArrayList<>(loreComponent.lines());
+        ItemLoreEvent.EVENT.invoker().modify(lines);
+
+        if (lines.size() != loreComponent.lines().size()) {
+            set(CookiesDataComponentTypes.CUSTOM_LORE, lines);
+        } else {
+            for (int index = 0; index < lines.size(); index++) {
+                if (!lines.get(index).equals(loreComponent.lines().get(index))) {
+                    set(CookiesDataComponentTypes.CUSTOM_LORE, lines);
+                    break;
+                }
+            }
+        }
     }
 
     @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 5))

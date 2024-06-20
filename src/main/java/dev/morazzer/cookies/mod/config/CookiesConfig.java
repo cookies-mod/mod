@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.config;
 
 import com.google.gson.annotations.Expose;
+import dev.morazzer.cookies.mod.config.categories.CleanupConfig;
 import dev.morazzer.cookies.mod.config.categories.DevConfig;
 import dev.morazzer.cookies.mod.config.categories.FarmingConfig;
 import dev.morazzer.cookies.mod.config.categories.HelpersConfig;
@@ -25,6 +26,8 @@ public class CookiesConfig extends Config<CookiesConfig> {
     public MiningConfig miningConfig = new MiningConfig();
     @Expose
     public HelpersConfig helpersConfig = new HelpersConfig();
+    @Expose
+    public CleanupConfig cleanupConfig = new CleanupConfig();
 
     @Expose
     public DevConfig devConfig = new DevConfig();

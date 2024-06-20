@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.features;
 
+import dev.morazzer.cookies.mod.features.cleanup.CleanupFeatures;
 import dev.morazzer.cookies.mod.features.farming.FarmingFeatures;
 import dev.morazzer.cookies.mod.features.misc.MiscFeatures;
 
@@ -12,6 +13,7 @@ public class Features {
     public static void load() {
         Loader.load("MiscFeatures", MiscFeatures::load);
         Loader.load("FarmingFeatures", FarmingFeatures::load);
+        Loader.load("CleanupFeatures", CleanupFeatures::load);
     }
 
 }

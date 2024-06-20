@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
-import dev.morazzer.cookies.mod.config.system.editor.EnumDropdownEditor;
+import dev.morazzer.cookies.mod.config.system.editor.EnumCycleEditor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Slf4j
 @Getter
-public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdownOption<T>> {
+public class EnumCycleOption<T extends Enum<T>> extends Option<T, EnumCycleOption<T>> {
 
     private TextSupplier<T> textSupplier;
 
@@ -29,7 +29,7 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
      * @param description The description of the option.
      * @param value       The initial value of the option.
      */
-    public EnumDropdownOption(Text name, Text description, T value) {
+    public EnumCycleOption(Text name, Text description, T value) {
         super(name, description, value);
         this.textSupplier =
             enumValue -> Text.literal(StringUtils.capitalize(enumValue.name().replace('_', ' ').toLowerCase()));
@@ -41,7 +41,7 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
      * @param textSupplier The supplier.
      * @return The option.
      */
-    public EnumDropdownOption<T> withSupplier(TextSupplier<T> textSupplier) {
+    public EnumCycleOption<T> withSupplier(TextSupplier<T> textSupplier) {
         this.textSupplier = textSupplier;
         return this;
     }
@@ -62,8 +62,8 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
     }
 
     @Override
-    public @NotNull ConfigOptionEditor<T, EnumDropdownOption<T>> getEditor() {
-        return new EnumDropdownEditor<>(this);
+    public @NotNull ConfigOptionEditor<T, EnumCycleOption<T>> getEditor() {
+        return new EnumCycleEditor<>(this);
     }
 
     /**
