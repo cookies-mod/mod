@@ -160,7 +160,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitive(jsonElement, log)) {
+        if (expectPrimitiveNumber(jsonElement, log)) {
             return;
         }
         //noinspection unchecked

@@ -48,7 +48,7 @@ public class EnumCycleOption<T extends Enum<T>> extends Option<T, EnumCycleOptio
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitive(jsonElement, log)) {
+        if (expectPrimitiveString(jsonElement, log)) {
             return;
         }
         //Can't fail under normal circumstances

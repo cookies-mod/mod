@@ -37,7 +37,7 @@ public class ColorOption extends Option<Color, ColorOption> {
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitive(jsonElement, log)) {
+        if (expectPrimitiveNumber(jsonElement, log)) {
             return;
         }
         int argb = jsonElement.getAsInt();

@@ -150,7 +150,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
         return this.asOption();
     }
 
-    protected boolean expectPrimitive(@NotNull JsonElement jsonElement, Logger log) {
+    protected boolean expectPrimitiveNumber(@NotNull JsonElement jsonElement, Logger log) {
         if (!jsonElement.isJsonPrimitive()) {
             log.warn("Error while loading config value, expected number got %s".formatted(
                 jsonElement.isJsonObject() ? "json-object" : "json-array"));
@@ -162,6 +162,20 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
         }
         return false;
     }
+
+    protected boolean expectPrimitiveString(@NotNull JsonElement jsonElement, Logger log) {
+        if (!jsonElement.isJsonPrimitive()) {
+            log.warn("Error while loading config value, expected string got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            return true;
+        }
+        if (!jsonElement.getAsJsonPrimitive().isString()) {
+            log.warn("Error while loading config value, expected string got %s".formatted(jsonElement.getAsString()));
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Only shows this option if the other option is true.

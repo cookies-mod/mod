@@ -37,7 +37,7 @@ public class KeybindingOption extends Option<InputUtil.Key, KeybindingOption> {
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitive(jsonElement, log)) {
+        if (expectPrimitiveString(jsonElement, log)) {
             return;
         }
         this.value = InputUtil.fromTranslationKey(jsonElement.getAsString());
