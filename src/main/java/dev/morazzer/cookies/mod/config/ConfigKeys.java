@@ -1,7 +1,5 @@
 package dev.morazzer.cookies.mod.config;
 
-import dev.morazzer.cookies.mod.config.categories.CleanupConfig;
-
 /**
  * A list of all available config keys.
  */
@@ -22,5 +20,39 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.cleanupConfig.hideSilverfishMessage);
     public static ConfigKey<Boolean> CLEANUP_HIDE_DUNGEON_KEY_MESSAGE =
         new ConfigKey<>(config -> config.cleanupConfig.hideDungeonKeyMessage);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_DUNGEON_STATS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeDungeonStats);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_REFORGE_STATS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeReforgeStats);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_HPB_STATS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeHpbStats);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_GEMSTONE_STATS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeGemstoneStats);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_GEAR_SCORE =
+        new ConfigKey<>(config -> config.cleanupConfig.removeGearScore);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_BLANK =
+        new ConfigKey<>(config -> config.cleanupConfig.removeBlank);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_ABILITY =
+        new ConfigKey<>(config -> config.cleanupConfig.removeAbility);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_PIECE_BONUS =
+        new ConfigKey<>(config -> config.cleanupConfig.removePieceBonus);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_FULL_SET_BONUS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeFullSetBonus);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_GEMSTONE_LINE =
+        new ConfigKey<>(config -> config.cleanupConfig.removeGemstoneLine);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_ENCHANTS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeEnchants);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_REFORGE =
+        new ConfigKey<>(config -> config.cleanupConfig.removeReforge);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_SOULBOUND =
+        new ConfigKey<>(config -> config.cleanupConfig.removeSoulbound);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_RUNES =
+        new ConfigKey<>(config -> config.cleanupConfig.removeRunes);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_MAX_LEVEL =
+        new ConfigKey<>(config -> config.cleanupConfig.removeMaxLevel);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_ACTIONS =
+        new ConfigKey<>(config -> config.cleanupConfig.removeActions);
+    public static ConfigKey<Boolean> CLEANUP_REMOVE_HELD_ITEM =
+        new ConfigKey<>(config -> config.cleanupConfig.removeHeldItem);
 
 }

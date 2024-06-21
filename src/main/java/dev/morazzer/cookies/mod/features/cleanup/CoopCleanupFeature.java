@@ -5,6 +5,7 @@ import dev.morazzer.cookies.mod.events.ItemLoreEvent;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 /**
@@ -17,7 +18,7 @@ public class CoopCleanupFeature {
         ItemLoreEvent.EVENT.register(this::modifyLore);
     }
 
-    private void modifyLore(List<Text> texts) {
+    private void modifyLore(List<MutableText> texts) {
         if (texts.size() < 2) {
             return;
         }
@@ -35,10 +36,10 @@ public class CoopCleanupFeature {
         }
     }
 
-    private void removeOther(List<Text> texts) {
+    private void removeOther(List<MutableText> texts) {
         boolean remove = false;
         final String username = MinecraftClient.getInstance().getSession().getUsername();
-        final Iterator<Text> iterator = texts.iterator();
+        final Iterator<MutableText> iterator = texts.iterator();
         while (iterator.hasNext()) {
             Text text = iterator.next();
 
@@ -59,13 +60,13 @@ public class CoopCleanupFeature {
         }
     }
 
-    private void removeEmpty(List<Text> texts) {
+    private void removeEmpty(List<MutableText> texts) {
         texts.removeIf(text -> text.getString().trim().endsWith(": 0"));
     }
 
-    private void removeAll(List<Text> texts) {
+    private void removeAll(List<MutableText> texts) {
         boolean remove = false;
-        final Iterator<Text> iterator = texts.iterator();
+        final Iterator<MutableText> iterator = texts.iterator();
         while (iterator.hasNext()) {
             Text text = iterator.next();
 

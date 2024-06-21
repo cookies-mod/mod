@@ -12,6 +12,7 @@ public class CleanupFeatures {
     public static void load() {
         Loader.load("CoopCleanup", CoopCleanupFeature::new);
         Loader.load("DungeonMessagesCleanup", DungeonMessagesCleanup::new);
+        Loader.load("ItemTooltipCleanup", ItemTooltipCleanup::new);
     }
 
 }

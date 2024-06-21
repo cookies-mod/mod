@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.events;
 import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 
 /**
  * Event to modify the item description without the need for an extra mixin.
@@ -26,5 +26,5 @@ public interface ItemLoreEvent {
      *
      * @param list The list of entries.
      */
-    void modify(List<Text> list);
+    void modify(List<MutableText> list);
 }

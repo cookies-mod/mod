@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.data.profile;
 
 import com.google.gson.JsonObject;
+import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,6 +35,13 @@ public class ProfileStorage {
             loadCurrentProfile();
         });
         ServerSwapEvent.SERVER_SWAP.register(ProfileStorage::saveCurrentProfile);
+
+        CookiesMod.getExecutorService().scheduleAtFixedRate(
+            ProfileStorage::saveCurrentProfile,
+            5,
+            5,
+            TimeUnit.MINUTES
+        );
     }
 
     /**

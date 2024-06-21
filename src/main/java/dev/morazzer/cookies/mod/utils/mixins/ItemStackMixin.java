@@ -13,6 +13,7 @@ import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
@@ -24,6 +25,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
@@ -74,15 +76,16 @@ public abstract class ItemStackMixin {
             return;
         }
 
-        final List<Text> lines = new ArrayList<>(loreComponent.lines());
+        final List<MutableText> lines = loreComponent.lines().stream().map(Text::copy).collect(
+            Collectors.toList());
         ItemLoreEvent.EVENT.invoker().modify(lines);
 
         if (lines.size() != loreComponent.lines().size()) {
-            set(CookiesDataComponentTypes.CUSTOM_LORE, lines);
+            set(CookiesDataComponentTypes.CUSTOM_LORE, lines.stream().map(Text.class::cast).collect(Collectors.toList()));
         } else {
             for (int index = 0; index < lines.size(); index++) {
                 if (!lines.get(index).equals(loreComponent.lines().get(index))) {
-                    set(CookiesDataComponentTypes.CUSTOM_LORE, lines);
+                    set(CookiesDataComponentTypes.CUSTOM_LORE, lines.stream().map(Text.class::cast).collect(Collectors.toList()));
                     break;
                 }
             }
