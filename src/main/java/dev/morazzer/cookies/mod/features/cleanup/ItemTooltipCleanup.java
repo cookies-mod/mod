@@ -109,7 +109,7 @@ public class ItemTooltipCleanup {
 
                     //The used constants always have a color value.
                     //noinspection DataFlowIssue
-                    if (rgb == Formatting.LIGHT_PURPLE.getColorValue() ||
+                    if ((rgb == Formatting.LIGHT_PURPLE.getColorValue() && iterator.hasNext())||
                         (rgb == Formatting.BLUE.getColorValue() && !first.getStyle().isBold())) {
                         hadEnchantments = true;
                         removeCurrent = true;
