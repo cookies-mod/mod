@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.utils.RenderUtils;
+import java.util.Arrays;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
@@ -88,7 +89,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      */
     public boolean doesMatchSearch(@NotNull final String search) {
         return this.option.getName().getString().toLowerCase(Locale.ROOT).contains(search)
-               || this.option.getDescription().getString().toLowerCase(Locale.ROOT).contains(search)
+               || Arrays.stream(this.option.getDescription()).anyMatch(s -> s.getString().toLowerCase(Locale.ROOT).contains(search))
                || this.option.getTags()
                    .stream()
                    .anyMatch(key -> key.contains(search));

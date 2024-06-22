@@ -54,5 +54,7 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.cleanupConfig.removeActions);
     public static ConfigKey<Boolean> CLEANUP_REMOVE_HELD_ITEM =
         new ConfigKey<>(config -> config.cleanupConfig.removeHeldItem);
+    public static ConfigKey<Boolean> MISC_SCROLLABLE_TOOLTIP =
+        new ConfigKey<>(config -> config.miscConfig.enableScrollableTooltips);
 
 }

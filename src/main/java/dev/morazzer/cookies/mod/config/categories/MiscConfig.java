@@ -16,6 +16,16 @@ import net.minecraft.text.Text;
 @SuppressWarnings({"MissingJavadoc", "unused"})
 public class MiscConfig extends Category {
 
+    @Expose
+    public BooleanOption enableScrollableTooltips = new BooleanOption(
+        Text.literal("Scrollable Tooltips"),
+        true,
+        Text.literal("Allows you to scroll through tooltips"),
+        Text.empty(),
+        Text.literal("CTRL + Scroll -> move horizontal"),
+        Text.literal("SHIFT + Scroll -> chop tooltips")
+    );
+
     @Parent
     public TextDisplayOption itemSubCategory = new TextDisplayOption(Text.literal("Items"), Text.literal(""));
 

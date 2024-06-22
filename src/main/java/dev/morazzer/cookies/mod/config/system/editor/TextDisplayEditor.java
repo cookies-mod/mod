@@ -3,12 +3,13 @@ package dev.morazzer.cookies.mod.config.system.editor;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import dev.morazzer.cookies.mod.config.utils.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Editor to display text.
  */
-public class TextDisplayEditor extends ConfigOptionEditor<Object, TextDisplayOption> {
+public class TextDisplayEditor extends ConfigOptionEditor<Text, TextDisplayOption> {
 
     @SuppressWarnings("MissingJavadoc")
     public TextDisplayEditor(final TextDisplayOption option) {

@@ -22,6 +22,11 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
         super(name, description, value);
     }
 
+    @SuppressWarnings("MissingJavadoc")
+    public BooleanOption(Text name, Boolean value, Text... description) {
+        super(name, value, description);
+    }
+
     @Override
     public void read(@NotNull JsonElement jsonElement) {
         if (jsonElement instanceof JsonObject jsonObject) {

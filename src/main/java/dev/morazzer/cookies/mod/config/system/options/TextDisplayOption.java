@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Easy way to display text in the config.
  */
-public class TextDisplayOption extends Option<Object, TextDisplayOption> {
+public class TextDisplayOption extends Option<Text, TextDisplayOption> {
 
     @Getter
     private int color;
@@ -21,7 +21,7 @@ public class TextDisplayOption extends Option<Object, TextDisplayOption> {
 
     @SuppressWarnings("MissingJavadoc")
     public TextDisplayOption(final Text name, final Text description) {
-        super(name, description, null);
+        super(name, description, Text.empty());
         this.setColor(0xFFFFFFFF);
     }
 
@@ -49,7 +49,7 @@ public class TextDisplayOption extends Option<Object, TextDisplayOption> {
 
     @Override
     @NotNull
-    public ConfigOptionEditor<Object, TextDisplayOption> getEditor() {
+    public ConfigOptionEditor<Text, TextDisplayOption> getEditor() {
         return new TextDisplayEditor(this);
     }
 

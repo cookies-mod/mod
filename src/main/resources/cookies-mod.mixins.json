@@ -1,11 +1,14 @@
 {
   "package": "dev.morazzer.cookies.mod.mixins",
+  "compatibilityLevel": "JAVA_21",
   "client": [
     "render.ArmorFeatureRenderMixin",
     "render.HeadFeatureRenderMixin",
     "render.HideLightningBoltMixin",
     "render.EntityRenderDispatcherMixin",
     "ui.PotionEffectMixin",
-    "ui.InGameHudMixin"
+    "ui.InGameHudMixin",
+    "ui.ParentElementMixin",
+    "ui.ScrollableTooltipMixin"
   ]
 }

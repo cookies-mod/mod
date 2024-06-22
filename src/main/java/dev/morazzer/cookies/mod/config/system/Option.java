@@ -26,7 +26,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
 
     private final Text name;
     private final List<OrderedText> descriptionOrdered;
-    private final Text description;
+    private final Text[] description;
     protected T value;
     protected boolean active = true;
     protected List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
@@ -41,9 +41,24 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      */
     public Option(@NotNull Text name, @NotNull Text description, T value) {
         this.name = name;
-        this.description = description;
-        this.descriptionOrdered = List.of(this.description.asOrderedText());
+        this.description = new Text[] {description};
+        this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
         this.value = value;
+    }
+
+    /**
+     * Creates a new option.
+     *
+     * @param name        The name.
+     * @param description The description.
+     * @param value       The initial value.
+     */
+    public Option(Text name, T value, Text[] description) {
+        this.name = name;
+        this.description = description;
+        this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
+        this.value = value;
+
     }
 
     /**
@@ -179,6 +194,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
 
     /**
      * Only shows this option if the other option is true.
+     *
      * @param booleanOption The option to depend on.
      * @return The option.
      */
@@ -190,6 +206,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
 
     /**
      * Only shows this option if the other option is false.
+     *
      * @param booleanOption The option to depend on.
      * @return The option.
      */
