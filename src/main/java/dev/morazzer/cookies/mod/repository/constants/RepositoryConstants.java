@@ -21,10 +21,12 @@ public class RepositoryConstants {
 
     public static Hotm hotm;
     public static PlotPrice plotPrice;
+    public static ComposterUpgrades composterUpgrades;
 
     public static void load(Path path) {
         hotm = new Hotm(resolve(path.resolve("hotm.json"), JsonObject.class));
         plotPrice = new PlotPrice(resolve(path.resolve("plot_cost.json"), JsonObject.class));
+        composterUpgrades = new ComposterUpgrades(resolve(path.resolve("compost_upgrades.json"), JsonObject.class));
     }
 
     @Nullable

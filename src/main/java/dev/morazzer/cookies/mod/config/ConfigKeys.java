@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.config;
 
+import javax.swing.SortOrder;
+
 /**
  * A list of all available config keys.
  */
@@ -60,5 +62,9 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.farmingConfig.showPlotPriceBreakdown);
     public static ConfigKey<Boolean> DEV_HIDE_SPAM =
         new ConfigKey<>(config -> config.devConfig.hideConsoleSpam);
+    public static ConfigKey<Boolean> FARMING_COMPOST_UPGRADE =
+        new ConfigKey<>(config -> config.farmingConfig.showCompostPriceBreakdown);
+    public static ConfigKey<SortOrder> FARMING_COMPOST_UPGRADE_ORDER =
+        new ConfigKey<>(config -> config.farmingConfig.compostSortOrder);
 
 }

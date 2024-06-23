@@ -4,10 +4,13 @@ import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.config.system.Row;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+import dev.morazzer.cookies.mod.config.system.options.EnumCycleOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
+import javax.swing.SortOrder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Config that contains all farming related settings.
@@ -26,6 +29,23 @@ public class FarmingConfig extends Category {
         Text.literal("Shows a breakdown of how much compost you need to unlock all plots."),
         false
     );
+
+    @Parent
+    public TextDisplayOption compostText = new TextDisplayOption(Text.literal("Composter"), Text.literal(""));
+
+    public BooleanOption showCompostPriceBreakdown = new BooleanOption(
+        Text.literal("Compost upgrade price"),
+        Text.literal("Shows the amount of items required to max an upgrade."),
+        false
+    );
+
+    public EnumCycleOption<SortOrder> compostSortOrder = new EnumCycleOption<>(
+        Text.literal("Item sort"),
+        Text.literal("How the items should be sorted."),
+        SortOrder.ASCENDING
+    ).withSupplier(value -> Text.of(StringUtils.capitalize(value.name().toLowerCase())))
+        .onlyIf(showCompostPriceBreakdown);
+
 
     @Parent
     public TextDisplayOption jacobsText = new TextDisplayOption(Text.literal("Jacob / Contests"), Text.literal(""));

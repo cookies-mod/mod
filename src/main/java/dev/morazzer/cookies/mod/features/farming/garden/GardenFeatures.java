@@ -10,6 +10,7 @@ public class GardenFeatures {
     @SuppressWarnings("MissingJavadoc")
     public static void load() {
         Loader.load("PlotPriceBreakdown", PlotPriceBreakdown::new);
+        Loader.load("CompostUpgrades", CompostUpgrades::new);
     }
 
 }

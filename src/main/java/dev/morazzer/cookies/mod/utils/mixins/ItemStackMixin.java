@@ -78,14 +78,17 @@ public abstract class ItemStackMixin {
 
         final List<MutableText> lines = loreComponent.lines().stream().map(Text::copy).collect(
             Collectors.toList());
-        ItemLoreEvent.EVENT.invoker().modify(lines);
+        ItemLoreEvent.EVENT.invoker().accept(lines);
+        ItemLoreEvent.EVENT_ITEM.invoker().modify((ItemStack) (Object) this, lines);
 
         if (lines.size() != loreComponent.lines().size()) {
-            set(CookiesDataComponentTypes.CUSTOM_LORE, lines.stream().map(Text.class::cast).collect(Collectors.toList()));
+            set(CookiesDataComponentTypes.CUSTOM_LORE,
+                lines.stream().map(Text.class::cast).collect(Collectors.toList()));
         } else {
             for (int index = 0; index < lines.size(); index++) {
                 if (!lines.get(index).equals(loreComponent.lines().get(index))) {
-                    set(CookiesDataComponentTypes.CUSTOM_LORE, lines.stream().map(Text.class::cast).collect(Collectors.toList()));
+                    set(CookiesDataComponentTypes.CUSTOM_LORE,
+                        lines.stream().map(Text.class::cast).collect(Collectors.toList()));
                     break;
                 }
             }
