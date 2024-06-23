@@ -12,6 +12,7 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -146,11 +147,11 @@ public class CraftHelper {
         }
 
         drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0,0,-100);
+        drawContext.getMatrices().translate(0, 0, -100);
         drawContext.drawTooltip(
             MinecraftClient.getInstance().textRenderer,
             this.tooltip,
-            HoveredTooltipPositioner.INSTANCE,
+            AbsoluteTooltipPositioner.INSTANCE,
             handledScreen.x + handledScreen.backgroundWidth + 2,
             handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset
         );
