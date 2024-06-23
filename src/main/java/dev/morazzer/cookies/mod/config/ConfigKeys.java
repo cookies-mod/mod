@@ -58,5 +58,7 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.miscConfig.enableScrollableTooltips);
     public static ConfigKey<Boolean> FARMING_PLOT_PRICE =
         new ConfigKey<>(config -> config.farmingConfig.showPlotPriceBreakdown);
+    public static ConfigKey<Boolean> DEV_HIDE_SPAM =
+        new ConfigKey<>(config -> config.devConfig.hideConsoleSpam);
 
 }

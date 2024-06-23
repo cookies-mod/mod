@@ -13,3 +13,4 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
+accessible class net/minecraft/client/texture/PlayerSkinProvider$Key

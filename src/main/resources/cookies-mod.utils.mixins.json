@@ -1,11 +1,13 @@
 {
   "package": "dev.morazzer.cookies.mod.utils.mixins",
   "client": [
-    "ClientPlayNetworkHandlerMixin",
     "ComponentMapImplMixin",
     "ItemStackMixin",
     "HandledScreenMixin",
     "SlotMixin",
-    "ReplaceRenderedItem"
+    "ReplaceRenderedItem",
+    "spam.ClientPlayNetworkHandlerMixin",
+    "spam.YggdrasilServicesKeyInfoMixin",
+    "spam.PlayerSkinProviderMixin"
   ]
 }
