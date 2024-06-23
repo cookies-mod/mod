@@ -3,16 +3,11 @@ package dev.morazzer.cookies.mod.repository.constants;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +20,14 @@ public class Hotm {
     private final Map<String, Perk> perks = new HashMap<>();
 
     /**
-     * Creats a new hotm constants instance.
+     * Creates a new hotm constants instance.
      *
      * @param jsonObject The json object to read.
      */
     public Hotm(JsonObject jsonObject) {
+        if (jsonObject == null) {
+            return;
+        }
         jsonObject.entrySet().forEach(entry -> {
             if (entry.getValue().isJsonObject()) {
                 addPerk(entry.getKey(), entry.getValue().getAsJsonObject());
@@ -40,26 +38,6 @@ public class Hotm {
     private void addPerk(String name, JsonObject object) {
         final Perk perk = JsonUtils.CLEAN_GSON.fromJson(object, Perk.class);
         perks.put(name, perk);
-    }
-
-    /**
-     * Loads the hotm constants from the provided file.
-     *
-     * @param path The file.
-     * @return The hotm constants.
-     */
-    public static @Nullable Hotm load(Path path) {
-        final String read;
-        try {
-            read = Files.readString(path, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            LOGGER.error("Failed to load Cookies Hotm Constants", e);
-            return null;
-        }
-
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(read, JsonObject.class);
-
-        return new Hotm(jsonObject);
     }
 
     /**

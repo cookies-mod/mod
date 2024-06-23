@@ -56,5 +56,7 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.cleanupConfig.removeHeldItem);
     public static ConfigKey<Boolean> MISC_SCROLLABLE_TOOLTIP =
         new ConfigKey<>(config -> config.miscConfig.enableScrollableTooltips);
+    public static ConfigKey<Boolean> FARMING_PLOT_PRICE =
+        new ConfigKey<>(config -> config.farmingConfig.showPlotPriceBreakdown);
 
 }

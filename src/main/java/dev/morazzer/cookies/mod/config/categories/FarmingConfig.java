@@ -15,18 +15,24 @@ import net.minecraft.text.Text;
 @SuppressWarnings({"MissingJavadoc", "unused"})
 public class FarmingConfig extends Category {
 
+    public BooleanOption showRancherSpeed = new BooleanOption(
+        Text.literal("Show rancher speed"),
+        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
+        false
+    );
+
+    public BooleanOption showPlotPriceBreakdown = new BooleanOption(
+        Text.literal("Plot price breakdown"),
+        Text.literal("Shows a breakdown of how much compost you need to unlock all plots."),
+        false
+    );
+
     @Parent
     public TextDisplayOption jacobsText = new TextDisplayOption(Text.literal("Jacob / Contests"), Text.literal(""));
 
     public BooleanOption highlightUnclaimedJacobContests = new BooleanOption(
         Text.literal("Highlight unclaimed"),
         Text.literal("Highlight unclaimed jacob contests in his inventory."),
-        false
-    );
-
-    public BooleanOption showRancherSpeed = new BooleanOption(
-        Text.literal("Show rancher speed"),
-        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
         false
     );
 
