@@ -14,5 +14,6 @@ public class FarmingFeatures {
         Loader.load("HighlightUnclaimedJacobContest", HighlightUnclaimedJacobsContest::load);
         Loader.load("ShowSpeedOnRancherBoots", RancherBootsNumbers::new);
         Loader.load("GardenFeatures", GardenFeatures::load);
+        Loader.load("YawPitchDisplay", YawPitchDisplay::register);
     }
 }

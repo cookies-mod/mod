@@ -66,5 +66,7 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.farmingConfig.showCompostPriceBreakdown);
     public static ConfigKey<SortOrder> FARMING_COMPOST_UPGRADE_ORDER =
         new ConfigKey<>(config -> config.farmingConfig.compostSortOrder);
+    public static ConfigKey<Boolean> FARMING_YAW_PITCH =
+        new ConfigKey<>(config -> config.farmingConfig.yawPitchDisplay);
 
 }

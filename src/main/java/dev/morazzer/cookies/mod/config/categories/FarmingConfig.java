@@ -30,6 +30,12 @@ public class FarmingConfig extends Category {
         false
     );
 
+    public BooleanOption yawPitchDisplay = new BooleanOption(
+        Text.literal("Yaw/Pitch display"),
+        Text.literal("Displays your yaw/pitch on the screen (in a non obnoxious way)."),
+        false
+    );
+
     @Parent
     public TextDisplayOption compostText = new TextDisplayOption(Text.literal("Composter"), Text.literal(""));
 
