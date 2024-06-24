@@ -60,6 +60,8 @@ public class CraftHelper {
     private List<OrderedText> tooltip = new ArrayList<>();
     private int buttonX;
     private int buttonY;
+    private int width = 0;
+    private int scrolled = 1;
 
     @SuppressWarnings("MissingJavadoc")
     public CraftHelper() {
@@ -77,6 +79,7 @@ public class CraftHelper {
             this.recalculate();
             ScreenEvents.afterRender(screen).register(this::afterRender);
             ScreenMouseEvents.beforeMouseClick(screen).register(this::clicked);
+            ScreenMouseEvents.beforeMouseScroll(screen).register(this::beforeScroll);
         });
     }
 
@@ -105,6 +108,7 @@ public class CraftHelper {
         instance.calculation = RecipeCalculator.calculate(item);
         ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
         instance.recalculate();
+        instance.scrolled = 1;
     }
 
     private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
@@ -129,15 +133,39 @@ public class CraftHelper {
         return Math.min(amount, max);
     }
 
-    private void clicked(Screen screen, double mouseX, double mouseY, int button) {
+    private void beforeScroll(
+        Screen screen,
+        double mouseX,
+        double mouseY,
+        double horizontalScroll,
+        double verticalScroll) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
-        if (this.calculation == null || this.tooltip.isEmpty()) {
+        if (!this.shouldRender()) {
             return;
         }
 
-        final int x = handledScreen.x + handledScreen.backgroundWidth + 2;
-        final int y = handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset;
+        if (this.tooltip.size() < 30) {
+            return;
+        }
+
+        final int x = this.calculateX(handledScreen);
+        final int y = this.calculateY(handledScreen);
+
+        if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + 270) {
+            this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
+        }
+    }
+
+    private void clicked(Screen screen, double mouseX, double mouseY, int button) {
+        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
+
+        if (!this.shouldRender()) {
+            return;
+        }
+
+        final int x = this.calculateX(handledScreen);
+        final int y = this.calculateY(handledScreen);
 
         final int buttonX = x + this.buttonX;
         final int buttonY = y + this.buttonY;
@@ -151,20 +179,33 @@ public class CraftHelper {
     private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
-        if (this.calculation == null || this.tooltip.isEmpty()) {
+        if (!this.shouldRender()) {
             return;
         }
-        final int x = handledScreen.x + handledScreen.backgroundWidth + 2;
-        final int y = handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset;
+
+        final int x = this.calculateX(handledScreen);
+        final int y = this.calculateY(handledScreen);
 
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0, 0, -100);
+        final int size = this.tooltip.size();
+        final List<OrderedText> tooltip;
+        if (this.tooltip.size() > 30) {
+            tooltip = new ArrayList<>(this.tooltip.subList(
+                Math.min(size - 29, this.scrolled),
+                Math.min(29 + this.scrolled, size)));
+            tooltip.addFirst(this.tooltip.getFirst());
+        } else {
+            tooltip = this.tooltip;
+        }
+
         drawContext.drawTooltip(
             MinecraftClient.getInstance().textRenderer,
-            this.tooltip,
+            tooltip,
             AbsoluteTooltipPositioner.INSTANCE,
             x,
             y);
+
 
         if (DevUtils.isEnabled(DEBUG_HITBOX)) {
             drawContext.getMatrices().translate(0, 0, 1000);
@@ -177,6 +218,18 @@ public class CraftHelper {
         }
         drawContext.getMatrices().pop();
 
+    }
+
+    private int calculateX(HandledScreen<?> handledScreen) {
+        return handledScreen.x + handledScreen.backgroundWidth + 2;
+    }
+
+    private int calculateY(HandledScreen<?> handledScreen) {
+        return handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset;
+    }
+
+    private boolean shouldRender() {
+        return this.calculation != null && !this.tooltip.isEmpty();
     }
 
     private void profileSwap() {
@@ -207,7 +260,7 @@ public class CraftHelper {
         List<MutableText> tooltip = new ArrayList<>();
         append("", tooltip, calculation, 0, new EvaluationContext(calculation, null), new StackCountContext());
 
-        this.yOffset = (this.tooltip.size() * 9) / 2;
+        this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
 
         if (!tooltip.isEmpty()) {
             this.addClose(tooltip);
@@ -228,6 +281,7 @@ public class CraftHelper {
                 maxSize = size;
             }
         }
+
         final MutableText orderedText = tooltip.getFirst();
         int size = textRenderer.getWidth(orderedText);
         if (size != maxSize) {
@@ -235,6 +289,8 @@ public class CraftHelper {
             int delta = maxSize - size;
             orderedText.append(StringUtils.leftPad("", delta / spaceSize - 1));
         }
+
+        this.width = maxSize + (size == maxSize ? 5 : 0);
 
         orderedText.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
 
