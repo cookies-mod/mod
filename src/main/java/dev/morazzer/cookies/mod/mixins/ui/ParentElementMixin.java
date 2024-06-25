@@ -1,10 +1,12 @@
 package dev.morazzer.cookies.mod.mixins.ui;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.events.api.ScreenKeyEvents;
 import dev.morazzer.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import dev.morazzer.cookies.mod.utils.items.types.ScrollableDataComponentTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.ParentElement;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.component.ComponentType;
@@ -24,8 +26,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public interface ParentElementMixin extends ParentElement {
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-    private void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount,
-                               CallbackInfoReturnable<Boolean> cir) {
+    private void mouseScrolled(
+        double mouseX, double mouseY, double horizontalAmount, double verticalAmount,
+        CallbackInfoReturnable<Boolean> cir) {
         if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
             return;
         }
@@ -88,4 +91,12 @@ public interface ParentElementMixin extends ParentElement {
         }
     }
 
+    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+    private void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (this instanceof Screen screen) {
+            if (ScreenKeyEvents.handle(screen, chr, modifiers)) {
+                cir.setReturnValue(true);
+            }
+        }
+    }
 }

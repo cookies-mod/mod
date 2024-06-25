@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.config.system;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
@@ -36,6 +37,13 @@ public interface SaveLoadHelper {
                     continue;
                 }
                 foldable.load(jsonObject.getAsJsonObject().get(declaredField.getName()));
+            } else if (JsonSerializable.class.isAssignableFrom(declaredField.getType())) {
+                JsonSerializable jsonSerializable =
+                    (JsonSerializable) ExceptionHandler.removeThrows(() -> declaredField.get(this));
+                if (!jsonObject.getAsJsonObject().has(declaredField.getName())) {
+                    continue;
+                }
+                jsonSerializable.read(jsonObject.getAsJsonObject().get(declaredField.getName()));
             }
         }
     }
@@ -61,6 +69,10 @@ public interface SaveLoadHelper {
                 .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> declaredField.get(this));
                 jsonObject.add(declaredField.getName(), foldable.save());
+            } else if (JsonSerializable.class.isAssignableFrom(declaredField.getType())) {
+                JsonSerializable jsonSerializable =
+                    (JsonSerializable) ExceptionHandler.removeThrows(() -> declaredField.get(this));
+                jsonObject.add(declaredField.getName(), jsonSerializable.write());
             }
         }
         return jsonObject;

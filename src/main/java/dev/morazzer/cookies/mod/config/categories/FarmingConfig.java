@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import dev.morazzer.cookies.mod.config.data.RancherSpeedConfig;
 import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.config.system.Row;
@@ -18,12 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 @SuppressWarnings({"MissingJavadoc", "unused"})
 public class FarmingConfig extends Category {
 
-    public BooleanOption showRancherSpeed = new BooleanOption(
-        Text.literal("Show rancher speed"),
-        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
-        false
-    );
-
     public BooleanOption showPlotPriceBreakdown = new BooleanOption(
         Text.literal("Plot price breakdown"),
         Text.literal("Shows a breakdown of how much compost you need to unlock all plots."),
@@ -35,6 +30,23 @@ public class FarmingConfig extends Category {
         Text.literal("Displays your yaw/pitch on the screen (in a non obnoxious way)."),
         false
     );
+
+    @Parent
+    public TextDisplayOption ranchers = new TextDisplayOption(Text.literal("Rancher's Boots"), Text.literal(""));
+
+    public BooleanOption showRancherSpeed = new BooleanOption(
+        Text.literal("Show rancher speed"),
+        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
+        false
+    );
+
+    public BooleanOption showRancherOptimalSpeeds = new BooleanOption(
+        Text.literal("Show rancher overlay"),
+        Text.literal("Show optimal speeds in the rancher's boots."),
+        false
+    );
+
+    public RancherSpeedConfig rancherSpeed = new RancherSpeedConfig();
 
     @Parent
     public TextDisplayOption compostText = new TextDisplayOption(Text.literal("Composter"), Text.literal(""));
@@ -50,7 +62,7 @@ public class FarmingConfig extends Category {
         Text.literal("How the items should be sorted."),
         SortOrder.ASCENDING
     ).withSupplier(value -> Text.of(StringUtils.capitalize(value.name().toLowerCase())))
-        .onlyIf(showCompostPriceBreakdown);
+     .onlyIf(showCompostPriceBreakdown);
 
 
     @Parent

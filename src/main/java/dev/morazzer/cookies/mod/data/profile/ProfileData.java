@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.data.profile;
 
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
+import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.json.Safe;
@@ -28,6 +29,7 @@ public class ProfileData {
     @Safe
     private SackTracker sackTracker = new SackTracker();
     private String selectedCraftHelperItem = "";
+    private RancherSpeeds rancherSpeeds = new RancherSpeeds(this);
 
     /**
      * Create a profile.

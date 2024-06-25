@@ -45,6 +45,26 @@ public interface Constants {
          * Emoji to indicate an achieved goal.
          */
         String FLAG_FILLED = "⚑";
+        /**
+         * Emoji to indicate a changeable/changed value.
+         */
+        String PEN = "✎";
+        /**
+         * Emoji to indicate a box that might have a value.
+         */
+        String EMPTY_BOX = "☐";
+        /**
+         * Emoji to indicate a true value.
+         */
+        String CHECKED_BOX = "☑";
+        /**
+         * Emoji to indicate a checked value.
+         */
+        String CROSSED_BOX = "☒";
+        /**
+         * Emoji to indicate a repetition.
+         */
+        String REPEAT_ARROW = "\uD83D\uDD01";
     }
 
 }

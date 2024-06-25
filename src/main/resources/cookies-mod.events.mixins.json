@@ -1,7 +1,9 @@
 {
   "package": "dev.morazzer.cookies.mod.events.mixins",
   "client": [
+    "InventoryContentUpdateMixin",
     "ItemBackgroundRenderMixin",
-    "InventoryContentUpdateMixin"
+    "ScreenMixin",
+    "AbstractSignEditScreenMixin"
   ]
 }

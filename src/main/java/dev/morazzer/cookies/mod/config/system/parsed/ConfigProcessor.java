@@ -63,13 +63,13 @@ public class ConfigProcessor {
         for (Field field : object.getClass().getDeclaredFields()) {
             if (!Optional
                 .ofNullable(field.getType().getSuperclass())
-                .map(clazz -> clazz.isAssignableFrom(Option.class) || clazz.isAssignableFrom(Foldable.class))
+                .map(clazz -> Option.class.isAssignableFrom(clazz) || Foldable.class.isAssignableFrom(clazz))
                 .orElse(false)) {
                 continue;
             }
             if (Optional
                 .of(field.getType().getSuperclass())
-                .map(clazz -> clazz.isAssignableFrom(Foldable.class))
+                .map(clazz -> Foldable.class.isAssignableFrom(field.getType()))
                 .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> field.get(object));
                 configReader.beginFoldable(foldable);
@@ -80,7 +80,7 @@ public class ConfigProcessor {
 
             if (Optional
                 .of(field.getType().getSuperclass())
-                .map(clazz -> clazz.isAssignableFrom(Option.class))
+                .map(Option.class::isAssignableFrom)
                 .orElse(false)) {
                 final Option<?, ?> fieldValue = (Option<?, ?>) ExceptionHandler.removeThrows(() -> field.get(object));
                 final String fieldName = field.getName();
