@@ -1,4 +1,4 @@
-package dev.morazzer.cookies.mod.utils.sound;
+package dev.morazzer.cookies.mod.utils.minecraft;
 
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import net.minecraft.sound.SoundEvent;
@@ -9,7 +9,7 @@ import net.minecraft.sound.SoundEvent;
 public class SoundUtils {
 
     /**
-     * Plays a sound at the players location.
+     * Plays a sound at the players' location.
      *
      * @param soundEvent The sound to play.
      */

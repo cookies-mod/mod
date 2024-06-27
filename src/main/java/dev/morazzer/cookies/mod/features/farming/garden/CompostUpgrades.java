@@ -8,6 +8,7 @@ import dev.morazzer.cookies.mod.repository.constants.ComposterUpgrades;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.RomanNumerals;
+import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,26 @@ public class CompostUpgrades {
     public CompostUpgrades() {
         ScreenEvents.BEFORE_INIT.register(this::openScreen);
         ItemLoreEvent.EVENT_ITEM.register(this::update);
+    }
+
+    private void openScreen(MinecraftClient minecraftClient, Screen screen, int i, int i1) {
+        if (LocationUtils.getRegion().island != LocationUtils.Island.GARDEN) {
+            return;
+        }
+        if (!ConfigKeys.FARMING_COMPOST_UPGRADE.get()) {
+            return;
+        }
+        if (!(screen instanceof HandledScreen<?>)) {
+            return;
+        }
+        if (!screen.getTitle().getString().equals("Composter Upgrades")) {
+            return;
+        }
+        if (RepositoryConstants.composterUpgrades == null) {
+            return;
+        }
+        this.isScreenOpen = true;
+        ScreenEvents.remove(screen).register(s -> this.isScreenOpen = false);
     }
 
     private void update(ItemStack itemStack, List<MutableText> mutableTexts) {
@@ -105,21 +126,23 @@ public class CompostUpgrades {
             list.add(text);
             if (text.getString().startsWith("Next Tier: ")) {
                 list.add(Text.literal("Max Tier: ").formatted(Formatting.GRAY)
-                    .append(Text.literal(maxAmount).formatted(Formatting.GREEN)));
+                             .append(Text.literal(maxAmount).formatted(Formatting.GREEN)));
             } else if (text.getString().startsWith("+")) {
                 list.add(Text.empty());
                 list.add(Text.literal("Remaining Upgrade Cost: ").formatted(Formatting.GRAY));
                 List<ComposterUpgrades.CompostUpgrade> subList = upgrades.subList(Math.min(
                     currentLevel,
                     upgrades.size()
-                ), upgrades.size());
+                                                                                          ), upgrades.size());
                 List<Ingredient> subListIngredients = subList.stream()
-                    .flatMap(compostUpgrade -> compostUpgrade.cost().stream()).toList();
+                                                             .flatMap(compostUpgrade -> compostUpgrade.cost().stream())
+                                                             .toList();
 
 
                 Stream<Ingredient> stream = Ingredient.mergeToList(subListIngredients).stream();
                 switch (ConfigKeys.FARMING_COMPOST_UPGRADE_ORDER.get()) {
-                    case DESCENDING -> stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount).reversed());
+                    case DESCENDING -> stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount)
+                                                                        .reversed());
                     case ASCENDING -> stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount));
                 }
 
@@ -132,33 +155,18 @@ public class CompostUpgrades {
                     }
                     entry.append(item.getFormattedName());
                     entry.append(Text.literal(" x").append(String.valueOf(ingredient.getAmount()))
-                        .formatted(Formatting.DARK_GRAY));
+                                     .formatted(Formatting.DARK_GRAY));
                     list.add(entry);
                 });
                 int sum = subList.stream().mapToInt(ComposterUpgrades.CompostUpgrade::copper).sum();
                 list.add(Text.literal("  ")
-                    .append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
+                             .append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
                 break;
             }
         }
 
         mutableTexts.clear();
         mutableTexts.addAll(list);
-    }
-
-    private void openScreen(MinecraftClient minecraftClient, Screen screen, int i, int i1) {
-        if (!(screen instanceof HandledScreen<?> handledScreen)) {
-            return;
-        }
-        if (!screen.getTitle().getString().equals("Composter Upgrades")) {
-            return;
-        }
-        if (RepositoryConstants.composterUpgrades == null) {
-            return;
-        }
-
-        this.isScreenOpen = true;
-        ScreenEvents.remove(screen).register(s -> this.isScreenOpen = false);
     }
 
 }

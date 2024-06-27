@@ -125,5 +125,4 @@ public class CookiesUtils {
         CookiesUtils.sendMessage(CookiesUtils.createPrefix(Constants.SUCCESS_COLOR).append(message));
     }
 
-
 }

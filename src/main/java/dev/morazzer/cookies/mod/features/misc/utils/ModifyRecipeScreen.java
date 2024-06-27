@@ -7,7 +7,7 @@ import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
-import dev.morazzer.cookies.mod.utils.sound.SoundUtils;
+import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;

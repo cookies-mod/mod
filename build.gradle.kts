@@ -65,11 +65,16 @@ tasks.register("generateBuildInfo", cm.tasks.CreateBuildInfo::class) {
     this.outputDir.set(this.project.layout.buildDirectory.dir("generated/buildinfo"))
 }
 
+tasks.register("generateRegions", cm.tasks.CreateRegions::class) {
+    this.outputDir.set(this.project.layout.buildDirectory.dir("generated/regions"))
+}
+
 sourceSets {
     main {
         java {
             srcDir(tasks.getByName("generateDatacomponentAccessors"))
             srcDir(tasks.getByName("generateBuildInfo"))
+            srcDir(tasks.getByName("generateRegions"))
         }
     }
 }

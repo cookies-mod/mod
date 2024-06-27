@@ -1,7 +1,6 @@
 package dev.morazzer.cookies.mod.repository.constants;
 
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

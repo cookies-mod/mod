@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.cleanup.dungeon;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 
@@ -18,6 +19,9 @@ public class DungeonMessagesCleanup {
         if (b) {
             return true;
         }
+        if (LocationUtils.getRegion().island != LocationUtils.Island.CATACOMBS) {
+            return true;
+        }
 
         final String content = text.getString().trim();
 
@@ -27,7 +31,8 @@ public class DungeonMessagesCleanup {
 
         if (ConfigKeys.CLEANUP_HIDE_POTION_EFFECTS.get()
             && content.equals(
-            "Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! You are not allowed to use existing Potion Effects while in Dungeons.")) {
+            "Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! " +
+            "You are not allowed to use existing Potion Effects while in Dungeons.")) {
             return false;
         }
 

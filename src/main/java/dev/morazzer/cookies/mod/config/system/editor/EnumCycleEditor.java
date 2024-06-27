@@ -1,14 +1,9 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
-import dev.morazzer.cookies.mod.config.system.element.DropdownElement;
 import dev.morazzer.cookies.mod.config.system.options.EnumCycleOption;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
-import dev.morazzer.cookies.mod.utils.sound.SoundUtils;
 import java.util.Arrays;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.utils;
 
 import dev.morazzer.cookies.mod.events.ChatListener;
+import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +25,6 @@ public class SkyblockUtils {
      * @return Whether the player is in skyblock.
      */
     public static boolean isCurrentlyInSkyblock() {
-        return true;
+        return LocationUtils.getRegion() != null;
     }
 }

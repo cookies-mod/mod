@@ -12,7 +12,7 @@ import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.IntReference;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.sound.SoundUtils;
+import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;

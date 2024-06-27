@@ -1,0 +1,989 @@
+[
+  {
+    "name": "Your Island",
+    "island": "PRIVATE_ISLAND"
+  },
+  {
+    "name": "(.*) - \\\\d+",
+    "iname": "GARDEN_PLOT",
+    "regex": true,
+    "island": "GARDEN"
+  },
+  {
+    "name": "The Garden",
+    "island": "GARDEN"
+  },
+  {
+    "name": "The Garden .*",
+    "iname": "GARDEN_PEST",
+    "regex": true,
+    "island": "GARDEN"
+  },
+  {
+    "name": "Archery Range",
+    "island": "HUB"
+  },
+  {
+    "name": "Auction House",
+    "island": "HUB"
+  },
+  {
+    "name": "Bank",
+    "island": "HUB"
+  },
+  {
+    "name": "Bazaar Alley",
+    "island": "HUB"
+  },
+  {
+    "name": "Blacksmith",
+    "island": "HUB"
+  },
+  {
+    "name": "Builder's House",
+    "island": "HUB"
+  },
+  {
+    "name": "Canvas Room",
+    "island": "HUB"
+  },
+  {
+    "name": "Coal Mine",
+    "island": "HUB"
+  },
+  {
+    "name": "Colosseum",
+    "iname": "Colosseum Hub",
+    "icon": "⏣",
+    "island": "HUB"
+  },
+  {
+    "name": "Community Center",
+    "iname": "Community Center Hub",
+    "icon": "⏣",
+    "island": "HUB"
+  },
+  {
+    "name": "Election Room",
+    "island": "HUB"
+  },
+  {
+    "name": "Farm",
+    "island": "HUB"
+  },
+  {
+    "name": "Farmhouse",
+    "island": "HUB"
+  },
+  {
+    "name": "Fashion Shop",
+    "island": "HUB"
+  },
+  {
+    "name": "Fisherman's Hut",
+    "island": "HUB"
+  },
+  {
+    "name": "Flower House",
+    "island": "HUB"
+  },
+  {
+    "name": "Forest",
+    "island": "HUB"
+  },
+  {
+    "name": "Graveyard",
+    "island": "HUB"
+  },
+  {
+    "name": "Catacombs Entrance",
+    "iname": "Catacombs Entrance Hub",
+    "island": "HUB"
+  },
+  {
+    "name": "Hexatorum",
+    "island": "HUB"
+  },
+  {
+    "name": "Unincorporated",
+    "island": "HUB"
+  },
+  {
+    "name": "Library",
+    "island": "HUB"
+  },
+  {
+    "name": "Mountain",
+    "island": "HUB"
+  },
+  {
+    "name": "Museum",
+    "island": "HUB"
+  },
+  {
+    "name": "Pet Care",
+    "island": "HUB"
+  },
+  {
+    "name": "Ruins",
+    "island": "HUB"
+  },
+  {
+    "name": "Tavern",
+    "island": "HUB"
+  },
+  {
+    "name": "Thaumaturgist",
+    "island": "HUB"
+  },
+  {
+    "name": "Village",
+    "island": "HUB"
+  },
+  {
+    "name": "Weaponsmith",
+    "island": "HUB"
+  },
+  {
+    "name": "Wilderness",
+    "island": "HUB"
+  },
+  {
+    "name": "Wizard Tower",
+    "iname": "Wizard Tower Hub",
+    "icon": "⏣",
+    "island": "HUB"
+  },
+  {
+    "name": "Hub",
+    "island": "HUB"
+  },
+  {
+    "name": "The Barn",
+    "island": "THE_BARN"
+  },
+  {
+    "name": "Windmill",
+    "island": "THE_BARN"
+  },
+  {
+    "name": "Desert Settlement",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Glowing Mushroom Cave",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Jake's House",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Mushroom Gorge",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Oasis",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Overgrown Mushroom Cave",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Shepherd's Keep",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Trapper's Den",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Treasure Hunter Camp",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Mushroom Desert",
+    "island": "MUSHROOM_DESERT"
+  },
+  {
+    "name": "Birch Park",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Howling Cave",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Spruce Woods",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Lonely Island",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Viking Longhouse",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Dark Thicket",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Savanna Woodland",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Melody's Plateau",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Jungle Island",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "The Park",
+    "island": "THE_PARK"
+  },
+  {
+    "name": "Spider Mound",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Gravel Mines",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Grandma's House",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Arachne's Burrow",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Archaeologist's Camp",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Spider's Den",
+    "island": "SPIDERS_DEN"
+  },
+  {
+    "name": "Dragon's Nest",
+    "island": "THE_END"
+  },
+  {
+    "name": "Void Sepulture",
+    "island": "THE_END"
+  },
+  {
+    "name": "Void Slate",
+    "island": "THE_END"
+  },
+  {
+    "name": "Zealot Bruiser Hideout",
+    "island": "THE_END"
+  },
+  {
+    "name": "The End",
+    "island": "THE_END"
+  },
+  {
+    "name": "Stronghold",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Crimson Fields",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Blazing Volcano",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Odger's Hut",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Plhlegblast Pool",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Magma Chamber",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Aura's Lab",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Matriarch's Lair",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Belly of the Beast",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dojo",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Burning Desert",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Mystic Marsh",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Barbarian Outpost",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Mage Outpost",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Chief's Hut",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail Blacksmith",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail Townsquare",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail Auction House",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail Bazaar",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Dragontail Bank",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Minion Shop",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "The Dukedom",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "The Bastion",
+    "iname": "The Bastion Crimson Isle",
+    "icon": "⏣",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Community Center",
+    "iname": "Community Center Crimson Isle",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Throne Room",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Mage Council",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Plaza",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Minion Shop",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Auction House",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Bazaar",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Bank",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Scarleton Blacksmith",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Igrupan's House",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Igrupan's Chicken Coop",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Cathedral",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Courtyard",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "The Wasteland",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Ruins of Ashfang",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Forgotten Skull",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Smoldering Tomb",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Crimson Isle",
+    "island": "CRIMSON_ISLE"
+  },
+  {
+    "name": "Gold Mine",
+    "island": "GOLD_MINE"
+  },
+  {
+    "name": "Gunpowder Mines",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Lapis Quarry",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Pigmen's Den",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Slimehill",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Diamond Reserve",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Obsidian Sanctuary",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Deep Caverns",
+    "island": "DEEP_CAVERNS"
+  },
+  {
+    "name": "Aristocrat Passage",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Barracks Of Heroes",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "C&C Minecarts Co.",
+    "iname": "CC Minecarts Co",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Cliffside Veins",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Divan's Gateway",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Dwarven Tavern",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Dwarven Village",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Far Reserve",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Forge Basin",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Gates To The Mines",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Goblin Burrows",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Grand Library",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Great Ice Wall",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Hanging Court",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Lava Springs",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Miner's Guild",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Palace Bridge",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Rampart's Quarry",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Royal Mines",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Royal Palace",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Royal Quarters",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "The Forge",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "The Lift",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "The Mist",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Upper Mines",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Dwarven Base Camp",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Fossil Research Center",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Glacite Tunnels",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Glacite Lake",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Glacite Mineshafts",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Dwarven Mines",
+    "island": "DWARVEN_MINES"
+  },
+  {
+    "name": "Crystal Nucleus",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Dragon's Lair",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Fairy Grotto",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Goblin Holdout",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Goblin Queen's Den",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Jungle Temple",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Jungle",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Khazad-dûm",
+    "iname": "Khazad dûm",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Lost Precursor City",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Magma Fields",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Mines of Divan",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Mithril Deposits",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Precursor Remnants",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Crystal Hollows",
+    "island": "CRYSTAL_HOLLOWS"
+  },
+  {
+    "name": "Jerry's Workshop",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Jerry Pond",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Mount Jerry",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Gary's Shack",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Glacial Cave",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Terry's Shack",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Hot Springs",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Reflective Pond",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Sunken Jerry Pond",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Sherry's Showroom",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Einary's Emporium",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Winter Island",
+    "island": "WINTER_ISLAND"
+  },
+  {
+    "name": "Dungeon Hub",
+    "island": "DUNGEON_HUB"
+  },
+  {
+    "name": "Wizard Tower",
+    "iname": "Wizard Tower Rift",
+    "icon": "ф",
+    "island": "RIFT"
+  },
+  {
+    "name": "Wyld Woods",
+    "island": "RIFT"
+  },
+  {
+    "name": "Enigma's Crib",
+    "island": "RIFT"
+  },
+  {
+    "name": "Broken Cage",
+    "island": "RIFT"
+  },
+  {
+    "name": "Shifted Tavern",
+    "island": "RIFT"
+  },
+  {
+    "name": "Pumpgrotto",
+    "island": "RIFT"
+  },
+  {
+    "name": "The Bastion",
+    "iname": "The Bastion Rift",
+    "icon": "ф",
+    "island": "RIFT"
+  },
+  {
+    "name": "Otherside",
+    "island": "RIFT"
+  },
+  {
+    "name": "Black Lagoon",
+    "island": "RIFT"
+  },
+  {
+    "name": "Lagoon Cave",
+    "island": "RIFT"
+  },
+  {
+    "name": "Lagoon Hut",
+    "island": "RIFT"
+  },
+  {
+    "name": "Leeches Lair",
+    "island": "RIFT"
+  },
+  {
+    "name": "Around Colosseum",
+    "island": "RIFT"
+  },
+  {
+    "name": "Rift Gallery Entrance",
+    "island": "RIFT"
+  },
+  {
+    "name": "Rift Gallery",
+    "island": "RIFT"
+  },
+  {
+    "name": "West Village",
+    "island": "RIFT"
+  },
+  {
+    "name": "Dolphin Trainer",
+    "island": "RIFT"
+  },
+  {
+    "name": "Cake House",
+    "island": "RIFT"
+  },
+  {
+    "name": "Infested House",
+    "island": "RIFT"
+  },
+  {
+    "name": "Mirrorverse",
+    "island": "RIFT"
+  },
+  {
+    "name": "Dreadfarm",
+    "island": "RIFT"
+  },
+  {
+    "name": "Great Beanstalk",
+    "island": "RIFT"
+  },
+  {
+    "name": "Village Plaza",
+    "island": "RIFT"
+  },
+  {
+    "name": "Taylor's",
+    "island": "RIFT"
+  },
+  {
+    "name": "Lonely Terrace",
+    "island": "RIFT"
+  },
+  {
+    "name": "Murder House",
+    "island": "RIFT"
+  },
+  {
+    "name": "Book In A Book",
+    "island": "RIFT"
+  },
+  {
+    "name": "Half-Eaten Cave",
+    "iname": "Half Eaten Cave",
+    "island": "RIFT"
+  },
+  {
+    "name": "\\\"Your\\\" Island",
+    "iname": "Your Island Rift",
+    "island": "RIFT"
+  },
+  {
+    "name": "Empty Bank",
+    "island": "RIFT"
+  },
+  {
+    "name": "Barry Center",
+    "island": "RIFT"
+  },
+  {
+    "name": "Barry HQ",
+    "island": "RIFT"
+  },
+  {
+    "name": "Déjà Vu Alley",
+    "island": "RIFT"
+  },
+  {
+    "name": "Living Cave",
+    "island": "RIFT"
+  },
+  {
+    "name": "Living Stillness",
+    "island": "RIFT"
+  },
+  {
+    "name": "Colosseum",
+    "iname": "Colosseum Rift",
+    "icon": "ф",
+    "island": "RIFT"
+  },
+  {
+    "name": "Barrier Street",
+    "island": "RIFT"
+  },
+  {
+    "name": "Photon Pathway",
+    "island": "RIFT"
+  },
+  {
+    "name": "Stillgore Château",
+    "island": "RIFT"
+  },
+  {
+    "name": "Oubliette",
+    "island": "RIFT"
+  },
+  {
+    "name": "Fairylosopher Tower",
+    "island": "RIFT"
+  },
+  {
+    "name": "Rift",
+    "island": "RIFT"
+  },
+  {
+    "name": "Unknown",
+    "island": "UNKNOWN"
+  },
+  {
+    "name": "The Catacombs (E)",
+    "iname": "Catacombs Entrance",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F1)",
+    "iname": "Catacombs Floor One",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F2)",
+    "iname": "Catacombs Floor Two",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F3)",
+    "iname": "Catacombs Floor Three",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F4)",
+    "iname": "Catacombs Floor Four",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F5)",
+    "iname": "Catacombs Floor Five",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F6)",
+    "iname": "Catacombs Floor Six",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (F7)",
+    "iname": "Catacombs Floor Seven",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M1)",
+    "iname": "Master Catacombs Floor One",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M2)",
+    "iname": "Master Catacombs Floor Two",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M3)",
+    "iname": "Master Catacombs Floor Three",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M4)",
+    "iname": "Master Catacombs Floor Four",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M5)",
+    "iname": "Master Catacombs Floor Five",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M6)",
+    "iname": "Master Catacombs Floor Six",
+    "island": "CATACOMBS"
+  },
+  {
+    "name": "The Catacombs (M7)",
+    "iname": "Master Catacombs Floor Seven",
+    "island": "CATACOMBS"
+  }
+]

@@ -1,7 +1,7 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
-import dev.morazzer.cookies.mod.utils.sound.SoundUtils;
+import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.tooltip.WidgetTooltipPositioner;

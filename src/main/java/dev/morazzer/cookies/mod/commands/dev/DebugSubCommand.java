@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.commands.dev;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import dev.morazzer.cookies.mod.commands.dev.debug.GetRegionDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.LoadScreenDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.RecipeCalculationDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.RecipeDebugCommand;
@@ -29,7 +30,8 @@ public class DebugSubCommand extends ClientCommand {
             new SetSelectedCraftHelperItemDebugCommand(),
             new SackMessageDebugCommand(),
             new LoadScreenDebugCommand(),
-            new SendMessageDebugCommand()
+            new SendMessageDebugCommand(),
+            new GetRegionDebugCommand()
         };
 
         for (ClientCommand clientCommand : clientCommands) {

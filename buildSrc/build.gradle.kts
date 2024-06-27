@@ -16,6 +16,8 @@ dependencies {
     //implementation(project.libs.quilt.parsers.json)
     //implementation(project.libs.yumi.gradle.licenser)
 
+    implementation("com.google.code.gson:gson:2.11.0")
+
     implementation("com.github.javaparser:javaparser-symbol-solver-core:3.25.10")
     implementation("com.github.johnrengelman:shadow:8.1.1")
 }
