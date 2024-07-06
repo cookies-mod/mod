@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.misc.items;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -36,6 +37,9 @@ public class SackInventoryTracker {
 
     private void afterInitScreen(MinecraftClient minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
         if (!(screen instanceof GenericContainerScreen genericContainerScreen)) {
+            return;
+        }
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
             return;
         }
         if (!genericContainerScreen.getTitle().getString().contains("Sack")) {
@@ -92,7 +96,8 @@ public class SackInventoryTracker {
             default -> this::saveDefaultSackItem;
         };
 
-        if (!lines.getLast().getString().equalsIgnoreCase("Click to pickup!")) {
+        if (!lines.getLast().getString().equalsIgnoreCase("Click to pickup!")
+            && !lines.getLast().getString().equals("Empty sack!")) {
             return;
         }
 

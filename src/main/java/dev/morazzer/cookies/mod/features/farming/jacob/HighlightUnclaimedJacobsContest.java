@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.farming.jacob;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -20,10 +21,13 @@ public class HighlightUnclaimedJacobsContest {
     @SuppressWarnings("MissingJavadoc")
     public static void load() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!ConfigManager.getConfig().farmingConfig.highlightUnclaimedJacobContests.getValue()) {
+            if (!(screen instanceof HandledScreen<?> handledScreen)) {
                 return;
             }
-            if (!(screen instanceof HandledScreen<?> handledScreen)) {
+            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+                return;
+            }
+            if (!ConfigManager.getConfig().farmingConfig.highlightUnclaimedJacobContests.getValue()) {
                 return;
             }
             if (!handledScreen.getTitle().getString().equals("Your Contests")) {

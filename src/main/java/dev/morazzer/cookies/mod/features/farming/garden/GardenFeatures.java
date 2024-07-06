@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.farming.garden;
 
 import dev.morazzer.cookies.mod.features.Loader;
+import dev.morazzer.cookies.mod.features.farming.garden.visitors.VisitorHelper;
 
 /**
  * Utility class to load all garden features.
@@ -11,6 +12,7 @@ public class GardenFeatures {
     public static void load() {
         Loader.load("PlotPriceBreakdown", PlotPriceBreakdown::new);
         Loader.load("CompostUpgrades", CompostUpgrades::new);
+        Loader.load("VisitorHelper", VisitorHelper::new);
     }
 
 }

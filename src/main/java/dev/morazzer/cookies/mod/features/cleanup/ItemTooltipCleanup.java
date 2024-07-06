@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.features.cleanup;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
 import dev.morazzer.cookies.mod.events.ItemLoreEvent;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.text.MutableText;
@@ -20,6 +21,9 @@ public class ItemTooltipCleanup {
     }
 
     private void modifyLore(List<MutableText> texts) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         boolean remove = false;
         boolean hasFinishedStats = false;
         boolean pet = false;

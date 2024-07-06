@@ -1,9 +1,14 @@
 package dev.morazzer.cookies.mod.utils.maths;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * A small collection of math functions.
  */
 public class MathUtils {
+    public static final NumberFormat NUMBER_FORMAT = DecimalFormat.getNumberInstance(Locale.ENGLISH);
 
     private static final float sigmoidA = -1 / (sigmoid(-4) - sigmoid(4));
 

@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -46,6 +47,9 @@ public class ModifyRecipeScreen {
             new AttributeModifiersComponent(Collections.emptyList(), false));
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof GenericContainerScreen genericContainerScreen) {
+                if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+                    return;
+                }
                 if (!ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
                     return;
                 }

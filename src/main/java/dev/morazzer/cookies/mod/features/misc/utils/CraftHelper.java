@@ -12,14 +12,13 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
@@ -49,9 +48,7 @@ public class CraftHelper {
     public static final String LOGGING_KEY = "crafthelper";
     private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
     private static final Identifier DEBUG_HITBOX = DevUtils.createIdentifier("craft_helper/hitbox");
-
     private static CraftHelper instance;
-    private final NumberFormat numberFormat = DecimalFormat.getNumberInstance(Locale.ENGLISH);
     private final int buttonWidthHeight = 8;
     @Getter
     private RepositoryItem selectedItem;
@@ -71,7 +68,9 @@ public class CraftHelper {
             if (!(screen instanceof HandledScreen<?>)) {
                 return;
             }
-
+            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+                return;
+            }
             if (!ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
                 return;
             }
@@ -131,6 +130,146 @@ public class CraftHelper {
         amount += (stackCountContext.integers.peek() *
                    (context.recipeResult.getAmount() / context.parent.recipeResult().getAmount()));
         return Math.min(amount, max);
+    }
+
+    @SuppressWarnings("MissingJavadoc")
+    public static boolean append(
+        String prefix,
+        List<MutableText> text,
+        RecipeResult<?> calculationResult,
+        int depth,
+        EvaluationContext parent,
+        StackCountContext stackCountContext,
+        Formatter formatter) {
+        EvaluationContext context = new EvaluationContext(calculationResult, parent);
+        final int amount = getAmount(context, calculationResult.getAmount(), stackCountContext);
+        final int amountThroughParents = getAmountThroughParents(
+            context,
+            calculationResult.getAmount(),
+            stackCountContext);
+        DevUtils.runIf(
+            DEBUG_INFO,
+            () -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(
+                amount,
+                amountThroughParents,
+                calculationResult.getAmount()))));
+        if (amountThroughParents == calculationResult.getAmount()) {
+            DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Parent full, skipping")));
+            return true;
+        }
+
+        if (calculationResult instanceof RecipeCalculationResult subResult) {
+            int index = text.size();
+
+            boolean childrenFinished = true;
+            stackCountContext.integers.push(amount);
+            if (amount == calculationResult.getAmount()) {
+                DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Skipping childs, parent full")));
+            }
+            for (int i = 0; i < subResult.getRequired().size(); i++) {
+                if (amount == calculationResult.getAmount()) {
+                    continue;
+                }
+                RecipeResult<?> recipeResult = subResult.getRequired().get(i);
+                String newPrefix;
+                boolean isLast = i + 1 == subResult.getRequired().size();
+                if (prefix.isEmpty()) {
+                    newPrefix = isLast ? "└ " : "├ ";
+                } else {
+                    newPrefix = prefix.replace("├", "│").replace("└", "  ") + (isLast ? "└ " : "├ ");
+                }
+
+                childrenFinished &= append(
+                    newPrefix,
+                    text,
+                    recipeResult,
+                    depth + 1,
+                    context,
+                    stackCountContext,
+                    formatter);
+            }
+            stackCountContext.integers.pop();
+
+            childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
+            System.out.println(((double) context.recipeResult.getAmount()) / context.parent.recipeResult().getAmount());
+
+            text.add(index, formatter.format(
+                prefix,
+                calculationResult.getId(),
+                calculationResult.getRepositoryItem(),
+                calculationResult.getAmount() - amountThroughParents,
+                amount - amountThroughParents,
+                childrenFinished,
+                depth));
+
+            return childrenFinished;
+        } else {
+            text.add(formatter.format(
+                prefix,
+                calculationResult.getId(),
+                calculationResult.getRepositoryItem(),
+                calculationResult.getAmount() - amountThroughParents,
+                amount - amountThroughParents,
+                false,
+                depth));
+        }
+
+        return amount == calculationResult.getAmount();
+    }
+
+    private MutableText formatted(
+        String prefix,
+        String id,
+        RepositoryItem repositoryItem,
+        int amount,
+        int amountOfItem,
+        boolean childrenFinished,
+        int depth) {
+        final MutableText literal = Text.empty().append(Text.literal(prefix).formatted(Formatting.DARK_GRAY));
+
+        final double percentage = (double) amountOfItem / amount;
+        //noinspection DataFlowIssue
+        final int color = ColorUtils.calculateBetween(
+            Formatting.RED.getColorValue(),
+            Formatting.GREEN.getColorValue(),
+            percentage);
+
+
+        if (percentage == 1) {
+            if (depth == 0) {
+                literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.GREEN));
+            } else {
+                literal.append(Text.literal(Constants.Emojis.YES).formatted(Formatting.GREEN, Formatting.BOLD));
+            }
+        } else {
+            if (childrenFinished) {
+                if (depth == 0) {
+                    literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.YELLOW));
+                } else {
+                    literal.append(Text.literal(Constants.Emojis.WARNING).formatted(Formatting.YELLOW));
+                }
+            } else {
+                if (depth == 0) {
+                    literal.append(Text.literal(Constants.Emojis.FLAG_EMPTY).formatted(Formatting.RED));
+                } else {
+                    literal.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
+                }
+            }
+        }
+
+        literal.append(" ");
+        final String formatted = "%s/%s".formatted(
+            MathUtils.NUMBER_FORMAT.format(amountOfItem),
+            MathUtils.NUMBER_FORMAT.format(amount));
+        literal.append(Text.literal(formatted).withColor(color));
+        literal.append(" ");
+        if (repositoryItem != null) {
+            literal.append(repositoryItem.getFormattedName());
+        } else {
+            literal.append(id);
+        }
+
+        return literal;
     }
 
     private void beforeScroll(
@@ -228,6 +367,7 @@ public class CraftHelper {
         return handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean shouldRender() {
         return this.calculation != null && !this.tooltip.isEmpty();
     }
@@ -258,7 +398,14 @@ public class CraftHelper {
 
         long start = System.nanoTime();
         List<MutableText> tooltip = new ArrayList<>();
-        append("", tooltip, calculation, 0, new EvaluationContext(calculation, null), new StackCountContext());
+        append(
+            "",
+            tooltip,
+            calculation,
+            0,
+            new EvaluationContext(calculation, null),
+            new StackCountContext(),
+            this::formatted);
 
         this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
 
@@ -298,138 +445,23 @@ public class CraftHelper {
         this.buttonY = -12;
     }
 
-    private boolean append(
-        String prefix,
-        List<MutableText> text,
-        RecipeResult<?> calculationResult,
-        int depth,
-        EvaluationContext parent,
-        StackCountContext stackCountContext) {
-        EvaluationContext context = new EvaluationContext(calculationResult, parent);
-        final int amount = getAmount(context, calculationResult.getAmount(), stackCountContext);
-        final int amountThroughParents = getAmountThroughParents(
-            context,
-            calculationResult.getAmount(),
-            stackCountContext);
-        DevUtils.runIf(
-            DEBUG_INFO,
-            () -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(
-                amount,
-                amountThroughParents,
-                calculationResult.getAmount()))));
-        if (amountThroughParents == calculationResult.getAmount()) {
-            DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Parent full, skipping")));
-            return true;
-        }
-
-        if (calculationResult instanceof RecipeCalculationResult subResult) {
-            int index = text.size();
-
-            boolean childrenFinished = true;
-            stackCountContext.integers.push(amount);
-            if (amount == calculationResult.getAmount()) {
-                DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Skipping childs, parent full")));
-            }
-            for (int i = 0; i < subResult.getRequired().size(); i++) {
-                if (amount == calculationResult.getAmount()) {
-                    continue;
-                }
-                RecipeResult<?> recipeResult = subResult.getRequired().get(i);
-                String newPrefix;
-                boolean isLast = i + 1 == subResult.getRequired().size();
-                if (prefix.isEmpty()) {
-                    newPrefix = isLast ? "└ " : "├ ";
-                } else {
-                    newPrefix = prefix.replace("├", "│").replace("└", "  ") + (isLast ? "└ " : "├ ");
-                }
-
-                childrenFinished &= append(newPrefix, text, recipeResult, depth + 1, context, stackCountContext);
-            }
-            stackCountContext.integers.pop();
-
-            childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
-
-            text.add(index, this.formatted(
-                prefix,
-                calculationResult.getId(),
-                calculationResult.getRepositoryItem(),
-                calculationResult.getAmount() - amountThroughParents,
-                amount - amountThroughParents,
-                childrenFinished,
-                depth));
-
-            return childrenFinished;
-        } else {
-            text.add(this.formatted(
-                prefix,
-                calculationResult.getId(),
-                calculationResult.getRepositoryItem(),
-                calculationResult.getAmount() - amountThroughParents,
-                amount - amountThroughParents,
-                false,
-                depth));
-        }
-
-        return amount == calculationResult.getAmount();
+    public interface Formatter {
+        MutableText format(
+            String prefix,
+            String id,
+            RepositoryItem repositoryItem,
+            int amount,
+            int amountOfItem,
+            boolean childrenFinished,
+            int depth);
     }
 
-    private MutableText formatted(
-        String prefix,
-        String id,
-        RepositoryItem repositoryItem,
-        int amount,
-        int amountOfItem,
-        boolean childrenFinished,
-        int depth) {
-        final MutableText literal = Text.empty().append(Text.literal(prefix).formatted(Formatting.DARK_GRAY));
-
-        final double percentage = (double) amountOfItem / amount;
-        //noinspection DataFlowIssue
-        final int color = ColorUtils.calculateBetween(
-            Formatting.RED.getColorValue(),
-            Formatting.GREEN.getColorValue(),
-            percentage);
-
-
-        if (percentage == 1) {
-            if (depth == 0) {
-                literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.GREEN));
-            } else {
-                literal.append(Text.literal(Constants.Emojis.YES).formatted(Formatting.GREEN, Formatting.BOLD));
-            }
-        } else {
-            if (childrenFinished) {
-                if (depth == 0) {
-                    literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.YELLOW));
-                } else {
-                    literal.append(Text.literal(Constants.Emojis.WARNING).formatted(Formatting.YELLOW));
-                }
-            } else {
-                if (depth == 0) {
-                    literal.append(Text.literal(Constants.Emojis.FLAG_EMPTY).formatted(Formatting.RED));
-                } else {
-                    literal.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
-                }
-            }
-        }
-
-        literal.append(" ");
-        final String formatted = "%s/%s".formatted(numberFormat.format(amountOfItem), numberFormat.format(amount));
-        literal.append(Text.literal(formatted).withColor(color));
-        literal.append(" ");
-        if (repositoryItem != null) {
-            literal.append(repositoryItem.getFormattedName());
-        } else {
-            literal.append(id);
-        }
-
-        return literal;
+    @SuppressWarnings("MissingJavadoc")
+    public record EvaluationContext(RecipeResult<?> recipeResult, EvaluationContext parent) {
     }
 
-    private record EvaluationContext(RecipeResult<?> recipeResult, EvaluationContext parent) {
-    }
-
-    private static class StackCountContext {
+    @SuppressWarnings("MissingJavadoc")
+    public static class StackCountContext {
         Map<RepositoryItem, Long> itemMap = new HashMap<>();
         Stack<Integer> integers = new Stack<>();
 

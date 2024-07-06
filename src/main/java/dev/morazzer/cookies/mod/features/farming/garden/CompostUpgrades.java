@@ -6,6 +6,7 @@ import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.constants.ComposterUpgrades;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.RomanNumerals;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
@@ -36,7 +37,10 @@ public class CompostUpgrades {
     }
 
     private void openScreen(MinecraftClient minecraftClient, Screen screen, int i, int i1) {
-        if (LocationUtils.getRegion().island != LocationUtils.Island.GARDEN) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
+        if (LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
         if (!ConfigKeys.FARMING_COMPOST_UPGRADE.get()) {

@@ -12,8 +12,9 @@ import com.github.javaparser.printer.DefaultPrettyPrinter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -42,8 +43,12 @@ public abstract class CreateRegions extends DefaultTask {
         compilationUnit.addImport("dev.morazzer.cookies.mod.utils.minecraft.LocationUtils");
         final EnumDeclaration regions = compilationUnit.addEnum("Regions");
 
-        final InputStream resourceAsStream = CreateRegions.class.getClassLoader().getResourceAsStream("regions.json");
-        JsonArray jsonArray = JsonParser.parseReader(new InputStreamReader(resourceAsStream)).getAsJsonArray();
+        JsonArray jsonArray = null;
+        try (final InputStream resourceAsStream = CreateRegions.class.getClassLoader().getResourceAsStream("regions.json")) {
+            jsonArray = JsonParser.parseString(new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Set<String> set = new HashSet<>();
         jsonArray.forEach(jsonElement -> {

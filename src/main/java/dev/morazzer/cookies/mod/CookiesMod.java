@@ -7,7 +7,6 @@ import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.events.EventLoader;
 import dev.morazzer.cookies.mod.features.Features;
 import dev.morazzer.cookies.mod.repository.Repository;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;

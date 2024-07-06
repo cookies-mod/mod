@@ -58,18 +58,35 @@ public class Ingredient implements RecipeResult<Ingredient> {
         return new Ingredient(id, amount);
     }
 
-    @Override
-    public Ingredient multiply(int multiplier) {
-        return new Ingredient(id, amount * multiplier);
+    /**
+     * Merges the iterable to a set of ingredients.
+     *
+     * @param ingredients The iterable.
+     * @return The merged set.
+     */
+    public static Set<Ingredient> mergeToSet(Iterable<Ingredient> ingredients) {
+        return mergeIngredients(ingredients, Collectors.toSet());
     }
 
     /**
-     * Gets the name or the id of the item if the item is null.
+     * Merges any given Iterable of Ingredients to not contain duplicated keys
      *
-     * @return The name or id.
+     * @param ingredients The original list of ingredients
+     * @param collector   The collector to create the returned value
+     * @param <T>         The return t ype of the collector
+     * @return The collected ingredients
      */
-    public String getNameSafe() {
-        return repositoryItem == null ? id : repositoryItem.getName();
+    public static <T> T mergeIngredients(Iterable<Ingredient> ingredients, Collector<Ingredient, ?, T> collector) {
+        HashMap<String, Ingredient> ingredientMap = new HashMap<>();
+        ingredients.forEach(ingredient ->
+                ingredientMap.merge(
+                    ingredient.getId(),
+                    ingredient,
+                    Ingredient::merge
+                                   )
+                           );
+
+        return ingredientMap.values().stream().collect(collector);
     }
 
     /**
@@ -87,16 +104,8 @@ public class Ingredient implements RecipeResult<Ingredient> {
     }
 
     /**
-     * Merges the iterable to a set of ingredients.
-     * @param ingredients The iterable.
-     * @return The merged set.
-     */
-    public static Set<Ingredient> mergeToSet(Iterable<Ingredient> ingredients) {
-        return mergeIngredients(ingredients, Collectors.toSet());
-    }
-
-    /**
      * Merges the iterable to a list of ingredients.
+     *
      * @param ingredients The iterable.
      * @return The merged list.
      */
@@ -104,24 +113,17 @@ public class Ingredient implements RecipeResult<Ingredient> {
         return mergeIngredients(ingredients, Collectors.toList());
     }
 
-    /**
-     * Merges any given Iterable of Ingredients to not contain duplicated keys
-     *
-     * @param ingredients The original list of ingredients
-     * @param collector   The collector to create the returned value
-     * @param <T>         The return t ype of the collector
-     * @return The collected ingredients
-     */
-    public static <T> T mergeIngredients(Iterable<Ingredient> ingredients, Collector<Ingredient, ?, T> collector) {
-        HashMap<String, Ingredient> ingredientMap = new HashMap<>();
-        ingredients.forEach(ingredient ->
-            ingredientMap.merge(
-                ingredient.getId(),
-                ingredient,
-                Ingredient::merge
-            )
-        );
+    @Override
+    public Ingredient multiply(int multiplier) {
+        return new Ingredient(this.id, this.amount * multiplier);
+    }
 
-        return ingredientMap.values().stream().collect(collector);
+    /**
+     * Gets the name or the id of the item if the item is null.
+     *
+     * @return The name or id.
+     */
+    public String getNameSafe() {
+        return this.repositoryItem == null ? this.id : this.repositoryItem.getName();
     }
 }

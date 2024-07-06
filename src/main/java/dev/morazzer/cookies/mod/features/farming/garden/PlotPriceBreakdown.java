@@ -5,6 +5,7 @@ import dev.morazzer.cookies.mod.config.ConfigKeys;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.constants.PlotPrice;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -49,7 +50,10 @@ public class PlotPriceBreakdown {
     }
 
     private void handleScreen(MinecraftClient minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
-        if (LocationUtils.getRegion().island != LocationUtils.Island.GARDEN) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
+        if (LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
         if (!ConfigKeys.FARMING_PLOT_PRICE.get()) {

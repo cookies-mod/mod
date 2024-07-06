@@ -1,13 +1,14 @@
 package dev.morazzer.cookies.mod.utils.minecraft;
 
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.mods.cookies.generated.Regions;
 import java.util.List;
+import net.minecraft.util.Identifier;
 
 /**
  * Utils to get the current location of the player.
  */
 public class LocationUtils {
-
     private static Regions region;
     private static long lastUpdated = -1;
 
@@ -40,9 +41,6 @@ public class LocationUtils {
         }
 
         for (Regions value : Regions.values()) {
-            if (value == Regions.WIZARD_TOWER_HUB) {
-                System.out.println("tower");
-            }
             if (value.icon != null && !icon.equals(value.icon)) {
                 continue;
             }
@@ -77,7 +75,14 @@ public class LocationUtils {
         DUNGEON_HUB,
         RIFT,
         CATACOMBS,
-        UNKNOWN
+        UNKNOWN;
+
+        private static final Identifier SKIP_ISLAND_CHECK = DevUtils.createIdentifier("islands/skip_check");
+
+        public boolean isActive() {
+
+            return (region != null && region.island == this) || DevUtils.isEnabled(SKIP_ISLAND_CHECK);
+        }
     }
 
 }

@@ -37,22 +37,23 @@ public class RepositoryItem {
      * Map to convert between 1.8.9 ids to modern ids.
      */
     private static final Map<String, String> OLD_NEW_ID_MAP = Map.ofEntries(
-        new AbstractMap.SimpleEntry<>("INK_SACK:1", "RED_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:2", "GREEN_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:3", "COCOA_BEAN"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:4", "LAPIS_LAZULI"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:5", "PURPLE_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:6", "CYAN_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:7", "LIGHT_GRAY_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:8", "GRAY_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:9", "PINK_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:10", "LIME_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:11", "YELLOW_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:12", "LIGHT_BLUE_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:13", "MAGENTA_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:14", "ORANGE_DYE"),
-        new AbstractMap.SimpleEntry<>("INK_SACK:15", "BONE_MEAL")
-    );
+        new AbstractMap.SimpleEntry<>("ink_sack:1", "red_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:2", "green_dye"),
+        new AbstractMap.SimpleEntry<>("cactus_green", "green_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:3", "cocoa_bean"),
+        new AbstractMap.SimpleEntry<>("ink_sack:4", "lapis_lazuli"),
+        new AbstractMap.SimpleEntry<>("ink_sack:5", "purple_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:6", "cyan_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:7", "light_gray_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:8", "gray_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:9", "pink_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:10", "lime_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:11", "yellow_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:12", "light_blue_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:13", "magenta_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:14", "orange_dye"),
+        new AbstractMap.SimpleEntry<>("ink_sack:15", "bone_meal")
+                                                                           );
 
     @Getter
     private final static Map<String, RepositoryItem> itemMap = new ConcurrentHashMap<>();
@@ -64,8 +65,8 @@ public class RepositoryItem {
         @Override
         public <T> DataResult<RepositoryItem> read(DynamicOps<T> ops, T input) {
             return ops.getStringValue(input)
-                .map(m -> OLD_NEW_ID_MAP.getOrDefault(m, m))
-                .map(RepositoryItem::of);
+                      .map(m -> OLD_NEW_ID_MAP.getOrDefault(m.toLowerCase(), m.toLowerCase()))
+                      .map(RepositoryItem::of);
         }
 
         @Override
@@ -143,7 +144,9 @@ public class RepositoryItem {
                 repositoryItem.setRecipes(new HashSet<>());
                 repositoryItem.setUsedInRecipeAsIngredient(new HashSet<>());
                 repositoryItem.internalId =
-                    OLD_NEW_ID_MAP.getOrDefault(repositoryItem.realInternalId, repositoryItem.realInternalId);
+                    OLD_NEW_ID_MAP.getOrDefault(
+                        repositoryItem.realInternalId.toLowerCase(),
+                        repositoryItem.realInternalId);
                 itemMap.put(repositoryItem.internalId.toLowerCase(Locale.ROOT), repositoryItem);
             }
         } catch (IOException e) {
@@ -158,7 +161,7 @@ public class RepositoryItem {
      * @return The item or null.
      */
     public static RepositoryItem of(String id) {
-        return itemMap.get(OLD_NEW_ID_MAP.getOrDefault(id, id).toLowerCase(Locale.ROOT));
+        return itemMap.get(OLD_NEW_ID_MAP.getOrDefault(id.toLowerCase(), id).toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -169,7 +172,7 @@ public class RepositoryItem {
      */
     public static Optional<RepositoryItem> ofName(String name) {
         return itemMap.values().stream().filter(repositoryItem -> repositoryItem.getName().equalsIgnoreCase(name))
-            .findFirst();
+                      .findFirst();
     }
 
     /**

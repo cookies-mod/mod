@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.farming.inventory;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -21,6 +22,9 @@ public class RancherBootsNumbers {
     public RancherBootsNumbers() {
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (!(screen instanceof HandledScreen<?> handledScreen)) {
+                return;
+            }
+            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
                 return;
             }
             if (!ConfigManager.getConfig().farmingConfig.showRancherSpeed.getValue()) {

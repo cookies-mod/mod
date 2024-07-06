@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.events;
 
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.UUID;
 import net.minecraft.text.Text;
@@ -37,7 +38,7 @@ public class ChatListener {
                 "Found new profile id was %s is %s",
                 lastProfileId,
                 text.getString().substring(12).trim()
-            );
+                        );
 
             ProfileSwapEvent.EVENT_NO_UUID.invoker().run();
             if (lastProfileId != null) {
@@ -51,8 +52,9 @@ public class ChatListener {
                 ProfileSwapEvent.AFTER_SET.invoker().swapProfile(previous, uuid);
             }
         } else if (text.getString().matches("Sending to server (?:mini|mega)\\d*.{1,3}\\.{3}")) {
-            ServerSwapEvent.SERVER_SWAP_ID.invoker()
-                .accept(text.getString().replaceAll("Sending to server ((?:mini|mega)\\d*.{1,3})\\.{3}", "$1"));
+            SkyblockUtils.swapServer();
+            final String id = text.getString().replaceAll("Sending to server ((?:mini|mega)\\d*.{1,3})\\.{3}", "$1");
+            ServerSwapEvent.SERVER_SWAP_ID.invoker().accept(id);
             ServerSwapEvent.SERVER_SWAP.invoker().onServerSwap();
         }
     }

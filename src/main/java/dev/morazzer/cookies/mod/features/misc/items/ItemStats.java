@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.Value;
@@ -38,6 +39,9 @@ public class ItemStats {
         final TooltipType tooltipType,
         final List<Text> texts
     ) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         final Value<String> stringValue = ItemAccessor.skyblockId(itemStack);
         if (stringValue.getAsOptional().isEmpty()) {
             return;

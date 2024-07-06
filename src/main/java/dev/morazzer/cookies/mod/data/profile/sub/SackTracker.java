@@ -62,6 +62,6 @@ public class SackTracker implements JsonSerializable {
      * @param value The value.
      */
     public void modify(RepositoryItem item, int value) {
-        items.compute(item, (key, oldValue) -> oldValue == null ? value : oldValue + value);
+        items.compute(item, (key, oldValue) -> Math.max(oldValue == null ? value : oldValue + value, 0));
     }
 }

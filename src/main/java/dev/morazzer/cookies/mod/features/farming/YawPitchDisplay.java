@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.farming;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -27,6 +28,9 @@ public class YawPitchDisplay {
     }
 
     private static void renderHud(DrawContext drawContext, RenderTickCounter renderTickCounter) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         if (!ConfigKeys.FARMING_YAW_PITCH.get()) {
             return;
         }

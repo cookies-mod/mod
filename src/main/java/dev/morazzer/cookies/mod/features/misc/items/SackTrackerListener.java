@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -26,6 +27,9 @@ public class SackTrackerListener {
     }
 
     private void receiveMessage(Text text, boolean b) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         if (b) {
             return;
         }

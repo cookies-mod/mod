@@ -1,8 +1,10 @@
 package dev.morazzer.cookies.mod.features.farming.garden;
 
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -17,6 +19,7 @@ public enum Plot {
     OUTER_EDGE_PLOT,
     OUTER_CORNER_PLOT,
     NONE;
+    private static final Identifier SKIP_PLOT_CHECK = DevUtils.createIdentifier("plots/skip_check");
 
     /**
      * Gets the plot the player currently is on.
@@ -24,8 +27,10 @@ public enum Plot {
      * @return The plot.
      */
     public static Plot getCurrentPlot() {
-        return Optional.ofNullable(MinecraftClient.getInstance().player).map(Entity::getPos)
-            .map(Plot::getPlotFromRealCoordinate).orElse(Plot.NONE);
+        return Optional.ofNullable(MinecraftClient.getInstance().player)
+            .map(Entity::getPos)
+            .map(Plot::getPlotFromRealCoordinate)
+            .orElse(Plot.NONE);
     }
 
     /**
@@ -37,8 +42,7 @@ public enum Plot {
     public static Plot getPlotFromRealCoordinate(Vec3d position) {
         return getPlotFromPlotCoordinate(
             (int) (changeToPlotCenter(Math.abs(position.x)) + 48) / 96,
-            (int) (changeToPlotCenter(Math.abs(position.z)) + 48) / 96
-        );
+            (int) (changeToPlotCenter(Math.abs(position.z)) + 48) / 96);
     }
 
     /**
@@ -50,6 +54,10 @@ public enum Plot {
      */
     public static Plot getPlotFromPlotCoordinate(int x, int z) {
         return getPlotFromAbsolutePlotCoordinate(Math.abs(x), Math.abs(z));
+    }
+
+    private static double changeToPlotCenter(double coordinate) {
+        return coordinate - coordinate % 48;
     }
 
     private static Plot getPlotFromAbsolutePlotCoordinate(int absoluteX, int absoluteY) {
@@ -68,21 +76,18 @@ public enum Plot {
         }
     }
 
-    private static double changeToPlotCenter(double coordinate) {
-        return coordinate - coordinate % 48;
-    }
-
-    private static double changeToPlotCorner(double coordinate) {
-        return coordinate - Math.abs(coordinate % 96);
-    }
-
     /**
      * Gets the center of the plot the location is on.
+     *
      * @param position The location.
      * @return The center of the plot.
      */
     public Vec3d getPlotCenter(Vec3d position) {
         return new Vec3d(changeToPlotCorner(position.x + 240) - 192, 0, changeToPlotCorner(position.z + 240) - 192);
+    }
+
+    private static double changeToPlotCorner(double coordinate) {
+        return coordinate - Math.abs(coordinate % 96);
     }
 
     /**
@@ -96,34 +101,34 @@ public enum Plot {
      * @return Whether the plot is an inner plot.
      */
     public boolean isInnerCircle() {
-        return ordinal() == 1 || ordinal() == 2;
+        return (ordinal() == 1 || ordinal() == 2) || DevUtils.isEnabled(SKIP_PLOT_CHECK);
     }
 
     /**
      * @return Whether the plot is an outer plot.
      */
     public boolean isOuterCircle() {
-        return ordinal() == 3 || ordinal() == 4;
+        return (ordinal() == 3 || ordinal() == 4) || DevUtils.isEnabled(SKIP_PLOT_CHECK);
     }
 
     /**
      * @return Whether the plot is the barn.
      */
     public boolean isBarn() {
-        return ordinal() == 0;
+        return ordinal() == 0 || DevUtils.isEnabled(SKIP_PLOT_CHECK);
     }
 
     /**
      * @return Whether the plot is on the edge.
      */
     public boolean isEdge() {
-        return ordinal() == 1 || ordinal() == 3;
+        return (ordinal() == 1 || ordinal() == 3) || DevUtils.isEnabled(SKIP_PLOT_CHECK);
     }
 
     /**
      * @return Whether the plot is a corner plot.
      */
     public boolean isCorner() {
-        return ordinal() == 2 || ordinal() == 4;
+        return (ordinal() == 2 || ordinal() == 4) || DevUtils.isEnabled(SKIP_PLOT_CHECK);
     }
 }

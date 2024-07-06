@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.features.cleanup;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.ItemLoreEvent;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
@@ -19,6 +20,9 @@ public class CoopCleanupFeature {
     }
 
     private void modifyLore(List<MutableText> texts) {
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         if (texts.size() < 2) {
             return;
         }

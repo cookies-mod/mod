@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.cleanup.dungeon;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
@@ -18,6 +19,9 @@ public class DungeonMessagesCleanup {
     private boolean shouldSend(Text text, boolean b) {
         if (b) {
             return true;
+        }
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return false;
         }
         if (LocationUtils.getRegion().island != LocationUtils.Island.CATACOMBS) {
             return true;
