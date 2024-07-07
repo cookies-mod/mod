@@ -64,6 +64,14 @@ public class FarmingConfig extends Category {
     ).withSupplier(value -> Text.of(StringUtils.capitalize(value.name().toLowerCase())))
      .onlyIf(showCompostPriceBreakdown);
 
+    @Parent
+    public TextDisplayOption visitorText = new TextDisplayOption(Text.literal("Visitor"), Text.literal(""));
+
+    public BooleanOption visitorMaterialHelper = new BooleanOption(
+        Text.literal("Show visitor materials"),
+        Text.literal("Shows the amount of items a visitor needs down to the actual crop."),
+        false
+    );
 
     @Parent
     public TextDisplayOption jacobsText = new TextDisplayOption(Text.literal("Jacob / Contests"), Text.literal(""));
