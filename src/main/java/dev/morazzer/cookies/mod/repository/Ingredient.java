@@ -124,6 +124,6 @@ public class Ingredient implements RecipeResult<Ingredient> {
      * @return The name or id.
      */
     public String getNameSafe() {
-        return this.repositoryItem == null ? this.id : this.repositoryItem.getName();
+        return this.repositoryItem == null ? this.id : this.repositoryItem.getName().getString();
     }
 }

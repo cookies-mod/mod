@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.repository.recipes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import java.util.HashMap;
@@ -19,12 +21,12 @@ public class CraftRecipe implements Recipe {
      * @param jsonObject The json object.
      */
     public CraftRecipe(JsonObject jsonObject) {
-        JsonObject ingredients = jsonObject.get("ingredients").getAsJsonObject();
+        JsonArray ingredients = jsonObject.get("ingredients").getAsJsonArray();
 
         Map<String, Ingredient> ingredientMap = new HashMap<>();
 
-        for (String key : ingredients.keySet()) {
-            final Ingredient ingredient = Ingredient.of(ingredients.get(key).getAsString());
+        for (JsonElement element : ingredients) {
+            final Ingredient ingredient = Ingredient.of(element.getAsString());
             if (!ingredientMap.containsKey(ingredient.getId())) {
                 ingredientMap.put(ingredient.getId(), ingredient);
             } else {

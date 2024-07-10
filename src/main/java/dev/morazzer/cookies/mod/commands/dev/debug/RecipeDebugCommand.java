@@ -54,7 +54,7 @@ public class RecipeDebugCommand extends ClientCommand {
             }
             sendRawMessage(
                 recipe.getOutput().getRepositoryItem() == null ? recipe.getOutput().getId() :
-                    recipe.getOutput().getRepositoryItem().getName()
+                    recipe.getOutput().getRepositoryItem().getName().getString()
             );
         }
         sendRawMessage("");

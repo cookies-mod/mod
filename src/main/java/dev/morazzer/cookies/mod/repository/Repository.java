@@ -50,13 +50,9 @@ public class Repository {
             final String modVersion = requires.get("mod_version").getAsString();
             final VersionPredicate versionPredicate =
                 ExceptionHandler.removeThrows(() -> VersionPredicate.parse(modVersion));
-            if (!versionPredicate.test(BuildInfo.version)) {
-                return;
+            if (versionPredicate.test(BuildInfo.version)) {
+                index.getAsJsonObject("files").entrySet().forEach(entry -> isUpToDate("", entry));
             }
-
-            index.getAsJsonObject("files").entrySet().forEach(entry -> {
-                isUpToDate("", entry);
-            });
         } catch (IOException e) {
             LOGGER.error("Error while loading cookies repository, continuing with old data.", e);
         }
