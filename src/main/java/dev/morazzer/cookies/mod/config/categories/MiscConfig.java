@@ -17,121 +17,93 @@ import net.minecraft.text.Text;
 public class MiscConfig extends Category {
 
     @Expose
-    public BooleanOption enableScrollableTooltips = new BooleanOption(
-        Text.literal("Scrollable Tooltips"),
+    public BooleanOption enableScrollableTooltips = new BooleanOption(Text.literal("Scrollable Tooltips"),
         true,
         Text.literal("Allows you to scroll through tooltips"),
         Text.empty(),
         Text.literal("CTRL + Scroll -> move horizontal"),
-        Text.literal("SHIFT + Scroll -> chop tooltips")
-    );
+        Text.literal("SHIFT + Scroll -> chop tooltips"));
 
     @Parent
     public TextDisplayOption itemSubCategory = new TextDisplayOption(Text.literal("Items"), Text.literal(""));
 
     @Expose
-    public BooleanOption showItemCreationDate = new BooleanOption(
-        Text.literal("Creation date"),
-        Text.literal("Shows the creation date of an item."),
-        true
-    );
+    public BooleanOption showItemCreationDate =
+        new BooleanOption(Text.literal("Creation date"), Text.literal("Shows the creation date of an item."), true);
 
     @Expose
-    public BooleanOption showItemDonatedToMuseum = new BooleanOption(
-        Text.literal("Donated to museum"),
+    public BooleanOption showItemDonatedToMuseum = new BooleanOption(Text.literal("Donated to museum"),
         Text.literal("Shows whether the item is donated to the museum or not."),
-        true
-    );
+        true);
 
     @Expose
-    public BooleanOption showItemNpcValue = new BooleanOption(
-        Text.literal("NPC Value"),
-        Text.literal("Show the npc value of the item."),
-        true
-    );
+    public BooleanOption showItemNpcValue =
+        new BooleanOption(Text.literal("NPC Value"), Text.literal("Show the npc value of the item."), true);
 
     @Parent
     public TextDisplayOption renderCategory = new TextDisplayOption(Text.literal("Render"), Text.literal(""));
 
     @Expose
-    public BooleanOption hideOwnArmor = new BooleanOption(
-        Text.literal("Hide own armor"),
-        Text.literal("Hides your own armor."),
-        false
-    );
+    public BooleanOption hideOwnArmor =
+        new BooleanOption(Text.literal("Hide own armor"), Text.literal("Hides your own armor."), false);
 
     @Expose
-    public BooleanOption hideOtherArmor = new BooleanOption(
-        Text.literal("Hide others armor"),
-        Text.literal("Hides others armor."),
-        false
-    );
+    public BooleanOption hideOtherArmor =
+        new BooleanOption(Text.literal("Hide others armor"), Text.literal("Hides others armor."), false);
 
     @Expose
-    public BooleanOption hideFireOnEntities = new BooleanOption(
-        Text.literal("Hide fire"),
-        Text.literal("Hide fire from entities."),
-        false
-    );
+    public BooleanOption showDyeArmor = new BooleanOption(Text.literal("Show armor if dyed"),
+        Text.literal("Shows the armor if a dye is applied to it."),
+        false);
 
     @Expose
-    public BooleanOption hideLightningBolt = new BooleanOption(
-        Text.literal("Hide lightning"),
-        Text.literal("Hide the lightning bolt entity."),
-        false
-    );
+    public BooleanOption hideFireOnEntities =
+        new BooleanOption(Text.literal("Hide fire"), Text.literal("Hide fire from entities."), false);
+
+    @Expose
+    public BooleanOption hideLightningBolt =
+        new BooleanOption(Text.literal("Hide lightning"), Text.literal("Hide the lightning bolt entity."), false);
 
     @Parent
     public TextDisplayOption renderUiCategory = new TextDisplayOption(Text.literal("Render - UI"), Text.literal(""));
 
     @Expose
-    public BooleanOption hidePotionEffects = new BooleanOption(
-        Text.literal("Hide inventory potions"),
+    public BooleanOption hidePotionEffects = new BooleanOption(Text.literal("Hide inventory potions"),
         Text.literal("Hides potion effects from the inventory."),
-        false
-    );
+        false);
 
     @Expose
-    public BooleanOption hideHealth = new BooleanOption(
-        Text.literal("Hide health bar"),
-        Text.literal("Hide health bar from ui."),
-        false
-    );
+    public BooleanOption hideHealth =
+        new BooleanOption(Text.literal("Hide health bar"), Text.literal("Hide health bar from ui."), false);
 
     @Expose
-    public BooleanOption hideArmor = new BooleanOption(
-        Text.literal("Hide armor bar"),
-        Text.literal("Hide armor bar from ui."),
-        false
-    );
+    public BooleanOption hideArmor =
+        new BooleanOption(Text.literal("Hide armor bar"), Text.literal("Hide armor bar from ui."), false);
 
     @Expose
-    public BooleanOption hideFood = new BooleanOption(
-        Text.literal("Hide food bar"),
-        Text.literal("Hide food bar from ui."),
-        false
-    );
+    public BooleanOption hideFood =
+        new BooleanOption(Text.literal("Hide food bar"), Text.literal("Hide food bar from ui."), false);
 
     @Parent
     public TextDisplayOption renderInventoryCategory =
         new TextDisplayOption(Text.literal("Render - Inventory"), Text.literal(""));
 
     @Expose
-    public BooleanOption showPetLevelAsStackSize = new BooleanOption(
-        Text.literal("Show pet level"),
-        Text.literal("Shows the pet level as stack size."),
-        false
-    );
+    public BooleanOption showPetLevelAsStackSize =
+        new BooleanOption(Text.literal("Show pet level"), Text.literal("Shows the pet level as stack size."), false);
 
     @Expose
-    public BooleanOption showPetRarityInLevelText = new BooleanOption(
-        Text.literal("Show rarity in level"),
+    public BooleanOption showPetRarityInLevelText = new BooleanOption(Text.literal("Show rarity in level"),
         Text.literal("Shows the pet level in the color of the rarity"),
-        false
-    ).onlyIf(this.showPetLevelAsStackSize);
+        false).onlyIf(this.showPetLevelAsStackSize);
 
     public MiscConfig() {
         super(new ItemStack(Items.COMPASS));
+        this.hideOtherArmor.withCallback((oldValue, newValue) -> this.showDyeArmor.setActive(
+            this.hideOwnArmor.getValue() || newValue));
+        this.hideOwnArmor.withCallback((oldValue, newValue) -> this.showDyeArmor.setActive(
+            this.hideOtherArmor.getValue() || newValue));
+        this.showDyeArmor.setActive(this.hideOwnArmor.getValue() || this.hideOtherArmor.getValue());
     }
 
     @Override

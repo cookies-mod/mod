@@ -56,6 +56,8 @@ public class CookiesDataComponentTypes {
     public static final ComponentType<Integer> STACKING_ENCHANT_XP;
     @GenerateAccessor
     public static final ComponentType<RepositoryItem> REPOSITORY_ITEM;
+    @GenerateAccessor
+    public static final ComponentType<String> DYE;
 
     public static final ComponentType<String> CUSTOM_SLOT_TEXT;
     public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
@@ -73,15 +75,15 @@ public class CookiesDataComponentTypes {
             "id",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getString(key)
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getString(key));
         //noinspection deprecation
         UUID = register(
             builder -> builder.codec(Uuids.CODEC),
             "uuid",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> java.util.UUID.randomUUID() //nbtComponent.getNbt().getUuid(key)
+            (nbtComponent, key) -> java.util.UUID.randomUUID()
+            //nbtComponent.getNbt().getUuid(key)
         );
         //noinspection deprecation
         TIMESTAMP = register(
@@ -89,28 +91,23 @@ public class CookiesDataComponentTypes {
             "timestamp",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> Instant.ofEpochMilli(nbtComponent.getNbt().getLong(key))
-        );
+            (nbtComponent, key) -> Instant.ofEpochMilli(nbtComponent.getNbt().getLong(key)));
         //noinspection deprecation
         MODIFIER = register(
             builder -> builder.codec(Codec.STRING),
             "modifier",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getString(key)
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getString(key));
         //noinspection deprecation
         DONATED_MUSEUM = register(
             builder -> builder.codec(Codec.BOOL),
             "donated_museum",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key) == 1
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key) == 1);
         ENCHANTMENTS = register(
-            builder -> builder.codec(
-                Codec.unboundedMap(Codec.STRING, Codec.INT)
-            ),
+            builder -> builder.codec(Codec.unboundedMap(Codec.STRING, Codec.INT)),
             "enchantments",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
@@ -123,26 +120,21 @@ public class CookiesDataComponentTypes {
                     map.put(elementKey, enchantments.getInt(elementKey));
                 }
                 return map;
-            }
-        );
+            });
         HOT_POTATO_COUNT = register(
             builder -> builder.codec(Codec.INT),
             "hot_potato_count",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key)
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
         RARITY_UPGRADES = register(
             builder -> builder.codec(Codec.INT),
             "rarity_upgrades",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key)
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
         RUNES = register(
-            builder -> builder.codec(
-                Codec.unboundedMap(Codec.STRING, Codec.INT)
-            ),
+            builder -> builder.codec(Codec.unboundedMap(Codec.STRING, Codec.INT)),
             "runes",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
@@ -155,29 +147,31 @@ public class CookiesDataComponentTypes {
                     map.put(elementKey, enchantments.getInt(elementKey));
                 }
                 return map;
-            }
-        );
+            });
         UPGRADE_LEVEL = register(
             builder -> builder.codec(Codec.INT),
             "upgrade_level",
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key)
-        );
+            (nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
         STACKING_ENCHANT_XP = register(
             builder -> builder.codec(Codec.INT),
             new String[] {"stacking_enchantment_xp"},
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
-            (nbtComponent, key) -> 0
-        );
+            (nbtComponent, key) -> 0);
         REPOSITORY_ITEM = register(
             builder -> builder.codec(RepositoryItem.CODEC),
             "",
             SKYBLOCK_ID,
             value(true),
-            (skyblockId, key) -> RepositoryItem.of(skyblockId)
-        );
+            (skyblockId, key) -> RepositoryItem.of(skyblockId));
+        DYE = register(
+            builder -> builder.codec(Codec.STRING),
+            "dye_item",
+            DataComponentTypes.CUSTOM_DATA,
+            defaultTest(),
+            (nbtComponent, s) -> nbtComponent.getNbt().getString(s));
         CUSTOM_SLOT_TEXT = new CookiesDataComponent<>(Identifier.of("cookies:custom_slot_text"));
         OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));
         ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
@@ -189,8 +183,7 @@ public class CookiesDataComponentTypes {
         String key,
         ComponentType<D> source,
         BiFunction<D, String, Boolean> test,
-        BiFunction<D, String, T> mapper
-    ) {
+        BiFunction<D, String, T> mapper) {
         return register(operator, new String[] {key}, source, test, mapper);
     }
 
@@ -199,8 +192,7 @@ public class CookiesDataComponentTypes {
         String[] key,
         ComponentType<D> source,
         BiFunction<D, String, Boolean> test,
-        BiFunction<D, String, T> mapper
-    ) {
+        BiFunction<D, String, T> mapper) {
         final ComponentType.Builder<T> builder = ComponentType.builder();
         final ComponentType<T> build = operator.apply(builder).build();
         list.add(build);
@@ -225,14 +217,10 @@ public class CookiesDataComponentTypes {
 
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.FIELD)
-    private @interface GenerateAccessor {
-    }
+    private @interface GenerateAccessor {}
 
     public record DataType<T, D>(
-        ComponentType<T> target,
-        String[] key,
-        ComponentType<D> source,
-        BiFunction<D, String, Boolean> test,
+        ComponentType<T> target, String[] key, ComponentType<D> source, BiFunction<D, String, Boolean> test,
         BiFunction<D, String, T> mapper
     ) {
 

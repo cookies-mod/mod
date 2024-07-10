@@ -3,7 +3,9 @@ package dev.morazzer.cookies.mod.mixins.render;
 import dev.morazzer.cookies.mod.features.misc.render.ArmorRenderHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,22 +20,19 @@ public class ArmorFeatureRenderMixin {
 
     @Inject(
         at = @At("HEAD"),
-        method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V",
+        method = "renderArmor",
         cancellable = true
     )
     @SuppressWarnings("MissingJavadoc")
-    public <T extends LivingEntity> void render(final MatrixStack matrixStack,
-                                                final VertexConsumerProvider vertexConsumerProvider,
-                                                final int i,
-                                                final T livingEntity,
-                                                final float f,
-                                                final float g,
-                                                final float h,
-                                                final float j,
-                                                final float k,
-                                                final float l,
-                                                final CallbackInfo ci) {
-        if (ArmorRenderHelper.shouldNotRender(livingEntity)) {
+    public <T extends LivingEntity, A extends BipedEntityModel<T>> void render(
+        MatrixStack matrices,
+        VertexConsumerProvider vertexConsumers,
+        T entity,
+        EquipmentSlot armorSlot,
+        int light,
+        A model,
+        CallbackInfo ci) {
+        if (ArmorRenderHelper.shouldNotRender(entity, entity.getEquippedStack(armorSlot))) {
             ci.cancel();
         }
     }
