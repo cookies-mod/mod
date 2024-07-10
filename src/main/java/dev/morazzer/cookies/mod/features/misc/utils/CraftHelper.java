@@ -191,7 +191,6 @@ public class CraftHelper {
             stackCountContext.integers.pop();
 
             childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
-            System.out.println(((double) context.recipeResult.getAmount()) / context.parent.recipeResult().getAmount());
 
             text.add(index, formatter.format(
                 prefix,
@@ -407,8 +406,6 @@ public class CraftHelper {
             new StackCountContext(),
             this::formatted);
 
-        this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
-
         if (!tooltip.isEmpty()) {
             this.addClose(tooltip);
         }
@@ -417,6 +414,7 @@ public class CraftHelper {
             DEBUG_INFO,
             () -> tooltip.add(Text.literal(("Time to calculate: %sμs").formatted((System.nanoTime() - start) / 1000))));
         this.tooltip = Lists.transform(tooltip, Text::asOrderedText);
+        this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
     }
 
     private void addClose(List<MutableText> tooltip) {
