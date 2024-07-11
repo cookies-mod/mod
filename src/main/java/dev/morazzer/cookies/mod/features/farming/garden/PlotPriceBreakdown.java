@@ -53,7 +53,7 @@ public class PlotPriceBreakdown {
         if (!SkyblockUtils.isCurrentlyInSkyblock()) {
             return;
         }
-        if (LocationUtils.Island.GARDEN.isActive()) {
+        if (!LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
         if (!ConfigKeys.FARMING_PLOT_PRICE.get()) {

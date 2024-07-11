@@ -40,7 +40,7 @@ public class CompostUpgrades {
         if (!SkyblockUtils.isCurrentlyInSkyblock()) {
             return;
         }
-        if (LocationUtils.Island.GARDEN.isActive()) {
+        if (!LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
         if (!ConfigKeys.FARMING_COMPOST_UPGRADE.get()) {
