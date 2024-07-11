@@ -1,0 +1,18 @@
+package dev.morazzer.cookies.mod.features.mining;
+
+import dev.morazzer.cookies.mod.features.Loader;
+import dev.morazzer.cookies.mod.features.mining.commissions.CommissionCompletionHighlighter;
+import dev.morazzer.cookies.mod.features.mining.utils.HotmUtils;
+
+/**
+ * Utility class to load all mining features.
+ */
+@SuppressWarnings("MissingJavadoc")
+public class MiningFeatures {
+
+    public static void load() {
+        Loader.load("HotmUtils", HotmUtils::new);
+        Loader.load("CommissionCompletionHighlighter", CommissionCompletionHighlighter::new);
+    }
+
+}

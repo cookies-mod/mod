@@ -1,4 +1,4 @@
-package dev.morazzer.cookies.mod.features.misc.utils;
+package dev.morazzer.cookies.mod.features.mining.utils;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
@@ -11,7 +11,6 @@ import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.types.HotmDataComponentTypes;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,7 +23,6 @@ import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.util.DateTimeFormatters;
 import net.minecraft.util.Formatting;
 
 /**
@@ -48,10 +46,6 @@ public class HotmUtils {
             if (!genericContainerScreen.getTitle().getString().equals("Heart of the Mountain")) {
                 return;
             }
-            HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
-                drawContext.drawTextWithBackground(MinecraftClient.getInstance().textRenderer, Text.literal(""), drawContext.getScaledWindowWidth(), drawContext.getScaledWindowWidth(), 0, -1);
-            });
-
 
             InventoryContentUpdateEvent.register(genericContainerScreen.getScreenHandler(),
                 ExceptionHandler.wrap(this::updateInventory));

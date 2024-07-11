@@ -23,6 +23,12 @@ public class MiningConfig extends Category {
             .or(o -> showTotalCost.getValue());
     }
 
+    public BooleanOption modifyCommissions = new BooleanOption(
+        Text.literal("Modify commission items"),
+        Text.literal("Visually changes the commission item to represent the stages a commission can be in."),
+        false
+    );
+
     @Parent
     public TextDisplayOption hotmParentDisplay =
         new TextDisplayOption(Text.literal("HOTM"), Text.literal("Settings for the hotm"));
