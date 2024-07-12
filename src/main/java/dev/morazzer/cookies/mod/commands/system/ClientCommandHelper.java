@@ -7,6 +7,8 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -57,6 +59,29 @@ public interface ClientCommandHelper {
             consumer.accept(context);
             return 1;
         };
+    }
+    /**
+     * Runs a piece of code without providing the context.
+     *
+     * @param runnable The consumer.
+     * @return The command.
+     */
+    default Command<FabricClientCommandSource> run(Runnable runnable) {
+        return context -> {
+            runnable.run();
+            return 1;
+        };
+    }
+
+    /**
+     * Modifies the provided value and returns it.
+     * @param value The value.
+     * @param config The configurator.
+     * @return The configured value.
+     * @param <T> The type of the value.
+     */
+    default <T> T create(T value, UnaryOperator<T> config) {
+        return config.apply(value);
     }
 
     /**

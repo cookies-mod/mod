@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.config.screen.ConfigScreen;
@@ -15,7 +16,6 @@ public class OpenConfigCommand extends ClientCommand {
     @Override
     public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         ConfigManager.getConfig();
-        return this.literal("config").executes(this.run(context -> MinecraftClient.getInstance()
-            .send(() -> MinecraftClient.getInstance().setScreen(new ConfigScreen(ConfigManager.getConfigReader())))));
+        return this.literal("config").executes(this.run(CookiesMod::openConfig));
     }
 }
