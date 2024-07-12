@@ -2,6 +2,8 @@ package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.EnumCycleOption;
 import java.util.Arrays;
+
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnumCycleEditor<T extends Enum<T>> extends ConfigOptionEditor<T, EnumCycleOption<T>> {
 
     private ButtonWidget buttonWidget;
+    private int maxButtonWidth;
     private int amount = 0;
     private Text text;
 
@@ -28,6 +31,14 @@ public class EnumCycleEditor<T extends Enum<T>> extends ConfigOptionEditor<T, En
         this.buttonWidget = new ButtonWidget.Builder(Text.empty(), this::onClick).build();
         this.amount = this.option.getValue().getDeclaringClass().getEnumConstants().length;
         this.text = this.getOptionText();
+
+        maxButtonWidth = Arrays.stream(this.option.getValue().getDeclaringClass().getEnumConstants())
+                .map(this.option.getTextSupplier()::supplyText)
+                .mapToInt(text -> MinecraftClient.getInstance().textRenderer.getWidth(text))
+                .max()
+                .orElse(0);
+
+        this.buttonWidget.setWidth(maxButtonWidth + 6);
     }
 
     private void onClick(ButtonWidget buttonWidget) {
@@ -44,26 +55,24 @@ public class EnumCycleEditor<T extends Enum<T>> extends ConfigOptionEditor<T, En
     public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
         super.render(drawContext, mouseX, mouseY, tickDelta, optionWidth);
         drawContext.drawText(this.getTextRenderer(), this.option.getName(), 2,
-            this.getHeight(optionWidth) / 2 - this.getTextRenderer().fontHeight / 2, 0xFFFFFFFF, true);
+                this.getHeight(optionWidth) / 2 - this.getTextRenderer().fontHeight / 2, 0xFFFFFFFF, true);
 
-        this.buttonWidget.setX(optionWidth - 55);
+        this.buttonWidget.setX(optionWidth - maxButtonWidth - 8);
         this.buttonWidget.setY(this.getHeight() - 16);
-
-        this.buttonWidget.setWidth(50);
         this.buttonWidget.setHeight(14);
         this.buttonWidget.render(drawContext, mouseX, mouseY, tickDelta);
 
         drawContext.drawCenteredTextWithShadow(this.getTextRenderer(), this.text,
-            this.buttonWidget.getX() + this.buttonWidget.getWidth() / 2, this.buttonWidget.getY() +3, 0xFFFFFFFF);
+                this.buttonWidget.getX() + this.buttonWidget.getWidth() / 2, this.buttonWidget.getY() +3, 0xFFFFFFFF);
     }
 
     @Override
     public boolean doesMatchSearch(@NotNull String search) {
         return super.doesMatchSearch(search) || Arrays
-            .stream(this.option.getValue().getDeclaringClass().getEnumConstants())
-            .map(this.option.getTextSupplier()::supplyText)
-            .map(Text::getString)
-            .anyMatch(option -> option.contains(search));
+                .stream(this.option.getValue().getDeclaringClass().getEnumConstants())
+                .map(this.option.getTextSupplier()::supplyText)
+                .map(Text::getString)
+                .anyMatch(option -> option.contains(search));
     }
 
     @Override
@@ -79,5 +88,4 @@ public class EnumCycleEditor<T extends Enum<T>> extends ConfigOptionEditor<T, En
     public int getHeight() {
         return 18;
     }
-
 }
