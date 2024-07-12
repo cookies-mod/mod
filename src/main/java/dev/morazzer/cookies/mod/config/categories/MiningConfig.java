@@ -29,6 +29,12 @@ public class MiningConfig extends Category {
         false
     );
 
+    public BooleanOption puzzlerSolver = new BooleanOption(
+        Text.literal("Puzzler solver"),
+        Text.literal("Highlight the correct block for the puzzler."),
+        false
+    );
+
     @Parent
     public TextDisplayOption hotmParentDisplay =
         new TextDisplayOption(Text.literal("HOTM"), Text.literal("Settings for the hotm"));
