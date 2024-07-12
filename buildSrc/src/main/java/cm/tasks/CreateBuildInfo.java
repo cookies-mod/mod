@@ -4,6 +4,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.LongLiteralExpr;
@@ -14,6 +15,7 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
 import com.google.common.collect.Iterators;
+import org.gradle.api.tasks.options.Option;
 import java.io.IOException;
 import javax.inject.Inject;
 import org.eclipse.jgit.api.Git;
@@ -21,16 +23,28 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 public abstract class CreateBuildInfo extends DefaultTask {
+    private boolean isStable;
 
     @Inject
     public CreateBuildInfo() {
         this.setGroup("generation");
         this.getOutputs().upToDateWhen(upToDateSpec -> false);
         this.getProject().getTasks().getByName("build").dependsOn(this);
+    }
+
+    @Option(option = "isStable", description = "Indicates that this is a release instead of a beta release")
+    public void setIsStable(boolean flag) {
+        this.isStable = flag;
+    }
+
+    @Input
+    public boolean isStable() {
+        return isStable;
     }
 
     @TaskAction
@@ -113,6 +127,15 @@ public abstract class CreateBuildInfo extends DefaultTask {
                 new PrimitiveType(PrimitiveType.Primitive.INT),
                 "lastCommitTime",
                 new IntegerLiteralExpr(revCommit.getCommitTime()),
+                Modifier.Keyword.FINAL,
+                Modifier.Keyword.PUBLIC,
+                Modifier.Keyword.STATIC
+            );
+
+            buildInfoClass.addFieldWithInitializer(
+                new PrimitiveType(PrimitiveType.Primitive.BOOLEAN),
+                "isStable",
+                new BooleanLiteralExpr(isStable),
                 Modifier.Keyword.FINAL,
                 Modifier.Keyword.PUBLIC,
                 Modifier.Keyword.STATIC

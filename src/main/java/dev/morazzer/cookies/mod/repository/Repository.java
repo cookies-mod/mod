@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
+import dev.morazzer.cookies.mod.utils.UpdateChecker;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
 import dev.morazzer.mods.cookies.generated.BuildInfo;
@@ -45,6 +46,7 @@ public class Repository {
         JsonObject index;
         try {
             index = JsonUtils.CLEAN_GSON.fromJson(download("index"), JsonObject.class);
+            UpdateChecker.setLatestModInfo(index.get("mod_info"));
 
             final JsonObject requires = index.getAsJsonObject("requires");
             final String modVersion = requires.get("mod_version").getAsString();

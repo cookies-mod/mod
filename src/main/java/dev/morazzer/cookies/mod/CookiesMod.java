@@ -10,6 +10,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.events.EventLoader;
 import dev.morazzer.cookies.mod.features.Features;
 import dev.morazzer.cookies.mod.repository.Repository;
+import dev.morazzer.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
@@ -24,6 +25,14 @@ public class CookiesMod implements ClientModInitializer {
     @Getter
     private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
+    /**
+     * Opens the config screen.
+     */
+    public static void openConfig() {
+        MinecraftClient.getInstance()
+            .send(() -> MinecraftClient.getInstance().setScreen(new ConfigScreen(ConfigManager.getConfigReader())));
+    }
+
     @Override
     public void onInitializeClient() {
         CommandManager.initialize();
@@ -32,9 +41,6 @@ public class CookiesMod implements ClientModInitializer {
         EventLoader.load();
         Features.load();
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand());
-    }
-
-    public static void openConfig() {
-        MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new ConfigScreen(ConfigManager.getConfigReader())));
+        UpdateChecker.init();
     }
 }
