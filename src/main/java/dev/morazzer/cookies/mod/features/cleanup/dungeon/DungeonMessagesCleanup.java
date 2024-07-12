@@ -21,7 +21,7 @@ public class DungeonMessagesCleanup {
             return true;
         }
         if (!SkyblockUtils.isCurrentlyInSkyblock()) {
-            return false;
+            return true;
         }
         if (LocationUtils.getRegion().island != LocationUtils.Island.CATACOMBS) {
             return true;
