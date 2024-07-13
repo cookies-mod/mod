@@ -13,16 +13,20 @@ import java.util.List;
 import java.util.Objects;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Data that contains all items that are currently in the storage of the selected profile.
  */
 public class StorageData implements JsonSerializable {
-    private static final Codec<StorageDataEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.fieldOf("slot").forGetter(StorageDataEntry::slot),
-            ItemStack.CODEC.fieldOf("item_stack").forGetter(StorageDataEntry::itemStack))
-        .apply(instance, StorageDataEntry::new));
+    private static final ItemStack VOID_ITEM = new ItemStack(Items.DEBUG_STICK);
+
+    private static final Codec<StorageDataEntry> CODEC =
+        RecordCodecBuilder.create(instance -> instance.group(Codec.INT.fieldOf("slot")
+                    .forGetter(StorageDataEntry::slot),
+                ItemStack.CODEC.fieldOf("item_stack").forGetter(StorageDataEntry::itemStack))
+            .apply(instance, StorageDataEntry::new));
     private static final Codec<List<StorageDataEntry>> LIST_CODEC = CODEC.listOf();
     private final List<List<StorageDataEntry>> enderChestItems = Arrays.asList(new List[9]);
     private final List<List<StorageDataEntry>> backpackItems = Arrays.asList(new List[18]);
@@ -93,7 +97,9 @@ public class StorageData implements JsonSerializable {
             if (parse.isError() || !parse.isSuccess()) {
                 continue;
             }
-            final List<StorageDataEntry> values = parse.getOrThrow();
+            final List<StorageDataEntry> values = new ArrayList<>(parse.getOrThrow());
+            values.replaceAll(entry -> entry.itemStack.getItem().equals(VOID_ITEM.getItem()) ?
+                new StorageDataEntry(entry.slot, ItemStack.EMPTY) : entry);
             itemsList.set(index, values);
         }
     }
@@ -109,12 +115,15 @@ public class StorageData implements JsonSerializable {
     private JsonElement save(List<List<StorageDataEntry>> itemList) {
         JsonObject jsonObject = new JsonObject();
         for (int i = 0; i < itemList.size(); i++) {
-            final List<StorageDataEntry> itemStacks = itemList.get(i);
-            if (itemStacks == null) {
+            final List<StorageDataEntry> storageDataEntries = itemList.get(i);
+            if (storageDataEntries == null) {
                 continue;
             }
+            final List<StorageDataEntry> itemStacks = new ArrayList<>(storageDataEntries);
+
             itemStacks.forEach(stack -> stack.itemStack.remove(DataComponentTypes.ENCHANTMENTS));
             itemStacks.forEach(stack -> stack.itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE));
+            itemStacks.replaceAll(entry -> entry.itemStack.isEmpty() ? new StorageDataEntry(entry.slot, VOID_ITEM) : entry);
             final DataResult<JsonElement> jsonElementDataResult = LIST_CODEC.encodeStart(JsonOps.INSTANCE, itemStacks);
             if (jsonElementDataResult.isSuccess()) {
                 jsonObject.add(String.valueOf(i), jsonElementDataResult.getOrThrow());
