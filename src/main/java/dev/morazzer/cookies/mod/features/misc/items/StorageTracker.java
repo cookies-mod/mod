@@ -51,7 +51,7 @@ public class StorageTracker {
                 continue;
             }
 
-            if (!slot.hasStack()) {
+            if (!slot.hasStack() && (slot.getIndex() + 1) % 9 != 0) {
                 continue;
             }
 

@@ -24,6 +24,12 @@ public class MiscConfig extends Category {
         Text.literal("CTRL + Scroll -> move horizontal"),
         Text.literal("SHIFT + Scroll -> chop tooltips"));
 
+    @Expose
+    public BooleanOption enableStoragePreview = new BooleanOption(
+        Text.literal("Storage Preview"),
+        Text.literal("Shows a preview of the content in the storage."),
+        false);
+
     @Parent
     public TextDisplayOption itemSubCategory = new TextDisplayOption(Text.literal("Items"), Text.literal(""));
 

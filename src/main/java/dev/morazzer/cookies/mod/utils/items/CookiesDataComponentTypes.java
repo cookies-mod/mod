@@ -16,10 +16,12 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
+import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.BundleTooltipData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -63,6 +65,7 @@ public class CookiesDataComponentTypes {
     public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
     public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
     public static final ComponentType<List<Text>> CUSTOM_LORE;
+    public static final ComponentType<ItemTooltipComponent> LORE_ITEMS;
 
     private static final List<ComponentType<?>> list = new ArrayList<>();
     @Getter
@@ -176,6 +179,7 @@ public class CookiesDataComponentTypes {
         OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));
         ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
         CUSTOM_LORE = new CookiesDataComponent<>(Identifier.of("cookies:custom_lore"));
+        LORE_ITEMS = new CookiesDataComponent<>(Identifier.of("cookies:lore_items"));
     }
 
     private static <T, D> ComponentType<T> register(
