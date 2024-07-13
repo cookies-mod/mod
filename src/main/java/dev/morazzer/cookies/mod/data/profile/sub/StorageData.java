@@ -10,6 +10,7 @@ import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +56,8 @@ public class StorageData implements JsonSerializable {
      */
     public List<StorageDataEntry> getAllItems() {
         List<StorageDataEntry> items = new ArrayList<>();
-        enderChestItems.stream().flatMap(List::stream).forEach(items::add);
-        backpackItems.stream().flatMap(List::stream).forEach(items::add);
+        enderChestItems.stream().filter(Objects::nonNull).flatMap(List::stream).forEach(items::add);
+        backpackItems.stream().filter(Objects::nonNull).flatMap(List::stream).forEach(items::add);
         return items;
     }
 
@@ -71,6 +72,9 @@ public class StorageData implements JsonSerializable {
     }
 
     private void process(JsonObject storage, List<List<StorageDataEntry>> itemsList) {
+        if (storage == null) {
+            return;
+        }
         for (String s : storage.keySet()) {
             final int index;
 

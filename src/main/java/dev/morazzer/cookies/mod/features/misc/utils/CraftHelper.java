@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
+import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
@@ -15,6 +16,8 @@ import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -123,9 +128,7 @@ public class CraftHelper {
     }
 
     private static int getAmountThroughParents(
-        EvaluationContext context,
-        int max,
-        StackCountContext stackCountContext) {
+        EvaluationContext context, int max, StackCountContext stackCountContext) {
         int amount = 0;
         amount += (stackCountContext.integers.peek() *
                    (context.recipeResult.getAmount() / context.parent.recipeResult().getAmount()));
@@ -143,14 +146,10 @@ public class CraftHelper {
         Formatter formatter) {
         EvaluationContext context = new EvaluationContext(calculationResult, parent);
         final int amount = getAmount(context, calculationResult.getAmount(), stackCountContext);
-        final int amountThroughParents = getAmountThroughParents(
-            context,
-            calculationResult.getAmount(),
-            stackCountContext);
-        DevUtils.runIf(
-            DEBUG_INFO,
-            () -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(
-                amount,
+        final int amountThroughParents =
+            getAmountThroughParents(context, calculationResult.getAmount(), stackCountContext);
+        DevUtils.runIf(DEBUG_INFO,
+            () -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(amount,
                 amountThroughParents,
                 calculationResult.getAmount()))));
         if (amountThroughParents == calculationResult.getAmount()) {
@@ -179,21 +178,14 @@ public class CraftHelper {
                     newPrefix = prefix.replace("├", "│").replace("└", "  ") + (isLast ? "└ " : "├ ");
                 }
 
-                childrenFinished &= append(
-                    newPrefix,
-                    text,
-                    recipeResult,
-                    depth + 1,
-                    context,
-                    stackCountContext,
-                    formatter);
+                childrenFinished &=
+                    append(newPrefix, text, recipeResult, depth + 1, context, stackCountContext, formatter);
             }
             stackCountContext.integers.pop();
 
             childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
 
-            text.add(index, formatter.format(
-                prefix,
+            text.add(index, formatter.format(prefix,
                 calculationResult.getId(),
                 calculationResult.getRepositoryItem(),
                 calculationResult.getAmount() - amountThroughParents,
@@ -203,8 +195,7 @@ public class CraftHelper {
 
             return childrenFinished;
         } else {
-            text.add(formatter.format(
-                prefix,
+            text.add(formatter.format(prefix,
                 calculationResult.getId(),
                 calculationResult.getRepositoryItem(),
                 calculationResult.getAmount() - amountThroughParents,
@@ -228,10 +219,8 @@ public class CraftHelper {
 
         final double percentage = (double) amountOfItem / amount;
         //noinspection DataFlowIssue
-        final int color = ColorUtils.calculateBetween(
-            Formatting.RED.getColorValue(),
-            Formatting.GREEN.getColorValue(),
-            percentage);
+        final int color =
+            ColorUtils.calculateBetween(Formatting.RED.getColorValue(), Formatting.GREEN.getColorValue(), percentage);
 
 
         if (percentage == 1) {
@@ -257,9 +246,8 @@ public class CraftHelper {
         }
 
         literal.append(" ");
-        final String formatted = "%s/%s".formatted(
-            MathUtils.NUMBER_FORMAT.format(amountOfItem),
-            MathUtils.NUMBER_FORMAT.format(amount));
+        final String formatted =
+            "%s/%s".formatted(MathUtils.NUMBER_FORMAT.format(amountOfItem), MathUtils.NUMBER_FORMAT.format(amount));
         literal.append(Text.literal(formatted).withColor(color));
         literal.append(" ");
         if (repositoryItem != null) {
@@ -272,11 +260,7 @@ public class CraftHelper {
     }
 
     private void beforeScroll(
-        Screen screen,
-        double mouseX,
-        double mouseY,
-        double horizontalScroll,
-        double verticalScroll) {
+        Screen screen, double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
         if (!this.shouldRender()) {
@@ -329,16 +313,14 @@ public class CraftHelper {
         final int size = this.tooltip.size();
         final List<OrderedText> tooltip;
         if (this.tooltip.size() > 30) {
-            tooltip = new ArrayList<>(this.tooltip.subList(
-                Math.min(size - 29, this.scrolled),
+            tooltip = new ArrayList<>(this.tooltip.subList(Math.min(size - 29, this.scrolled),
                 Math.min(29 + this.scrolled, size)));
             tooltip.addFirst(this.tooltip.getFirst());
         } else {
             tooltip = this.tooltip;
         }
 
-        drawContext.drawTooltip(
-            MinecraftClient.getInstance().textRenderer,
+        drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
             tooltip,
             AbsoluteTooltipPositioner.INSTANCE,
             x,
@@ -347,8 +329,7 @@ public class CraftHelper {
 
         if (DevUtils.isEnabled(DEBUG_HITBOX)) {
             drawContext.getMatrices().translate(0, 0, 1000);
-            drawContext.drawBorder(
-                x + this.buttonX,
+            drawContext.drawBorder(x + this.buttonX,
                 y + this.buttonY,
                 this.buttonWidthHeight,
                 this.buttonWidthHeight,
@@ -397,8 +378,7 @@ public class CraftHelper {
 
         long start = System.nanoTime();
         List<MutableText> tooltip = new ArrayList<>();
-        append(
-            "",
+        append("",
             tooltip,
             calculation,
             0,
@@ -410,8 +390,7 @@ public class CraftHelper {
             this.addClose(tooltip);
         }
 
-        DevUtils.runIf(
-            DEBUG_INFO,
+        DevUtils.runIf(DEBUG_INFO,
             () -> tooltip.add(Text.literal(("Time to calculate: %sμs").formatted((System.nanoTime() - start) / 1000))));
         this.tooltip = Lists.transform(tooltip, Text::asOrderedText);
         this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
@@ -455,8 +434,7 @@ public class CraftHelper {
     }
 
     @SuppressWarnings("MissingJavadoc")
-    public record EvaluationContext(RecipeResult<?> recipeResult, EvaluationContext parent) {
-    }
+    public record EvaluationContext(RecipeResult<?> recipeResult, EvaluationContext parent) {}
 
     @SuppressWarnings("MissingJavadoc")
     public static class StackCountContext {
@@ -478,6 +456,21 @@ public class CraftHelper {
                 if (currentProfile.isPresent()) {
                     final ProfileData profileData = currentProfile.get();
                     count += profileData.getSackTracker().getItems().getOrDefault(id, 0);
+                    for (StorageData.StorageDataEntry allItem : profileData.getStorageData().getAllItems()) {
+                        RepositoryItem item =
+                            ItemUtils.getData(allItem.itemStack(), CookiesDataComponentTypes.REPOSITORY_ITEM);
+                        if (id.equals(item)) {
+                            count += allItem.itemStack().getCount();
+                        }
+                    }
+                    final PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+                    for (int i = 0; i < inventory.size() - 1; i++) {
+                        final ItemStack stack = inventory.getStack(i);
+                        RepositoryItem item = ItemUtils.getData(stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
+                        if (id.equals(item)) {
+                            count += stack.getCount();
+                        }
+                    }
                 }
                 itemMap.put(id, (long) count);
             }
