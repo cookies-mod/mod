@@ -52,22 +52,6 @@ public class ItemTooltipComponent implements TooltipComponent {
         }
     }
 
-    private int getColumns() {
-        return Math.min(this.size, 9);
-    }
-
-    private int getRows() {
-        return this.size / this.getColumns();
-    }
-
-    private int getColumnsWidth() {
-        return this.getColumns() * 18 + 2;
-    }
-
-    private int getRowsHeight() {
-        return this.getRows() * 18 + 2;
-    }
-
     private void drawSlot(
         int x, int y, int index, DrawContext context, TextRenderer textRenderer) {
         if (index >= this.size) {
@@ -82,5 +66,21 @@ public class ItemTooltipComponent implements TooltipComponent {
 
     private void draw(DrawContext context, int x, int y) {
         context.drawGuiTexture(SLOT, x, y, 0, 18, 20);
+    }
+
+    private int getColumnsWidth() {
+        return this.getColumns() * 18 + 2;
+    }
+
+    private int getRowsHeight() {
+        return this.getRows() * 18 + 4;
+    }
+
+    private int getRows() {
+        return this.size / this.getColumns() + (this.size % this.getColumns() != 0 ? 1 : 0);
+    }
+
+    private int getColumns() {
+        return Math.min(this.size, 9);
     }
 }
