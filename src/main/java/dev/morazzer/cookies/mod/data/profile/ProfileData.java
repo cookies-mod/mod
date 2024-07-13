@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.data.profile;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
+import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.json.Safe;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class ProfileData {
     private SackTracker sackTracker = new SackTracker();
     private String selectedCraftHelperItem = "";
     private RancherSpeeds rancherSpeeds = new RancherSpeeds(this);
+    private StorageData storageData = new StorageData();
 
     /**
      * Create a profile.
@@ -60,8 +62,8 @@ public class ProfileData {
      * @return If the profile is active.
      */
     public boolean isActive() {
-        return PlayerStorage.getCurrentPlayer().map(uuid -> uuid.equals(this.playerUuid)).orElse(false)
-               && SkyblockUtils.getLastProfileId().map(uuid -> uuid.equals(this.profileUuid)).orElse(false);
+        return PlayerStorage.getCurrentPlayer().map(uuid -> uuid.equals(this.playerUuid)).orElse(false) &&
+               SkyblockUtils.getLastProfileId().map(uuid -> uuid.equals(this.profileUuid)).orElse(false);
     }
 
     /**
@@ -71,11 +73,8 @@ public class ProfileData {
      */
     @Override
     public String toString() {
-        return "ProfileData{"
-               + "playerUuid=" + this.playerUuid
-               + ", profileUuid=" + this.profileUuid
-               + ", gameMode=" + this.gameMode
-               + '}';
+        return "ProfileData{" + "playerUuid=" + this.playerUuid + ", profileUuid=" + this.profileUuid + ", gameMode=" +
+               this.gameMode + '}';
     }
 
 }

@@ -12,6 +12,7 @@ public class ItemFeatures {
         Loader.load("ItemStats", ItemStats::register);
         Loader.load("SackTrackerListener", SackTrackerListener::new);
         Loader.load("SackInventoryTracker", SackInventoryTracker::new);
+        Loader.load("StorageTracker", StorageTracker::new);
     }
 
 }
