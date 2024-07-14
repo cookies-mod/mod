@@ -18,6 +18,12 @@ public class HelpersConfig extends Category {
         false
     );
 
+    public BooleanOption anvilHelper = new BooleanOption(
+        Text.literal("Anvil Helper"),
+        Text.literal("Highlights the same book in your inventory when combining them in an anvil."),
+        false
+    );
+
     public HelpersConfig() {
         super(new ItemStack(Items.SCAFFOLDING));
     }
@@ -29,7 +35,7 @@ public class HelpersConfig extends Category {
 
     @Override
     public Text getDescription() {
-        return Text.literal("Settings that help you keeping track of certain things.");
+        return Text.literal("Settings that help you with keeping track of certain things.");
     }
 
     @Override

@@ -12,6 +12,7 @@ public class UtilsFeatures {
         Loader.load("CraftHelper", CraftHelper::new);
         Loader.load("ModifiedRecipeScreen", ModifyRecipeScreen::new);
         Loader.load("StoragePreview", StoragePreview::new);
+        Loader.load("AnvilHelper", AnvilHelper::new);
     }
 
 }
