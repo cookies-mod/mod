@@ -1,10 +1,13 @@
 package dev.morazzer.cookies.mod.data.profile;
 
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
+import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileStorage;
+import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.json.Exclude;
 import dev.morazzer.cookies.mod.utils.json.Safe;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -32,6 +35,8 @@ public class ProfileData {
     private String selectedCraftHelperItem = "";
     private RancherSpeeds rancherSpeeds = new RancherSpeeds(this);
     private StorageData storageData = new StorageData();
+    @Exclude
+    private GlobalProfileData globalProfileData;
 
     /**
      * Create a profile.
@@ -64,6 +69,20 @@ public class ProfileData {
     public boolean isActive() {
         return PlayerStorage.getCurrentPlayer().map(uuid -> uuid.equals(this.playerUuid)).orElse(false) &&
                SkyblockUtils.getLastProfileId().map(uuid -> uuid.equals(this.profileUuid)).orElse(false);
+    }
+
+    /**
+     * Called right after all serializable fields have been set.
+     */
+    public void load() {
+        this.globalProfileData = GlobalProfileStorage.load(profileUuid);
+    }
+
+    /**
+     * Called right after all serializable fields have been saved.
+     */
+    public void save() {
+        GlobalProfileStorage.save(this.globalProfileData);
     }
 
     /**

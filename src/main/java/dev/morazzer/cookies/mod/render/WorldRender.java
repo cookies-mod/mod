@@ -44,6 +44,10 @@ public class WorldRender {
      */
     public synchronized static void removeRenderable(final Renderable renderable) {
         renderables.remove(renderable);
+        if (renderable == null) {
+            return;
+        }
+        renderable.remove();
     }
 
     /**

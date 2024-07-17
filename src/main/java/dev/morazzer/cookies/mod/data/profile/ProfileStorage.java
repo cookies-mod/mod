@@ -2,6 +2,8 @@ package dev.morazzer.cookies.mod.data.profile;
 
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.CookiesMod;
+import dev.morazzer.cookies.mod.data.DataMigrations;
+import dev.morazzer.cookies.mod.data.Migration;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Storage for the {@linkplain cm.data.profile.ProfileData} to always get the correct instance.
+ * Storage for the {@linkplain dev.morazzer.cookies.mod.data.profile.ProfileData} to always get the correct instance.
  */
 public class ProfileStorage {
     private static final String LOGGING_KEY = "profileStorage";
@@ -62,7 +64,8 @@ public class ProfileStorage {
 
         ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
         final JsonObject jsonObject = JsonUtils.toJsonObject(profileData);
-        ProfileDataMigrations.writeLatest(jsonObject);
+        DataMigrations.writeLatest(jsonObject);
+        profileData.save();
         ExceptionHandler.removeThrows(() -> Files.writeString(
             profileFile,
             JsonUtils.CLEAN_GSON.toJson(jsonObject),
@@ -88,6 +91,7 @@ public class ProfileStorage {
                 PlayerStorage.getCurrentPlayer().get(),
                 SkyblockUtils.getLastProfileId().get()
             );
+            profileData.load();
             saveCurrentProfile();
             return;
         }
@@ -98,12 +102,13 @@ public class ProfileStorage {
                 profileFile,
                 StandardCharsets.UTF_8
             )), JsonObject.class);
-        ProfileDataMigrations.migrate(jsonObject);
+        DataMigrations.migrate(jsonObject, Migration.Type.PROFILE);
 
         profileData = JsonUtils.fromJson(new ProfileData(
             PlayerStorage.getCurrentPlayer().get(),
             SkyblockUtils.getLastProfileId().get()
         ), jsonObject);
+        profileData.load();
     }
 
     /**

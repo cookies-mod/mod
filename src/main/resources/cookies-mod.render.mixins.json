@@ -3,6 +3,8 @@
   "client": [
     "DebugHudMixin",
     "WorldRenderMixin",
-    "AllowOutlinesWithoutEntities"
+    "AllowOutlinesWithoutEntities",
+    "BlockEntityMixin",
+    "BlockEntityRenderDispatcherMixin"
   ]
 }

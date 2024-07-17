@@ -6,14 +6,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.ItemLoreEvent;
+import dev.morazzer.cookies.mod.events.ItemStackEvents;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
@@ -23,6 +26,7 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
@@ -53,21 +57,30 @@ public abstract class ItemStackMixin {
         at = @At(value = "RETURN")
     )
     public void initializeItemStackWithComponents(
-        ItemConvertible itemConvertible,
-        int i,
-        ComponentMapImpl componentMapImpl,
-        CallbackInfo ci
-    ) {
+        ItemConvertible itemConvertible, int i, ComponentMapImpl componentMapImpl, CallbackInfo ci) {
         this.cookies$setComponents();
         CookiesDataComponentTypes.getDataTypes().forEach(this::cookies$registerType);
 
         NbtComponent nbtComponent = componentMapImpl.get(DataComponentTypes.CUSTOM_DATA);
         NbtCompound nbtCompound = nbtComponent == null ? null : nbtComponent.copyNbt();
 
+        final Map<String, Integer> enchantMap =
+            ItemUtils.getData((ItemStack) (Object) this, CookiesDataComponentTypes.ENCHANTMENTS);
+
+        if (enchantMap != null && itemConvertible.asItem() == Items.ENCHANTED_BOOK) {
+            if (enchantMap.size() == 1) {
+                final Map.Entry<String, Integer> next = enchantMap.entrySet().iterator().next();
+                set(
+                    CookiesDataComponentTypes.SKYBLOCK_ID,
+                    "%s;%s".formatted(next.getKey(), next.getValue()).toUpperCase(Locale.ROOT));
+            }
+        }
+
+        ItemStackEvents.EVENT.invoker().create((ItemStack) (Object) this);
+
         if (!ConfigManager.isLoaded()) {
             return;
         }
-
 
         this.cookies$setPetLevel(nbtCompound, componentMapImpl);
 
@@ -76,8 +89,7 @@ public abstract class ItemStackMixin {
             return;
         }
 
-        final List<MutableText> lines = loreComponent.lines().stream().map(Text::copy).collect(
-            Collectors.toList());
+        final List<MutableText> lines = loreComponent.lines().stream().map(Text::copy).collect(Collectors.toList());
         ItemLoreEvent.EVENT.invoker().accept(lines);
         ItemLoreEvent.EVENT_ITEM.invoker().modify((ItemStack) (Object) this, lines);
 
@@ -95,25 +107,10 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 5))
-    private <T> void getLore(ItemStack instance, ComponentType<T> componentType, Item.TooltipContext context,
-                             Consumer<Text> textConsumer, TooltipType type, Operation<Void> original) {
-        if (!componentType.equals(DataComponentTypes.LORE)) {
-            return;
-        }
-
-        final List<Text> data = ItemUtils.getData(instance, CookiesDataComponentTypes.CUSTOM_LORE);
-        if (data == null) {
-            original.call(instance, componentType, context, textConsumer, type);
-            return;
-        }
-        data.forEach(textConsumer);
-    }
-
     @Unique
     private void cookies$setComponents() {
-        ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(
-            new ComponentMapImpl(ComponentMap.EMPTY));
+        ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(new ComponentMapImpl(
+            ComponentMap.EMPTY));
     }
 
     @Unique
@@ -126,6 +123,10 @@ public abstract class ItemStackMixin {
             }
         }
     }
+
+    @Shadow
+    @Nullable
+    public abstract <T> T set(ComponentType<? super T> dataComponentType, @Nullable T object);
 
     @Unique
     private void cookies$setPetLevel(NbtCompound nbtCompound, ComponentMapImpl componentMapImpl) {
@@ -151,8 +152,7 @@ public abstract class ItemStackMixin {
         final Formatting tier;
         if (ConfigManager.getConfig().miscConfig.showPetRarityInLevelText.getValue()) {
             JsonObject jsonObject = JsonParser.parseString(nbtCompound.getString("petInfo")).getAsJsonObject();
-            tier =
-                RepositoryItem.Tier.valueOf(jsonObject.get("tier").getAsString()).getFormatting();
+            tier = RepositoryItem.Tier.valueOf(jsonObject.get("tier").getAsString()).getFormatting();
         } else {
             tier = Formatting.WHITE;
         }
@@ -173,8 +173,34 @@ public abstract class ItemStackMixin {
     public abstract ComponentMap getComponents();
 
     @Shadow
-    @Nullable
-    public abstract <T> T set(ComponentType<? super T> dataComponentType,
-                              @Nullable T object);
+    public abstract ComponentChanges getComponentChanges();
+
+    @WrapOperation(
+        method = "getTooltip", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;" +
+                 "Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;" +
+                 "Lnet/minecraft/item/tooltip/TooltipType;)V",
+        ordinal = 5
+    )
+    )
+    private <T> void getLore(
+        ItemStack instance,
+        ComponentType<T> componentType,
+        Item.TooltipContext context,
+        Consumer<Text> textConsumer,
+        TooltipType type,
+        Operation<Void> original) {
+        if (!componentType.equals(DataComponentTypes.LORE)) {
+            return;
+        }
+
+        final List<Text> data = ItemUtils.getData(instance, CookiesDataComponentTypes.CUSTOM_LORE);
+        if (data == null) {
+            original.call(instance, componentType, context, textConsumer, type);
+            return;
+        }
+        data.forEach(textConsumer);
+    }
 
 }

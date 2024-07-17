@@ -60,6 +60,9 @@ public class CookiesDataComponentTypes {
     public static final ComponentType<RepositoryItem> REPOSITORY_ITEM;
     @GenerateAccessor
     public static final ComponentType<String> DYE;
+    @GenerateAccessor
+    public static final ComponentType<Map<String, Integer>> ATTRIBUTES;
+    public static final ComponentType<String> ENCHANTMENT_ID;
 
     public static final ComponentType<String> CUSTOM_SLOT_TEXT;
     public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
@@ -151,6 +154,20 @@ public class CookiesDataComponentTypes {
                 }
                 return map;
             });
+        ATTRIBUTES = register(
+            builder -> builder.codec(Codec.unboundedMap(Codec.STRING, Codec.INT)),
+            "attributes",
+            DataComponentTypes.CUSTOM_DATA,
+            defaultTest(),
+            (nbtComponent, key) -> {
+                final NbtCompound enchantments = nbtComponent.copyNbt().getCompound(key);
+
+                Map<String, Integer> map = new HashMap<>();
+                for (String elementKey : enchantments.getKeys()) {
+                    map.put(elementKey, enchantments.getInt(elementKey));
+                }
+                return map;
+            });
         UPGRADE_LEVEL = register(
             builder -> builder.codec(Codec.INT),
             "upgrade_level",
@@ -175,6 +192,7 @@ public class CookiesDataComponentTypes {
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
             (nbtComponent, s) -> nbtComponent.getNbt().getString(s));
+        ENCHANTMENT_ID = new CookiesDataComponent<>(Identifier.of("cookies:enchantment_id"));
         CUSTOM_SLOT_TEXT = new CookiesDataComponent<>(Identifier.of("cookies:custom_slot_text"));
         OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));
         ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));

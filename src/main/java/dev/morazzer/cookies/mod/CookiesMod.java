@@ -10,12 +10,19 @@ import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.events.EventLoader;
 import dev.morazzer.cookies.mod.features.Features;
 import dev.morazzer.cookies.mod.repository.Repository;
+import dev.morazzer.cookies.mod.screen.ItemSearchScreen;
 import dev.morazzer.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Main class of the mod, mainly initialization and loading of further components/features.
@@ -29,8 +36,16 @@ public class CookiesMod implements ClientModInitializer {
      * Opens the config screen.
      */
     public static void openConfig() {
-        MinecraftClient.getInstance()
-            .send(() -> MinecraftClient.getInstance().setScreen(new ConfigScreen(ConfigManager.getConfigReader())));
+        openScreen(new ConfigScreen(ConfigManager.getConfigReader()));
+    }
+
+    /**
+     * Opens the provided screen.
+     *
+     * @param screen The screen to open.
+     */
+    public static void openScreen(Screen screen) {
+        MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(screen));
     }
 
     @Override
@@ -42,5 +57,19 @@ public class CookiesMod implements ClientModInitializer {
         Features.load();
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand());
         UpdateChecker.init();
+        this.registerKeyBindings();
+    }
+
+    private void registerKeyBindings() {
+        final KeyBinding chestSearch = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.search",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_O,
+            "cookies.mod.keybinds"));
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (chestSearch.isPressed()) {
+                openScreen(new ItemSearchScreen());
+            }
+        });
     }
 }

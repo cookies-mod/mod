@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
+import dev.morazzer.cookies.mod.screen.ItemSearchScreen;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -19,7 +20,8 @@ public class CookieCommand extends ClientCommand {
     public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         return literal("cookie").executes(run(CookiesMod::openConfig))
             .then(literal("config").executes(run(CookiesMod::openConfig)))
-            .then(create(literal("sendCoords"), this::sendCoords));
+            .then(create(literal("sendCoords"), this::sendCoords))
+            .then(create(literal("search"), this::searchScreen));
     }
 
     private LiteralArgumentBuilder<FabricClientCommandSource> sendCoords(LiteralArgumentBuilder<FabricClientCommandSource> command) {
@@ -29,5 +31,9 @@ public class CookieCommand extends ClientCommand {
             String message = COORDINATE_FORMAT.formatted((int) player.getX(), (int) player.getY(), (int) player.getZ());
             MinecraftClient.getInstance().player.networkHandler.sendChatMessage(message);
         }));
+    }
+
+    private LiteralArgumentBuilder<FabricClientCommandSource> searchScreen(LiteralArgumentBuilder<FabricClientCommandSource> command) {
+        return command.executes(run(() -> CookiesMod.openScreen(new ItemSearchScreen())));
     }
 }

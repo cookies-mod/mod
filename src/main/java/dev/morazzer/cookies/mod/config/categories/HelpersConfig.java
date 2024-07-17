@@ -24,6 +24,12 @@ public class HelpersConfig extends Category {
         false
     );
 
+    public BooleanOption itemChestTracker = new BooleanOption(
+        Text.literal("Chest Tracker"),
+        Text.literal("Allows for tracking of chests on private island."),
+        true
+    );
+
     public HelpersConfig() {
         super(new ItemStack(Items.SCAFFOLDING));
     }

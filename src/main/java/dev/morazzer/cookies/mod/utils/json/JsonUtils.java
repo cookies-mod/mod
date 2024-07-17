@@ -38,6 +38,10 @@ public class JsonUtils {
             field.trySetAccessible();
             final String fieldName = getEffectiveName(field);
 
+            if (field.isAnnotationPresent(Exclude.class)) {
+                continue;
+            }
+
             if (JsonSerializable.class.isAssignableFrom(field.getType())) {
                 final JsonSerializable serializer = (JsonSerializable) ExceptionHandler.removeThrows(
                     () -> field.get(instance)
@@ -67,6 +71,10 @@ public class JsonUtils {
         for (Field field : instance.getClass().getDeclaredFields()) {
             field.trySetAccessible();
             final String fieldName = getEffectiveName(field);
+
+            if (field.isAnnotationPresent(Exclude.class)) {
+                continue;
+            }
 
             if (JsonSerializable.class.isAssignableFrom(field.getType())) {
                 if (!jsonObject.has(fieldName)) {

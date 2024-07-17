@@ -22,4 +22,23 @@ public interface Migration<T> {
      */
     void apply(T value);
 
+    /**
+     * The type of data that is handled by this migration.
+     * @return The type.
+     */
+    Type getType();
+
+    /**
+     * The supported migration types.
+     */
+    enum Type {
+        /**
+         * {@link dev.morazzer.cookies.mod.data.profile.ProfileData}
+         */
+        PROFILE,
+        /**
+         * {@link dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData}
+         */
+        GLOBAL_PROFILE;
+    }
 }

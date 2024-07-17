@@ -22,4 +22,9 @@ public interface Renderable {
         return true;
     }
 
+    /**
+     * Called right after the renderable has been removed from the global render context.
+     */
+    default void remove() {}
+
 }
