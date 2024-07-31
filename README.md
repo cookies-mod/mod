@@ -2,7 +2,7 @@
 <h1>CookiesMod</h1>
 
 [![Modrinth](https://img.shields.io/modrinth/dt/Te5vDuHn?style=flat&logo=modrinth)](https://modrinth.com/mod/cookies-mod)
-[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/1.0.1-beta+5)
+[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/1.0.1-beta+6)
 
 </div>
 
@@ -15,8 +15,9 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 <summary>Misc</summary>
 
 - Scrollable Tooltips
-    - Allows for horizontal scrolling while holding ctrl
-    - Allows for chopping of the tooltip while holding shift
+  - Allows for horizontal scrolling while holding ctrl
+  - Allows for chopping of the tooltip while holding shift
+- Storage preview
 #### Items
 
 - Creation date
@@ -28,7 +29,7 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 - Hide own armor
 - Hide other armor
 - Show dyed armor
-    - Only visible if either `Hide own armor` or `Hide other armor` is enabled
+  - Only visible if either `Hide own armor` or `Hide other armor` is enabled
 - Hide fire
 - Hide lightning
 
@@ -43,19 +44,22 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 
 - Show pet level
 - Show rarity in level
-    - Only visible if `Show pet level` is enabled
+  - Only visible if `Show pet level` is enabled
 </details>
 <details >
 <summary>Helper</summary>
 
 - Craft Helper
+- Anvil combine helper
+- Chest search
+  - Use `/cookie search` (or use the keybind) to open the search screen!
 </details>
 <details >
 <summary>Farming</summary>
 
 - Plot price breakdown
 - Yaw/Pitch display
-    - Will fade out after not moving your cursor for a few seconds
+  - Will fade out after not moving your cursor for a few seconds
 
 #### Rancher's Boots
 
@@ -66,7 +70,7 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 
 - Show total compost upgrade price breakdown
 - Change sorting behaviour of the price breakdown
-    - Only visible if `Compost upgrade price` is enabled
+  - Only visible if `Compost upgrade price` is enabled
 
 #### Visitor
 
@@ -79,11 +83,15 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 <details >
 <summary>Mining</summary>
 
+- Highlight unclaimed commissions (`Modify commission items`)
+  - Changes the commission items to knowledge book for completed, writeable book for started and written book for new commission
+- Puzzler solver
+
 #### HOTM
 
 - Show perk level as stack size
 - Highlight disabled
-    - Changes the item for disabled perks to a redstone dust
+  - Changes the item for disabled perks to a redstone dust
 - Cost for next 10
 - Cost for max level
 </details>
@@ -101,8 +109,14 @@ This command shows the config menu of the mod.
 
 Mainly used to toggle certain debug functionality, disabling of checks, extra logging and printing debug information
 
-⠀
----
+## /cookie
+- Also available as `/cookies:cookie`
+
+### sendCoords
+> `/cookie sendCoords` sends your current coordinates as chat message e.g. `x: -10, y: 20, z: 10`
+
+### search
+> `/cookie search` allows you to search through all cached chests on your island
 
 <h1> Contributors </h1>
 
