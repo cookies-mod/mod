@@ -10,11 +10,27 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A recipe that exists in skyblock.
  */
 public interface Recipe {
+
+    List<ForgeRecipe> ALL_FORGE_RECIPES = new LinkedList<>();
+    List<CraftRecipe> ALL_CRAFT_RECIPES = new LinkedList<>();
+    List<Recipe> ALL_RECIPES = new LinkedList<>() {
+        @Override
+        public boolean add(Recipe recipe) {
+            if (recipe instanceof ForgeRecipe forgeRecipe) {
+                ALL_FORGE_RECIPES.add(forgeRecipe);
+            } else if (recipe instanceof CraftRecipe craftRecipe) {
+                ALL_CRAFT_RECIPES.add(craftRecipe);
+            }
+            return super.add(recipe);
+        }
+    };
 
     /**
      * Loads a collection of recipes.
@@ -62,6 +78,7 @@ public interface Recipe {
             }
             ingredient.getRepositoryItem().getUsedInRecipeAsIngredient().add(recipe);
         }
+        ALL_RECIPES.add(recipe);
         if (recipe.getOutput() == null || recipe.getOutput().getRepositoryItem() == null) {
             return;
         }

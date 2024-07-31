@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.config.system.parsed;
 import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Config;
 import dev.morazzer.cookies.mod.config.system.Foldable;
+import dev.morazzer.cookies.mod.config.system.Hidden;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
@@ -44,16 +45,6 @@ public class ConfigProcessor {
     }
 
     /**
-     * Processes a foldable and all of its fields.
-     *
-     * @param foldable     The foldable to process.
-     * @param configReader The config reader to read the values.
-     */
-    private static void processFoldable(Foldable foldable, ConfigReader configReader) {
-        processAny(foldable, configReader);
-    }
-
-    /**
      * Processes any object and all of its fields.
      *
      * @param object       The object to process.
@@ -61,14 +52,12 @@ public class ConfigProcessor {
      */
     public static void processAny(Object object, ConfigReader configReader) {
         for (Field field : object.getClass().getDeclaredFields()) {
-            if (!Optional
-                .ofNullable(field.getType().getSuperclass())
+            if (!Optional.ofNullable(field.getType().getSuperclass())
                 .map(clazz -> Option.class.isAssignableFrom(clazz) || Foldable.class.isAssignableFrom(clazz))
                 .orElse(false)) {
                 continue;
             }
-            if (Optional
-                .of(field.getType().getSuperclass())
+            if (Optional.of(field.getType().getSuperclass())
                 .map(clazz -> Foldable.class.isAssignableFrom(field.getType()))
                 .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> field.get(object));
@@ -78,10 +67,11 @@ public class ConfigProcessor {
                 continue;
             }
 
-            if (Optional
-                .of(field.getType().getSuperclass())
-                .map(Option.class::isAssignableFrom)
-                .orElse(false)) {
+            if (Optional.of(field.getType().getSuperclass()).map(Option.class::isAssignableFrom).orElse(false)) {
+                if (field.isAnnotationPresent(Hidden.class)) {
+                    continue;
+                }
+
                 final Option<?, ?> fieldValue = (Option<?, ?>) ExceptionHandler.removeThrows(() -> field.get(object));
                 final String fieldName = field.getName();
                 if (field.isAnnotationPresent(Parent.class)) {
@@ -95,6 +85,16 @@ public class ConfigProcessor {
 
             log.warn("Couldn't process field {} in {}", field, object.getClass().getName());
         }
+    }
+
+    /**
+     * Processes a foldable and all of its fields.
+     *
+     * @param foldable     The foldable to process.
+     * @param configReader The config reader to read the values.
+     */
+    private static void processFoldable(Foldable foldable, ConfigReader configReader) {
+        processAny(foldable, configReader);
     }
 
     /**

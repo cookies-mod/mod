@@ -76,6 +76,8 @@ public abstract class ItemStackMixin {
             }
         }
 
+        set(CookiesDataComponentTypes.SELF, (ItemStack) (Object) this);
+
         ItemStackEvents.EVENT.invoker().create((ItemStack) (Object) this);
 
         if (!ConfigManager.isLoaded()) {
@@ -94,12 +96,14 @@ public abstract class ItemStackMixin {
         ItemLoreEvent.EVENT_ITEM.invoker().modify((ItemStack) (Object) this, lines);
 
         if (lines.size() != loreComponent.lines().size()) {
-            set(CookiesDataComponentTypes.CUSTOM_LORE,
+            set(
+                CookiesDataComponentTypes.CUSTOM_LORE,
                 lines.stream().map(Text.class::cast).collect(Collectors.toList()));
         } else {
             for (int index = 0; index < lines.size(); index++) {
                 if (!lines.get(index).equals(loreComponent.lines().get(index))) {
-                    set(CookiesDataComponentTypes.CUSTOM_LORE,
+                    set(
+                        CookiesDataComponentTypes.CUSTOM_LORE,
                         lines.stream().map(Text.class::cast).collect(Collectors.toList()));
                     break;
                 }
@@ -109,8 +113,10 @@ public abstract class ItemStackMixin {
 
     @Unique
     private void cookies$setComponents() {
-        ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(new ComponentMapImpl(
-            ComponentMap.EMPTY));
+        if (((CustomComponentMapAccessor) (Object) this.components).cookies$getComponentMapImpl() == null) {
+            ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(new ComponentMapImpl(
+                ComponentMap.EMPTY));
+        }
     }
 
     @Unique

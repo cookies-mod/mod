@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevInventoryUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
@@ -36,18 +37,27 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 /**
  * Allows for saving of screens/inventories.
  */
 @Mixin(HandledScreen.class)
-public abstract class HandledScreenMixin {
+public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 
-    @Shadow @Nullable protected Slot focusedSlot;
     @Unique
     private static final Identifier ALLOW_SCREEN_SAVING = DevUtils.createIdentifier("save_handled_screens");
+    @Shadow
+    @Nullable
+    protected Slot focusedSlot;
+
+    @Shadow public int backgroundHeight;
+
+    @Shadow public int backgroundWidth;
+
+    @Shadow public int x;
+
+    @Shadow public int y;
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     @SuppressWarnings("MissingJavadoc")
@@ -73,55 +83,12 @@ public abstract class HandledScreenMixin {
         }
     }
 
-    @Inject(
-        method = "mouseClicked",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J"),
-        cancellable = true,
-        locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void cancelMouseClick(
-        double mouseX,
-        double mouseY,
-        int button,
-        CallbackInfoReturnable<Boolean> cir,
-        boolean bl,
-        Slot slot) {
-        if (slot == null) {
-            return;
-        }
-        if (SlotAccessor.getRunnable(slot) != null) {
-            SlotAccessor.getRunnable(slot).run();
-            cir.setReturnValue(true);
-            return;
-        }
-        if (SlotAccessor.getItem(slot) != null) {
-            cir.setReturnValue(true);
-        }
-    }
-
-    @ModifyArgs(
-        method = "drawSlot",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/DrawContext;drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;" +
-                     "Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"
-        )
-    )
-    private void drawItem$drawItemInSlot(Args args) {
-        final ItemStack itemStack = args.get(1);
-        String text;
-        if ((text = ItemUtils.getData(itemStack, CookiesDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
-            args.set(4, text);
-        }
-    }
-
     @WrapOperation(
-        method = "drawMouseoverTooltip",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;" +
-                     "Ljava/util/List;Ljava/util/Optional;II)V"
-        )
+        method = "drawMouseoverTooltip", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;" +
+                 "Ljava/util/List;Ljava/util/Optional;II)V"
+    )
     )
     public void drawTooltip(
         DrawContext instance,
@@ -138,10 +105,70 @@ public abstract class HandledScreenMixin {
             original.call(instance, textRenderer, text, data, x, y);
             return;
         }
-        List<TooltipComponent> list = text.stream().map(Text::asOrderedText).map(TooltipComponent::of).collect(
-            Util.toArrayList());
+        List<TooltipComponent> list =
+            text.stream().map(Text::asOrderedText).map(TooltipComponent::of).collect(Util.toArrayList());
         list.add(list.isEmpty() ? 0 : 1, loreItems);
         data.ifPresent(data2 -> list.add(1, TooltipComponent.of(data2)));
-        instance.drawTooltip(textRenderer,list, x, y, HoveredTooltipPositioner.INSTANCE);
+        instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE);
+    }
+
+    @Inject(
+        method = "mouseClicked",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J"),
+        cancellable = true
+    )
+    private void cancelMouseClick(
+        double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir, @Local Slot slot) {
+        if (slot == null) {
+            return;
+        }
+        if (SlotAccessor.getOnClick(slot) != null) {
+            SlotAccessor.getOnClick(slot).accept(button);
+            cir.setReturnValue(true);
+            return;
+        }
+        if (SlotAccessor.getRunnable(slot) != null) {
+            SlotAccessor.getRunnable(slot).run();
+            cir.setReturnValue(true);
+            return;
+        }
+        if (SlotAccessor.getItem(slot) != null) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @ModifyArgs(
+        method = "drawSlot", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/client/gui/DrawContext;drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;" +
+                 "Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"
+    )
+    )
+    private void drawItem$drawItemInSlot(Args args) {
+        final ItemStack itemStack = args.get(1);
+        String text;
+        if ((text = ItemUtils.getData(itemStack, CookiesDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
+            args.set(4, text);
+        }
+    }
+
+    @Override
+    public int cookies$getBackgroundWidth() {
+        return this.backgroundWidth;
+    }
+
+    @Override
+    public int cookies$getBackgroundHeight() {
+        return this.backgroundHeight;
+    }
+
+    @Override
+    public int cookies$getX() {
+        return this.x;
+    }
+
+    @Override
+    public int cookies$getY() {
+        return this.y;
     }
 }

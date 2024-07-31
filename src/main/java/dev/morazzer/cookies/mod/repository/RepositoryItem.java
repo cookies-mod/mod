@@ -4,26 +4,37 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 /**
  * Class to represent an item.
@@ -57,6 +68,8 @@ public class RepositoryItem {
     private Text name;
     @SerializedName("internal_id")
     private String internalId;
+    @SerializedName("minecraft_id")
+    private String minecraftId;
     private String category;
     private Tier tier;
     private double value;
@@ -67,8 +80,9 @@ public class RepositoryItem {
     @SerializedName("rift_transferrable")
     private boolean riftTransferrable;
     private boolean sackable;
-    private Text lore;
+    private List<Text> lore;
     //TODO gemslots, bazaarable, essence (already included in data)
+    private String skin;
 
     /**
      * Loads a collection of items.
@@ -126,6 +140,21 @@ public class RepositoryItem {
      */
     public Text getFormattedName() {
         return this.name.copyContentOnly().formatted(this.tier.formatting);
+    }
+
+    /**
+     * Creates a new item stack for the repository item.
+     * @return The item stack.
+     */
+    public ItemStack constructItemStack() {
+        final ItemStack itemStack = new ItemStack(Registries.ITEM.get(Identifier.of(this.minecraftId)));
+        itemStack.set(DataComponentTypes.CUSTOM_NAME, this.name.copy().styled(style -> style.withItalic(false)));
+        final PropertyMap propertyMap = new PropertyMap();
+        final ProfileComponent component = new ProfileComponent(new GameProfile(UUID.randomUUID(), "meowora"));
+        component.properties().put("textures", new Property("textures", this.skin));
+        itemStack.set(DataComponentTypes.PROFILE, component);
+        itemStack.set(CookiesDataComponentTypes.CUSTOM_LORE, this.lore);
+        return itemStack;
     }
 
     /**

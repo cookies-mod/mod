@@ -15,6 +15,7 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
 import com.google.common.collect.Iterators;
+import java.nio.file.Path;
 import org.gradle.api.tasks.options.Option;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -82,9 +83,7 @@ public abstract class CreateBuildInfo extends DefaultTask {
         );
 
 
-        try {
-            Git git = Git.open(getProject().getRootDir());
-
+        try (Git git = findGit(getProject().getRootDir().toPath())) {
             buildInfoClass.addFieldWithInitializer(
                 "String",
                 "branch",
@@ -126,7 +125,7 @@ public abstract class CreateBuildInfo extends DefaultTask {
             buildInfoClass.addFieldWithInitializer(
                 new PrimitiveType(PrimitiveType.Primitive.INT),
                 "lastCommitTime",
-                new IntegerLiteralExpr(revCommit.getCommitTime()),
+                new IntegerLiteralExpr(String.valueOf(revCommit.getCommitTime())),
                 Modifier.Keyword.FINAL,
                 Modifier.Keyword.PUBLIC,
                 Modifier.Keyword.STATIC
@@ -147,6 +146,14 @@ public abstract class CreateBuildInfo extends DefaultTask {
         }
 
         compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
+    }
+
+    private Git findGit(Path path) {
+        try {
+            return Git.open(path.toFile());
+        } catch (Exception exception) {
+            return findGit(path.getParent());
+        }
     }
 
     @OutputDirectory

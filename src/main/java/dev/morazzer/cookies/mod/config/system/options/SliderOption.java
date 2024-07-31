@@ -163,8 +163,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
         if (expectPrimitiveNumber(jsonElement, log)) {
             return;
         }
-        //noinspection unchecked
-        this.value = (T) jsonElement.getAsNumber();
+        this.setValue(jsonElement.getAsNumber());
     }
 
     @Override

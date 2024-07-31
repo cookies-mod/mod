@@ -14,14 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
-import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.BundleTooltipData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -66,6 +65,11 @@ public class CookiesDataComponentTypes {
 
     public static final ComponentType<String> CUSTOM_SLOT_TEXT;
     public static final ComponentType<ItemStack> OVERRIDE_RENDER_ITEM;
+    public static final ComponentType<ItemStack> OVERRIDE_ITEM;
+    public static final ComponentType<ItemStack> ORIGINAL_ITEM;
+    public static final ComponentType<ItemStack> SELF;
+    public static final ComponentType<Runnable> ITEM_CLICK_RUNNABLE;
+    public static final ComponentType<Consumer<Integer>> ITEM_CLICK_CONSUMER;
     public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
     public static final ComponentType<List<Text>> CUSTOM_LORE;
     public static final ComponentType<ItemTooltipComponent> LORE_ITEMS;
@@ -195,9 +199,21 @@ public class CookiesDataComponentTypes {
         ENCHANTMENT_ID = new CookiesDataComponent<>(Identifier.of("cookies:enchantment_id"));
         CUSTOM_SLOT_TEXT = new CookiesDataComponent<>(Identifier.of("cookies:custom_slot_text"));
         OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));
+        OVERRIDE_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_item"));
+        ORIGINAL_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:original_item"));
+        SELF = new CookiesDataComponent<>(Identifier.of("cookies:self"));
+        ITEM_CLICK_RUNNABLE = new CookiesDataComponent<>(Identifier.of("cookies:item_click_runnable"));
+        ITEM_CLICK_CONSUMER = new CookiesDataComponent<>(Identifier.of("cookies:item_click_consumer"));
         ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
         CUSTOM_LORE = new CookiesDataComponent<>(Identifier.of("cookies:custom_lore"));
         LORE_ITEMS = new CookiesDataComponent<>(Identifier.of("cookies:lore_items"));
+    }
+
+    public static boolean isCustomType(ComponentType<?> type) {
+        if (type instanceof CookiesDataComponent<?>) {
+            return true;
+        }
+        return list.contains(type);
     }
 
     private static <T, D> ComponentType<T> register(
@@ -228,13 +244,6 @@ public class CookiesDataComponentTypes {
 
     private static <T> BiFunction<T, String, Boolean> value(boolean result) {
         return (t, key) -> result;
-    }
-
-    public static boolean isCustomType(ComponentType<?> type) {
-        if (type instanceof CookiesDataComponent<?>) {
-            return true;
-        }
-        return list.contains(type);
     }
 
     @Retention(RetentionPolicy.SOURCE)

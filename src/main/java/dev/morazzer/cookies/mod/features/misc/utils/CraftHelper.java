@@ -14,6 +14,7 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -32,7 +33,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
@@ -70,7 +70,7 @@ public class CraftHelper {
         instance = this;
         ProfileSwapEvent.AFTER_SET_NO_UUID.register(this::profileSwap);
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!(screen instanceof HandledScreen<?>)) {
+            if (!(screen instanceof InventoryScreenAccessor)) {
                 return;
             }
             if (!SkyblockUtils.isCurrentlyInSkyblock()) {
@@ -261,7 +261,6 @@ public class CraftHelper {
 
     private void beforeScroll(
         Screen screen, double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
-        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
         if (!this.shouldRender()) {
             return;
@@ -271,8 +270,8 @@ public class CraftHelper {
             return;
         }
 
-        final int x = this.calculateX(handledScreen);
-        final int y = this.calculateY(handledScreen);
+        final int x = this.calculateX(screen);
+        final int y = this.calculateY(screen);
 
         if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + 270) {
             this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
@@ -280,14 +279,13 @@ public class CraftHelper {
     }
 
     private void clicked(Screen screen, double mouseX, double mouseY, int button) {
-        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
         if (!this.shouldRender()) {
             return;
         }
 
-        final int x = this.calculateX(handledScreen);
-        final int y = this.calculateY(handledScreen);
+        final int x = this.calculateX(screen);
+        final int y = this.calculateY(screen);
 
         final int buttonX = x + this.buttonX;
         final int buttonY = y + this.buttonY;
@@ -299,14 +297,12 @@ public class CraftHelper {
     }
 
     private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
-        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
-
         if (!this.shouldRender()) {
             return;
         }
 
-        final int x = this.calculateX(handledScreen);
-        final int y = this.calculateY(handledScreen);
+        final int x = this.calculateX(screen);
+        final int y = this.calculateY(screen);
 
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0, 0, -100);
@@ -339,12 +335,12 @@ public class CraftHelper {
 
     }
 
-    private int calculateX(HandledScreen<?> handledScreen) {
-        return handledScreen.x + handledScreen.backgroundWidth + 2;
+    private int calculateX(Screen screen) {
+        return InventoryScreenAccessor.getX(screen) + InventoryScreenAccessor.getBackgroundWidth(screen) + 2;
     }
 
-    private int calculateY(HandledScreen<?> handledScreen) {
-        return handledScreen.y + handledScreen.backgroundHeight / 2 - yOffset;
+    private int calculateY(Screen screen) {
+        return InventoryScreenAccessor.getY(screen) + InventoryScreenAccessor.getBackgroundHeight(screen) / 2 - yOffset;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

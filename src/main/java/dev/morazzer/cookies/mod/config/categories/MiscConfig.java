@@ -2,9 +2,11 @@ package dev.morazzer.cookies.mod.config.categories;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookies.mod.config.system.Category;
+import dev.morazzer.cookies.mod.config.system.Hidden;
 import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.config.system.Row;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+import dev.morazzer.cookies.mod.config.system.options.SliderOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -25,8 +27,7 @@ public class MiscConfig extends Category {
         Text.literal("SHIFT + Scroll -> chop tooltips"));
 
     @Expose
-    public BooleanOption enableStoragePreview = new BooleanOption(
-        Text.literal("Storage Preview"),
+    public BooleanOption enableStoragePreview = new BooleanOption(Text.literal("Storage Preview"),
         Text.literal("Shows a preview of the content in the storage."),
         false);
 
@@ -102,6 +103,15 @@ public class MiscConfig extends Category {
     public BooleanOption showPetRarityInLevelText = new BooleanOption(Text.literal("Show rarity in level"),
         Text.literal("Shows the pet level in the color of the rarity"),
         false).onlyIf(this.showPetLevelAsStackSize);
+
+    @Expose
+    public BooleanOption showForgeRecipeStack = new BooleanOption(Text.literal("Show forge recipes"),
+        Text.literal("Shows forge recipes in the recipe book"),
+        true);
+
+    @Hidden
+    @Expose
+    public SliderOption<Integer> forgeRecipeSlot = SliderOption.integerOption(Text.empty(), Text.empty(), 47);
 
     public MiscConfig() {
         super(new ItemStack(Items.COMPASS));

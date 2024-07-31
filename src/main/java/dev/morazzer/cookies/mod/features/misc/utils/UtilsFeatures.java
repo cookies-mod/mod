@@ -13,6 +13,7 @@ public class UtilsFeatures {
         Loader.load("ModifiedRecipeScreen", ModifyRecipeScreen::new);
         Loader.load("StoragePreview", StoragePreview::new);
         Loader.load("AnvilHelper", AnvilHelper::new);
+        Loader.load("ForgeRecipes", ForgeRecipes::new);
     }
 
 }

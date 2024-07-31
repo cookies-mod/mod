@@ -1,12 +1,19 @@
 package dev.morazzer.cookies.mod.repository;
 
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
+import dev.morazzer.cookies.mod.utils.TextUtils;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -125,5 +132,29 @@ public class Ingredient implements RecipeResult<Ingredient> {
      */
     public String getNameSafe() {
         return this.repositoryItem == null ? this.id : this.repositoryItem.getName().getString();
+    }
+
+    /**
+     * Gets the ingredient as an item.
+     * @return The item representing the ingredient.
+     */
+    public ItemStack getAsItem() {
+        if (this.id.equalsIgnoreCase("SKYBLOCK_COIN")) {
+            return new ItemBuilder(Items.GOLD_NUGGET)
+                .setName(TextUtils.literal("Coins", Formatting.GOLD))
+                .setLore(TextUtils.literal("%s Coins".formatted(NumberFormat.getInstance().format(this.amount)), Formatting.GOLD))
+                .set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, NumberFormat.getCompactNumberInstance().format(this.amount))
+                .build();
+        }
+        if (this.repositoryItem != null) {
+            final ItemStack itemStack = repositoryItem.constructItemStack();
+            itemStack.setCount(this.amount);
+            return itemStack;
+        }
+
+        return new ItemBuilder(Items.BARRIER)
+            .setName(TextUtils.literal("Not found", Formatting.RED))
+            .setLore(TextUtils.literal("Unable to find item with internal id %s".formatted(this.id)))
+            .build();
     }
 }

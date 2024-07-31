@@ -68,5 +68,9 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.farmingConfig.compostSortOrder);
     public static ConfigKey<Boolean> FARMING_YAW_PITCH =
         new ConfigKey<>(config -> config.farmingConfig.yawPitchDisplay);
+    public static ConfigKey<Boolean> MISC_FORGE_RECIPE =
+        new ConfigKey<>(config -> config.miscConfig.showForgeRecipeStack);
+    public static ConfigKey<Integer> MISC_FORGE_RECIPE_SLOT =
+        new ConfigKey<>(config -> config.miscConfig.forgeRecipeSlot);
 
 }
