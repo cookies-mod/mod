@@ -2,10 +2,10 @@ package dev.morazzer.cookies.mod.features.misc.items;
 
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
+import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import java.util.List;
@@ -19,7 +19,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import org.intellij.lang.annotations.RegExp;
 
@@ -30,6 +29,7 @@ public class SackInventoryTracker {
     private static final String LOGGER_KEY = "SackInventoryTracker";
     @RegExp
     private static final String GEMSTONE_PATTER = "(?:Rough|Flawed|Fine): ([\\d,]+) \\(.*\\)";
+    private int lastUpdated = 0;
 
     public SackInventoryTracker() {
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
@@ -48,28 +48,20 @@ public class SackInventoryTracker {
         if (genericContainerScreen.getTitle().getString().equalsIgnoreCase("Sack of Sacks")) {
             return;
         }
-        ScreenEvents.remove(screen).register(ExceptionHandler.wrap(this::remove));
+        InventoryContentUpdateEvent.register(genericContainerScreen.getScreenHandler(), this::update);
     }
 
-    private void remove(Screen screen) {
-        GenericContainerScreen genericContainerScreen = (GenericContainerScreen) screen;
-        DevUtils.log(LOGGER_KEY, "Registered removing of sack inventory!");
-        for (Slot slot : genericContainerScreen.getScreenHandler().slots) {
-            if (slot.inventory == MinecraftClient.getInstance().player.getInventory()) {
-                continue;
-            }
-
-            if (!slot.hasStack()) {
-                continue;
-            }
-
-            final ItemStack stack = slot.getStack();
-            if (stack.getItem() == Items.BLACK_STAINED_GLASS_PANE) {
-                continue;
-            }
-
-            this.saveItem(slot.getStack());
+    private void update(int i, ItemStack itemStack) {
+        if (lastUpdated > i) {
+            return;
         }
+
+        if (itemStack.getItem() == Items.BLACK_STAINED_GLASS_PANE) {
+            return;
+        }
+
+        this.saveItem(itemStack);
+        this.lastUpdated = i;
     }
 
     private void saveItem(ItemStack stack) {
@@ -96,8 +88,8 @@ public class SackInventoryTracker {
             default -> this::saveDefaultSackItem;
         };
 
-        if (!lines.getLast().getString().equalsIgnoreCase("Click to pickup!")
-            && !lines.getLast().getString().equals("Empty sack!")) {
+        if (!lines.getLast().getString().equalsIgnoreCase("Click to pickup!") &&
+            !lines.getLast().getString().equals("Empty sack!")) {
             return;
         }
 
@@ -146,7 +138,9 @@ public class SackInventoryTracker {
         final RepositoryItem item = ItemUtils.getData(stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
 
         if (item == null) {
-            DevUtils.log(LOGGER_KEY, "Couldn't find item with id %s",
+            DevUtils.log(
+                LOGGER_KEY,
+                "Couldn't find item with id %s",
                 ItemUtils.getData(stack, CookiesDataComponentTypes.SKYBLOCK_ID));
             return;
         }
