@@ -1,9 +1,12 @@
 package dev.morazzer.cookies.mod.utils.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.morazzer.cookies.mod.utils.accessors.CustomComponentMapAccessor;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
+import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,11 +32,14 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
      */
     @Inject(method = "set", at = @At("HEAD"), cancellable = true)
     public <T> void set(
-        ComponentType<? super T> dataComponentType,
-        @Nullable T object,
-        CallbackInfoReturnable<T> cir
-    ) {
+        ComponentType<? super T> dataComponentType, @Nullable T object, CallbackInfoReturnable<T> cir) {
         if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
+            if (dataComponentType == CookiesDataComponentTypes.OVERRIDE_ITEM && object != null) {
+                ItemStack itemStack = (ItemStack) object;
+                itemStack.set(
+                    CookiesDataComponentTypes.ORIGINAL_ITEM,
+                    this.cookies$componentMap.get(CookiesDataComponentTypes.SELF));
+            }
             this.cookies$componentMap.set(dataComponentType, object);
             cir.setReturnValue(null);
         }
@@ -48,12 +54,32 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
      */
     @Inject(method = "remove", at = @At("HEAD"), cancellable = true)
     public <T> void remove(
-        ComponentType<? extends T> dataComponentType,
-        CallbackInfoReturnable<T> cir
-    ) {
+        ComponentType<? extends T> dataComponentType, CallbackInfoReturnable<T> cir) {
         if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
+            if (dataComponentType == CookiesDataComponentTypes.OVERRIDE_ITEM) {
+                final ItemStack itemStack = cookies$componentMap.get(CookiesDataComponentTypes.ORIGINAL_ITEM);
+                if (itemStack != null) {
+                    itemStack.remove(CookiesDataComponentTypes.OVERRIDE_ITEM);
+                }
+            }
             cir.setReturnValue(this.cookies$componentMap.remove(dataComponentType));
         }
+    }
+
+    /**
+     * Creates a copy of the custom map and attaches it to the normal copy.
+     * @param original The original copy.
+     * @return The copy with the extra components attached.
+     */
+    @ModifyReturnValue(method = "copy", at = @At("RETURN"))
+    public ComponentMapImpl copy(ComponentMapImpl original) {
+        if (this.cookies$componentMap != null) {
+            final ComponentMapImpl copy = new ComponentMapImpl(ComponentMap.EMPTY);
+            copy.setAll(this.cookies$componentMap);
+            ((CustomComponentMapAccessor) (Object) original).cookies$setComponentMapImpl(copy);
+        }
+
+        return original;
     }
 
     /**
@@ -65,9 +91,7 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
      */
     @Inject(method = "get", at = @At("HEAD"), cancellable = true)
     public <T> void get(
-        ComponentType<? extends T> dataComponentType,
-        CallbackInfoReturnable<T> cir
-    ) {
+        ComponentType<? extends T> dataComponentType, CallbackInfoReturnable<T> cir) {
         if (this.cookies$componentMap != null && CookiesDataComponentTypes.isCustomType(dataComponentType)) {
             cir.setReturnValue(this.cookies$componentMap.get(dataComponentType));
         }

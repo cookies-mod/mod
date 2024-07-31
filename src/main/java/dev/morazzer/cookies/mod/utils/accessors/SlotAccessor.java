@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.utils.accessors;
 
+import java.util.function.Consumer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
@@ -7,6 +8,36 @@ import net.minecraft.screen.slot.Slot;
  * Accessor to for setting an override item.
  */
 public interface SlotAccessor {
+
+    /**
+     * Sets the on click consumer for the slot.
+     *
+     * @param slot    The slot.
+     * @param onClick The item.
+     */
+    static void setOnClick(Slot slot, Consumer<Integer> onClick) {
+        getAccessor(slot).cookies$setOnClick(onClick);
+    }
+
+    void cookies$setOnClick(Consumer<Integer> onClick);
+
+    private static SlotAccessor getAccessor(Slot slot) {
+        //The cast is possible, though it correctly assumes it is not
+        //noinspection CastToIncompatibleInterface
+        return (SlotAccessor) slot;
+    }
+
+    /**
+     * Gets the on click consumer for the slot.
+     *
+     * @param slot The slot.
+     * @return The consumer.
+     */
+    static Consumer<Integer> getOnClick(Slot slot) {
+        return getAccessor(slot).cookies$getOnClick();
+    }
+
+    Consumer<Integer> cookies$getOnClick();
 
     /**
      * Sets the "new" item for the slot.
@@ -20,12 +51,6 @@ public interface SlotAccessor {
 
     @SuppressWarnings("MissingJavadoc")
     void cookies$setOverrideItem(ItemStack itemStack);
-
-    private static SlotAccessor getAccessor(Slot slot) {
-        //The cast is possible, though it correctly assumes it is not
-        //noinspection CastToIncompatibleInterface
-        return (SlotAccessor) slot;
-    }
 
     /**
      * Sets the runnable.

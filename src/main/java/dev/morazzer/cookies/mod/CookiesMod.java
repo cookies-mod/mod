@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod;
 
 import dev.morazzer.cookies.mod.commands.CookieCommand;
 import dev.morazzer.cookies.mod.commands.OpenConfigCommand;
+import dev.morazzer.cookies.mod.commands.ViewForgeRecipeCommand;
 import dev.morazzer.cookies.mod.commands.dev.DevCommand;
 import dev.morazzer.cookies.mod.commands.system.CommandManager;
 import dev.morazzer.cookies.mod.config.ConfigManager;
@@ -55,7 +56,7 @@ public class CookiesMod implements ClientModInitializer {
         Repository.loadRepository();
         EventLoader.load();
         Features.load();
-        CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand());
+        CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
         UpdateChecker.init();
         this.registerKeyBindings();
     }

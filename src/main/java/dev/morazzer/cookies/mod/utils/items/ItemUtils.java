@@ -50,6 +50,16 @@ public class ItemUtils {
             .orElse(null);
     }
 
+    /**
+     * Copies the component data form one item onto another item.
+     * @param type The component to copy.
+     * @param source The source to copy from.
+     * @param target The target to copy to.
+     * @param <T> The data value of the component.
+     */
+    public static <T> void copy(ComponentType<T> type, ItemStack source, ItemStack target) {
+        target.set(type, ItemUtils.getData(source, type));
+    }
 
     /**
      * Gets the data for the type from the item.
@@ -62,5 +72,4 @@ public class ItemUtils {
     public static <T> T getData(ItemStack itemStack, ComponentType<T> type) {
         return itemStack.getComponents().get(type);
     }
-
 }

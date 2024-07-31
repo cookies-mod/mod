@@ -5,25 +5,20 @@ import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
-import java.util.Collections;
+import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Unit;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,20 +26,19 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ModifyRecipeScreen {
 
+    public static ItemStack CRAFT_HELPER_SELECT;
+    static {
+        CRAFT_HELPER_SELECT = new ItemBuilder(Items.DIAMOND_PICKAXE)
+            .setName(TextUtils.literal("Set craft helper item", Constants.SUCCESS_COLOR))
+            .setLore(
+                TextUtils.literal("Set the recipe as the selected", Formatting.GRAY),
+                TextUtils.literal("craft helper item!", Formatting.GRAY)
+            ).hideAdditionalTooltips().build();
+    }
+
     @SuppressWarnings("MissingJavadoc")
     public ModifyRecipeScreen() {
-        final ItemStack itemStack = new ItemStack(Items.DIAMOND_PICKAXE);
-        itemStack.set(DataComponentTypes.CUSTOM_NAME,
-            Text.literal("Set craft helper item").styled(style -> style.withColor(
-                Constants.SUCCESS_COLOR).withItalic(false)));
-        itemStack.set(DataComponentTypes.LORE, new LoreComponent(Stream.of(
-                Text.literal("Set the recipe as the selected"),
-                Text.literal("craft helper item!")
-            ).map(it -> it.formatted(Formatting.GRAY).styled(style -> style.withItalic(false)))
-            .map(Text.class::cast).toList()));
-        itemStack.set(DataComponentTypes.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-        itemStack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS,
-            new AttributeModifiersComponent(Collections.emptyList(), false));
+
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof GenericContainerScreen genericContainerScreen) {
                 if (!SkyblockUtils.isCurrentlyInSkyblock()) {
@@ -64,7 +58,7 @@ public class ModifyRecipeScreen {
                             return;
                         }
                         final Slot slot = genericContainerScreen.getScreenHandler().slots.get(14);
-                        SlotAccessor.setItem(slot, itemStack);
+                        SlotAccessor.setItem(slot, CRAFT_HELPER_SELECT);
                         SlotAccessor.setRunnable(slot, this.setSelectedItem(genericContainerScreen));
                     }
                 }, 1, TimeUnit.SECONDS);
