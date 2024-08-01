@@ -1,8 +1,11 @@
 package dev.morazzer.cookies.mod.config.categories;
 
 import dev.morazzer.cookies.mod.config.system.Category;
+import dev.morazzer.cookies.mod.config.system.Hidden;
+import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.Row;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+import dev.morazzer.cookies.mod.config.system.options.SliderOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -29,6 +32,9 @@ public class HelpersConfig extends Category {
         Text.literal("Allows for tracking of chests on private island."),
         true
     );
+
+    @Hidden
+    public SliderOption<Integer> craftHelperSlot = SliderOption.integerOption(Text.empty(), Text.empty(), 14);
 
     public HelpersConfig() {
         super(new ItemStack(Items.SCAFFOLDING));

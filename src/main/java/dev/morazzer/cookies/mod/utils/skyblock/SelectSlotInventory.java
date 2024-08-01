@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.utils.skyblock;
 
+import com.google.common.util.concurrent.Runnables;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
@@ -28,6 +29,7 @@ public class SelectSlotInventory {
         NOT_ELIGIBLE_FOR_SELECTION = new ItemBuilder(Items.BARRIER).setLore()
             .hideAdditionalTooltips()
             .setName(TextUtils.literal("Not eligible for selection", Formatting.RED))
+            .setClickRunnable(Runnables.doNothing())
             .setGlint(false)
             .build();
 
