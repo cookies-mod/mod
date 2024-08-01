@@ -8,6 +8,8 @@ import dev.morazzer.mods.cookies.generated.Regions;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.util.Identifier;
 
 /**
@@ -17,6 +19,9 @@ public class SkyblockUtils {
     private static final Identifier SKIP_SKYBLOCK_CHECK = DevUtils.createIdentifier("skyblock/skip_check");
     private static long lastSkyblock = -1;
     private static long lastServerSwap = -1;
+    @Getter
+    @Setter
+    private static long lastPing = -1;
 
     /**
      * Sets lastServerSwap to the current time.

@@ -9,6 +9,8 @@
     "DrawContextMixin",
     "spam.ClientPlayNetworkHandlerMixin",
     "spam.YggdrasilServicesKeyInfoMixin",
-    "spam.PlayerSkinProviderMixin"
+    "spam.PlayerSkinProviderMixin",
+    "PingMeasurerMixin",
+    "ClientPlayNetworkHandlerMixin"
   ]
 }

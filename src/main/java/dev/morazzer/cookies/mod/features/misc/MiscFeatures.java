@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.misc;
 
 import dev.morazzer.cookies.mod.features.Loader;
 import dev.morazzer.cookies.mod.features.misc.items.ItemFeatures;
-import dev.morazzer.cookies.mod.features.misc.utils.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.render.PingDisplay;
 import dev.morazzer.cookies.mod.features.misc.utils.UtilsFeatures;
 
 /**
@@ -14,6 +14,7 @@ public class MiscFeatures {
     public static void load() {
         Loader.load("ItemFeatures", ItemFeatures::load);
         Loader.load("UtilityFeatures", UtilsFeatures::load);
+        Loader.load("PingDisplay", PingDisplay::load);
     }
 
 

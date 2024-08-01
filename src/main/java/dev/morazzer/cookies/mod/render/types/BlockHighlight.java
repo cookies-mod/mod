@@ -43,6 +43,9 @@ public final class BlockHighlight implements Renderable {
 
     @Override
     public void remove() {
+        if (entity == null) {
+            return;
+        }
         ((BlockEntityAccessor) entity).cookies$setHighlighted(false);
     }
 

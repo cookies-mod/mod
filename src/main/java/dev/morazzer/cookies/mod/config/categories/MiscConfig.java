@@ -31,6 +31,11 @@ public class MiscConfig extends Category {
         Text.literal("Shows a preview of the content in the storage."),
         false);
 
+    @Expose
+    public BooleanOption showPing = new BooleanOption(Text.literal("Show Ping"),
+        Text.literal("Shows the ping in the action bar"),
+        false);
+
     @Parent
     public TextDisplayOption itemSubCategory = new TextDisplayOption(Text.literal("Items"), Text.literal(""));
 
