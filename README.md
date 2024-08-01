@@ -2,7 +2,7 @@
 <h1>CookiesMod</h1>
 
 [![Modrinth](https://img.shields.io/modrinth/dt/Te5vDuHn?style=flat&logo=modrinth)](https://modrinth.com/mod/cookies-mod)
-[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/1.0.1-beta+6)
+[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/1.0.1-beta+7)
 
 </div>
 
@@ -42,6 +42,9 @@ A 1.21 Hypixel Skyblock mod with that tries to integrate features in a vanilla s
 
 #### Render - Inventory
 
+- Show forge recipe
+ - Adds an item to the recipe book to show all forge recipes
+ - Also enables the `/showforgerecipe` command
 - Show pet level
 - Show rarity in level
   - Only visible if `Show pet level` is enabled
@@ -117,6 +120,13 @@ Mainly used to toggle certain debug functionality, disabling of checks, extra lo
 
 ### search
 > `/cookie search` allows you to search through all cached chests on your island
+
+## /viewforgerecipe
+- Also available as `/cookies:viewforgerecipe`
+> `/viewforgerecipe <id/name>` shows the forge recipe for the item
+
+## Warp shortcuts
+> The mod adds most (if not all) skyblock warps as command, e.g. `/warp mines` is available as `/mines`
 
 <h1> Contributors </h1>
 
