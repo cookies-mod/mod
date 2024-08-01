@@ -15,6 +15,11 @@ public class Warps {
     // Key: command name (shortcut), Value: warp name
     private final Map<String, String> warps = new HashMap<>();
 
+    /**
+     * Creates a new warps constant instance.
+     *
+     * @param jsonArray The array of warps.
+     */
     public Warps(JsonArray jsonArray) {
         if (jsonArray == null) {
             return;
