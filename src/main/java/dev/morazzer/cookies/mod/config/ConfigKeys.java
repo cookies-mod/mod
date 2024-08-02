@@ -72,5 +72,9 @@ public class ConfigKeys {
         new ConfigKey<>(config -> config.miscConfig.showForgeRecipeStack);
     public static ConfigKey<Integer> MISC_FORGE_RECIPE_SLOT =
         new ConfigKey<>(config -> config.miscConfig.forgeRecipeSlot);
+    public static ConfigKey<Boolean> HELPER_CRAFT_HELPER =
+        new ConfigKey<>(config -> config.helpersConfig.craftHelper);
+    public static ConfigKey<Integer> HELPER_CRAFT_HELPER_SLOT =
+        new ConfigKey<>(config -> config.helpersConfig.craftHelperSlot);
 
 }

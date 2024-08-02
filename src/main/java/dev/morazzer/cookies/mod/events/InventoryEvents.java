@@ -14,9 +14,10 @@ public class InventoryEvents {
 
     /**
      * Registers an after init event handler.
-     * @param name The name of the inventory.
+     *
+     * @param name             The name of the inventory.
      * @param shouldInstrument Whether the event should be called or not.
-     * @param inventoryEvent The inventory event to run.
+     * @param inventoryEvent   The inventory event to run.
      */
     public static void afterInit(
         String name, Predicate<HandledScreen<?>> shouldInstrument, InventoryEvent inventoryEvent) {
@@ -30,12 +31,13 @@ public class InventoryEvents {
 
     /**
      * Registers an after init event handler.
-     * @param name The name of the inventory.
-     * @param shouldInstrument Whether the event should be called or not.
-     * @param inventoryEvent The inventory event to run.
-     * @param event The event to register to.
+     *
+     * @param name                 The name of the inventory.
+     * @param shouldInstrument     Whether the event should be called or not.
+     * @param inventoryEvent       The inventory event to run.
+     * @param event                The event to register to.
      * @param inventoryEventMapper A mapper to convert between {@link InventoryEvent} and {@link T}
-     * @param <T> The type of the event.
+     * @param <T>                  The type of the event.
      */
     private static <T> void register(
         String name,
@@ -55,8 +57,19 @@ public class InventoryEvents {
 
     private static InventoryEvent registerInternal(
         String name, Predicate<HandledScreen<?>> shouldInstrument, InventoryEvent inventoryEvent) {
+        boolean regex = name.startsWith("cookies-regex:");
+        final String finalName;
+        if (regex) {
+            finalName = name.substring(14);
+        } else {
+            finalName = name;
+        }
         return screen -> {
-            if (screen.getTitle() == null || !screen.getTitle().getString().equalsIgnoreCase(name)) {
+            if (screen.getTitle() == null) {
+                return;
+            }
+            String literalName = screen.getTitle().getString();
+            if ((!regex || !literalName.matches(finalName)) && !literalName.equalsIgnoreCase(finalName)) {
                 return;
             }
 
@@ -70,10 +83,11 @@ public class InventoryEvents {
 
     /**
      * Registers an on remove handler.
-     * @param originalScreen The screen.
-     * @param name The name of the inventory.
+     *
+     * @param originalScreen   The screen.
+     * @param name             The name of the inventory.
      * @param shouldInstrument Whether the event should be called or not.
-     * @param inventoryEvent The inventory event to run.
+     * @param inventoryEvent   The inventory event to run.
      */
     public static void remove(
         Screen originalScreen,
@@ -90,9 +104,10 @@ public class InventoryEvents {
 
     /**
      * Registers an before init event handler.
-     * @param name The name of the inventory.
+     *
+     * @param name             The name of the inventory.
      * @param shouldInstrument Whether the event should be called or not.
-     * @param inventoryEvent The inventory event to run.
+     * @param inventoryEvent   The inventory event to run.
      */
     public static void beforeInit(
         String name, Predicate<HandledScreen<?>> shouldInstrument, InventoryEvent inventoryEvent) {
