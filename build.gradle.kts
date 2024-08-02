@@ -21,7 +21,7 @@ loom {
 }
 
 dependencies {
-    annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.32")!!)
+    annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.34")!!)
     compileOnly("org.jetbrains:annotations:1.18.32")
 
     minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
