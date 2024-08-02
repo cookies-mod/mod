@@ -1,0 +1,27 @@
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 21
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Set executable
+        run: chmod +x gradlew
+      - name: Build project
+        id: build
+        run: ./gradlew build
+      - name: Run tests
+        run: ./gradlew test
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          #name: ${{ steps.build.outputs.result }}
+          path: build/libs/

@@ -3,6 +3,7 @@ import org.gradle.jvm.tasks.Jar
 plugins {
     id("fabric-loom")
     id("maven-publish")
+    id("dev.morazzer.cookies.internal.classified-jars")
 }
 
 version = project.properties["mod_version"]!!
