@@ -22,7 +22,7 @@ loom {
 
 dependencies {
     annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.34")!!)
-    compileOnly("org.jetbrains:annotations:1.18.32")
+    compileOnly("org.jetbrains:annotations:24.1.0")
 
     minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
     mappings("net.fabricmc:yarn:${project.properties["yarn_mappings"]}:v2")
