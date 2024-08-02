@@ -33,6 +33,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_20
 }
 
+gradlePlugin {
+    plugins {
+        create("classifiedJars") {
+            id = "dev.morazzer.cookies.internal.classified-jars"
+            implementationClass = "cm.tasks.ModifyJarName"
+        }
+    }
+}
 
 afterEvaluate {
     tasks.withType<JavaCompile>().configureEach {

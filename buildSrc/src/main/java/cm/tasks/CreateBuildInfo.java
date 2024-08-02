@@ -14,8 +14,11 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
-import com.google.common.collect.Iterators;
-import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
+import org.checkerframework.checker.units.qual.A;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.gradle.api.tasks.options.Option;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -82,50 +85,11 @@ public abstract class CreateBuildInfo extends DefaultTask {
             Modifier.Keyword.STATIC
         );
 
-
-        try (Git git = findGit(getProject().getRootDir().toPath())) {
+        try (Git git = GitUtils.findGit(getProject())) {
             buildInfoClass.addFieldWithInitializer(
                 "String",
                 "branch",
                 new StringLiteralExpr(git.getRepository().getBranch()),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
-
-            final RevCommit revCommit = Iterators.cycle(git.log().setMaxCount(1).call()).next();
-
-            buildInfoClass.addFieldWithInitializer(
-                "String",
-                "lastCommit",
-                new StringLiteralExpr(revCommit.getId().toObjectId().getName()),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
-
-            buildInfoClass.addFieldWithInitializer(
-                "String",
-                "lastCommitter",
-                new StringLiteralExpr(revCommit.getCommitterIdent().getName()),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
-
-            buildInfoClass.addFieldWithInitializer(
-                "String",
-                "lastAuthor",
-                new StringLiteralExpr(revCommit.getAuthorIdent().getName()),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
-
-            buildInfoClass.addFieldWithInitializer(
-                new PrimitiveType(PrimitiveType.Primitive.INT),
-                "lastCommitTime",
-                new IntegerLiteralExpr(String.valueOf(revCommit.getCommitTime())),
                 Modifier.Keyword.FINAL,
                 Modifier.Keyword.PUBLIC,
                 Modifier.Keyword.STATIC
@@ -141,19 +105,11 @@ public abstract class CreateBuildInfo extends DefaultTask {
             );
 
 
-        } catch (IOException | GitAPIException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
-    }
-
-    private Git findGit(Path path) {
-        try {
-            return Git.open(path.toFile());
-        } catch (Exception exception) {
-            return findGit(path.getParent());
-        }
     }
 
     @OutputDirectory
