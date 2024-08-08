@@ -9,6 +9,7 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculatio
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +30,7 @@ public class VisitorHelper {
 
     @SuppressWarnings("MissingJavadoc")
     public VisitorHelper() {
-        ItemLoreEvent.EVENT_ITEM.register(this::modify);
+        ItemLoreEvent.EVENT_ITEM.register(ExceptionHandler.wrap(this::modify));
     }
 
     private void modify(ItemStack itemStack, List<MutableText> lines) {
@@ -78,6 +79,10 @@ public class VisitorHelper {
         final Optional<RepositoryItem> repositoryItem = RepositoryItem.ofName(name);
         if (repositoryItem.isEmpty()) {
             iterator.add(Text.literal(" -> Could not find item %s".formatted(name)).formatted(Formatting.RED));
+            return;
+        }
+
+        if (repositoryItem.get().getRecipes().isEmpty()) {
             return;
         }
 
