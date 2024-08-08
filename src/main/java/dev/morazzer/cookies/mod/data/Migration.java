@@ -1,5 +1,9 @@
 package dev.morazzer.cookies.mod.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Generic migration for every type of data.
  *
@@ -13,7 +17,7 @@ public interface Migration<T> {
      *
      * @return The number.
      */
-    long getNumber();
+    int getNumber();
 
     /**
      * Applies the migration to the data.
@@ -24,6 +28,7 @@ public interface Migration<T> {
 
     /**
      * The type of data that is handled by this migration.
+     *
      * @return The type.
      */
     Type getType();
@@ -31,14 +36,19 @@ public interface Migration<T> {
     /**
      * The supported migration types.
      */
+    @AllArgsConstructor
+    @Getter
     enum Type {
         /**
          * {@link dev.morazzer.cookies.mod.data.profile.ProfileData}
          */
-        PROFILE,
+        PROFILE(-1),
         /**
          * {@link dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData}
          */
-        GLOBAL_PROFILE;
+        GLOBAL_PROFILE(-1);
+
+        @Setter
+        int latest;
     }
 }

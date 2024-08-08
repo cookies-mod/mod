@@ -52,13 +52,18 @@ public class ItemTooltipComponent implements TooltipComponent {
         }
     }
 
-    private void drawSlot(
-        int x, int y, int index, DrawContext context, TextRenderer textRenderer) {
+    private void drawSlot(int x, int y, int index, DrawContext context, TextRenderer textRenderer) {
         if (index >= this.size) {
             this.draw(context, x, y);
         } else {
             ItemStack itemStack = this.entries.getOrDefault(index, ItemStack.EMPTY);
             this.draw(context, x, y);
+
+            final Integer data = ItemUtils.getData(itemStack, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+            if (data != null) {
+                context.fill(x + 1, y + 1, x + 17, y + 17, data);
+            }
+
             context.drawItem(itemStack, x + 1, y + 1, index);
             context.drawItemInSlot(textRenderer, itemStack, x + 1, y + 1);
         }

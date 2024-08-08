@@ -13,7 +13,7 @@ import dev.morazzer.cookies.mod.events.EventLoader;
 import dev.morazzer.cookies.mod.features.Features;
 import dev.morazzer.cookies.mod.repository.Repository;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
-import dev.morazzer.cookies.mod.screen.ItemSearchScreen;
+import dev.morazzer.cookies.mod.screen.search.ItemSearchScreen;
 import dev.morazzer.cookies.mod.utils.UpdateChecker;
 
 import java.util.concurrent.Executors;

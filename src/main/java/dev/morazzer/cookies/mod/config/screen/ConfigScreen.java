@@ -8,7 +8,7 @@ import dev.morazzer.cookies.mod.config.system.parsed.ConfigReader;
 import dev.morazzer.cookies.mod.config.system.parsed.ProcessedCategory;
 import dev.morazzer.cookies.mod.config.system.parsed.ProcessedOption;
 import dev.morazzer.cookies.mod.config.utils.RenderUtils;
-import dev.morazzer.cookies.mod.utils.maths.LinearInterpolatedInteger;
+import dev.morazzer.cookies.mod.screen.ScrollbarScreen;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
@@ -30,15 +29,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Config screen to visualize and change the {@linkplain dev.morazzer.cookies.mod.config.CookiesConfig}.
  */
-public class ConfigScreen extends Screen implements InventoryConfigScreenConstants {
+public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScreenConstants, TabConstants {
 
 
+    private final static int SCROLL_HEIGHT = 163;
     private final ConfigReader configReader;
     private final List<ProcessedOption<?, ?>> hiddenOptions = new LinkedList<>();
     private final LinkedList<ProcessedCategory> visibleCategories = new LinkedList<>();
     private final LinkedList<ProcessedCategory> allCategories = new LinkedList<>();
-    private final LinearInterpolatedInteger categoryScrollbar = new LinearInterpolatedInteger(150, 0);
-    private final LinearInterpolatedInteger optionsScrollbar = new LinearInterpolatedInteger(150, 0);
     private final ConcurrentHashMap<Integer, Integer> activeFoldables = new ConcurrentHashMap<>();
     private final int optionsViewport = 160;
     int x;
@@ -59,7 +57,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
      * @param configReader The config reader.
      */
     public ConfigScreen(final ConfigReader configReader) {
-        super(Text.empty());
+        super(Text.empty(), SCROLL_HEIGHT);
         this.configReader = configReader;
         this.allCategories.addAll(configReader.getCategories());
         this.visibleCategories.addAll(this.allCategories);
@@ -68,30 +66,24 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     @Override
     public void render(final DrawContext drawContext, final int mouseX, final int mouseY, final float tickDelta) {
         this.renderBackground(drawContext, mouseX, mouseY, tickDelta);
+        super.renderScrollbar(drawContext);
         if (this.selectedCategory == null && !this.visibleCategories.isEmpty()) {
             this.setSelectedCategory(this.visibleCategories.getFirst());
         }
 
-        this.categoryScrollbar.tick();
-        this.optionsScrollbar.tick();
-
-        RenderUtils.renderFilledBox(
-            drawContext,
+        RenderUtils.renderFilledBox(drawContext,
             this.optionsLeft - 1,
             this.optionsTop - 1,
             this.optionsRight + 1,
-            this.optionsBottom + 1
-        );
+            this.optionsBottom + 1);
 
         this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> {
             final ConfigOptionEditor<?, ?> editor = processedOption.getEditor();
 
-            drawContext.enableScissor(
-                this.optionsLeft - 1,
+            drawContext.enableScissor(this.optionsLeft - 1,
                 this.optionsTop - 1,
                 this.optionsRight + 1,
-                this.optionsBottom + 1
-            );
+                this.optionsBottom + 1);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(positionX, positionY, 1);
 
@@ -121,31 +113,20 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         this.searchField.render(drawContext, mouseX, mouseY, tickDelta);
 
         if (this.selectedCategory != null) {
-            RenderUtils.renderTextWithMaxWidth(
-                drawContext,
+            RenderUtils.renderTextWithMaxWidth(drawContext,
                 this.selectedCategory.getName(),
                 70,
                 this.x + 6,
                 this.y + 6,
                 -1,
-                true
-            );
+                true);
         }
 
         if ((mouseY < this.y || mouseY > this.y + 186)) {
             for (final ProcessedCategory allCategory : this.allCategories) {
                 final int tabX = this.x + this.getTabX(allCategory);
                 final int tabY = this.y + this.getTabY(allCategory);
-                if (
-                    this.isInBound(
-                        mouseX,
-                        mouseY,
-                        tabX,
-                        tabY,
-                        26,
-                        32
-                    )
-                ) {
+                if (this.isInBound(mouseX, mouseY, tabX, tabY, 26, 32)) {
                     if (this.selectedCategory == allCategory) {
                         drawContext.drawTooltip(this.textRenderer, allCategory.getDescription(), mouseX, mouseY);
                     } else {
@@ -157,9 +138,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     }
 
     @Override
-    public boolean keyPressed(final int keyCode,
-                              final int scanCode,
-                              final int modifiers) {
+    public boolean keyPressed(final int keyCode, final int scanCode, final int modifiers) {
         if (keyCode == InputUtil.GLFW_KEY_DOWN) {
             this.mouseScrolled(this.optionsLeft + 1, this.optionsTop + 1, 0, -1);
         } else if (keyCode == InputUtil.GLFW_KEY_UP) {
@@ -173,8 +152,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         if (this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-            .getEditor()
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
             .keyPressed(keyCode, scanCode, modifiers));
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -191,10 +169,8 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         this.searchField.setVisible(true);
         this.searchField.setDrawsBackground(false);
         this.setSelectedCategory(this.allCategories.peekFirst());
-        this.executeForEach(
-            (processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().init(),
-            true
-        );
+        this.executeForEach((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().init(),
+            true);
         this.resize(MinecraftClient.getInstance(), this.width, this.height);
         this.searchField.setChangedListener(text -> {
             this.repopulateActiveFoldables();
@@ -222,9 +198,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     }
 
     @Override
-    public void resize(final MinecraftClient client,
-                       final int width,
-                       final int height) {
+    public void resize(final MinecraftClient client, final int width, final int height) {
         final int scaleFactor = (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
 
         this.x = (width - BACKGROUND_WIDTH) / 2;
@@ -240,60 +214,20 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         this.optionsBottom = this.optionsTop + 160;
 
         this.optionDefaultWidth = this.optionsRight - this.optionsLeft + 1;
+        this.updateScrollbar(SCROLL_HEIGHT, this.x + 174, this.y + 16);
 
         this.recalculateOptionBarSize();
         this.setSearchBarWidth();
     }
 
-    private void renderTabIcon(@NotNull final DrawContext drawContext,
-                               @NotNull final ProcessedCategory category) {
-        final boolean active = this.selectedCategory == category;
-        final boolean bottom = category.getRow() == Row.BOTTOM;
-        final int column = category.getColumn();
-
-        final int tabX = this.x + this.getTabX(category);
-        final int tabY = this.y + this.getTabY(category);
-
-        final Identifier[] identifiers =
-            bottom
-                ? (active ? TAB_BOTTOM_SELECTED_TEXTURES : TAB_BOTTOM_UNSELECTED_TEXTURES)
-                : (active ? TAB_TOP_SELECTED_TEXTURES : TAB_TOP_UNSELECTED_TEXTURES);
-
-
-        drawContext.drawGuiTexture(
-            identifiers[MathUtils.clamp(column, 0, identifiers.length - 1)],
-            tabX,
-            tabY,
-            26,
-            32
-        );
-
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0, 0, 100);
-
-        final int offset = bottom ? -1 : 1;
-        final ItemStack itemStack = category.getItemStack();
-
-        final int itemX = tabX + 5;
-        final int itemY = tabY + 8 + offset;
-
-        drawContext.drawItem(itemStack, itemX, itemY);
-        drawContext.drawItemInSlot(this.textRenderer, itemStack, itemX, itemY);
-        drawContext.getMatrices().pop();
-    }
-
     @Override
-    public boolean mouseClicked(final double mouseX,
-                                final double mouseY,
-                                final int button) {
-        if (this.isInBound(
-            (int) mouseX,
+    public boolean mouseClicked(final double mouseX, final double mouseY, final int button) {
+        if (this.isInBound((int) mouseX,
             (int) mouseY,
             this.searchField.getX() - 3,
             this.searchField.getY(),
             this.searchField.getWidth(),
-            this.searchField.getHeight()
-        ) && button == 0) {
+            this.searchField.getHeight()) && button == 0) {
             this.searchField.setFocused(true);
             this.searchField.active = true;
             return true;
@@ -306,25 +240,15 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             for (final ProcessedCategory allCategory : this.allCategories) {
                 final int tabX = this.x + this.getTabX(allCategory);
                 final int tabY = this.y + this.getTabY(allCategory);
-                if (
-                    this.isInBound(
-                        (int) mouseX,
-                        (int) mouseY,
-                        tabX,
-                        tabY,
-                        26,
-                        32
-                    )
-                    && button == 0
-                ) {
+                if (this.isInBound((int) mouseX, (int) mouseY, tabX, tabY, 26, 32) && button == 0) {
                     this.setSelectedCategory(allCategory);
                     return true;
                 }
             }
         }
 
-        if (mouseY > this.optionsTop && mouseY < this.optionsBottom
-            && mouseX > this.optionsLeft && mouseX < this.optionsRight) {
+        if (mouseY > this.optionsTop && mouseY < this.optionsBottom && mouseX > this.optionsLeft &&
+            mouseX < this.optionsRight) {
             final AtomicBoolean consumed = new AtomicBoolean(false);
             this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> {
                 if (consumed.get()) {
@@ -344,13 +268,15 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     }
 
     @Override
-    public boolean mouseReleased(final double mouseX,
-                                 final double mouseY,
-                                 final int button) {
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-            .getEditor()
-            .mouseReleased(mouseX - positionX, mouseY - positionY, button));
-        return super.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseDragged(
+        final double mouseX, final double mouseY, final int button, final double deltaX, final double deltaY) {
+        if (mouseY > this.optionsTop && mouseY < this.optionsBottom && mouseX > this.optionsLeft &&
+            mouseX < this.optionsRight) {
+            this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+                .mouseDragged(mouseX - positionX, mouseY - positionY, button, deltaX, deltaY, optionWidth));
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     /**
@@ -362,7 +288,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         if (this.selectedCategory == null) {
             return;
         }
-        int optionsY = -this.optionsScrollbar.getValue();
+        int optionsY = -this.scroll;
         for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
             final int optionWidth = this.getOptionSize(processedOption);
             if (optionWidth == -1) {
@@ -382,8 +308,8 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             final int finalX = this.optionsLeft - 1;
             final int finalY = this.optionsTop + optionsY + 1;
 
-            if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1))
-                && (finalY < (this.optionsBottom - 1))) {
+            if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1)) &&
+                (finalY < (this.optionsBottom - 1))) {
                 executor.execute(processedOption, finalX, finalY, optionWidth + 1);
             }
 
@@ -411,69 +337,68 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
     }
 
     @Override
-    public boolean mouseDragged(final double mouseX,
-                                final double mouseY,
-                                final int button,
-                                final double deltaX,
-                                final double deltaY) {
-        if (mouseY > this.optionsTop && mouseY < this.optionsBottom
-            && mouseX > this.optionsLeft && mouseX < this.optionsRight) {
-            this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-                .getEditor()
-                .mouseDragged(mouseX - positionX, mouseY - positionY, button, deltaX, deltaY, optionWidth));
-        }
-
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    public boolean mouseReleased(final double mouseX, final double mouseY, final int button) {
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+            .mouseReleased(mouseX - positionX, mouseY - positionY, button));
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseScrolled(final double mouseX,
-                                 final double mouseY,
-                                 final double horizontalAmount,
-                                 final double verticalAmount) {
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-            .getEditor()
+    public boolean mouseScrolled(
+        final double mouseX, final double mouseY, final double horizontalAmount, final double verticalAmount) {
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
             .mouseScrolled(mouseX - positionX, mouseY - positionY, horizontalAmount, verticalAmount));
-        if ((mouseY > this.optionsTop) && (mouseY < this.optionsBottom)
-            && (mouseX > this.optionsLeft) && (mouseX < this.optionsRight)) {
-            final int newTarget = (int) (this.optionsScrollbar.getTarget() - verticalAmount * 30);
-            this.optionsScrollbar.setTargetValue(Math.max(
-                0,
-                Math.min(this.optionsAllSize - this.optionsViewport, newTarget)
-            ));
+        if ((mouseY > this.optionsTop) && (mouseY < this.optionsBottom) && (mouseX > this.optionsLeft) &&
+            (mouseX < this.optionsRight)) {
+            this.updateScrollbar(verticalAmount);
         }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override
-    public boolean keyReleased(final int keyCode,
-                               final int scanCode,
-                               final int modifiers) {
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-            .getEditor()
+    public boolean keyReleased(final int keyCode, final int scanCode, final int modifiers) {
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
             .keyReleased(keyCode, scanCode, modifiers));
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(final char character,
-                             final int modifiers) {
+    public boolean charTyped(final char character, final int modifiers) {
         if (this.searchField.charTyped(character, modifiers)) {
             return true;
         }
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption
-            .getEditor()
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
             .charTyped(character, modifiers));
         return super.charTyped(character, modifiers);
     }
 
-    private boolean isInBound(final int x,
-                              final int y,
-                              final int regionX,
-                              final int regionY,
-                              final int regionWidth,
-                              final int regionHeight) {
-        return (x >= regionX && x <= regionX + regionWidth) && (y >= regionY && y <= regionY + regionHeight);
+    private void renderTabIcon(@NotNull final DrawContext drawContext, @NotNull final ProcessedCategory category) {
+        final boolean active = this.selectedCategory == category;
+        final boolean bottom = category.getRow() == Row.BOTTOM;
+        final int column = category.getColumn();
+
+        final int tabX = this.x + this.getTabX(category);
+        final int tabY = this.y + this.getTabY(category);
+
+        final Identifier[] identifiers =
+            bottom ? (active ? TAB_BOTTOM_SELECTED_TEXTURES : TAB_BOTTOM_UNSELECTED_TEXTURES) :
+                (active ? TAB_TOP_SELECTED_TEXTURES : TAB_TOP_UNSELECTED_TEXTURES);
+
+
+        drawContext.drawGuiTexture(identifiers[MathUtils.clamp(column, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
+
+        drawContext.getMatrices().push();
+        drawContext.getMatrices().translate(0, 0, 100);
+
+        final int offset = bottom ? -1 : 1;
+        final ItemStack itemStack = category.getItemStack();
+
+        final int itemX = tabX + 5;
+        final int itemY = tabY + 8 + offset;
+
+        drawContext.drawItem(itemStack, itemX, itemY);
+        drawContext.drawItemInSlot(this.textRenderer, itemStack, itemX, itemY);
+        drawContext.getMatrices().pop();
     }
 
     int getTabX(@NotNull final ProcessedCategory category) {
@@ -531,8 +456,8 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         this.optionsAllSize = 0;
         for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
             if ((processedOption.getFoldable() >= 0 &&
-                 !this.activeFoldables.containsKey(processedOption.getFoldable()))
-                || this.hiddenOptions.contains(processedOption)) {
+                 !this.activeFoldables.containsKey(processedOption.getFoldable())) ||
+                this.hiddenOptions.contains(processedOption)) {
                 continue;
             }
             if (!processedOption.getOption().isActive()) {
@@ -542,10 +467,9 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             this.optionsAllSize += processedOption.getEditor().getHeight(optionWidth);
         }
 
-        this.optionsScrollbar.setValue(Math.max(
-            0,
-            Math.min(this.optionsAllSize - this.optionsViewport, this.optionsScrollbar.getValue())
-        ));
+        int size = this.optionsAllSize - this.optionsViewport;
+        this.scroll = Math.clamp(this.scroll, 0, Math.max(0, size));
+        this.updateScroll(size);
     }
 
     /**
@@ -553,10 +477,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
      */
     private void setSearchBarWidth() {
         this.searchField.setWidth(90);
-        this.searchField.setPosition(
-            this.x + 82,
-            this.y + 6
-        );
+        this.searchField.setPosition(this.x + 82, this.y + 6);
         this.searchField.setHeight(12);
     }
 
@@ -570,18 +491,12 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
         if (search.isEmpty()) {
             return;
         }
-        this.visibleCategories.removeIf(
-            Predicate.<ProcessedCategory>not(
-                processedCategory ->
-                    processedCategory.getName().getString().contains(search)
-                    || processedCategory.getDescription().getString().contains(search)
-                    || processedCategory.getProcessedOptions()
-                        .stream()
-                        .anyMatch(option -> option.getEditor()
-                            .doesMatchSearch(search.toLowerCase(Locale.ROOT))
-                        )
-            ).and(Predicate.not(ProcessedCategory::isSearch))
-        );
+        this.visibleCategories.removeIf(Predicate.<ProcessedCategory>not(processedCategory ->
+                processedCategory.getName().getString().contains(search) ||
+                processedCategory.getDescription().getString().contains(search) || processedCategory.getProcessedOptions()
+                    .stream()
+                    .anyMatch(option -> option.getEditor().doesMatchSearch(search.toLowerCase(Locale.ROOT))))
+            .and(Predicate.not(ProcessedCategory::isSearch)));
         if (this.visibleCategories.isEmpty()) {
             return;
         }
@@ -623,8 +538,7 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
                     this.hiddenOptions.add(processedOption);
                     continue;
                 }
-                if (!processedOption.getEditor()
-                    .doesMatchSearch(search.toLowerCase(Locale.ROOT)) &&
+                if (!processedOption.getEditor().doesMatchSearch(search.toLowerCase(Locale.ROOT)) &&
                     !matchedFoldables.contains(processedOption.getFoldable())) {
                     this.hiddenOptions.add(processedOption);
                 } else if (processedOption.getEditor() instanceof final FoldableEditor editor) {
@@ -643,12 +557,12 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
      * @param executor The executor to be called.
      * @param all      If all or only, the visible options should be used.
      */
-    private void executeForEach(final ProcessedOptionExecutor executor,
-                                @SuppressWarnings("SameParameterValue") final boolean all) {
+    private void executeForEach(
+        final ProcessedOptionExecutor executor, @SuppressWarnings("SameParameterValue") final boolean all) {
         if (this.selectedCategory == null) {
             return;
         }
-        int optionsY = -this.optionsScrollbar.getValue();
+        int optionsY = -this.scroll;
         for (final ProcessedOption<?, ?> processedOption : this.selectedCategory.getProcessedOptions()) {
             final int optionWidth = this.getOptionSize(processedOption);
             if (optionWidth == -1) {
@@ -662,8 +576,8 @@ public class ConfigScreen extends Screen implements InventoryConfigScreenConstan
             final int finalX = (this.optionsLeft + this.optionsRight - optionWidth) / 2 - 5;
             final int finalY = this.optionsTop + 5 + optionsY;
 
-            if (all || ((finalY + editor.getHeight(optionWidth) > this.optionsTop + 1)
-                        && (finalY < this.optionsBottom - 1))) {
+            if (all ||
+                ((finalY + editor.getHeight(optionWidth) > this.optionsTop + 1) && (finalY < this.optionsBottom - 1))) {
                 executor.execute(processedOption, finalX, finalY, optionWidth);
             }
 

@@ -1,12 +1,18 @@
 package dev.morazzer.cookies.mod.utils.skyblock.inventories;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
@@ -17,6 +23,7 @@ import net.minecraft.util.Unit;
  * A builder for items.
  */
 public class ItemBuilder {
+    private static final String SKIN_DECODED_TEMPLATE = "{\"textures\":{\"SKIN\":{\"url\":\"%S\"}}}";
 
     private final ItemStack itemStack;
 
@@ -135,6 +142,27 @@ public class ItemBuilder {
     public ItemBuilder setClickConsumer(Consumer<Integer> consumer) {
         this.itemStack.set(CookiesDataComponentTypes.ITEM_CLICK_CONSUMER, consumer);
         return this;
+    }
+
+    /**
+     * Sets the skin of the item to the provided skin.
+     *
+     * @param skin The skin.
+     */
+    public ItemBuilder setSkinUrl(String skin) {
+        return setSkin(Base64.getEncoder()
+            .encodeToString(SKIN_DECODED_TEMPLATE.formatted(skin).getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Sets the skin of the item to the provided skin.
+     *
+     * @param skin The skin.
+     */
+    public ItemBuilder setSkin(String skin) {
+        final ProfileComponent component = new ProfileComponent(new GameProfile(UUID.randomUUID(), "meowora"));
+        component.properties().put("textures", new Property("textures", skin));
+        return set(DataComponentTypes.PROFILE, component);
     }
 
     /**

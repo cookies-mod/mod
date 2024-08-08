@@ -72,7 +72,7 @@ public class GlobalProfileStorage {
 
         ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
         final JsonObject jsonObject = JsonUtils.toJsonObject(globalProfileData);
-        DataMigrations.writeLatest(jsonObject);
+        DataMigrations.writeLatest(jsonObject, Migration.Type.GLOBAL_PROFILE);
         ExceptionHandler.removeThrows(() -> Files.writeString(profileFile,
             JsonUtils.CLEAN_GSON.toJson(jsonObject),
             StandardCharsets.UTF_8,

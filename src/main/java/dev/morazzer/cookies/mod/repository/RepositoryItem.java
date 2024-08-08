@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -133,6 +134,19 @@ public class RepositoryItem {
             .findFirst();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return switch (obj) {
+            case null -> false;
+            case Identifier identifier -> (identifier.getNamespace().equalsIgnoreCase("cookies") ||
+                                           identifier.getNamespace().equalsIgnoreCase("skyblock")) &&
+                                          identifier.getPath().equals(this.internalId);
+            case Ingredient ingredient -> equals(ingredient.getRepositoryItem());
+            case RepositoryItem repositoryItem -> Objects.equals(this.internalId, repositoryItem.getInternalId());
+            default -> super.equals(obj);
+        };
+    }
+
     /**
      * Gets the name as text with the formatting applied.
      *
@@ -144,11 +158,13 @@ public class RepositoryItem {
 
     /**
      * Creates a new item stack for the repository item.
+     *
      * @return The item stack.
      */
     public ItemStack constructItemStack() {
         final ItemStack itemStack = new ItemStack(Registries.ITEM.get(Identifier.of(this.minecraftId)));
         itemStack.set(DataComponentTypes.CUSTOM_NAME, this.name.copy().styled(style -> style.withItalic(false)));
+        itemStack.set(CookiesDataComponentTypes.REPOSITORY_ITEM, this);
         final PropertyMap propertyMap = new PropertyMap();
         final ProfileComponent component = new ProfileComponent(new GameProfile(UUID.randomUUID(), "meowora"));
         component.properties().put("textures", new Property("textures", this.skin));

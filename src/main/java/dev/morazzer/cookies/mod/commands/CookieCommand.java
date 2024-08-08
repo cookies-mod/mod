@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.screen.ItemSearchScreen;
+import dev.morazzer.cookies.mod.screen.search.ItemSearchScreen;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;

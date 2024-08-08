@@ -64,7 +64,7 @@ public class ProfileStorage {
 
         ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
         final JsonObject jsonObject = JsonUtils.toJsonObject(profileData);
-        DataMigrations.writeLatest(jsonObject);
+        DataMigrations.writeLatest(jsonObject, Migration.Type.PROFILE);
         profileData.save();
         ExceptionHandler.removeThrows(() -> Files.writeString(
             profileFile,

@@ -45,27 +45,26 @@ public class StoragePreview {
 
     private void updateInventory(int index, ItemStack itemStack) {
         final String name = itemStack.getName().getString();
-        boolean isEnderChest = false;
+        StorageData.StorageLocation location = StorageData.StorageLocation.BACKPACK;
         if (name.startsWith("Ender Chest Page")) {
-            isEnderChest = true;
+            location = StorageData.StorageLocation.ENDER_CHEST;
         } else if (!name.startsWith("Backpack Slot")) {
             return;
         }
 
-        int page = index - (isEnderChest ? 9 : 27);
+        int page = index - (location == StorageData.StorageLocation.ENDER_CHEST ? 9 : 27);
         final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
         if (currentProfile.isEmpty()) {
             return;
         }
-        final List<StorageData.StorageDataEntry> items =
-            currentProfile.get().getStorageData().getItems(page, isEnderChest);
+        final List<StorageData.StorageItem> items = currentProfile.get().getStorageData().getItems(page, location);
         if (items == null || items.isEmpty()) {
             return;
         }
 
         Map<Integer, ItemStack> map = new HashMap<>();
-        for (StorageData.StorageDataEntry item : items) {
-            map.put(item.slot(), item.itemStack());
+        for (StorageData.StorageItem item : items) {
+            map.put(item.slot(), item.itemStack().copy());
         }
         itemStack.set(CookiesDataComponentTypes.LORE_ITEMS, new ItemTooltipComponent(map));
     }
