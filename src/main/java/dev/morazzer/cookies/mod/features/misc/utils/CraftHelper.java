@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
-import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
+import dev.morazzer.cookies.mod.data.profile.items.Item;
+import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
+import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
@@ -17,8 +19,6 @@ import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
-import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
-import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +33,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -53,6 +51,7 @@ public class CraftHelper {
     public static final String LOGGING_KEY = "crafthelper";
     private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
     private static final Identifier DEBUG_HITBOX = DevUtils.createIdentifier("craft_helper/hitbox");
+    private static final ItemSources[] ITEM_SOURCES = {ItemSources.INVENTORY, ItemSources.SACKS, ItemSources.STORAGE};
     private static CraftHelper instance;
     private final int buttonWidthHeight = 8;
     @Getter
@@ -113,26 +112,6 @@ public class CraftHelper {
         ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
         instance.recalculate();
         instance.scrolled = 1;
-    }
-
-    private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
-        int amount = 0;
-
-        if (context.parent != null) {
-            amount = getAmountThroughParents(context, max, stackCountContext);
-        }
-
-        amount += stackCountContext.take(context.recipeResult.getRepositoryItem(), max - amount);
-
-        return Math.min(amount, max);
-    }
-
-    private static int getAmountThroughParents(
-        EvaluationContext context, int max, StackCountContext stackCountContext) {
-        int amount = 0;
-        amount += (stackCountContext.integers.peek() *
-                   (context.recipeResult.getAmount() / context.parent.recipeResult().getAmount()));
-        return Math.min(amount, max);
     }
 
     @SuppressWarnings("MissingJavadoc")
@@ -205,6 +184,26 @@ public class CraftHelper {
         }
 
         return amount == calculationResult.getAmount();
+    }
+
+    private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
+        int amount = 0;
+
+        if (context.parent != null) {
+            amount = getAmountThroughParents(context, max, stackCountContext);
+        }
+
+        amount += stackCountContext.take(context.recipeResult.getRepositoryItem(), max - amount);
+
+        return Math.min(amount, max);
+    }
+
+    private static int getAmountThroughParents(
+        EvaluationContext context, int max, StackCountContext stackCountContext) {
+        int amount = 0;
+        amount += (stackCountContext.integers.peek() *
+                   (context.recipeResult.getAmount() / context.parent.recipeResult().getAmount()));
+        return Math.min(amount, max);
     }
 
     private MutableText formatted(
@@ -447,28 +446,13 @@ public class CraftHelper {
             }
 
             if (!itemMap.containsKey(id)) {
-                int count = 0;
-                final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-                if (currentProfile.isPresent()) {
-                    final ProfileData profileData = currentProfile.get();
-                    count += profileData.getSackTracker().getItems().getOrDefault(id, 0);
-                    for (StorageData.StorageDataEntry allItem : profileData.getStorageData().getAllItems()) {
-                        RepositoryItem item =
-                            ItemUtils.getData(allItem.itemStack(), CookiesDataComponentTypes.REPOSITORY_ITEM);
-                        if (id.equals(item)) {
-                            count += allItem.itemStack().getCount();
-                        }
-                    }
-                    final PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
-                    for (int i = 0; i < inventory.size() - 1; i++) {
-                        final ItemStack stack = inventory.getStack(i);
-                        RepositoryItem item = ItemUtils.getData(stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
-                        if (id.equals(item)) {
-                            count += stack.getCount();
-                        }
-                    }
-                }
-                itemMap.put(id, (long) count);
+                itemMap.put(
+                    id,
+                    ItemSources.getItems(ITEM_SOURCES)
+                        .stream()
+                        .filter(item -> id.equals(ItemAccessor.repositoryItemOrNull(item.itemStack())))
+                        .mapToLong(Item::amount)
+                        .sum());
             }
 
             long l = itemMap.getOrDefault(id, 0L);

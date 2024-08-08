@@ -13,7 +13,9 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Pair;
 
 /**
  * Saves the content of the storage (enderchest/backpack) to the {@link ProfileData}.
@@ -45,7 +47,7 @@ public class StorageTracker {
     private void remove(Screen screen) {
         GenericContainerScreen genericContainerScreen = (GenericContainerScreen) screen;
         DevUtils.log(LOGGER_KEY, "Registered removing of storage inventory!");
-        List<StorageData.StorageDataEntry> slots = new ArrayList<>();
+        List<Pair<Integer, ItemStack>> slots = new ArrayList<>();
         for (Slot slot : genericContainerScreen.getScreenHandler().slots) {
             if (slot.inventory == MinecraftClient.getInstance().player.getInventory()) {
                 continue;
@@ -59,7 +61,7 @@ public class StorageTracker {
                 continue;
             }
 
-            slots.add(new StorageData.StorageDataEntry(slot.getIndex() - 9, slot.getStack()));
+            slots.add(new Pair<>(slot.getIndex() - 9, slot.getStack()));
         }
 
         final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
@@ -77,7 +79,11 @@ public class StorageTracker {
             page = Integer.parseInt(literalTitle.replaceAll("\\D", ""));
         }
 
-        currentProfile.get().getStorageData().saveItems(slots, page - 1, isEnderChest);
+        currentProfile.get()
+            .getStorageData()
+            .saveItems(slots,
+                page - 1,
+                isEnderChest ? StorageData.StorageLocation.ENDER_CHEST : StorageData.StorageLocation.BACKPACK);
     }
 
 

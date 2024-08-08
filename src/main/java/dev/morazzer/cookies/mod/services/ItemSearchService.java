@@ -5,6 +5,9 @@ import com.mojang.serialization.DataResult;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
+import dev.morazzer.cookies.mod.data.profile.items.Item;
+import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
+import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
 import dev.morazzer.cookies.mod.events.ItemStackEvents;
 import dev.morazzer.cookies.mod.render.Renderable;
@@ -16,7 +19,6 @@ import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,16 +49,107 @@ public class ItemSearchService {
         ItemStackEvents.EVENT.register(ItemSearchService::modify);
     }
 
-    private static void modify(ItemStack itemStack) {
-        if (currentlySearched == null) {
+    /**
+     * Adds a chest to the currently active profile, and ignores it if there is no active profile.
+     *
+     * @param first  The first chest block.
+     * @param second The second chest block (or null).
+     * @param stacks The items in the chest.
+     */
+    public static void add(BlockPos first, BlockPos second, List<ItemStack> stacks) {
+        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
+        if (currentProfile.isEmpty()) {
             return;
         }
 
-        if (isSame(itemStack, currentlySearched)) {
-            itemStack.set(
-                CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR,
-                ItemUtils.getData(currentlySearched, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR));
-            modifiedStacks.add(itemStack);
+        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
+        islandStorage.add(first, second, stacks);
+    }
+
+    /**
+     * Removes a chest from the currently active profile, or ignores it if there is no active profile.
+     *
+     * @param pos The position of the chest borken (either left or right works for double chests)
+     */
+    public static void chestBreak(BlockPos pos) {
+        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
+        if (currentProfile.isEmpty()) {
+            return;
+        }
+
+        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
+        islandStorage.remove(pos);
+    }
+
+    /**
+     * Highlights the chests associated with the provided context for 10s and also displays a title to notify the
+     * user of the highlight.
+     *
+     * @param context The context to highlight.
+     */
+    public static synchronized void highlight(ItemCompound context) {
+        removeActive(currentlyActive, currentlySearched);
+        currentlySearched = context.itemStack();
+
+        final RepositoryItem data = ItemUtils.getData(context.itemStack(), CookiesDataComponentTypes.REPOSITORY_ITEM);
+        final int color;
+        if (data != null && data.getTier() != null) {
+            final Formatting formatting = data.getTier().getFormatting();
+            switch (formatting) {
+                case GREEN -> color = Constants.SUCCESS_COLOR;
+                case WHITE -> color = 0xFFEBEBEB;
+                default -> color = Objects.requireNonNullElse(formatting.getColorValue(), Constants.SUCCESS_COLOR);
+            }
+        } else {
+            color = Constants.SUCCESS_COLOR;
+        }
+        context.itemStack().set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, 0xFF000000 | color);
+
+        if (LocationUtils.Island.PRIVATE_ISLAND.isActive()) {
+            for (Item<?> item : context.items()) {
+                if (item.source() != ItemSources.CHESTS) {
+                    continue;
+                }
+                final BiBlockPosKey data1 = (BiBlockPosKey) item.data();
+                final BlockHighlight first = new BlockHighlight(data1.first(), color);
+                final BlockHighlight second = data1.second() != null ? new BlockHighlight(data1.second(), color) : null;
+
+                WorldRender.addRenderable(first);
+                if (second != null) {
+                    WorldRender.addRenderable(second);
+                }
+
+                currentlyActive.add(first);
+                if (second != null) {
+                    currentlyActive.add(second);
+                }
+            }
+        }
+        final ArrayList<Renderable> copy = new ArrayList<>(currentlyActive);
+        CookiesMod.getExecutorService()
+            .schedule(() -> removeActive(copy, context.itemStack()), 10, TimeUnit.SECONDS);
+        MinecraftClient.getInstance().inGameHud.setTitleTicks(4, 40, 4);
+        MinecraftClient.getInstance().inGameHud.setTitle(context.itemStack().getName());
+        MinecraftClient.getInstance().inGameHud.setSubtitle(Text.literal("Highlighting Chests")
+            .withColor(Constants.MAIN_COLOR));
+    }
+
+    /**
+     * Removes the active highlight.
+     *
+     * @param renderables All currently active highlights that should be removed.
+     * @param current     The currently active item.
+     */
+    public static void removeActive(List<Renderable> renderables, ItemStack current) {
+        renderables.forEach(WorldRender::removeRenderable);
+        currentlyActive.clear();
+        for (ItemStack modifiedStack : modifiedStacks) {
+            if (isSame(modifiedStack, currentlySearched)) {
+                modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+            }
+        }
+        if (isSame(current, currentlySearched)) {
+            currentlySearched = null;
         }
     }
 
@@ -73,7 +166,7 @@ public class ItemSearchService {
      * If one is not present on both, that criteria is considered a match. <br>
      * If on is missing on either but present on the other, it is not considered a match and will return false.
      *
-     * @param first The first item stack to check.
+     * @param first  The first item stack to check.
      * @param second The second item stack to check.
      * @return Whether the two items are (more or less) the same.
      */
@@ -126,126 +219,31 @@ public class ItemSearchService {
         return Objects.deepEquals(firstComponent, secondComponent);
     }
 
-    /**
-     * Adds a chest to the currently active profile, and ignores it if there is no active profile.
-     * @param first The first chest block.
-     * @param second The second chest block (or null).
-     * @param stacks The items in the chest.
-     */
-    public static void add(BlockPos first, BlockPos second, List<ItemStack> stacks) {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
+    private static void modify(ItemStack itemStack) {
+        if (currentlySearched == null) {
             return;
         }
 
-        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
-        islandStorage.add(first, second, stacks);
-    }
-
-    /**
-     * Gets all items of the currently active profile, or an empty collection if there is no active profile.
-     * @return The items.
-     */
-    public static List<IslandItems> getAllItems() {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return currentProfile.get().getGlobalProfileData().getIslandStorage().getItems();
-    }
-
-    /**
-     * Removes a chest from the currently active profile, or ignores it if there is no active profile.
-     * @param pos The position of the chest borken (either left or right works for double chests)
-     */
-    public static void chestBreak(BlockPos pos) {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
-            return;
-        }
-
-        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
-        islandStorage.remove(pos);
-    }
-
-    /**
-     * Highlights the chests associated with the provided context for 10s and also displays a title to notify the user of the highlight.
-     * @param context The context to highlight.
-     */
-    public static synchronized void highlight(Context context) {
-        if (!LocationUtils.Island.PRIVATE_ISLAND.isActive()) {
-            return;
-        }
-        removeActive(currentlyActive, currentlySearched);
-
-        final RepositoryItem data = ItemUtils.getData(context.stack, CookiesDataComponentTypes.REPOSITORY_ITEM);
-        final int color;
-        if (data != null && data.getTier() != null) {
-            final Formatting formatting = data.getTier().getFormatting();
-            switch (formatting) {
-                case GREEN -> color = Constants.SUCCESS_COLOR;
-                case WHITE -> color = 0xFFEBEBEB;
-                default -> color = Objects.requireNonNullElse(formatting.getColorValue(), Constants.SUCCESS_COLOR);
-            }
-        } else {
-            color = Constants.SUCCESS_COLOR;
-        }
-        context.stack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, 0xFF000000 | color);
-        for (Block block : context.blocks) {
-            final ItemSearchService.BiBlockPosKey blocks = block.blocks;
-
-            final BlockHighlight first = new BlockHighlight(blocks.first(), color);
-            final BlockHighlight second = blocks.second() != null ? new BlockHighlight(blocks.second(), color) : null;
-
-            WorldRender.addRenderable(first);
-            if (second != null) {
-                WorldRender.addRenderable(second);
-            }
-
-            currentlyActive.add(first);
-            if (second != null) {
-                currentlyActive.add(second);
-            }
-        }
-        currentlySearched = context.stack();
-        final ArrayList<Renderable> copy = new ArrayList<>(currentlyActive);
-        CookiesMod.getExecutorService()
-            .schedule(() -> removeActive(copy, currentlySearched.copy()), 10, TimeUnit.SECONDS);
-        MinecraftClient.getInstance().inGameHud.setTitleTicks(4, 40, 4);
-        MinecraftClient.getInstance().inGameHud.setTitle(context.stack().getName());
-        MinecraftClient.getInstance().inGameHud.setSubtitle(Text.literal("Highlighting Chests")
-            .withColor(Constants.MAIN_COLOR));
-    }
-
-    /**
-     * Removes the active highlight.
-     * @param renderables All currently active highlights that should be removed.
-     * @param current The currently active item.
-     */
-    public static void removeActive(List<Renderable> renderables, ItemStack current) {
-        renderables.forEach(WorldRender::removeRenderable);
-        currentlyActive.clear();
-        for (ItemStack modifiedStack : modifiedStacks) {
-            if (isSame(modifiedStack, currentlySearched)) {
-                modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
-            }
-        }
-        if (isSame(current, currentlySearched)) {
-            currentlySearched = null;
+        if (isSame(itemStack, currentlySearched)) {
+            itemStack.set(
+                CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR,
+                ItemUtils.getData(currentlySearched, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR));
+            modifiedStacks.add(itemStack);
         }
     }
 
     /**
      * A data class to store both a {@link BiBlockPosKey} and a {@link List<ItemStack>}.
+     *
      * @param blockPos The block key for the chest.
-     * @param stacks The stacks in the chest.
+     * @param stacks   The stacks in the chest.
      */
     public record IslandItems(BiBlockPosKey blockPos, List<ItemStack> stacks) {}
 
     /**
      * A data class to save two {@link BlockPos}.
-     * @param first The first position.
+     *
+     * @param first  The first position.
      * @param second The second position (or null).
      */
     public record BiBlockPosKey(BlockPos first, BlockPos second) {
@@ -257,6 +255,7 @@ public class ItemSearchService {
 
         /**
          * Parses the serialized string value to a key.
+         *
          * @param key The serialized key.
          */
         public BiBlockPosKey(String key) {
@@ -265,6 +264,7 @@ public class ItemSearchService {
 
         /**
          * Gets the first block pos from the key.
+         *
          * @param key The key.
          * @return The block pos (as long).
          */
@@ -275,6 +275,7 @@ public class ItemSearchService {
 
         /**
          * Gets the second block pos from the key.
+         *
          * @param key The key.
          * @return The block pos (as long).
          */
@@ -323,15 +324,17 @@ public class ItemSearchService {
 
     /**
      * A context to keep an {@link ItemStack} in relation to its chests stored as {@link Block}
-     * @param stack The stack.
+     *
+     * @param stack  The stack.
      * @param blocks The chests locations.
      */
     public record Context(ItemStack stack, Set<Block> blocks) {}
 
     /**
      * A data class to save a {@link BiBlockPosKey} and the amount of items found in that chest.
+     *
      * @param blocks The block.
-     * @param count The amount of items.
+     * @param count  The amount of items.
      */
     public record Block(ItemSearchService.BiBlockPosKey blocks, AtomicInteger count) {}
 }

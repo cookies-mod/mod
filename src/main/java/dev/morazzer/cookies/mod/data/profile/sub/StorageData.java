@@ -1,19 +1,19 @@
 package dev.morazzer.cookies.mod.data.profile.sub;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import net.minecraft.component.DataComponentTypes;
+import java.util.Optional;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Pair;
+import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,35 +22,39 @@ import org.jetbrains.annotations.NotNull;
 public class StorageData implements JsonSerializable {
     private static final ItemStack VOID_ITEM = new ItemStack(Items.DEBUG_STICK);
 
-    private static final Codec<StorageDataEntry> CODEC =
-        RecordCodecBuilder.create(instance -> instance.group(Codec.INT.fieldOf("slot")
-                    .forGetter(StorageDataEntry::slot),
-                ItemStack.CODEC.fieldOf("item_stack").forGetter(StorageDataEntry::itemStack))
-            .apply(instance, StorageDataEntry::new));
-    private static final Codec<List<StorageDataEntry>> LIST_CODEC = CODEC.listOf();
-    private final List<List<StorageDataEntry>> enderChestItems = Arrays.asList(new List[9]);
-    private final List<List<StorageDataEntry>> backpackItems = Arrays.asList(new List[18]);
+    private static final Codec<StorageItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        StorageLocation.CODEC.fieldOf("location").forGetter(StorageItem::storageLocation),
+        Codec.INT.fieldOf("page").forGetter(StorageItem::page),
+        Codec.INT.fieldOf("slot").forGetter(StorageItem::slot),
+        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::itemStack)).apply(instance, StorageItem::new));
+
+    private static final Codec<List<StorageItem>> LIST_CODEC = CODEC.listOf();
+    private final List<StorageItem> items = new ArrayList<>();
 
     /**
      * Saves the contents of a specific page.
      *
-     * @param itemStacks   The content of the page.
-     * @param page         The page.
-     * @param isEnderChest Whether to save it as enderchest or backpack.
+     * @param itemStacks The content of the page.
+     * @param page       The page.
+     * @param location   The location the item is in.
      */
-    public void saveItems(List<StorageDataEntry> itemStacks, int page, boolean isEnderChest) {
-        (isEnderChest ? enderChestItems : backpackItems).set(page, itemStacks);
+    public void saveItems(List<Pair<Integer, ItemStack>> itemStacks, int page, StorageLocation location) {
+        this.items.removeAll(this.getItems(page, location));
+        itemStacks.stream().map(pair -> new StorageItem(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
     }
 
     /**
      * Gets the content of a specific page of the storage.
      *
-     * @param page         The page to get.
-     * @param isEnderChest Whether to get the enderchest or the backpack.
+     * @param page     The page to get.
+     * @param location The location to search in.
      * @return The page.
      */
-    public List<StorageDataEntry> getItems(int page, boolean isEnderChest) {
-        return (isEnderChest ? enderChestItems : backpackItems).get(page);
+    public List<StorageItem> getItems(int page, StorageLocation location) {
+        return this.items.stream()
+            .filter(item -> item.storageLocation() == location)
+            .filter(item -> item.page() == page)
+            .toList();
     }
 
     /**
@@ -58,85 +62,42 @@ public class StorageData implements JsonSerializable {
      *
      * @return All items.
      */
-    public List<StorageDataEntry> getAllItems() {
-        List<StorageDataEntry> items = new ArrayList<>();
-        enderChestItems.stream().filter(Objects::nonNull).flatMap(List::stream).forEach(items::add);
-        backpackItems.stream().filter(Objects::nonNull).flatMap(List::stream).forEach(items::add);
-        return items;
+    public List<StorageItem> getAllItems() {
+        return this.items;
     }
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (!jsonElement.isJsonObject()) {
+        final JsonArray asJsonArray = jsonElement.getAsJsonArray();
+        final DataResult<List<StorageItem>> parse = LIST_CODEC.parse(JsonOps.INSTANCE, asJsonArray);
+
+        final Optional<List<StorageItem>> storageItems = parse.resultOrPartial();
+        if (storageItems.isEmpty()) {
             return;
         }
-
-        process(jsonElement.getAsJsonObject().getAsJsonObject("ender_chest"), enderChestItems);
-        process(jsonElement.getAsJsonObject().getAsJsonObject("backpack"), backpackItems);
-    }
-
-    private void process(JsonObject storage, List<List<StorageDataEntry>> itemsList) {
-        if (storage == null) {
-            return;
-        }
-        for (String s : storage.keySet()) {
-            final int index;
-
-            try {
-                index = Integer.parseInt(s);
-            } catch (NumberFormatException ignored) {
-                continue;
-            }
-
-            final JsonElement jsonElement = storage.get(s);
-            if (!jsonElement.isJsonArray()) {
-                continue;
-            }
-            final DataResult<List<StorageDataEntry>> parse =
-                LIST_CODEC.parse(JsonOps.INSTANCE, jsonElement.getAsJsonArray());
-            if (parse.isError() || !parse.isSuccess()) {
-                continue;
-            }
-            final List<StorageDataEntry> values = new ArrayList<>(parse.getOrThrow());
-            values.replaceAll(entry -> entry.itemStack.getItem().equals(VOID_ITEM.getItem()) ?
-                new StorageDataEntry(entry.slot, ItemStack.EMPTY) : entry);
-            itemsList.set(index, values);
-        }
+        final List<StorageItem> items = storageItems.get();
+        this.items.addAll(items);
     }
 
     @Override
     public @NotNull JsonElement write() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("ender_chest", save(this.enderChestItems));
-        jsonObject.add("backpack", save(this.backpackItems));
-        return jsonObject;
+        final DataResult<JsonElement> jsonElementDataResult = LIST_CODEC.encodeStart(JsonOps.INSTANCE, this.items);
+        final Optional<JsonElement> jsonElement = jsonElementDataResult.resultOrPartial();
+        return Optional.ofNullable(jsonElement).orElseGet(Optional::empty).orElseGet(JsonArray::new);
     }
 
-    private JsonElement save(List<List<StorageDataEntry>> itemList) {
-        JsonObject jsonObject = new JsonObject();
-        for (int i = 0; i < itemList.size(); i++) {
-            final List<StorageDataEntry> storageDataEntries = itemList.get(i);
-            if (storageDataEntries == null) {
-                continue;
-            }
-            final List<StorageDataEntry> itemStacks = new ArrayList<>(storageDataEntries);
 
-            itemStacks.forEach(stack -> stack.itemStack.remove(DataComponentTypes.ENCHANTMENTS));
-            itemStacks.forEach(stack -> stack.itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE));
-            itemStacks.replaceAll(entry -> entry.itemStack.isEmpty() ? new StorageDataEntry(entry.slot, VOID_ITEM) : entry);
-            final DataResult<JsonElement> jsonElementDataResult = LIST_CODEC.encodeStart(JsonOps.INSTANCE, itemStacks);
-            if (jsonElementDataResult.isSuccess()) {
-                jsonObject.add(String.valueOf(i), jsonElementDataResult.getOrThrow());
-            }
+    public enum StorageLocation implements StringIdentifiable {
+        ENDER_CHEST,
+        BACKPACK;
+
+        public static Codec<StorageLocation> CODEC = StringIdentifiable.createCodec(StorageLocation::values);
+
+        @Override
+        public String asString() {
+            return name();
         }
-        return jsonObject;
     }
 
-    /**
-     * An entry for the storage data.
-     *
-     * @param slot      The slot the item is in.
-     * @param itemStack The item.
-     */
-    public record StorageDataEntry(int slot, ItemStack itemStack) {}
+    public record StorageItem(StorageLocation storageLocation, int page, int slot, ItemStack itemStack) {}
 }
