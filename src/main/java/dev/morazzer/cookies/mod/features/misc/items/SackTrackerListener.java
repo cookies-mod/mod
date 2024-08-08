@@ -19,7 +19,7 @@ import net.minecraft.text.Text;
 public class SackTrackerListener {
     private static final String LOGGER_KEY = "SackTrackerListener";
 
-    private static final Pattern pattern = Pattern.compile("^ *([+-]\\d+)(.+?)\\(.*\\) *$", Pattern.MULTILINE);
+    private static final Pattern pattern = Pattern.compile("^ *([+-][\\d,]+)(.+?)\\(.*\\) *$", Pattern.MULTILINE);
 
     @SuppressWarnings("MissingJavadoc")
     public SackTrackerListener() {
@@ -84,7 +84,12 @@ public class SackTrackerListener {
             final String content = value.getString();
             final Matcher matcher = pattern.matcher(content);
             while (matcher.find()) {
-                final int count = Integer.parseInt(matcher.group(1));
+                final int count;
+                try {
+                    count = Integer.parseInt(matcher.group(1).replaceAll("[^+\\-\\d]", ""));
+                } catch (NumberFormatException e) {
+                    continue;
+                }
                 final String name = matcher.group(2).trim();
 
                 final Optional<RepositoryItem> ofName = RepositoryItem.ofName(name);
