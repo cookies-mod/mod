@@ -153,6 +153,9 @@ public class RepositoryItem {
      * @return The formatted name.
      */
     public Text getFormattedName() {
+        if (this.tier == null) {
+            return this.name.copy();
+        }
         return this.name.copyContentOnly().formatted(this.tier.formatting);
     }
 
