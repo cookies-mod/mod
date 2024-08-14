@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.config.system.editor.TextDisplayEditor;
+import dev.morazzer.cookies.mod.translations.TranslationKey;
 import lombok.Getter;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Contract;
@@ -18,6 +19,17 @@ public class TextDisplayOption extends Option<Text, TextDisplayOption> {
     private int color;
     @Getter
     private int secondColor;
+
+    /**
+     * Creates a text display.
+     *
+     * @param translationKey The translation key to use.
+     * @param value          The value to use.
+     */
+    public TextDisplayOption(@NotNull @TranslationKey String translationKey) {
+        super(Text.translatable(translationKey), Text.empty(), Text.empty());
+        this.setColor(0xFFFFFFFF);
+    }
 
     @SuppressWarnings("MissingJavadoc")
     public TextDisplayOption(final Text name, final Text description) {

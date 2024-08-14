@@ -37,6 +37,6 @@ public class CookiesConfig extends Config<CookiesConfig> {
 
     @Override
     public Text getTitle() {
-        return Text.literal("Test");
+        return Text.empty();
     }
 }

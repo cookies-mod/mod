@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.utils.skyblock.inventories;
 
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
@@ -21,7 +22,7 @@ import net.minecraft.util.Identifier;
  * Allows for creation of "inventories" that do exactly look like normal ones.
  * They actually just act like screens though.
  */
-public class ClientSideInventory extends Screen implements InventoryScreenAccessor {
+public class ClientSideInventory extends Screen implements InventoryScreenAccessor, TranslationKeys {
 
     protected static final ItemStack outline= new ItemBuilder(Items.BLACK_STAINED_GLASS_PANE).hideAdditionalTooltips().hideTooltips().build();
     private static final Identifier TEXTURE = Identifier.ofVanilla("textures/gui/container/generic_54.png");

@@ -11,7 +11,6 @@ import javax.swing.SortOrder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Config that contains all farming related settings.
@@ -19,81 +18,45 @@ import org.apache.commons.lang3.StringUtils;
 @SuppressWarnings({"MissingJavadoc", "unused"})
 public class FarmingConfig extends Category {
 
-    public BooleanOption showPlotPriceBreakdown = new BooleanOption(
-        Text.literal("Plot price breakdown"),
-        Text.literal("Shows a breakdown of how much compost you need to unlock all plots."),
-        false
-    );
+    public BooleanOption showPlotPriceBreakdown = new BooleanOption(CONFIG_FARMING_SHOW_PLOT_PRICE_BREAKDOWN, false);
 
-    public BooleanOption yawPitchDisplay = new BooleanOption(
-        Text.literal("Yaw/Pitch display"),
-        Text.literal("Displays your yaw/pitch on the screen (in a non obnoxious way)."),
-        false
-    );
+    public BooleanOption yawPitchDisplay = new BooleanOption(CONFIG_FARMING_YAW_PITCH_DISPLAY, false);
 
     @Parent
-    public TextDisplayOption ranchers = new TextDisplayOption(Text.literal("Rancher's Boots"), Text.literal(""));
+    public TextDisplayOption ranchers = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_RANCHERS);
 
-    public BooleanOption showRancherSpeed = new BooleanOption(
-        Text.literal("Show rancher speed"),
-        Text.literal("Shows the speed selected on ranchers boots as item stack size."),
-        false
-    );
+    public BooleanOption showRancherSpeed = new BooleanOption(CONFIG_FARMING_SHOW_RANCHER_SPEED, false);
 
-    public BooleanOption showRancherOptimalSpeeds = new BooleanOption(
-        Text.literal("Show rancher overlay"),
-        Text.literal("Show optimal speeds in the rancher's boots."),
-        false
-    );
+    public BooleanOption showRancherOptimalSpeeds = new BooleanOption(CONFIG_FARMING_SHOW_RANCHER_OPTIMAL_SPEED, false);
 
     public RancherSpeedConfig rancherSpeed = new RancherSpeedConfig();
 
     @Parent
-    public TextDisplayOption compostText = new TextDisplayOption(Text.literal("Composter"), Text.literal(""));
+    public TextDisplayOption compostText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_COMPOST);
 
-    public BooleanOption showCompostPriceBreakdown = new BooleanOption(
-        Text.literal("Compost upgrade price"),
-        Text.literal("Shows the amount of items required to max an upgrade."),
-        false
-    );
+    public BooleanOption showCompostPriceBreakdown =
+        new BooleanOption(CONFIG_FARMING_SHOW_COMPOST_PRICE_BREAKDOWN, false);
 
-    public EnumCycleOption<SortOrder> compostSortOrder = new EnumCycleOption<>(
-        Text.literal("Item sort"),
-        Text.literal("How the items should be sorted."),
-        SortOrder.ASCENDING
-    ).withSupplier(value -> Text.of(StringUtils.capitalize(value.name().toLowerCase())))
-     .onlyIf(showCompostPriceBreakdown);
+    public EnumCycleOption<SortOrder> compostSortOrder = new EnumCycleOption<>(CONFIG_FARMING_COMPOST_SORT_ORDER,
+        SortOrder.ASCENDING).withSupplier(value -> Text.translatable(switch (value) {
+        case UNSORTED -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_UNSORTED;
+        case ASCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_ASCENDING;
+        case DESCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING;
+    })).onlyIf(showCompostPriceBreakdown);
 
     @Parent
-    public TextDisplayOption visitorText = new TextDisplayOption(Text.literal("Visitor"), Text.literal(""));
+    public TextDisplayOption visitorText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITOR);
 
-    public BooleanOption visitorMaterialHelper = new BooleanOption(
-        Text.literal("Show visitor materials"),
-        Text.literal("Shows the amount of items a visitor needs down to the actual crop."),
-        false
-    );
+    public BooleanOption visitorMaterialHelper = new BooleanOption(CONFIG_FARMING_VISITOR_MATERIAL_HELPER, false);
 
     @Parent
-    public TextDisplayOption jacobsText = new TextDisplayOption(Text.literal("Jacob / Contests"), Text.literal(""));
+    public TextDisplayOption jacobsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_JACOBS);
 
-    public BooleanOption highlightUnclaimedJacobContests = new BooleanOption(
-        Text.literal("Highlight unclaimed"),
-        Text.literal("Highlight unclaimed jacob contests in his inventory."),
-        false
-    );
+    public BooleanOption highlightUnclaimedJacobContests =
+        new BooleanOption(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS, false);
 
     public FarmingConfig() {
-        super(new ItemStack(Items.WHEAT));
-    }
-
-    @Override
-    public Text getName() {
-        return Text.literal("Farming Config");
-    }
-
-    @Override
-    public Text getDescription() {
-        return Text.literal("Farming related settings.");
+        super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
     }
 
     @Override

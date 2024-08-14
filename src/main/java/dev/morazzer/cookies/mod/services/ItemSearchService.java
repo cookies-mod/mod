@@ -14,6 +14,7 @@ import dev.morazzer.cookies.mod.render.Renderable;
 import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
@@ -130,7 +131,7 @@ public class ItemSearchService {
             .schedule(() -> removeActive(copy, context.itemStack()), 10, TimeUnit.SECONDS);
         MinecraftClient.getInstance().inGameHud.setTitleTicks(4, 40, 4);
         MinecraftClient.getInstance().inGameHud.setTitle(context.itemStack().getName());
-        MinecraftClient.getInstance().inGameHud.setSubtitle(Text.literal("Highlighting Chests")
+        MinecraftClient.getInstance().inGameHud.setSubtitle(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_HIGHLIGHT)
             .withColor(Constants.MAIN_COLOR));
     }
 

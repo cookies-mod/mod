@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.misc.items;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -55,7 +56,7 @@ public class ItemStats {
             ConfigManager.getConfig().miscConfig.showItemCreationDate.getValue()
             && (time = ItemUtils.getData(itemStack, CookiesDataComponentTypes.TIMESTAMP)) != null
         ) {
-            list.add(Text.literal("Obtained: %s".formatted(dateTimeFormatter.format(time))).formatted(
+            list.add(Text.translatable(TranslationKeys.ITEM_STATS_OBTAINED).append(": %s".formatted(dateTimeFormatter.format(time))).formatted(
                 Formatting.LIGHT_PURPLE));
         }
 
@@ -68,13 +69,13 @@ public class ItemStats {
                 donatedMuseum = false;
             }
             list.add(
-                Text.literal("Museum: ")
+                Text.translatable(TranslationKeys.ITEM_STATS_MUSEUM).append(": ")
                     .formatted(Formatting.LIGHT_PURPLE)
                     .append(
                         Text.literal(donatedMuseum ? Constants.Emojis.YES : Constants.Emojis.NO)
                             .formatted(donatedMuseum ? Formatting.GREEN : Formatting.RED, Formatting.BOLD)
                     ).append(
-                        Text.literal(donatedMuseum ? " Yes" : " No")
+                        Text.literal(" ").append(Text.translatable(donatedMuseum ? "gui.yes" : "gui.no"))
                             .formatted(donatedMuseum ? Formatting.GREEN : Formatting.RED)
                     )
             );
@@ -84,14 +85,14 @@ public class ItemStats {
             ConfigManager.getConfig().miscConfig.showItemNpcValue.getValue()
             && repositoryItem != null && repositoryItem.getValue() > 0
         ) {
-            addValue(itemStack, repositoryItem.getValue(), list);
+            addValue(itemStack, repositoryItem.getValue(), list, TranslationKeys.ITEM_STATS_VALUE_COINS);
         }
 
         if (
             ConfigManager.getConfig().miscConfig.showItemNpcValue.getValue()
             && repositoryItem != null && repositoryItem.getMotesValue() > 0
         ) {
-            addValue(itemStack, repositoryItem.getMotesValue(), list);
+            addValue(itemStack, repositoryItem.getMotesValue(), list, TranslationKeys.ITEM_STATS_VALUE_MOTES);
         }
 
         if (!list.isEmpty()) {
@@ -101,8 +102,8 @@ public class ItemStats {
         texts.addAll(list);
     }
 
-    private static void addValue(final ItemStack itemStack, final double value, List<Text> list) {
-        final MutableText formatted = Text.literal("Coins Price: ").formatted(Formatting.LIGHT_PURPLE);
+    private static void addValue(final ItemStack itemStack, final double value, List<Text> list, String key) {
+        final MutableText formatted = Text.translatable(key).append(": ").formatted(Formatting.LIGHT_PURPLE);
         formatted.append(Text.literal(String.valueOf(value * itemStack.getCount())).formatted(Formatting.GOLD));
         if (itemStack.getCount() > 1) {
             formatted.append(Text.literal(" (%s)".formatted(value)).formatted(Formatting.DARK_GRAY));

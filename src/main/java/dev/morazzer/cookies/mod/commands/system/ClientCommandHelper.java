@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -98,7 +99,7 @@ public interface ClientCommandHelper {
             } catch (Throwable e) {
                 LOGGER.error("Command execution exception", e);
                 context.getSource().sendError(
-                    Text.literal("An unexpected error occurred while executing the command!")
+                    Text.translatable(TranslationKeys.UNEXPECTED_ERROR)
                 );
                 return 1;
             }

@@ -7,6 +7,7 @@ import dev.morazzer.cookies.mod.features.misc.utils.CraftHelper;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
@@ -78,7 +79,7 @@ public class VisitorHelper {
         }
         final Optional<RepositoryItem> repositoryItem = RepositoryItem.ofName(name);
         if (repositoryItem.isEmpty()) {
-            iterator.add(Text.literal(" -> Could not find item %s".formatted(name)).formatted(Formatting.RED));
+            iterator.add(Text.literal(" -> ").append(Text.translatable(TranslationKeys.ITEM_NOT_FOUND, name)).formatted(Formatting.RED));
             return;
         }
 

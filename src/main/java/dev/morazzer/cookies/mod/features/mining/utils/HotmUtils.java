@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.constants.Hotm;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -135,7 +136,7 @@ public class HotmUtils {
 
             if (ConfigManager.getConfig().miningConfig.showNext10Cost.getValue()) {
                 lines.add(index++, Text.empty());
-                lines.add(index++, Text.literal("Cost (10)").formatted(Formatting.GRAY));
+                lines.add(index++, Text.translatable(TranslationKeys.HOTM_UTILS_COST_NEXT_10).formatted(Formatting.GRAY));
                 final Hotm.Perk perk = RepositoryConstants.hotm.getPerk(perkType);
                 if (perk == null) {
                     return;
@@ -150,7 +151,7 @@ public class HotmUtils {
 
             if (ConfigManager.getConfig().miningConfig.showTotalCost.getValue()) {
                 lines.add(index++, Text.empty());
-                lines.add(index++, Text.literal("Cost (total)").formatted(Formatting.GRAY));
+                lines.add(index++, Text.translatable(TranslationKeys.HOTM_UTILS_COST_TOTAL).formatted(Formatting.GRAY));
                 final Hotm.Perk perk = RepositoryConstants.hotm.getPerk(perkType);
                 if (perk == null) {
                     return;

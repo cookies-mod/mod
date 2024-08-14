@@ -31,7 +31,7 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
     private static final int ROWS = 6;
 
     public ForgeRecipeOverviewScreen() {
-        super(Text.literal("Forge Recipes"), ROWS);
+        super(Text.translatable(SCREEN_FORGE_RECIPE_OVERVIEW), ROWS);
         this.inventoryContents.fillBorders(outline);
 
         this.initPagination(Recipe.ALL_FORGE_RECIPES.stream()
@@ -41,21 +41,22 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
             .toList(), new Position(1, 1), new Position(4, 7), null);
 
         this.inventoryContents.set(new Position(0, 4),
-            new ItemBuilder(Items.LAVA_BUCKET).setName(TextUtils.literal("Forge Recipes", Formatting.GREEN))
-                .setLore(TextUtils.literal("View all of the Forge Recipes!", Formatting.GRAY))
+            new ItemBuilder(Items.LAVA_BUCKET).setName(TextUtils.translatable(SCREEN_FORGE_RECIPE_OVERVIEW,
+                    Formatting.GREEN))
+                .setLore(TextUtils.translatable(SCREEN_FORGE_RECIPE_OVERVIEW_VIEW_ALL, Formatting.GRAY))
                 .hideAdditionalTooltips()
                 .build());
 
         this.inventoryContents.set(new Position(5, 4),
             new ItemBuilder(Items.BARRIER).hideTooltips()
-                .setName(TextUtils.literal("Close", Formatting.RED))
+                .setName(TextUtils.translatable(CLOSE, Formatting.RED))
                 .setClickRunnable(InventoryUtils.wrapWithSound(this::close))
                 .hideAdditionalTooltips()
                 .build());
 
         this.inventoryContents.set(new Position(5, 3),
-            new ItemBuilder(Items.ARROW).setName(TextUtils.literal("Go Back", Formatting.GREEN))
-                .setLore(TextUtils.literal("To Recipe Book", Formatting.GRAY))
+            new ItemBuilder(Items.ARROW).setName(TextUtils.translatable(GO_BACK, Formatting.GREEN))
+                .setLore(TextUtils.translatable(TO_RECIPE_BOOK, Formatting.GRAY))
                 .setClickRunnable(this::openRecipeBook)
                 .build());
     }
@@ -73,7 +74,7 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
         }
         final ArrayList<Text> lore = new ArrayList<>(texts);
         lore.add(Text.empty());
-        lore.add(Text.literal("Click to view!").formatted(Formatting.YELLOW));
+        lore.add(TextUtils.translatable(CLICK_TO_VIEW, Formatting.YELLOW).append("!"));
         itemStack.set(CookiesDataComponentTypes.CUSTOM_LORE, lore);
         itemStack.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE,
             InventoryUtils.wrapWithSound(this.itemClicked(forgeRecipe)));
@@ -102,9 +103,9 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
         super.paginationUpdate();
         if (this.pagination.hasPreviousPage()) {
             this.inventoryContents.set(LEFT_ARROW,
-                new ItemBuilder(Items.ARROW).setName(TextUtils.literal("Previous Page", Formatting.GREEN))
-                    .setLore(TextUtils.literal("Page %s".formatted(this.pagination.getCurrentPage() - 1),
-                        Formatting.YELLOW))
+                new ItemBuilder(Items.ARROW).setName(TextUtils.translatable(PAGE_PREVIOUS, Formatting.GREEN))
+                    .setLore(Text.translatable(PAGE_WITH_NUMBER, this.pagination.getCurrentPage() - 1)
+                        .formatted(Formatting.YELLOW))
                     .setClickRunnable(InventoryUtils.wrapWithSound(this.pagination::previousPage))
                     .build());
         } else {
@@ -112,9 +113,9 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
         }
         if (this.pagination.hasNextPage()) {
             this.inventoryContents.set(RIGHT_ARROW,
-                new ItemBuilder(Items.ARROW).setName(TextUtils.literal("Next Page", Formatting.GREEN))
-                    .setLore(TextUtils.literal("Page %s".formatted(this.pagination.getCurrentPage() + 1),
-                        Formatting.YELLOW))
+                new ItemBuilder(Items.ARROW).setName(TextUtils.translatable(PAGE_NEXT, Formatting.GREEN))
+                    .setLore(Text.translatable(PAGE_WITH_NUMBER, this.pagination.getCurrentPage() + 1)
+                        .formatted(Formatting.YELLOW))
                     .setClickRunnable(InventoryUtils.wrapWithSound(this.pagination::nextPage))
                     .build());
         } else {
@@ -122,7 +123,9 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
             this.inventoryContents.set(RIGHT_ARROW, outline);
         }
 
-        this.inventoryTitle = Text.literal("(%s/%s) Forge Recipes".formatted(this.pagination.getCurrentPage(),
-            this.pagination.getMaxPage())).formatted(Formatting.DARK_GRAY);
+        this.inventoryTitle = Text.translatable(SCREEN_FORGE_RECIPE_OVERVIEW_TITLE,
+                this.pagination.getCurrentPage(),
+                this.pagination.getMaxPage())
+            .formatted(Formatting.DARK_GRAY);
     }
 }

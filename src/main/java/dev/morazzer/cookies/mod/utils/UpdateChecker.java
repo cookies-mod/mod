@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.mods.cookies.generated.BuildInfo;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -36,9 +37,9 @@ public class UpdateChecker {
         firstJoin = false;
 
         final MutableText firstLine =
-            CookiesUtils.createPrefix(Constants.FAIL_COLOR).append("Your version of the mod isn't up-to-date!");
+            CookiesUtils.createPrefix(Constants.FAIL_COLOR).append(Text.translatable(TranslationKeys.UPDATE_AVAILABLE));
 
-        final Text secondLine = Text.literal("(Click here to open modrinth)")
+        final Text secondLine = Text.translatable(TranslationKeys.UPDATE_MODRINTH)
             .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
                     "https://modrinth.com/mod/Te5vDuHn/version/" + latestVersion))
                 .withColor(Formatting.DARK_GRAY));

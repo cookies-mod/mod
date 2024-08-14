@@ -5,6 +5,7 @@ import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.config.system.editor.EnumCycleEditor;
+import dev.morazzer.cookies.mod.translations.TranslationKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
@@ -23,12 +24,25 @@ public class EnumCycleOption<T extends Enum<T>> extends Option<T, EnumCycleOptio
     private TextSupplier<T> textSupplier;
 
     /**
-     * Creats an enum dropdown option.
+     * Creates an enum dropdown option.
+     *
+     * @param translationKey The translation key to use.
+     * @param value          The initial value of the option.
+     */
+    public EnumCycleOption(@TranslationKey @NotNull String translationKey, T value) {
+        super(translationKey, value);
+        this.textSupplier =
+            enumValue -> Text.literal(StringUtils.capitalize(enumValue.name().replace('_', ' ').toLowerCase()));
+    }
+
+    /**
+     * Creates an enum dropdown option.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
      * @param value       The initial value of the option.
      */
+    @Deprecated(forRemoval = true, since = "1.0.1")
     public EnumCycleOption(Text name, Text description, T value) {
         super(name, description, value);
         this.textSupplier =
