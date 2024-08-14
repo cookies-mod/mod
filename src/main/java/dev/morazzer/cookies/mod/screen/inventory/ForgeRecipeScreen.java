@@ -8,6 +8,7 @@ import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.ForgeRecipe;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.skyblock.InventoryUtils;
@@ -41,13 +42,13 @@ public class ForgeRecipeScreen extends ClientSideInventory {
 
         this.inventoryContents.set(new Position(5, 4),
             new ItemBuilder(Items.BARRIER)
-                .setName(TextUtils.literal("Close", Formatting.RED))
+                .setName(TextUtils.translatable("mco.selectServer.close", Formatting.RED))
                 .setClickRunnable(InventoryUtils.wrapWithSound(this::close))
                 .hideAdditionalTooltips()
                 .build());
 
         this.inventoryContents.set(new Position(1, 4),
-            new ItemBuilder(Items.LAVA_BUCKET).setName(TextUtils.literal("Forge Recipe", Formatting.GREEN)).setLore(
+            new ItemBuilder(Items.LAVA_BUCKET).setName(TextUtils.translatable(TranslationKeys.SCREEN_FORGE_RECIPE_OVERVIEW_RECIPE, Formatting.GREEN)).setLore(
                 TextUtils.literal("<-- ", Formatting.WHITE)
                     .append(TextUtils.literal("Required items", Formatting.YELLOW)),
                 TextUtils.literal("      Result item ", Formatting.YELLOW)
@@ -61,10 +62,10 @@ public class ForgeRecipeScreen extends ClientSideInventory {
             this.inventoryContents.set(new Position(3, 4), craftHelperSelect);
         }
 
-        final ItemBuilder goBack = new ItemBuilder(Items.ARROW).setName(TextUtils.literal("Go Back", Formatting.GREEN))
+        final ItemBuilder goBack = new ItemBuilder(Items.ARROW).setName(TextUtils.translatable("dataPack.validation.back", Formatting.GREEN))
             .setClickRunnable(InventoryUtils.wrapWithSound(this::openForgeRecipes));
         if (previous instanceof ForgeRecipeOverviewScreen) {
-            goBack.setLore(TextUtils.literal("To Forge Recipes", Formatting.GRAY));
+            goBack.setLore(TextUtils.translatable(TranslationKeys.SCREEN_FORGE_RECIPE_OVERVIEW_BACK_TO_FORGE_RECIPES, Formatting.GRAY));
         } else if (previous instanceof ForgeRecipeScreen forgeRecipeScreen) {
             goBack.setLore(TextUtils.literal("To ", Formatting.GRAY)
                 .append(getName(forgeRecipeScreen.recipe).formatted(Formatting.GRAY)));

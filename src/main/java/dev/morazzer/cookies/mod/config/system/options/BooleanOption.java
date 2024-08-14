@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.BooleanEditor;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
+import dev.morazzer.cookies.mod.translations.TranslationKey;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -16,6 +17,16 @@ import org.slf4j.LoggerFactory;
  */
 public class BooleanOption extends Option<Boolean, BooleanOption> {
     private static final Logger logger = LoggerFactory.getLogger(BooleanOption.class);
+
+    /**
+     * Creates a boolean option.
+     *
+     * @param translationKey The translation key to use.
+     * @param value          The initial value.
+     */
+    public BooleanOption(@NotNull @TranslationKey String translationKey, Boolean value) {
+        super(translationKey, value);
+    }
 
     @SuppressWarnings("MissingJavadoc")
     public BooleanOption(Text name, Text description, Boolean value) {
@@ -43,8 +54,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isBoolean()) {
-            logger.warn(
-                "Error while loading config value, expected boolean got %s".formatted(jsonElement.getAsString()));
+            logger.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.getAsString()));
             return;
         }
         this.value = jsonElement.getAsBoolean();

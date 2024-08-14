@@ -19,122 +19,83 @@ import net.minecraft.text.Text;
 public class MiscConfig extends Category {
 
     @Expose
-    public BooleanOption enableScrollableTooltips = new BooleanOption(Text.literal("Scrollable Tooltips"),
-        true,
-        Text.literal("Allows you to scroll through tooltips"),
-        Text.empty(),
-        Text.literal("CTRL + Scroll -> move horizontal"),
-        Text.literal("SHIFT + Scroll -> chop tooltips"));
+    public BooleanOption enableScrollableTooltips = new BooleanOption(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, true);
 
     @Expose
-    public BooleanOption enableStoragePreview = new BooleanOption(Text.literal("Storage Preview"),
-        Text.literal("Shows a preview of the content in the storage."),
-        false);
+    public BooleanOption enableStoragePreview = new BooleanOption(CONFIG_MISC_STORAGE_PREVIEW, false);
 
     @Expose
-    public BooleanOption showPing = new BooleanOption(Text.literal("Show Ping"),
-        Text.literal("Shows the ping in the action bar"),
-        false);
+    public BooleanOption showPing = new BooleanOption(CONFIG_MISC_SHOW_PING, false);
 
     @Parent
-    public TextDisplayOption itemSubCategory = new TextDisplayOption(Text.literal("Items"), Text.literal(""));
+    public TextDisplayOption itemSubCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_ITEMS);
 
     @Expose
-    public BooleanOption showItemCreationDate =
-        new BooleanOption(Text.literal("Creation date"), Text.literal("Shows the creation date of an item."), true);
+    public BooleanOption showItemCreationDate = new BooleanOption(CONFIG_MISC_SHOW_ITEM_CREATION_DATE, true);
 
     @Expose
-    public BooleanOption showItemDonatedToMuseum = new BooleanOption(Text.literal("Donated to museum"),
-        Text.literal("Shows whether the item is donated to the museum or not."),
-        true);
+    public BooleanOption showItemDonatedToMuseum = new BooleanOption(CONFIG_MISC_SHOW_ITEM_DONATED_TO_MUSEUM, true);
 
     @Expose
-    public BooleanOption showItemNpcValue =
-        new BooleanOption(Text.literal("NPC Value"), Text.literal("Show the npc value of the item."), true);
+    public BooleanOption showItemNpcValue = new BooleanOption(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, true);
 
     @Parent
-    public TextDisplayOption renderCategory = new TextDisplayOption(Text.literal("Render"), Text.literal(""));
+    public TextDisplayOption renderCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_RENDER);
 
     @Expose
-    public BooleanOption hideOwnArmor =
-        new BooleanOption(Text.literal("Hide own armor"), Text.literal("Hides your own armor."), false);
+    public BooleanOption hideOwnArmor = new BooleanOption(CONFIG_MISC_HIDE_OWN_ARMOR, false);
 
     @Expose
-    public BooleanOption hideOtherArmor =
-        new BooleanOption(Text.literal("Hide others armor"), Text.literal("Hides others armor."), false);
+    public BooleanOption hideOtherArmor = new BooleanOption(CONFIG_MISC_HIDE_OTHER_ARMOR, false);
 
     @Expose
-    public BooleanOption showDyeArmor = new BooleanOption(Text.literal("Show armor if dyed"),
-        Text.literal("Shows the armor if a dye is applied to it."),
-        false);
+    public BooleanOption showDyeArmor = new BooleanOption(CONFIG_MISC_SHOW_DYE_ARMOR, false);
 
     @Expose
-    public BooleanOption hideFireOnEntities =
-        new BooleanOption(Text.literal("Hide fire"), Text.literal("Hide fire from entities."), false);
+    public BooleanOption hideFireOnEntities = new BooleanOption(CONFIG_MISC_HIDE_FIRE_ON_ENTITIES, false);
 
     @Expose
-    public BooleanOption hideLightningBolt =
-        new BooleanOption(Text.literal("Hide lightning"), Text.literal("Hide the lightning bolt entity."), false);
+    public BooleanOption hideLightningBolt = new BooleanOption(CONFIG_MISC_HIDE_LIGHTNING_BOLT, false);
 
     @Parent
-    public TextDisplayOption renderUiCategory = new TextDisplayOption(Text.literal("Render - UI"), Text.literal(""));
+    public TextDisplayOption renderUiCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_RENDER_UI);
 
     @Expose
-    public BooleanOption hidePotionEffects = new BooleanOption(Text.literal("Hide inventory potions"),
-        Text.literal("Hides potion effects from the inventory."),
-        false);
+    public BooleanOption hidePotionEffects = new BooleanOption(CONFIG_MISC_HIDE_POTION_EFFECTS, false);
 
     @Expose
-    public BooleanOption hideHealth =
-        new BooleanOption(Text.literal("Hide health bar"), Text.literal("Hide health bar from ui."), false);
+    public BooleanOption hideHealth = new BooleanOption(CONFIG_MISC_HIDE_HEALTH, false);
 
     @Expose
-    public BooleanOption hideArmor =
-        new BooleanOption(Text.literal("Hide armor bar"), Text.literal("Hide armor bar from ui."), false);
+    public BooleanOption hideArmor = new BooleanOption(CONFIG_MISC_HIDE_ARMOR, false);
 
     @Expose
-    public BooleanOption hideFood =
-        new BooleanOption(Text.literal("Hide food bar"), Text.literal("Hide food bar from ui."), false);
+    public BooleanOption hideFood = new BooleanOption(CONFIG_MISC_HIDE_FOOD, false);
 
     @Parent
-    public TextDisplayOption renderInventoryCategory =
-        new TextDisplayOption(Text.literal("Render - Inventory"), Text.literal(""));
+    public TextDisplayOption renderInventoryCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_RENDER_INVENTORY);
 
     @Expose
-    public BooleanOption showPetLevelAsStackSize =
-        new BooleanOption(Text.literal("Show pet level"), Text.literal("Shows the pet level as stack size."), false);
+    public BooleanOption showPetLevelAsStackSize = new BooleanOption(CONFIG_MISC_SHOW_PET_LEVEL, false);
 
     @Expose
-    public BooleanOption showPetRarityInLevelText = new BooleanOption(Text.literal("Show rarity in level"),
-        Text.literal("Shows the pet level in the color of the rarity"),
-        false).onlyIf(this.showPetLevelAsStackSize);
+    public BooleanOption showPetRarityInLevelText =
+        new BooleanOption(CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT, false).onlyIf(this.showPetLevelAsStackSize);
 
     @Expose
-    public BooleanOption showForgeRecipeStack = new BooleanOption(Text.literal("Show forge recipes"),
-        Text.literal("Shows forge recipes in the recipe book"),
-        true);
+    public BooleanOption showForgeRecipeStack = new BooleanOption(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK, true);
 
     @Hidden
     @Expose
     public SliderOption<Integer> forgeRecipeSlot = SliderOption.integerOption(Text.empty(), Text.empty(), 47);
 
     public MiscConfig() {
-        super(new ItemStack(Items.COMPASS));
+        super(new ItemStack(Items.COMPASS), CONFIG_MISC);
         this.hideOtherArmor.withCallback((oldValue, newValue) -> this.showDyeArmor.setActive(
             this.hideOwnArmor.getValue() || newValue));
         this.hideOwnArmor.withCallback((oldValue, newValue) -> this.showDyeArmor.setActive(
             this.hideOtherArmor.getValue() || newValue));
         this.showDyeArmor.setActive(this.hideOwnArmor.getValue() || this.hideOtherArmor.getValue());
-    }
-
-    @Override
-    public Text getName() {
-        return Text.literal("Misc Config");
-    }
-
-    @Override
-    public Text getDescription() {
-        return Text.literal("Miscellaneous settings");
     }
 
     @Override

@@ -13,10 +13,13 @@ repositories {
 }
 
 fabricApi {
-    configureDataGeneration()
+    configureDataGeneration {
+        createSourceSet = true
+    }
 }
 
 loom {
+
     accessWidenerPath.set(rootProject.rootDir.resolve("src/main/resources/cookies.accesswidener"))
 }
 

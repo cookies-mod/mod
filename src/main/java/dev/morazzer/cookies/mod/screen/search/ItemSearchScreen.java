@@ -10,6 +10,7 @@ import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.screen.ScrollbarScreen;
 import dev.morazzer.cookies.mod.services.ItemSearchService;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
@@ -60,7 +61,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     private ItemSearchCategories itemSearchCategories = ItemSearchCategories.ALL;
 
     public ItemSearchScreen() {
-        super(Text.literal("Item Search"), 163);
+        super(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH), 163);
         this.searchField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 0, 18, Text.of(""));
 
 
@@ -151,6 +152,23 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == InputUtil.GLFW_KEY_ENTER && this.searchField.active) {
+            this.searchField.active = false;
+            this.searchField.setFocused(false);
+            return true;
+        }
+        if (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.isActive()) {
+            return true;
+        }
+        if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
+            this.close();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
     protected void init() {
         super.init();
         final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
@@ -179,7 +197,11 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     }
 
     private Predicate<? super ItemCompound> matches(String s) {
-        return item -> item.itemStack().getName().getString().toLowerCase(Locale.ROOT).contains(s.toLowerCase(Locale.ROOT));
+        return item -> item.itemStack()
+            .getName()
+            .getString()
+            .toLowerCase(Locale.ROOT)
+            .contains(s.toLowerCase(Locale.ROOT));
     }
 
     @Override
@@ -240,6 +262,14 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if (this.searchField.isFocused() && this.searchField.charTyped(chr, modifiers)) {
+            return true;
+        }
+        return super.charTyped(chr, modifiers);
+    }
+
     private void clickedSlot(ItemCompound compound, int button) {
         if (button == 0) {
             ItemSearchService.highlight(compound);
@@ -287,31 +317,6 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         }
 
         return false;
-    }
-
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
-        if (this.searchField.isFocused() && this.searchField.charTyped(chr, modifiers)) {
-            return true;
-        }
-        return super.charTyped(chr, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == InputUtil.GLFW_KEY_ENTER && this.searchField.active) {
-            this.searchField.active = false;
-            this.searchField.setFocused(false);
-            return true;
-        }
-        if (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.isActive()) {
-            return true;
-        }
-        if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
-            this.close();
-            return true;
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     private void drawItems(DrawContext context, int mouseX, int mouseY) {
@@ -389,21 +394,23 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         }
 
         if (this.itemSourceCategories.has(ItemSources.STORAGE) && storage > 0) {
-            tooltip.add(TextUtils.literal("Storage: ", Formatting.GRAY).append(formattedText(storage)));
+            tooltip.add(ItemSources.STORAGE.getName().copy().formatted(Formatting.GRAY).append(formattedText(storage)));
         }
         if (this.itemSourceCategories.has(ItemSources.SACKS) && sacks > 0) {
-            tooltip.add(TextUtils.literal("Sacks: ", Formatting.GRAY).append(formattedText(sacks)));
+            tooltip.add(ItemSources.SACKS.getName().copy().formatted(Formatting.GRAY).append(formattedText(sacks)));
         }
         if (this.itemSourceCategories.has(ItemSources.CHESTS) && chests > 0) {
-            tooltip.add(TextUtils.literal("Chests: ", Formatting.GRAY).append(formattedText(chests)));
+            tooltip.add(ItemSources.CHESTS.getName().copy().formatted(Formatting.GRAY).append(formattedText(chests)));
         }
         if (this.itemSourceCategories.getSources().length > 1 &&
             ((storage != 0 && (sacks != 0 || chests != 0)) || (sacks != 0 && chests != 0))) {
-            tooltip.add(TextUtils.literal("Total: ", Formatting.GRAY).append(formattedText(storage + sacks + chests)));
+            tooltip.add(TextUtils.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_TOTAL, Formatting.GRAY)
+                .append(formattedText(storage + sacks + chests)));
         }
 
         tooltip.add(Text.empty());
-        tooltip.add(Text.literal("Left-click to highlight all chests!").formatted(Formatting.YELLOW));
+        tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT)
+            .formatted(Formatting.YELLOW));
         //tooltip.add(Text.literal("Right-click to view chests!").formatted(Formatting.YELLOW));
         //tooltip.add(Text.literal("Shift right-click to remove!").formatted(Formatting.RED));
     }
@@ -427,7 +434,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     }
 
     private MutableText formattedText(int amount) {
-        return Text.literal(NumberFormat.getIntegerInstance(Locale.ENGLISH).format(amount))
+        return Text.literal(": ")
+            .append(NumberFormat.getIntegerInstance(Locale.ENGLISH).format(amount))
             .formatted(Formatting.YELLOW);
     }
 

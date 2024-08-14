@@ -6,6 +6,7 @@ import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.constants.ComposterUpgrades;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.RomanNumerals;
@@ -129,11 +130,11 @@ public class CompostUpgrades {
         for (MutableText text : mutableTexts) {
             list.add(text);
             if (text.getString().startsWith("Next Tier: ")) {
-                list.add(Text.literal("Max Tier: ").formatted(Formatting.GRAY)
+                list.add(Text.translatable(TranslationKeys.COMPOST_UPGRADE_MAX_TIER).append(": ").formatted(Formatting.GRAY)
                              .append(Text.literal(maxAmount).formatted(Formatting.GREEN)));
             } else if (text.getString().startsWith("+")) {
                 list.add(Text.empty());
-                list.add(Text.literal("Remaining Upgrade Cost: ").formatted(Formatting.GRAY));
+                list.add(Text.translatable(TranslationKeys.COMPOST_UPGRADE_REMAINING_COST).append(": ").formatted(Formatting.GRAY));
                 List<ComposterUpgrades.CompostUpgrade> subList = upgrades.subList(Math.min(
                     currentLevel,
                     upgrades.size()
@@ -154,7 +155,7 @@ public class CompostUpgrades {
                     MutableText entry = Text.literal("  ");
                     RepositoryItem item = RepositoryItem.of(ingredient.getId());
                     if (item == null) {
-                        list.add(Text.literal("Can't find item %s".formatted(ingredient.toString())));
+                        list.add(Text.translatable(TranslationKeys.ITEM_NOT_FOUND, ingredient.getId()));
                         return;
                     }
                     entry.append(item.getFormattedName());

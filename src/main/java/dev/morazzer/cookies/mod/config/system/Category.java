@@ -1,42 +1,28 @@
 package dev.morazzer.cookies.mod.config.system;
 
 import com.google.gson.JsonElement;
+import dev.morazzer.cookies.mod.translations.TranslationKey;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
+import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A category in the config.
  */
-public abstract class Category implements SaveLoadHelper {
+@Getter
+public abstract class Category implements SaveLoadHelper, TranslationKeys {
 
     private final ItemStack itemStack;
+    private final Text name;
+    private final Text description;
 
     @SuppressWarnings("MissingJavadoc")
-    public Category(ItemStack itemStack) {
+    public Category(ItemStack itemStack, @TranslationKey @NotNull String translationKey) {
         this.itemStack = itemStack;
-    }
-
-    /**
-     * The display name that will be displayed in the config.
-     *
-     * @return The name.
-     */
-    public abstract Text getName();
-
-    /**
-     * A small description of what is in this category.
-     *
-     * @return A description.
-     */
-    public abstract Text getDescription();
-
-    /**
-     * Gets the stack that represents the category.
-     *
-     * @return The stack.
-     */
-    public ItemStack getItemStack() {
-        return this.itemStack;
+        this.name = Text.translatable(TranslationKeys.name(translationKey));
+        this.description = Text.translatable(TranslationKeys.tooltip(translationKey));
     }
 
     /**

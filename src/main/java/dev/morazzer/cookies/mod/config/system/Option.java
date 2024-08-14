@@ -3,6 +3,8 @@ package dev.morazzer.cookies.mod.config.system;
 import com.google.gson.JsonElement;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+import dev.morazzer.cookies.mod.translations.TranslationKey;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +37,24 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
     /**
      * Creates a new option.
      *
+     * @param translationKey The translation key to use.
+     * @param value          The initial value.
+     */
+    public Option(@NotNull @TranslationKey String translationKey, T value) {
+        this(
+            Text.translatable(TranslationKeys.name(translationKey)),
+            Text.translatable(TranslationKeys.tooltip(translationKey)),
+            value);
+    }
+
+    /**
+     * Creates a new option.
+     *
      * @param name        The name.
      * @param description The description.
      * @param value       The initial value.
      */
+    @Deprecated(forRemoval = true, since = "1.0.1")
     public Option(@NotNull Text name, @NotNull Text description, T value) {
         this.name = name;
         this.description = new Text[] {description};
@@ -53,6 +69,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      * @param description The description.
      * @param value       The initial value.
      */
+    @Deprecated(forRemoval = true, since = "1.0.1")
     public Option(Text name, T value, Text[] description) {
         this.name = name;
         this.description = description;
@@ -154,6 +171,18 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
     }
 
     /**
+     * Only shows this option if the other option is true.
+     *
+     * @param booleanOption The option to depend on.
+     * @return The option.
+     */
+    public O onlyIf(BooleanOption booleanOption) {
+        this.active = booleanOption.active;
+        booleanOption.withCallback((oldValue, newValue) -> this.active = newValue);
+        return this.asOption();
+    }
+
+    /**
      * Adds a callback that will be called when the value is changed.
      *
      * @param valueChangeCallback The callback to add.
@@ -162,6 +191,18 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
     @NotNull
     public final O withCallback(@NotNull ValueChangeCallback<T> valueChangeCallback) {
         this.callbacks.add(valueChangeCallback);
+        return this.asOption();
+    }
+
+    /**
+     * Only shows this option if the other option is false.
+     *
+     * @param booleanOption The option to depend on.
+     * @return The option.
+     */
+    public O onlyIfNot(BooleanOption booleanOption) {
+        this.active = !booleanOption.active;
+        booleanOption.withCallback((oldValue, newValue) -> this.active = !newValue);
         return this.asOption();
     }
 
@@ -189,31 +230,6 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
             return true;
         }
         return false;
-    }
-
-
-    /**
-     * Only shows this option if the other option is true.
-     *
-     * @param booleanOption The option to depend on.
-     * @return The option.
-     */
-    public O onlyIf(BooleanOption booleanOption) {
-        this.active = booleanOption.active;
-        booleanOption.withCallback((oldValue, newValue) -> this.active = newValue);
-        return this.asOption();
-    }
-
-    /**
-     * Only shows this option if the other option is false.
-     *
-     * @param booleanOption The option to depend on.
-     * @return The option.
-     */
-    public O onlyIfNot(BooleanOption booleanOption) {
-        this.active = !booleanOption.active;
-        booleanOption.withCallback((oldValue, newValue) -> this.active = !newValue);
-        return this.asOption();
     }
 
     /**

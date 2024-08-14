@@ -5,6 +5,7 @@ import dev.morazzer.cookies.mod.config.ConfigKeys;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.repository.constants.PlotPrice;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.text.NumberFormat;
@@ -31,8 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class PlotPriceBreakdown {
 
-    private static final int[][] plotIndex = {
-        {13, 21, 23, 31}, // inner
+    private static final int[][] plotIndex = {{13, 21, 23, 31}, // inner
         {12, 14, 30, 32}, // middle
         {3, 4, 5, 11, 15, 20, 24, 29, 33, 39, 40, 41}, // edges
         {2, 6, 38, 42} // corner
@@ -84,8 +84,7 @@ public class PlotPriceBreakdown {
             this.lines,
             HoveredTooltipPositioner.INSTANCE,
             handledScreen.x - this.lineWidth - 32,
-            handledScreen.y + 16
-                               );
+            handledScreen.y + 16);
     }
 
     private void updateList(HandledScreen<?> handledScreen) {
@@ -102,8 +101,8 @@ public class PlotPriceBreakdown {
                 if (slot.getStack().isEmpty()) {
                     continue;
                 }
-                if (slot.getStack().getItem() == Items.OAK_BUTTON
-                    || slot.getStack().getItem() == Items.RED_STAINED_GLASS_PANE) {
+                if (slot.getStack().getItem() == Items.OAK_BUTTON ||
+                    slot.getStack().getItem() == Items.RED_STAINED_GLASS_PANE) {
                     amountMissing++;
                 } else {
                     amountBought++;
@@ -133,30 +132,33 @@ public class PlotPriceBreakdown {
         List<MutableText> breakdown = new LinkedList<>();
 
         breakdown.add(Text.empty());
-        breakdown.add(Text.literal("Plots missing: ").formatted(Formatting.GRAY)
-                          .append(Text.literal(String.valueOf(missingPlots)).formatted(
-                              Formatting.GOLD)));
-        breakdown.add(Text.literal("Plots owned: ").formatted(Formatting.GRAY)
-                          .append(Text.literal(String.valueOf(ownedPlots)).formatted(
-                              Formatting.GOLD)));
+        breakdown.add(Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN_PLOTS_MISSING)
+            .append(": ")
+            .formatted(Formatting.GRAY)
+            .append(Text.literal(String.valueOf(missingPlots)).formatted(Formatting.GOLD)));
+        breakdown.add(Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN_PLOTS_OWNED)
+            .append(": ")
+            .formatted(Formatting.GRAY)
+            .append(Text.literal(String.valueOf(ownedPlots)).formatted(Formatting.GOLD)));
         breakdown.add(Text.empty());
         breakdown.add(Text.empty());
         if (missingCompost > 0) {
-            breakdown.add(
-                Text.empty().append(Text.literal(numberFormat.format(missingCompost)).formatted(Formatting.GOLD)
-                                        .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
+            breakdown.add(Text.empty()
+                .append(Text.literal(numberFormat.format(missingCompost)).formatted(Formatting.GOLD).append("x "))
+                .append(Text.literal("Compost").formatted(Formatting.GREEN)));
         }
         breakdown.add(Text.empty()
-                          .append(Text.literal(numberFormat.format(missingBundles)).formatted(Formatting.GOLD)
-                                      .append("x "))
-                          .append(Text.literal("Compost Bundle").formatted(Formatting.BLUE)));
+            .append(Text.literal(numberFormat.format(missingBundles)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal("Compost Bundle").formatted(Formatting.BLUE)));
         breakdown.add(Text.literal(" -> ")
-                          .append(Text.literal(numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD)
-                                      .append("x "))
-                          .append(Text.literal("Compost").formatted(Formatting.GREEN)).formatted(Formatting.DARK_GRAY));
-        breakdown.add(Text.literal("Missing: ").formatted(Formatting.GRAY)
-                          .append(Text.literal(numberFormat.format(regularCompost)).formatted(Formatting.GOLD)
-                                      .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
+            .append(Text.literal(numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal("Compost").formatted(Formatting.GREEN))
+            .formatted(Formatting.DARK_GRAY));
+        breakdown.add(Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN_MISSING)
+            .append(": ")
+            .formatted(Formatting.GRAY)
+            .append(Text.literal(numberFormat.format(regularCompost)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal("Compost").formatted(Formatting.GREEN)));
 
 
         int maxLineWidth = 0;
@@ -168,24 +170,24 @@ public class PlotPriceBreakdown {
         breakdown.add(
             breakdown.size() - 1,
             Text.literal(StringUtils.leftPad("", maxLineWidth / equalsWidth, " "))
-                .formatted(Formatting.STRIKETHROUGH, Formatting.BLUE)
-                     );
+                .formatted(Formatting.STRIKETHROUGH, Formatting.BLUE));
 
-        Text breakdownLine = Text.literal("Breakdown").formatted(Formatting.BOLD, Formatting.BLUE);
+        Text breakdownLine = Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN)
+            .append(": ")
+            .formatted(Formatting.BOLD, Formatting.BLUE);
         int breakdownWidth = MinecraftClient.getInstance().textRenderer.getWidth(breakdownLine);
 
-        breakdown.addFirst(
-            Text.literal(StringUtils.leftPad("", ((maxLineWidth - breakdownWidth) / 2) / equalsWidth))
-                .append(breakdownLine)
-                          );
+        breakdown.addFirst(Text.literal(StringUtils.leftPad("", ((maxLineWidth - breakdownWidth) / 2) / equalsWidth))
+            .append(breakdownLine));
 
-        Text compostBreakdownLine = Text.literal("Compost Breakdown").formatted(Formatting.BOLD, Formatting.BLUE);
+        Text compostBreakdownLine = Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN_COMPOST_BREAKDOWN)
+            .append(": ")
+            .formatted(Formatting.BOLD, Formatting.BLUE);
         int compostBreakdownWidth = MinecraftClient.getInstance().textRenderer.getWidth(compostBreakdownLine);
         breakdown.add(
             5,
             Text.literal(StringUtils.leftPad("", ((maxLineWidth - compostBreakdownWidth) / 2) / equalsWidth))
-                .append(compostBreakdownLine)
-                     );
+                .append(compostBreakdownLine));
 
 
         this.lines = Lists.transform(breakdown, Text::asOrderedText);

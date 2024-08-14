@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.utils.exceptions;
 
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.Constants;
 import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import java.io.PrintWriter;
@@ -70,7 +71,7 @@ public class ExceptionHandler {
             );
             player.sendMessage(CookiesUtils.createPrefix(Constants.FAIL_COLOR)
                 .append(Text
-                    .literal("An internal error occurred please report this on our discord. (Click to copy)")
+                    .translatable(TranslationKeys.INTERNAL_ERROR)
                     .styled(style -> style
                         .withColor(Constants.FAIL_COLOR)
                         .withHoverEvent(new HoverEvent(
