@@ -2,7 +2,7 @@
 <h1>CookiesMod</h1>
 
 [![Modrinth](https://img.shields.io/modrinth/dt/Te5vDuHn?style=flat&logo=modrinth)](https://modrinth.com/mod/cookies-mod)
-[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/1.0.1-beta+7)
+[![Version](https://img.shields.io/modrinth/v/Te5vDuHn?style=flat&logo=modrinth&logo=)](https://modrinth.com/mod/cookies-mod/version/latest)
 
 </div>
 
