@@ -29,7 +29,7 @@ public class StorageData implements JsonSerializable {
         StorageLocation.CODEC.fieldOf("location").forGetter(StorageItem::storageLocation),
         Codec.INT.fieldOf("page").forGetter(StorageItem::page),
         Codec.INT.fieldOf("slot").forGetter(StorageItem::slot),
-        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::itemStack)).apply(instance, StorageItem::create));
+        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::getActualItemStack)).apply(instance, StorageItem::create));
 
     private static final Codec<List<StorageItem>> LIST_CODEC = CODEC.listOf();
     private final List<StorageItem> items = new ArrayList<>();
@@ -43,7 +43,7 @@ public class StorageData implements JsonSerializable {
      */
     public void saveItems(List<Pair<Integer, ItemStack>> itemStacks, int page, StorageLocation location) {
         this.items.removeAll(this.getItems(page, location));
-        itemStacks.stream().map(pair -> StorageItem.create(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
+        itemStacks.stream().map(pair ->  StorageItem.create(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
     }
 
     /**
@@ -129,6 +129,10 @@ public class StorageData implements JsonSerializable {
                 return ItemStack.EMPTY;
             }
             return itemStack;
+        }
+
+        public ItemStack getActualItemStack() {
+            return this.itemStack;
         }
     }
 }
