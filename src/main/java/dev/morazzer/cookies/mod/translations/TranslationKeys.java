@@ -34,10 +34,14 @@ public interface TranslationKeys {
     String SELECT_SLOT = MOD + ".select_slot";
     String SELECT_SLOT_ELIGIBLE = SELECT_SLOT + ".eligible";
     String SELECT_SLOT_NOT_ELIGIBLE = SELECT_SLOT + ".not_eligible";
+    //</editor-fold>
 
+    //<editor-fold desc="Item Sources">
     String CRAFT_HELPER = MOD + ".craft_helper";
     String CRAFT_HELPER_LINE_1 = CRAFT_HELPER + ".line1";
     String CRAFT_HELPER_LINE_2 = CRAFT_HELPER + ".line2";
+
+    String CRAFT_HELPER_PLACEMENT = CRAFT_HELPER + ".placement";
     //</editor-fold>
 
     //<editor-fold desc="Path stuff">
@@ -213,6 +217,8 @@ public interface TranslationKeys {
     String CONFIG_HELPERS = CONFIG + ".helpers";
 
     String CONFIG_HELPERS_CRAFT_HELPER = CONFIG_HELPERS + ".craft_helper";
+    String CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS = CONFIG_HELPERS_CRAFT_HELPER + ".locations";
+    String CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS_BUTTON = CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS + ".button";
     String CONFIG_HELPERS_ANVIL_HELPER = CONFIG_HELPERS + ".anvil_helper";
     String CONFIG_HELPERS_CHEST_TRACKER = CONFIG_HELPERS + ".chest_tracker";
     //</editor-fold>

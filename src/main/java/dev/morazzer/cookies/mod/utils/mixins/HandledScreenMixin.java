@@ -14,6 +14,7 @@ import dev.morazzer.cookies.mod.utils.items.ItemTooltipComponent;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.font.TextRenderer;
@@ -51,13 +52,19 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
     @Nullable
     protected Slot focusedSlot;
 
-    @Shadow public int backgroundHeight;
+    @Shadow
+    public int backgroundHeight;
 
-    @Shadow public int backgroundWidth;
+    @Shadow
+    public int backgroundWidth;
 
-    @Shadow public int x;
+    @Shadow
+    public int x;
 
-    @Shadow public int y;
+    @Shadow
+    public int y;
+    @Unique
+    private final List<Disabled> cookies$disabled = new ArrayList<>();
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     @SuppressWarnings("MissingJavadoc")
@@ -170,5 +177,10 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
     @Override
     public int cookies$getY() {
         return this.y;
+    }
+
+    @Override
+    public List<Disabled> cookies$getDisabled() {
+        return this.cookies$disabled;
     }
 }

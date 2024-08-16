@@ -9,6 +9,7 @@ import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -30,6 +31,7 @@ public class SackInventoryTracker {
     @RegExp
     private static final String GEMSTONE_PATTER = "(?:Rough|Flawed|Fine): ([\\d,]+) \\(.*\\)";
     private int lastUpdated = 0;
+    private String lastSack = "";
 
     public SackInventoryTracker() {
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
@@ -48,6 +50,11 @@ public class SackInventoryTracker {
         if (genericContainerScreen.getTitle().getString().equalsIgnoreCase("Sack of Sacks")) {
             return;
         }
+        if (Objects.equals(lastSack, genericContainerScreen.getTitle().getString())) {
+            return;
+        }
+        lastSack = genericContainerScreen.getTitle().getString();
+        lastUpdated = 0;
         InventoryContentUpdateEvent.register(genericContainerScreen.getScreenHandler(), this::update);
     }
 

@@ -51,6 +51,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     private static final int SCROLLBAR_OFFSET_X = 261;
     private static final int SCROLLBAR_OFFSET_Y = 17;
     private static final int SCROLLBAR_HEIGHT = 163;
+    private final List<Disabled> disableds = new ArrayList<>();
     private final ArrayList<ItemCompound> items = new ArrayList<>();
     private final List<ItemCompound> finalItems = new ArrayList<>();
     private final TextFieldWidget searchField;
@@ -119,6 +120,11 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     @Override
     public int cookies$getY() {
         return this.y;
+    }
+
+    @Override
+    public List<Disabled> cookies$getDisabled() {
+        return this.disableds;
     }
 
     @Override
@@ -335,7 +341,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
                 itemContext.itemStack(),
                 (int) (slotX / 0.5f),
                 (int) (slotY / 0.5f),
-                NumberFormat.getCompactNumberInstance().format(itemContext.amount()));
+                NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT).format(itemContext.amount()));
             context.getMatrices().pop();
             if (mouseX > slotX && mouseY > slotY && mouseX < slotX + 16 && mouseY < slotY + 16) {
                 HandledScreen.drawSlotHighlight(context, slotX, slotY, 100);

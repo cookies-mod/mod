@@ -4,9 +4,11 @@ import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -29,13 +31,16 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
     private static final int BACKGROUND_WIDTH = 176;
     protected final InventoryContents inventoryContents;
     private final int rows;
+    private final List<Disabled> disableds = new ArrayList<>();
     private final int backgroundHeight;
     @Getter
     private final Slot[] slots;
     private final Slot[] playerInventorySlots;
     protected Pagination pagination;
     protected Text inventoryTitle;
+    @Getter(AccessLevel.PROTECTED)
     private int x;
+    @Getter(AccessLevel.PROTECTED)
     private int y;
 
     public ClientSideInventory(Text title, int rows) {
@@ -109,6 +114,11 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
     @Override
     public int cookies$getY() {
         return this.y;
+    }
+
+    @Override
+    public List<Disabled> cookies$getDisabled() {
+        return this.disableds;
     }
 
     @Override

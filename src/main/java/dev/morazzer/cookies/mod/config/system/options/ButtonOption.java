@@ -17,6 +17,11 @@ public class ButtonOption extends Option<Runnable, ButtonOption> {
 
     private final Text buttonText;
 
+    public ButtonOption(String key, Runnable value, String buttonText) {
+        super(key, value);
+        this.buttonText = Text.translatable(buttonText);
+    }
+
     @SuppressWarnings("MissingJavadoc")
     public ButtonOption(Text name, Text description, Runnable value, Text buttonText) {
         super(name, description, value);

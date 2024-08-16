@@ -3,7 +3,9 @@ package dev.morazzer.cookies.mod.features.farming.garden.visitors;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.ItemLoreEvent;
 import dev.morazzer.cookies.mod.features.farming.garden.Plot;
-import dev.morazzer.cookies.mod.features.misc.utils.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.EvaluationContext;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.StackCountContext;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator;
@@ -52,7 +54,7 @@ public class VisitorHelper {
                 break;
             }
 
-            final CraftHelper.StackCountContext stackCountContext = new CraftHelper.StackCountContext();
+            final StackCountContext stackCountContext = new StackCountContext();
             if (literalContent.matches("([A-Za-z ]+)(?: x[\\d,]+)?")) {
                 this.modify(literalContent, iterator, stackCountContext);
             }
@@ -67,7 +69,7 @@ public class VisitorHelper {
     }
 
     private void modify(
-        String literalContent, ListIterator<MutableText> iterator, CraftHelper.StackCountContext stackCountContext) {
+        String literalContent, ListIterator<MutableText> iterator, StackCountContext stackCountContext) {
         final String name;
         final int amount;
         if (literalContent.matches(".*? x[\\d,]+")) {
@@ -97,7 +99,7 @@ public class VisitorHelper {
             craft,
             multiply,
             0,
-            new CraftHelper.EvaluationContext(multiply, null),
+            new EvaluationContext(multiply, null),
             stackCountContext,
             this::format);
         craft.forEach(iterator::add);

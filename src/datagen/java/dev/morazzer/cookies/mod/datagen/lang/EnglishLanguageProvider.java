@@ -263,6 +263,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
         translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER,
             "Craft Helper",
             "Shows the items required to craft something and your progress in the inventory.");
+        translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS, "Craft Helper Location", "Edits the location of the craft helper.");
+        translationBuilder.add(CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS_BUTTON, "Edit");
         translationBuilder.addConfig(CONFIG_HELPERS_ANVIL_HELPER,
             "Anvil Helper",
             "Highlights the same book in your inventory when combining them in an anvil.");
