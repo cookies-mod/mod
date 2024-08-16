@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.features.misc.utils;
 
 import dev.morazzer.cookies.mod.config.ConfigKey;
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.Constants;

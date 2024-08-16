@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.misc.utils;
 
 import dev.morazzer.cookies.mod.features.Loader;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 
 /**
  * Utility class to load all utility features.

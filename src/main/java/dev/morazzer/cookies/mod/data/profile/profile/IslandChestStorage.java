@@ -101,4 +101,8 @@ public class IslandChestStorage implements JsonSerializable {
     public void remove(BlockPos pos) {
         this.chest.keySet().removeIf(biBlockPosKey -> biBlockPosKey.equals(pos));
     }
+
+    public void clear() {
+        this.chest.clear();
+    }
 }

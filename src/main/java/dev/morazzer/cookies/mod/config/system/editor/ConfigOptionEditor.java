@@ -1,7 +1,7 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.Option;
-import dev.morazzer.cookies.mod.config.utils.RenderUtils;
+import dev.morazzer.cookies.mod.utils.RenderUtils;
 import java.util.Arrays;
 import java.util.Locale;
 import lombok.Getter;

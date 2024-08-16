@@ -2,7 +2,13 @@ package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.element.ButtonElement;
 import dev.morazzer.cookies.mod.config.system.options.ButtonOption;
+import dev.morazzer.cookies.mod.config.system.options.EnumCycleOption;
+import java.util.Arrays;
+import java.util.Locale;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,29 +16,66 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ButtonEditor extends ConfigOptionEditor<Runnable, ButtonOption> {
 
-    private final ButtonElement buttonElement;
+    private ButtonWidget buttonWidget;
+    private Text text;
+    private int maxButtonWidth;
 
     @SuppressWarnings("MissingJavadoc")
     public ButtonEditor(ButtonOption option) {
         super(option);
-        this.buttonElement = new ButtonElement(option.getValue(), option.getButtonText());
+    }
+
+    @Override
+    public void init() {
+        this.buttonWidget = new ButtonWidget.Builder(Text.empty(), this::onClick).build();
+        this.text = this.getOptionText();
+
+        maxButtonWidth = getTextRenderer().getWidth(this.text);
+
+        this.buttonWidget.setWidth(maxButtonWidth + 6);
+
+        this.buttonWidget.setY(this.getHeight() - 16);
+        this.buttonWidget.setHeight(14);
+    }
+
+    private void onClick(ButtonWidget buttonWidget) {
+        this.option.getValue().run();
+    }
+
+    private Text getOptionText() {
+        return this.option.getButtonText();
     }
 
     @Override
     public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
         super.render(drawContext, mouseX, mouseY, tickDelta, optionWidth);
+        drawContext.drawText(this.getTextRenderer(), this.option.getName(), 2,
+            this.getHeight(optionWidth) / 2 - this.getTextRenderer().fontHeight / 2, 0xFFFFFFFF, true);
 
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().translate((float) optionWidth / 6 - 24, this.getHeight() - 21, 1);
-        this.buttonElement.render(drawContext);
-        drawContext.getMatrices().pop();
+        this.buttonWidget.setX(optionWidth - maxButtonWidth - 8);
+        this.buttonWidget.render(drawContext, mouseX, mouseY, tickDelta);
+
+        drawContext.drawCenteredTextWithShadow(this.getTextRenderer(), this.text,
+            this.buttonWidget.getX() + this.buttonWidget.getWidth() / 2, this.buttonWidget.getY() +3, 0xFFFFFFFF);
+    }
+
+    @Override
+    public boolean doesMatchSearch(@NotNull String search) {
+        return super.doesMatchSearch(search) || this.getOptionText().getString().toLowerCase(Locale.ROOT).contains(search);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button, int optionWidth) {
-        int buttonLeft = optionWidth / 6 - 24;
-        int buttonTop = this.getHeight() - 21;
-        return this.buttonElement.mouseClicked(mouseX - buttonLeft, mouseY - buttonTop);
+        if (this.buttonWidget.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button, optionWidth);
+    }
+
+    @Override
+    public int getHeight() {
+        return 18;
     }
 
 }

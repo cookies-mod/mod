@@ -75,11 +75,15 @@ public class ProfileStorage {
         ));
     }
 
+    private static void loadCurrentProfile() {
+        loadCurrentProfile(false);
+    }
+
     /**
      * Load the current profile data instance from the file.
      */
-    private static void loadCurrentProfile() {
-        if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty()) {
+    public static void loadCurrentProfile(boolean skipCheck) {
+        if (PlayerStorage.getCurrentPlayer().isEmpty() || (SkyblockUtils.getLastProfileId().isEmpty() || skipCheck)) {
             return;
         }
 

@@ -1,7 +1,7 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
-import dev.morazzer.cookies.mod.config.utils.RenderUtils;
+import dev.morazzer.cookies.mod.utils.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;

@@ -1,13 +1,10 @@
-package dev.morazzer.cookies.mod.features.misc.utils;
+package dev.morazzer.cookies.mod.features.misc.utils.crafthelper;
 
 import com.google.common.collect.Lists;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
-import dev.morazzer.cookies.mod.data.profile.items.Item;
-import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
-import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
@@ -21,11 +18,8 @@ import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Stack;
 import lombok.Getter;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -33,12 +27,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
+import org.joml.Vector2ic;
 
 /**
  * Helper to display a recipe (and its respective sub recipes) in game and also show the ingredients plus their
@@ -51,11 +48,13 @@ public class CraftHelper {
     public static final String LOGGING_KEY = "crafthelper";
     private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
     private static final Identifier DEBUG_HITBOX = DevUtils.createIdentifier("craft_helper/hitbox");
-    private static final ItemSources[] ITEM_SOURCES = {ItemSources.INVENTORY, ItemSources.SACKS, ItemSources.STORAGE};
+    private CraftHelperLocation location = CraftHelperLocation.RIGHT;
+    @Getter
     private static CraftHelper instance;
     private final int buttonWidthHeight = 8;
     @Getter
     private RepositoryItem selectedItem;
+    @Getter
     private RecipeCalculationResult calculation;
     private int yOffset = 0;
     private List<OrderedText> tooltip = new ArrayList<>();
@@ -67,6 +66,8 @@ public class CraftHelper {
     @SuppressWarnings("MissingJavadoc")
     public CraftHelper() {
         instance = this;
+        ConfigManager.getConfig().helpersConfig.craftHelperLocation.withCallback((oldValue, newValue) -> this.location =
+            newValue);
         ProfileSwapEvent.AFTER_SET_NO_UUID.register(this::profileSwap);
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (!(screen instanceof InventoryScreenAccessor)) {
@@ -80,6 +81,7 @@ public class CraftHelper {
             }
 
             this.recalculate();
+            this.location = ConfigManager.getConfig().helpersConfig.craftHelperLocation.getValue();
             ScreenEvents.afterRender(screen).register(this::afterRender);
             ScreenMouseEvents.beforeMouseClick(screen).register(this::clicked);
             ScreenMouseEvents.beforeMouseScroll(screen).register(this::beforeScroll);
@@ -189,11 +191,11 @@ public class CraftHelper {
     private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
         int amount = 0;
 
-        if (context.parent != null) {
+        if (context.parent() != null) {
             amount = getAmountThroughParents(context, max, stackCountContext);
         }
 
-        amount += stackCountContext.take(context.recipeResult.getRepositoryItem(), max - amount);
+        amount += stackCountContext.take(context.recipeResult().getRepositoryItem(), max - amount);
 
         return Math.min(amount, max);
     }
@@ -202,11 +204,11 @@ public class CraftHelper {
         EvaluationContext context, int max, StackCountContext stackCountContext) {
         int amount = 0;
         amount += (stackCountContext.integers.peek() *
-                   (context.recipeResult.getAmount() / context.parent.recipeResult().getAmount()));
+                   (context.recipeResult().getAmount() / context.parent().recipeResult().getAmount()));
         return Math.min(amount, max);
     }
 
-    private MutableText formatted(
+    public static MutableText formatted(
         String prefix,
         String id,
         RepositoryItem repositoryItem,
@@ -261,7 +263,7 @@ public class CraftHelper {
     private void beforeScroll(
         Screen screen, double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
 
-        if (!this.shouldRender()) {
+        if (!this.shouldRender(screen)) {
             return;
         }
 
@@ -269,8 +271,14 @@ public class CraftHelper {
             return;
         }
 
-        final int x = this.calculateX(screen);
-        final int y = this.calculateY(screen);
+        final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
+            screen.height,
+            this.calculateX(screen),
+            this.calculateY(screen),
+            width,
+            0);
+        final int x = position.x();
+        final int y = position.y();
 
         if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + 270) {
             this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
@@ -279,13 +287,19 @@ public class CraftHelper {
 
     private void clicked(Screen screen, double mouseX, double mouseY, int button) {
 
-        if (!this.shouldRender()) {
+        if (!this.shouldRender(screen)) {
             return;
         }
 
-        final int x = this.calculateX(screen);
-        final int y = this.calculateY(screen);
+        final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
+            screen.height,
+            this.calculateX(screen),
+            this.calculateY(screen),
+            width,
+            0);
 
+        final int x = position.x();
+        final int y = position.y();
         final int buttonX = x + this.buttonX;
         final int buttonY = y + this.buttonY;
 
@@ -296,9 +310,10 @@ public class CraftHelper {
     }
 
     private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
-        if (!this.shouldRender()) {
+        if (!this.shouldRender(screen)) {
             return;
         }
+
 
         final int x = this.calculateX(screen);
         final int y = this.calculateY(screen);
@@ -317,7 +332,7 @@ public class CraftHelper {
 
         drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
             tooltip,
-            AbsoluteTooltipPositioner.INSTANCE,
+            CraftHelperTooltipPositioner.INSTANCE,
             x,
             y);
 
@@ -331,11 +346,15 @@ public class CraftHelper {
                 -1);
         }
         drawContext.getMatrices().pop();
-
     }
 
     private int calculateX(Screen screen) {
-        return InventoryScreenAccessor.getX(screen) + InventoryScreenAccessor.getBackgroundWidth(screen) + 2;
+        return switch (this.location) {
+            case LEFT -> 0;
+            case LEFT_INVENTORY -> InventoryScreenAccessor.getX(screen) - 1;
+            case RIGHT_INVENTORY -> InventoryScreenAccessor.getX(screen) + 1;
+            case RIGHT -> screen.width;
+        };
     }
 
     private int calculateY(Screen screen) {
@@ -343,7 +362,10 @@ public class CraftHelper {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean shouldRender() {
+    private boolean shouldRender(Screen screen) {
+        if (InventoryScreenAccessor.isDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER)) {
+            return false;
+        }
         return this.calculation != null && !this.tooltip.isEmpty();
     }
 
@@ -379,7 +401,7 @@ public class CraftHelper {
             0,
             new EvaluationContext(calculation, null),
             new StackCountContext(),
-            this::formatted);
+            CraftHelper::formatted);
 
         if (!tooltip.isEmpty()) {
             this.addClose(tooltip);
@@ -413,8 +435,12 @@ public class CraftHelper {
 
         orderedText.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
 
-        this.buttonX = textRenderer.getWidth(orderedText) + 3;
-        this.buttonY = -12;
+        int buttonOffset = switch (this.location) {
+            case RIGHT_INVENTORY, LEFT -> 8;
+            case RIGHT, LEFT_INVENTORY -> 10;
+        };
+        this.buttonX = textRenderer.getWidth(orderedText) - buttonOffset;
+        this.buttonY = 0;
     }
 
     public interface Formatter {
@@ -426,50 +452,6 @@ public class CraftHelper {
             int amountOfItem,
             boolean childrenFinished,
             int depth);
-    }
-
-    @SuppressWarnings("MissingJavadoc")
-    public record EvaluationContext(RecipeResult<?> recipeResult, EvaluationContext parent) {}
-
-    @SuppressWarnings("MissingJavadoc")
-    public static class StackCountContext {
-        Map<RepositoryItem, Long> itemMap = new HashMap<>();
-        Stack<Integer> integers = new Stack<>();
-
-        public StackCountContext() {
-            integers.push(0);
-        }
-
-        public int take(RepositoryItem id, int max) {
-            if (id == null) {
-                return 0;
-            }
-
-            if (!itemMap.containsKey(id)) {
-                itemMap.put(
-                    id,
-                    ItemSources.getItems(ITEM_SOURCES)
-                        .stream()
-                        .filter(item -> id.equals(ItemAccessor.repositoryItemOrNull(item.itemStack())))
-                        .mapToLong(Item::amount)
-                        .sum());
-            }
-
-            long l = itemMap.getOrDefault(id, 0L);
-            int used = (int) (l >> 32);
-            int total = (int) l;
-            int available = total - used;
-            if (max >= available) {
-                itemMap.put(id, ((long) total << 32) | total);
-                return available;
-            }
-
-            used += max;
-            l = l & 0xFFFFFFFFL;
-            l |= (long) used << 32;
-            itemMap.put(id, l);
-            return max;
-        }
     }
 
 }

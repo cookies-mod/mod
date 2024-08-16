@@ -21,7 +21,7 @@ public abstract class CookiesScreen extends Screen {
      * @param regionHeight The height of the box.
      * @return Whether the position is within the bounds.
      */
-    protected boolean isInBound(
+    public static boolean isInBound(
         final int x, final int y, final int regionX, final int regionY, final int regionWidth, final int regionHeight) {
         return (x >= regionX && x <= regionX + regionWidth) && (y >= regionY && y <= regionY + regionHeight);
     }

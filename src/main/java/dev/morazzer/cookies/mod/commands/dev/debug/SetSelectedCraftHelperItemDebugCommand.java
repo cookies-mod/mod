@@ -4,7 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookies.mod.commands.arguments.RealIdentifierArgument;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.features.misc.utils.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import java.util.ArrayList;
 import java.util.List;

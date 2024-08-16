@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.screen.inventory;
 
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
-import dev.morazzer.cookies.mod.features.misc.utils.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.features.misc.utils.ModifyRecipeScreen;
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;

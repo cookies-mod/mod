@@ -39,4 +39,7 @@ public enum ItemSources {
         return items;
     }
 
+    public static ItemSources[] none() {
+        return new ItemSources[0];
+    }
 }

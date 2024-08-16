@@ -2,14 +2,17 @@ package dev.morazzer.cookies.mod.data.profile.sub;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Pair;
@@ -26,7 +29,7 @@ public class StorageData implements JsonSerializable {
         StorageLocation.CODEC.fieldOf("location").forGetter(StorageItem::storageLocation),
         Codec.INT.fieldOf("page").forGetter(StorageItem::page),
         Codec.INT.fieldOf("slot").forGetter(StorageItem::slot),
-        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::itemStack)).apply(instance, StorageItem::new));
+        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::itemStack)).apply(instance, StorageItem::create));
 
     private static final Codec<List<StorageItem>> LIST_CODEC = CODEC.listOf();
     private final List<StorageItem> items = new ArrayList<>();
@@ -40,7 +43,7 @@ public class StorageData implements JsonSerializable {
      */
     public void saveItems(List<Pair<Integer, ItemStack>> itemStacks, int page, StorageLocation location) {
         this.items.removeAll(this.getItems(page, location));
-        itemStacks.stream().map(pair -> new StorageItem(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
+        itemStacks.stream().map(pair -> StorageItem.create(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
     }
 
     /**
@@ -82,8 +85,16 @@ public class StorageData implements JsonSerializable {
     @Override
     public @NotNull JsonElement write() {
         final DataResult<JsonElement> jsonElementDataResult = LIST_CODEC.encodeStart(JsonOps.INSTANCE, this.items);
+        if (jsonElementDataResult.isError()) {
+            final DataResult.Error<JsonElement> jsonElementError = jsonElementDataResult.error().get();
+            ExceptionHandler.handleException(new RuntimeException(jsonElementError.message()));
+        }
         final Optional<JsonElement> jsonElement = jsonElementDataResult.resultOrPartial();
         return Optional.ofNullable(jsonElement).orElseGet(Optional::empty).orElseGet(JsonArray::new);
+    }
+
+    public void clear() {
+        this.items.clear();
     }
 
 
@@ -91,7 +102,7 @@ public class StorageData implements JsonSerializable {
         ENDER_CHEST,
         BACKPACK;
 
-        public static Codec<StorageLocation> CODEC = StringIdentifiable.createCodec(StorageLocation::values);
+        public static final Codec<StorageLocation> CODEC = StringIdentifiable.createCodec(StorageLocation::values);
 
         @Override
         public String asString() {
@@ -99,5 +110,25 @@ public class StorageData implements JsonSerializable {
         }
     }
 
-    public record StorageItem(StorageLocation storageLocation, int page, int slot, ItemStack itemStack) {}
+    public record StorageItem(StorageLocation storageLocation, int page, int slot, ItemStack itemStack) {
+        public static StorageItem create(StorageLocation location, int page, int slot, ItemStack itemStack) {
+            itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE);
+            itemStack.remove(DataComponentTypes.ENCHANTMENTS);
+            if (itemStack.isEmpty()) {
+                return new StorageItem(location, page, slot, VOID_ITEM);
+            } else if (itemStack.isOf(Items.DEBUG_STICK)) {
+                return new StorageItem(location, page, slot, ItemStack.EMPTY);
+            } else {
+                return new StorageItem(location, page, slot, itemStack);
+            }
+        }
+
+        @Override
+        public ItemStack itemStack() {
+            if (itemStack.isOf(Items.DEBUG_STICK)) {
+                return ItemStack.EMPTY;
+            }
+            return itemStack;
+        }
+    }
 }

@@ -2,11 +2,14 @@ package dev.morazzer.cookies.mod.features.farming.garden;
 
 import com.google.common.collect.Lists;
 import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperLocation;
 import dev.morazzer.cookies.mod.repository.constants.PlotPrice;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -67,6 +70,10 @@ public class PlotPriceBreakdown {
         }
         if (RepositoryConstants.plotPrice == null) {
             return;
+        }
+        final CraftHelperLocation value = ConfigManager.getConfig().helpersConfig.craftHelperLocation.getValue();
+        if (value == CraftHelperLocation.LEFT_INVENTORY || value == CraftHelperLocation.LEFT) {
+            InventoryScreenAccessor.setDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER);
         }
 
         ScreenEvents.afterRender(screen).register(this::draw);

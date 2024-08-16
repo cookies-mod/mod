@@ -7,7 +7,7 @@ import dev.morazzer.cookies.mod.config.system.editor.FoldableEditor;
 import dev.morazzer.cookies.mod.config.system.parsed.ConfigReader;
 import dev.morazzer.cookies.mod.config.system.parsed.ProcessedCategory;
 import dev.morazzer.cookies.mod.config.system.parsed.ProcessedOption;
-import dev.morazzer.cookies.mod.config.utils.RenderUtils;
+import dev.morazzer.cookies.mod.utils.RenderUtils;
 import dev.morazzer.cookies.mod.screen.ScrollbarScreen;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
