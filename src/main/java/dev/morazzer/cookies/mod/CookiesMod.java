@@ -41,7 +41,7 @@ import org.lwjgl.glfw.GLFW;
 public class CookiesMod implements ClientModInitializer {
 
     @Getter
-    private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
     /**
      * Opens the config screen.
