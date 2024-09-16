@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.cleanup.dungeon;
 
 import dev.morazzer.cookies.mod.config.ConfigKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 

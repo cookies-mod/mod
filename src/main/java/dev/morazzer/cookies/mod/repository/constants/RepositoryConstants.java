@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.repository.constants;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonRoomData;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
 
 import java.io.IOException;
@@ -31,15 +32,16 @@ public class RepositoryConstants {
         plotPrice = new PlotPrice(resolve(path.resolve("plot_cost.json"), JsonObject.class));
         composterUpgrades = new ComposterUpgrades(resolve(path.resolve("compost_upgrades.json"), JsonObject.class));
         warps = new Warps(resolve(path.resolve("warps.json"), JsonArray.class));
+		DungeonRoomData.load(path.resolve("dungeon_rooms.json"));
     }
 
     @Nullable
-    private static <T> T resolve(Path path, Class<T> clazz) {
+    public static <T> T resolve(Path path, Class<T> clazz) {
         final String read;
         try {
             read = Files.readString(path, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            LOGGER.error("Failed to load Cookies Hotm Constants", e);
+            LOGGER.error("Failed to load Cookies Constant", e);
             return null;
         }
 

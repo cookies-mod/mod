@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod;
 
+import dev.morazzer.cookies.mod.api.ApiManager;
 import dev.morazzer.cookies.mod.commands.CookieCommand;
 import dev.morazzer.cookies.mod.commands.OpenConfigCommand;
 import dev.morazzer.cookies.mod.commands.ViewForgeRecipeCommand;
@@ -23,6 +24,11 @@ import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+
+import net.hypixel.modapi.HypixelModAPI;
+
+import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
@@ -58,7 +64,9 @@ public class CookiesMod implements ClientModInitializer {
         CommandManager.initialize();
         ProfileStorage.register();
         Repository.loadRepository();
+		HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
         EventLoader.load();
+		ApiManager.initialize();
         Features.load();
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
         CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));

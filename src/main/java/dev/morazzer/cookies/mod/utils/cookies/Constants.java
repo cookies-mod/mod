@@ -1,4 +1,4 @@
-package dev.morazzer.cookies.mod.utils;
+package dev.morazzer.cookies.mod.utils.cookies;
 
 /**
  * Various constants used throughout the mod.

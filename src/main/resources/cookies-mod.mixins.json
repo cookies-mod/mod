@@ -9,6 +9,7 @@
     "ui.PotionEffectMixin",
     "ui.InGameHudMixin",
     "ui.ParentElementMixin",
-    "ui.ScrollableTooltipMixin"
+    "ui.ScrollableTooltipMixin",
+    "render.TextFieldWidgetMixin"
   ]
 }

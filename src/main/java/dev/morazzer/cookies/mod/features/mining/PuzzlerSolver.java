@@ -1,6 +1,5 @@
 package dev.morazzer.cookies.mod.features.mining;
 
-import com.mojang.datafixers.types.templates.Tag;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
 import dev.morazzer.cookies.mod.render.Renderable;
@@ -8,18 +7,15 @@ import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.render.types.Composite;
 import dev.morazzer.cookies.mod.render.types.Line;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import dev.morazzer.mods.cookies.generated.Regions;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagEntry;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -61,10 +57,10 @@ public class PuzzlerSolver {
 
         for (char c : puzzlerString.toCharArray()) {
             switch (c) {
-                case '▲' -> block = move(block, 0, 1);
-                case '◀' -> block = move(block, 1, 0);
-                case '▶' -> block = move(block, -1, 0);
-                case '▼' -> block = move(block, 0, -1);
+                case '▲' -> block = this.move(block, 0, 1);
+                case '◀' -> block = this.move(block, 1, 0);
+                case '▶' -> block = this.move(block, -1, 0);
+                case '▼' -> block = this.move(block, 0, -1);
                 default -> isTask = false;
             }
         }
@@ -72,7 +68,7 @@ public class PuzzlerSolver {
         if (!isTask) {
             this.solved();
         } else {
-            setHighlight(block);
+			this.setHighlight(block);
         }
     }
 
@@ -105,7 +101,7 @@ public class PuzzlerSolver {
     private BlockPos move(BlockPos pos, int x, int y) {
         final BlockPos add = pos.add(x, 0, y);
         if (DevUtils.isEnabled(DEBUG)) {
-            Line newLine = new Line(centerPos(pos), centerPos(add), Constants.MAIN_COLOR);
+            Line newLine = new Line(this.centerPos(pos), this.centerPos(add), Constants.MAIN_COLOR);
             if (this.line == null) {
                 this.line = newLine;
             } else {
@@ -116,7 +112,7 @@ public class PuzzlerSolver {
     }
 
     private void solved() {
-        setHighlight(null);
+		this.setHighlight(null);
     }
 
     private Vec3d centerPos(BlockPos pos) {

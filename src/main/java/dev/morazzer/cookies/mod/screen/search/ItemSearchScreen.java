@@ -11,7 +11,7 @@ import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.screen.ScrollbarScreen;
 import dev.morazzer.cookies.mod.services.ItemSearchService;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
@@ -150,7 +150,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
             0xFF555555,
             false);
 
-        renderScrollbar(context);
+		this.renderScrollbar(context);
         this.drawItems(context, mouseX, mouseY);
         this.searchField.render(context, mouseX, mouseY, delta);
         this.renderTopTabs(context, true);
@@ -196,7 +196,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     private void updateSearch(String s) {
         this.finalItems.clear();
         this.finalItems.addAll(this.items);
-        lastSearch = s;
+		this.lastSearch = s;
         this.finalItems.removeIf(Predicate.not(this.matches(s)));
         this.updateMaxScroll();
         this.scroll = 0;
@@ -222,7 +222,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isInBound((int) mouseX,
+        if (isInBound((int) mouseX,
             (int) mouseY,
             this.searchField.getX() - 3,
             this.searchField.getY(),
@@ -251,7 +251,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
             }
         }
 
-        if (this.mouseClickedTop(mouseX, mouseY, button) || this.mouseClickedBottom(mouseX, mouseY, button)) {
+        if (this.mouseClickedTop(mouseX, mouseY) || this.mouseClickedBottom(mouseX, mouseY)) {
             return true;
         }
 
@@ -261,7 +261,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (isInBound((int) mouseX, (int) mouseY, this.x, this.y, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)) {
-            updateScrollbar(verticalAmount);
+			this.updateScrollbar(verticalAmount);
             return true;
         }
 
@@ -279,7 +279,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     private void clickedSlot(ItemCompound compound, int button) {
         if (button == 0) {
             ItemSearchService.highlight(compound);
-            close();
+			this.close();
             SoundUtils.playSound(SoundEvents.BLOCK_CHERRY_WOOD_BUTTON_CLICK_ON, 2, 1);
         }
     }
@@ -290,9 +290,9 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         this.updateMaxScroll();
     }
 
-    private boolean mouseClickedBottom(double mouseX, double mouseY, int button) {
+    private boolean mouseClickedBottom(double mouseX, double mouseY) {
         for (int i = 0; i < ItemSourceCategories.VALUES.length; i++) {
-            if (this.isInBound((int) mouseX,
+            if (isInBound((int) mouseX,
                 (int) mouseY,
                 this.x + this.getTabX(i),
                 this.y + this.getTabY(false),
@@ -307,9 +307,9 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         return false;
     }
 
-    private boolean mouseClickedTop(double mouseX, double mouseY, int button) {
+    private boolean mouseClickedTop(double mouseX, double mouseY) {
         for (int i = 0; i < ItemSearchCategories.VALUES.length; i++) {
-            if (this.isInBound((int) mouseX,
+            if (isInBound((int) mouseX,
                 (int) mouseY,
                 this.x + this.getTabX(i),
                 this.y + this.getTabY(true),
@@ -368,7 +368,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
             if (onlyActive && !isActive) {
                 continue;
             }
-            this.renderTab(context, true, isActive, i, value.getDisplay(), value.getName());
+            this.renderTab(context, true, isActive, i, value.getDisplay());
         }
     }
 
@@ -379,7 +379,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
             if (onlyActive && !isActive) {
                 continue;
             }
-            this.renderTab(context, false, isActive, i, value.getDisplay(), value.getName());
+            this.renderTab(context, false, isActive, i, value.getDisplay());
         }
     }
 
@@ -400,18 +400,18 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
         }
 
         if (this.itemSourceCategories.has(ItemSources.STORAGE) && storage > 0) {
-            tooltip.add(ItemSources.STORAGE.getName().copy().formatted(Formatting.GRAY).append(formattedText(storage)));
+            tooltip.add(ItemSources.STORAGE.getName().copy().formatted(Formatting.GRAY).append(this.formattedText(storage)));
         }
         if (this.itemSourceCategories.has(ItemSources.SACKS) && sacks > 0) {
-            tooltip.add(ItemSources.SACKS.getName().copy().formatted(Formatting.GRAY).append(formattedText(sacks)));
+            tooltip.add(ItemSources.SACKS.getName().copy().formatted(Formatting.GRAY).append(this.formattedText(sacks)));
         }
         if (this.itemSourceCategories.has(ItemSources.CHESTS) && chests > 0) {
-            tooltip.add(ItemSources.CHESTS.getName().copy().formatted(Formatting.GRAY).append(formattedText(chests)));
+            tooltip.add(ItemSources.CHESTS.getName().copy().formatted(Formatting.GRAY).append(this.formattedText(chests)));
         }
         if (this.itemSourceCategories.getSources().length > 1 &&
             ((storage != 0 && (sacks != 0 || chests != 0)) || (sacks != 0 && chests != 0))) {
             tooltip.add(TextUtils.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_TOTAL, Formatting.GRAY)
-                .append(formattedText(storage + sacks + chests)));
+                .append(this.formattedText(storage + sacks + chests)));
         }
 
         tooltip.add(Text.empty());
@@ -422,11 +422,11 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
     }
 
     private void renderTab(
-        DrawContext context, boolean top, boolean active, int index, ItemStack itemStack, Text name) {
+        DrawContext context, boolean top, boolean active, int index, ItemStack itemStack) {
         final Identifier[] identifiers = top ? (active ? TAB_TOP_SELECTED_TEXTURES : TAB_TOP_UNSELECTED_TEXTURES) :
             (active ? TAB_BOTTOM_SELECTED_TEXTURES : TAB_BOTTOM_UNSELECTED_TEXTURES);
-        int tabX = this.x + getTabX(index);
-        int tabY = this.y + getTabY(top);
+        int tabX = this.x + this.getTabX(index);
+        int tabY = this.y + this.getTabY(top);
 
         context.drawGuiTexture(identifiers[MathUtils.clamp(index, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
 

@@ -3,6 +3,8 @@ package dev.morazzer.cookies.mod.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.mods.cookies.generated.BuildInfo;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

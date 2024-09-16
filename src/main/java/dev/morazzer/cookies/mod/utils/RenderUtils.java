@@ -161,11 +161,7 @@ public sealed interface RenderUtils permits RenderUtils.Sealed {
         }
         drawContext.getMatrices().push();
         drawContext.getMatrices().scale(scaleFactor, scaleFactor, 1);
-        drawContext.drawCenteredTextWithShadow(textRenderer,
-            text,
-            (int) (x / scaleFactor),
-            (int) (y / scaleFactor),
-            color);
+		drawContext.drawText(textRenderer, text, (int) (x / scaleFactor) - textRenderer.getWidth(text) / 2, (int) (y / scaleFactor), color, false);
         drawContext.getMatrices().pop();
     }
 

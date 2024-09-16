@@ -4,9 +4,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+
 import net.minecraft.text.Text;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,15 +18,14 @@ import org.jetbrains.annotations.NotNull;
  * usage: /dev debug sendMessage {@literal <message>}
  */
 public class SendMessageDebugCommand extends ClientCommand {
-    @Override
-    public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-        return literal("sendMessage").then(
-            argument("message", StringArgumentType.greedyString())
-                .executes(run(this::sendMessage))
-        );
-    }
+	@Override
+	public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
+		return super.literal("sendMessage")
+				.then(super.argument("message", StringArgumentType.greedyString())
+						.executes(super.run(this::sendMessage)));
+	}
 
-    private void sendMessage(CommandContext<FabricClientCommandSource> context) {
-        CookiesUtils.sendMessage(Text.literal(context.getArgument("message", String.class)));
-    }
+	private void sendMessage(CommandContext<FabricClientCommandSource> context) {
+		CookiesUtils.sendMessage(Text.literal(context.getArgument("message", String.class)));
+	}
 }

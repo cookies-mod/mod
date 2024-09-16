@@ -21,9 +21,8 @@ public class DraggableListOption extends Option<List<String>, DraggableListOptio
 
     private ValueSupplier valueSupplier;
 
-    @SuppressWarnings("MissingJavadoc")
-    public DraggableListOption(Text name, Text description, List<String> value) {
-        super(name, description, value);
+    public DraggableListOption(String key, List<String> value) {
+        super(key, value);
     }
 
     /**

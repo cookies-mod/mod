@@ -37,14 +37,17 @@ public abstract class CreateRegions extends DefaultTask {
     public void createBuildInfo() {
         CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
             .setStorage(
-                getOutputDir().get().getAsFile().toPath()
+                this.getOutputDir().get().getAsFile().toPath()
                               .resolve("dev/morazzer/mods/cookies/generated/Regions.java")
                        );
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.minecraft.LocationUtils");
+        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.skyblock.LocationUtils");
         final EnumDeclaration regions = compilationUnit.addEnum("Regions");
 
-        JsonArray jsonArray = null;
+        JsonArray jsonArray;
         try (final InputStream resourceAsStream = CreateRegions.class.getClassLoader().getResourceAsStream("regions.json")) {
+			if (resourceAsStream == null) {
+				return;
+			}
             jsonArray = JsonParser.parseString(new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -53,7 +56,7 @@ public abstract class CreateRegions extends DefaultTask {
         Set<String> set = new HashSet<>();
         jsonArray.forEach(jsonElement -> {
             final JsonObject jsonObject = jsonElement.getAsJsonObject();
-            final String name = getName(jsonObject);
+            final String name = this.getName(jsonObject);
             if (set.contains(name)) {
                 System.err.println("Duplicate region name: " + name);
             }
@@ -98,7 +101,7 @@ public abstract class CreateRegions extends DefaultTask {
         if (jsonObject.has("island")) {
             return jsonObject.get("island").getAsString();
         }
-        throw new RuntimeException("No island set for %s".formatted(getName(jsonObject)));
+        throw new RuntimeException("No island set for %s".formatted(this.getName(jsonObject)));
     }
 
     private String getScoreboard(JsonObject jsonObject) {

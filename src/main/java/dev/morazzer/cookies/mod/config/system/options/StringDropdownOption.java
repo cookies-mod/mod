@@ -9,7 +9,6 @@ import java.util.Set;
 import joptsimple.internal.Strings;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,9 +20,8 @@ public class StringDropdownOption extends Option<String, StringDropdownOption> {
 
     private final Set<String> possibleValues;
 
-    @SuppressWarnings("MissingJavadoc")
-    public StringDropdownOption(Text name, Text description, String value, String... possibleValues) {
-        super(name, description, value);
+    public StringDropdownOption(String key, String value, String... possibleValues) {
+        super(key, value);
         this.possibleValues = Set.of(possibleValues);
     }
 
@@ -31,21 +29,21 @@ public class StringDropdownOption extends Option<String, StringDropdownOption> {
     public void read(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
             log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
-                possibleValues,
+					this.possibleValues,
                 ", "
             ), jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isString()) {
             log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
-                possibleValues,
+                this.possibleValues,
                 ", "
             ), jsonElement.getAsString()));
             return;
         }
-        if (!possibleValues.contains(jsonElement.getAsString())) {
+        if (!this.possibleValues.contains(jsonElement.getAsString())) {
             log.warn("Error while loading config value, expected any of [%s] found %s".formatted(Strings.join(
-                possibleValues,
+					this.possibleValues,
                 ", "
             ), jsonElement.getAsString()));
             return;

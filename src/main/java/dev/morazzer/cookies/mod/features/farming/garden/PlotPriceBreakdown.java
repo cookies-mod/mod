@@ -10,7 +10,7 @@ import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -43,7 +43,6 @@ public class PlotPriceBreakdown {
 
     private final NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 
-    private long lastRefresh = 0;
     private List<OrderedText> lines;
     private int lineWidth = 0;
 
@@ -77,9 +76,9 @@ public class PlotPriceBreakdown {
         }
 
         ScreenEvents.afterRender(screen).register(this::draw);
-        updateList(handledScreen);
+        this.updateList(handledScreen);
         InventoryContentUpdateEvent.register(handledScreen.getScreenHandler(), (slot, item) -> {
-            updateList(handledScreen);
+			this.updateList(handledScreen);
         });
     }
 
@@ -129,7 +128,6 @@ public class PlotPriceBreakdown {
         }
 
         if (missingCompost == 0 && missingBundles == 0) {
-            this.lastRefresh = System.currentTimeMillis();
             this.lines = Collections.emptyList();
             return;
         }
@@ -151,20 +149,20 @@ public class PlotPriceBreakdown {
         breakdown.add(Text.empty());
         if (missingCompost > 0) {
             breakdown.add(Text.empty()
-                .append(Text.literal(numberFormat.format(missingCompost)).formatted(Formatting.GOLD).append("x "))
+                .append(Text.literal(this.numberFormat.format(missingCompost)).formatted(Formatting.GOLD).append("x "))
                 .append(Text.literal("Compost").formatted(Formatting.GREEN)));
         }
         breakdown.add(Text.empty()
-            .append(Text.literal(numberFormat.format(missingBundles)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal(this.numberFormat.format(missingBundles)).formatted(Formatting.GOLD).append("x "))
             .append(Text.literal("Compost Bundle").formatted(Formatting.BLUE)));
         breakdown.add(Text.literal(" -> ")
-            .append(Text.literal(numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal(this.numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD).append("x "))
             .append(Text.literal("Compost").formatted(Formatting.GREEN))
             .formatted(Formatting.DARK_GRAY));
         breakdown.add(Text.translatable(TranslationKeys.PLOT_PRICE_BREAKDOWN_MISSING)
             .append(": ")
             .formatted(Formatting.GRAY)
-            .append(Text.literal(numberFormat.format(regularCompost)).formatted(Formatting.GOLD).append("x "))
+            .append(Text.literal(this.numberFormat.format(regularCompost)).formatted(Formatting.GOLD).append("x "))
             .append(Text.literal("Compost").formatted(Formatting.GREEN)));
 
 
@@ -198,7 +196,6 @@ public class PlotPriceBreakdown {
 
 
         this.lines = Lists.transform(breakdown, Text::asOrderedText);
-        this.lastRefresh = System.currentTimeMillis();
         this.lineWidth = maxLineWidth;
     }
 }

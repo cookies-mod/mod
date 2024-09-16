@@ -7,25 +7,27 @@ import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.util.Identifier;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Sub command of the /dev tools command to enable a specific flag.
  */
 public class EnableToolsSubCommand extends ClientCommand {
 
     @Override
-    public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-        return literal("enable").then(argument(
+    public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
+        return super.literal("enable").then(super.argument(
             "tool",
             new RealIdentifierArgument(DevUtils.getDisabledTools(), "cookiesmod", "dev/")
-        ).executes(run(context -> {
+        ).executes(super.run(context -> {
             Identifier identifier = context.getArgument("tool", Identifier.class);
             boolean enable = DevUtils.enable(identifier);
             if (!enable) {
-                sendFailedMessage("No devtool found with name " + identifier.toString());
+				super.sendFailedMessage("No devtool found with name " + identifier.toString());
                 return;
             }
 
-            sendSuccessMessage("Enabled devtool " + identifier.toString());
+            super.sendSuccessMessage("Enabled devtool " + identifier.toString());
         })));
     }
 
