@@ -10,7 +10,6 @@ import dev.morazzer.cookies.mod.config.system.options.SliderOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 
 /**
  * Category related to all miscellaneous settings.
@@ -87,7 +86,7 @@ public class MiscConfig extends Category {
 
     @Hidden
     @Expose
-    public SliderOption<Integer> forgeRecipeSlot = SliderOption.integerOption(Text.empty(), Text.empty(), 47);
+    public SliderOption<Integer> forgeRecipeSlot = SliderOption.integerOption("", 47);
 
     public MiscConfig() {
         super(new ItemStack(Items.COMPASS), CONFIG_MISC);

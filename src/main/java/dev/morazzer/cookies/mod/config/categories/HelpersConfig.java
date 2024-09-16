@@ -12,7 +12,6 @@ import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperLocat
 import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperPlacement;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 
 /**
  * Category that contains all helper related config settings.
@@ -38,7 +37,7 @@ public class HelpersConfig extends Category {
     public BooleanOption itemChestTracker = new BooleanOption(CONFIG_HELPERS_CHEST_TRACKER, true);
 
     @Hidden
-    public SliderOption<Integer> craftHelperSlot = SliderOption.integerOption(Text.empty(), Text.empty(), 14);
+    public SliderOption<Integer> craftHelperSlot = SliderOption.integerOption("", 14);
 
     public HelpersConfig() {
         super(new ItemStack(Items.SCAFFOLDING), CONFIG_HELPERS);
