@@ -15,19 +15,18 @@ import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
@@ -288,23 +287,23 @@ public class ItemSearchService {
         @Override
         public boolean equals(Object other) {
             if (other instanceof BiBlockPosKey otherBi) {
-                return otherBi.first().asLong() == first().asLong() &&
-                       (second() == null || otherBi.second().asLong() == second().asLong());
+                return otherBi.first().asLong() == this.first().asLong() &&
+                       (this.second() == null || otherBi.second().asLong() == this.second().asLong());
             } else if (other instanceof BlockPos blockPos) {
-                return blockPos.asLong() == first().asLong() ||
-                       (second() != null && blockPos.asLong() == second().asLong());
+                return blockPos.asLong() == this.first().asLong() ||
+                       (this.second() != null && blockPos.asLong() == this.second().asLong());
             }
             return false;
         }
 
         @Override
         public int hashCode() {
-            if (second() == null) {
-                return Long.hashCode(first.asLong());
+            if (this.second() == null) {
+                return Long.hashCode(this.first.asLong());
             }
 
-            long first = Math.min(first().asLong(), second().asLong());
-            long second = Math.max(second().asLong(), first().asLong());
+            long first = Math.min(this.first().asLong(), this.second().asLong());
+            long second = Math.max(this.second().asLong(), this.first().asLong());
             int result = Long.hashCode(first);
             result = 31 * result + Long.hashCode(second);
 
@@ -313,29 +312,14 @@ public class ItemSearchService {
 
         @Override
         public String toString() {
-            if (second() == null) {
-                return String.valueOf(first.asLong());
+            if (this.second() == null) {
+                return String.valueOf(this.first.asLong());
             }
 
-            long first = Math.min(first().asLong(), second().asLong());
-            long second = Math.max(second().asLong(), first().asLong());
+            long first = Math.min(this.first().asLong(), this.second().asLong());
+            long second = Math.max(this.second().asLong(), this.first().asLong());
             return "%s;%s".formatted(first, second);
         }
     }
 
-    /**
-     * A context to keep an {@link ItemStack} in relation to its chests stored as {@link Block}
-     *
-     * @param stack  The stack.
-     * @param blocks The chests locations.
-     */
-    public record Context(ItemStack stack, Set<Block> blocks) {}
-
-    /**
-     * A data class to save a {@link BiBlockPosKey} and the amount of items found in that chest.
-     *
-     * @param blocks The block.
-     * @param count  The amount of items.
-     */
-    public record Block(ItemSearchService.BiBlockPosKey blocks, AtomicInteger count) {}
 }

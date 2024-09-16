@@ -17,11 +17,16 @@ jobs:
         run: chmod +x gradlew
       - name: Build project
         id: build
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build
       - name: Run tests
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          #name: ${{ steps.build.outputs.result }}
           path: build/libs/

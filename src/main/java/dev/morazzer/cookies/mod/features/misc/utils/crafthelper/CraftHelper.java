@@ -11,11 +11,10 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculatio
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.items.AbsoluteTooltipPositioner;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -275,12 +272,12 @@ public class CraftHelper {
             screen.height,
             this.calculateX(screen),
             this.calculateY(screen),
-            width,
+				this.width,
             0);
         final int x = position.x();
         final int y = position.y();
 
-        if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + 270) {
+        if (mouseX > x && mouseX < x + this.width && mouseY > y && mouseY < y + 270) {
             this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
         }
     }
@@ -295,7 +292,7 @@ public class CraftHelper {
             screen.height,
             this.calculateX(screen),
             this.calculateY(screen),
-            width,
+			this.width,
             0);
 
         final int x = position.x();
@@ -303,8 +300,8 @@ public class CraftHelper {
         final int buttonX = x + this.buttonX;
         final int buttonY = y + this.buttonY;
 
-        if (mouseX >= buttonX && mouseX <= buttonX + buttonWidthHeight && mouseY >= buttonY &&
-            mouseY <= buttonY + buttonWidthHeight) {
+        if (mouseX >= buttonX && mouseX <= buttonX + this.buttonWidthHeight && mouseY >= buttonY &&
+            mouseY <= buttonY + this.buttonWidthHeight) {
             setSelectedItem(null);
         }
     }
@@ -358,7 +355,7 @@ public class CraftHelper {
     }
 
     private int calculateY(Screen screen) {
-        return InventoryScreenAccessor.getY(screen) + InventoryScreenAccessor.getBackgroundHeight(screen) / 2 - yOffset;
+        return InventoryScreenAccessor.getY(screen) + InventoryScreenAccessor.getBackgroundHeight(screen) / 2 - this.yOffset;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -397,9 +394,9 @@ public class CraftHelper {
         List<MutableText> tooltip = new ArrayList<>();
         append("",
             tooltip,
-            calculation,
+			this.calculation,
             0,
-            new EvaluationContext(calculation, null),
+            new EvaluationContext(this.calculation, null),
             new StackCountContext(),
             CraftHelper::formatted);
 

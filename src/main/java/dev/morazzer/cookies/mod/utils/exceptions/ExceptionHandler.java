@@ -1,8 +1,8 @@
 package dev.morazzer.cookies.mod.utils.exceptions;
 
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.Constants;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
@@ -54,13 +54,12 @@ public class ExceptionHandler {
                 VM: %s
                 Mod: %s
                 Exception type: %s
-                                    
+                
                 --------------------------
-                                    
+                
                 Stacktrace:
                 %s
-                ```
-                """.formatted(
+                ```""".formatted(
                 MinecraftClient.getInstance().getGameVersion(),
                 ManagementFactory.getRuntimeMXBean().getVmVendor() + " " + ManagementFactory
                     .getRuntimeMXBean()

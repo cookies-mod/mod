@@ -10,7 +10,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.events.api.ScreenKeyEvents;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.IntReference;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
@@ -73,7 +73,7 @@ public class RancherBootsOverlay {
         }
 
         if (index == -1) {
-            CookiesMod.getExecutorService().execute(save);
+            CookiesMod.getExecutorService().execute(this.save);
         }
     }
 
@@ -87,7 +87,7 @@ public class RancherBootsOverlay {
         if (!ConfigManager.getConfig().farmingConfig.showRancherOptimalSpeeds.getValue()) {
             return;
         }
-        if (!DevUtils.isEnabled(SKIP_RANCHER_BOOTS_CHECK) && !isRancherBootsScreen((SignEditScreen) screen)) {
+        if (!DevUtils.isEnabled(SKIP_RANCHER_BOOTS_CHECK) && !this.isRancherBootsScreen((SignEditScreen) screen)) {
             return;
         }
 
@@ -130,14 +130,14 @@ public class RancherBootsOverlay {
     private void render(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
         drawContext.getMatrices().push();
 
-        int x = getX(screen);
-        int y = getY(screen);
+        int x = this.getX(screen);
+        int y = this.getY(screen);
         drawContext.getMatrices().translate(x, y, 50.0f);
         int translatedMouseX = mouseX - x;
         int translatedMouseY = mouseY - y;
 
         drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
-            getText(translatedMouseX, translatedMouseY, tickDelta),
+				this.getText(translatedMouseX, translatedMouseY, tickDelta),
             0,
             0);
 
@@ -145,11 +145,11 @@ public class RancherBootsOverlay {
     }
 
     private void mouseClick(Screen screen, double mouseX, double mouseY, int button) {
-        int x = getX(screen);
-        int y = getY(screen);
+        int x = this.getX(screen);
+        int y = this.getY(screen);
         int translatedMouseX = (int) (mouseX - x);
         int translatedMouseY = (int) (mouseY - y);
-        if (translatedMouseX <= 0 || translatedMouseX >= maxWidth) {
+        if (translatedMouseX <= 0 || translatedMouseX >= this.maxWidth) {
             return;
         }
 
@@ -167,7 +167,7 @@ public class RancherBootsOverlay {
         } else if (this.editing != -1) {
             this.setEditing(index);
         } else {
-            final IntReference intReference = indexToReference(index);
+            final IntReference intReference = this.indexToReference(index);
             if (intReference == null) {
                 return;
             }
@@ -281,49 +281,49 @@ public class RancherBootsOverlay {
         texts.add(Text.translatable("item.minecraft.wheat")
             .append(": ")
             .withColor(0xF5DEB3)
-            .append(Text.literal(String.valueOf(rancherSpeeds.wheat().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.wheat().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("item.minecraft.carrot")
             .append(": ")
             .withColor(0xED9121)
-            .append(Text.literal(String.valueOf(rancherSpeeds.carrot().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.carrot().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("item.minecraft.potato")
             .append(": ")
             .withColor(0xB79268)
-            .append(Text.literal(String.valueOf(rancherSpeeds.potato().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.potato().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("item.minecraft.nether_wart")
             .append(": ")
             .withColor(0x9F1B0F)
-            .append(Text.literal(String.valueOf(rancherSpeeds.netherWart().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.netherWart().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("block.minecraft.pumpkin")
             .append(": ")
             .withColor(0xFF7518)
-            .append(Text.literal(String.valueOf(rancherSpeeds.pumpkin().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.pumpkin().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("block.minecraft.melon")
             .append(": ")
             .withColor(0x74AC8D)
-            .append(Text.literal(String.valueOf(rancherSpeeds.melon().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.melon().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("item.minecraft.cocoa_beans")
             .append(": ")
             .withColor(0x481C1C)
-            .append(Text.literal(String.valueOf(rancherSpeeds.cocoaBeans().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.cocoaBeans().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("block.minecraft.sugar_cane")
             .append(": ")
             .withColor(0xC3DB79)
-            .append(Text.literal(String.valueOf(rancherSpeeds.sugarCane().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.sugarCane().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("block.minecraft.cactus")
             .append(": ")
             .withColor(0x5C755E)
-            .append(Text.literal(String.valueOf(rancherSpeeds.cactus().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.cactus().get())).formatted(Formatting.GRAY)));
         texts.add(Text.translatable("block.minecraft.red_mushroom")
             .append(": ")
             .withColor(0x90806D)
-            .append(Text.literal(String.valueOf(rancherSpeeds.mushroom().get())).formatted(Formatting.GRAY)));
+            .append(Text.literal(String.valueOf(this.rancherSpeeds.mushroom().get())).formatted(Formatting.GRAY)));
 
         texts.add(Text.empty());
         texts.add(Text.literal(Constants.Emojis.PEN + " ")
             .append(Text.translatable(TranslationKeys.CLICK_TO_EDIT))
             .formatted(Formatting.DARK_AQUA));
-        if (useProfile) {
+        if (this.useProfile) {
             texts.add(Text.literal(Constants.Emojis.EMPTY_BOX + " ")
                 .append(Text.translatable(TranslationKeys.RANCHER_BOOTS_SAVE_GLOBAL))
                 .formatted(Formatting.DARK_GREEN));
@@ -346,20 +346,20 @@ public class RancherBootsOverlay {
             final MutableText mutableText = texts.get(this.editing + 2);
             mutableText.getSiblings().removeLast();
             mutableText.append(Text.literal(this.editingValue).formatted(Formatting.GRAY));
-            if (show) {
+            if (this.show) {
                 mutableText.append(Text.literal("_").formatted(Formatting.GRAY));
             }
-            track += tickDelta;
-            if (track >= 8) {
-                track = 0;
-                show = !show;
+			this.track += tickDelta;
+            if (this.track >= 8) {
+				this.track = 0;
+				this.show = !this.show;
             }
         }
 
-        if (mouseX > 0 && mouseX <= maxWidth) {
+        if (mouseX > 0 && mouseX <= this.maxWidth) {
             if (this.editing != this.getIndex(mouseY) - 2) {
 
-                final MutableText textAt = getTextAt(texts, mouseY);
+                final MutableText textAt = this.getTextAt(texts, mouseY);
 
                 if (textAt != null) {
                     textAt.formatted(Formatting.UNDERLINE);

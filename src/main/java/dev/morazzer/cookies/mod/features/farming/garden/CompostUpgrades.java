@@ -10,7 +10,7 @@ import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.maths.RomanNumerals;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;

@@ -8,8 +8,8 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.morazzer.cookies.mod.utils.Constants;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -91,8 +91,8 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
      */
     @Override
     public Identifier parse(@NotNull StringReader reader) throws CommandSyntaxException {
-        Identifier identifier = fromCommandInput(reader);
-        if (!identifierCollection.contains(identifier)) {
+        Identifier identifier = this.fromCommandInput(reader);
+        if (!this.identifierCollection.contains(identifier)) {
             throw IDENTIFIER_NOT_FOUND.create(identifier);
         }
 
@@ -115,7 +115,7 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
         }
         String string = reader.getString().substring(i, reader.getCursor());
         try {
-            String[] split = split(string);
+            String[] split = this.split(string);
             return Identifier.of(split[0], split[1]);
         } catch (InvalidIdentifierException invalidIdentifierException) {
             reader.setCursor(i);
@@ -132,7 +132,7 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
     @NotNull
     @Contract(pure = true)
     protected String[] split(@NotNull String id) {
-        String[] strings = new String[] {this.namespace, pathPrefix + id};
+        String[] strings = new String[] {this.namespace, this.pathPrefix + id};
         int i = id.indexOf(':');
         if (i >= 0) {
             strings[1] = id.substring(i + 1);
@@ -161,12 +161,12 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
         @NotNull SuggestionsBuilder builder
     ) {
         if (builder.getRemaining().isEmpty()) {
-            identifierCollection.forEach(identifier -> builder.suggest(identifier.toString()));
+			this.identifierCollection.forEach(identifier -> builder.suggest(identifier.toString()));
         } else {
-            identifierCollection.stream().filter(
+			this.identifierCollection.stream().filter(
                     ((Predicate<Identifier>) i -> i.toString().startsWith(builder.getRemaining()))
                         .or(i -> i.getPath().startsWith(builder.getRemaining()))
-                        .or(i -> i.getPath().startsWith(pathPrefix + builder.getRemaining())))
+                        .or(i -> i.getPath().startsWith(this.pathPrefix + builder.getRemaining())))
                 .map(Identifier::toString)
                 .forEach(builder::suggest);
         }

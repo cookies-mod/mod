@@ -8,7 +8,6 @@ import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import java.awt.Color;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,9 +19,8 @@ public class ColorOption extends Option<Color, ColorOption> {
 
     private boolean allowAlpha;
 
-    @SuppressWarnings("MissingJavadoc")
-    public ColorOption(Text name, Text description, Color value) {
-        super(name, description, value);
+    public ColorOption(String key, Color value) {
+        super(key, value);
     }
 
     /**
@@ -37,16 +35,16 @@ public class ColorOption extends Option<Color, ColorOption> {
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitiveNumber(jsonElement, log)) {
+        if (this.expectPrimitiveNumber(jsonElement, log)) {
             return;
         }
         int argb = jsonElement.getAsInt();
-        this.value = new Color(argb, allowAlpha);
+        this.value = new Color(argb, this.allowAlpha);
     }
 
     @Override
     public @NotNull JsonElement write() {
-        return new JsonPrimitive(this.value.getRGB() | this.value.getAlpha() << 24);
+        return new JsonPrimitive(this.value.getRGB());
     }
 
     @Override
@@ -54,4 +52,15 @@ public class ColorOption extends Option<Color, ColorOption> {
         return new ColorEditor(this);
     }
 
+	/**
+	 * Gets the color value of the option, this is a null safe alternative to {@link #getValue()}.
+	 * @return The color value.
+	 */
+	public int getColorValue() {
+		final Color value = this.getValue();
+		if (value == null) {
+			return 0;
+		}
+		return value.getRGB();
+	}
 }

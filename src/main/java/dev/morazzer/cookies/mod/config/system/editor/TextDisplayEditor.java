@@ -35,7 +35,14 @@ public class TextDisplayEditor extends ConfigOptionEditor<Text, TextDisplayOptio
         );
     }
 
-    @Override
+	/**
+	 * @implNote Don't call super, we don't want descriptions on text elements.
+ 	 */
+	@Override
+	public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
+	}
+
+	@Override
     public int getHeight() {
         return 18;
     }

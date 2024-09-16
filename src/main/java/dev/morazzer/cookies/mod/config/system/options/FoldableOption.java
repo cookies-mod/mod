@@ -5,7 +5,6 @@ import dev.morazzer.cookies.mod.config.system.Foldable;
 import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.config.system.editor.FoldableEditor;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,9 +15,8 @@ public class FoldableOption extends Option<Object, FoldableOption> {
 
     private final int id;
 
-    @SuppressWarnings("MissingJavadoc")
     public FoldableOption(Foldable foldable, int id) {
-        super(foldable.getName(), Text.empty(), foldable);
+        super("<fixme>", foldable); //TODO
         this.id = id;
     }
 
@@ -36,7 +34,7 @@ public class FoldableOption extends Option<Object, FoldableOption> {
 
     @Override
     public @NotNull ConfigOptionEditor<Object, FoldableOption> getEditor() {
-        return new FoldableEditor(this, id);
+        return new FoldableEditor(this, this.id);
     }
 
     @Override

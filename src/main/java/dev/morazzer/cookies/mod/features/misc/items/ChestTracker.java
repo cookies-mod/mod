@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.misc.items;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.services.ItemSearchService;
-import dev.morazzer.cookies.mod.utils.minecraft.LocationUtils;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -137,8 +137,8 @@ public class ChestTracker {
     }
 
     private void resetCoords() {
-        lastInteraction = null;
-        doubleChestPosition = null;
+        this.lastInteraction = null;
+        this.doubleChestPosition = null;
     }
 
     private void saveScreen(Screen screen) {
@@ -153,7 +153,7 @@ public class ChestTracker {
             items.add(slot.getStack());
         }
 
-        saveItems(items, this.lastInteraction, this.doubleChestPosition);
+		this.saveItems(items, this.lastInteraction, this.doubleChestPosition);
     }
 
     private void saveItems(List<ItemStack> items, BlockPos first, BlockPos second) {

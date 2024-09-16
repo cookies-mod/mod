@@ -36,20 +36,6 @@ public class EnumCycleOption<T extends Enum<T>> extends Option<T, EnumCycleOptio
     }
 
     /**
-     * Creates an enum dropdown option.
-     *
-     * @param name        The name of the option.
-     * @param description The description of the option.
-     * @param value       The initial value of the option.
-     */
-    @Deprecated(forRemoval = true, since = "1.0.1")
-    public EnumCycleOption(Text name, Text description, T value) {
-        super(name, description, value);
-        this.textSupplier =
-            enumValue -> Text.literal(StringUtils.capitalize(enumValue.name().replace('_', ' ').toLowerCase()));
-    }
-
-    /**
      * Sets a supplier for the text.
      *
      * @param textSupplier The supplier.
@@ -62,7 +48,7 @@ public class EnumCycleOption<T extends Enum<T>> extends Option<T, EnumCycleOptio
 
     @Override
     public void read(@NotNull JsonElement jsonElement) {
-        if (expectPrimitiveString(jsonElement, log)) {
+        if (this.expectPrimitiveString(jsonElement, log)) {
             return;
         }
         //Can't fail under normal circumstances

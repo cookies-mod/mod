@@ -7,7 +7,6 @@ import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.BooleanEditor;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.translations.TranslationKey;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +25,6 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
      */
     public BooleanOption(@NotNull @TranslationKey String translationKey, Boolean value) {
         super(translationKey, value);
-    }
-
-    @SuppressWarnings("MissingJavadoc")
-    public BooleanOption(Text name, Text description, Boolean value) {
-        super(name, description, value);
-    }
-
-    @SuppressWarnings("MissingJavadoc")
-    public BooleanOption(Text name, Boolean value, Text... description) {
-        super(name, value, description);
     }
 
     @Override
@@ -58,7 +47,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
             return;
         }
         this.value = jsonElement.getAsBoolean();
-        this.setValue(value);
+        this.setValue(this.value);
     }
 
     @Override
