@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation(project.libs.fabric.loom)
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r")
     //implementation(project.libs.quilt.parsers.json)
     //implementation(project.libs.yumi.gradle.licenser)
 
