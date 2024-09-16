@@ -86,8 +86,7 @@ public class CookiesDataComponentTypes {
             DataComponentTypes.CUSTOM_DATA,
             defaultTest(),
             (nbtComponent, key) -> nbtComponent.getNbt().getString(key));
-        //noinspection deprecation
-        UUID = register(
+		UUID = register(
             builder -> builder.codec(Uuids.CODEC),
             "uuid",
             DataComponentTypes.CUSTOM_DATA,

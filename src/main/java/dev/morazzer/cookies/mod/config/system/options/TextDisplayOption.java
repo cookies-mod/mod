@@ -13,27 +13,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Easy way to display text in the config.
  */
+@Getter
 public class TextDisplayOption extends Option<Text, TextDisplayOption> {
 
-    @Getter
     private int color;
-    @Getter
     private int secondColor;
 
     /**
      * Creates a text display.
      *
      * @param translationKey The translation key to use.
-     * @param value          The value to use.
      */
     public TextDisplayOption(@NotNull @TranslationKey String translationKey) {
         super(Text.translatable(translationKey), Text.empty(), Text.empty());
-        this.setColor(0xFFFFFFFF);
-    }
-
-    @SuppressWarnings("MissingJavadoc")
-    public TextDisplayOption(final Text name, final Text description) {
-        super(name, description, Text.empty());
         this.setColor(0xFFFFFFFF);
     }
 

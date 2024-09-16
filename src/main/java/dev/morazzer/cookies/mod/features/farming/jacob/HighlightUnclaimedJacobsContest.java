@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.farming.jacob;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
@@ -34,7 +34,8 @@ public class HighlightUnclaimedJacobsContest {
                 return;
             }
 
-            InventoryContentUpdateEvent.register(((HandledScreen<?>) screen).getScreenHandler(),
+            InventoryContentUpdateEvent.register(
+					handledScreen.getScreenHandler(),
                 HighlightUnclaimedJacobsContest::updateItem);
         });
     }

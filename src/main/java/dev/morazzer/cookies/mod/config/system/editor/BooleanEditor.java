@@ -3,8 +3,6 @@ package dev.morazzer.cookies.mod.config.system.editor;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
 import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.tooltip.WidgetTooltipPositioner;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
@@ -23,11 +21,7 @@ public class BooleanEditor extends ConfigOptionEditor<Boolean, BooleanOption> {
         super(option);
     }
 
-    @Override
-    public void init() {
-    }
-
-    @Override
+	@Override
     public void render(final @NotNull DrawContext drawContext,
                        final int mouseX,
                        final int mouseY,
@@ -62,17 +56,4 @@ public class BooleanEditor extends ConfigOptionEditor<Boolean, BooleanOption> {
         return false;
     }
 
-    @Override
-    public void renderOverlay(final DrawContext drawContext,
-                              final int mouseX,
-                              final int mouseY,
-                              final float tickDelta,
-                              final int optionWidth) {
-        if (mouseX > 2 && mouseX < this.getTextRenderer().getWidth(this.option.getName()) + 2
-            && mouseY > 0 && mouseY < 16) {
-            drawContext.drawTooltip(this.getTextRenderer(), this.option.getDescriptionOrdered(),
-                new WidgetTooltipPositioner(
-                    ScreenRect.empty()), mouseX, mouseY);
-        }
-    }
 }

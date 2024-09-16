@@ -8,9 +8,9 @@ import dev.morazzer.cookies.mod.features.mining.utils.HotmUtils;
  * Utility class to load all mining features.
  */
 @SuppressWarnings("MissingJavadoc")
-public class MiningFeatures {
+public interface MiningFeatures {
 
-    public static void load() {
+    static void load() {
         Loader.load("HotmUtils", HotmUtils::new);
         Loader.load("CommissionCompletionHighlighter", CommissionCompletionHighlighter::new);
         Loader.load("PuzzlerSolver", PuzzlerSolver::new);

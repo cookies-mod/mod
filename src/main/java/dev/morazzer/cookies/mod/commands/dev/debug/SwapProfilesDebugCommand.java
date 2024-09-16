@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.commands.dev.debug;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import java.util.UUID;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.argument.UuidArgumentType;
@@ -18,14 +18,14 @@ import org.jetbrains.annotations.NotNull;
 public class SwapProfilesDebugCommand extends ClientCommand {
     @Override
     public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-        return literal("swap").then(
-            argument("uuid", UuidArgumentType.uuid()).executes(run(this::swapProfile))
+        return super.literal("swap").then(
+				super.argument("uuid", UuidArgumentType.uuid()).executes(super.run(this::swapProfile))
         );
     }
 
     private void swapProfile(CommandContext<FabricClientCommandSource> context) {
         final UUID uuid = context.getArgument("uuid", UUID.class);
         CookiesUtils.sendMessage(Text.literal("Profile ID: " + uuid.toString()), false);
-        sendSuccessMessage("Switched to profile " + uuid);
+		super.sendSuccessMessage("Switched to profile " + uuid);
     }
 }

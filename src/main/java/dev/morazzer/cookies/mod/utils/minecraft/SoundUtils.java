@@ -1,6 +1,6 @@
 package dev.morazzer.cookies.mod.utils.minecraft;
 
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import net.minecraft.sound.SoundEvent;
 
 /**

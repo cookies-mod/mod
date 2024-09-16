@@ -4,6 +4,7 @@
     "InventoryContentUpdateMixin",
     "ItemBackgroundRenderMixin",
     "ScreenMixin",
-    "AbstractSignEditScreenMixin"
+    "AbstractSignEditScreenMixin",
+    "TeamMixin"
   ]
 }

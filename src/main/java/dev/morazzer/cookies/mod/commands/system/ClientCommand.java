@@ -57,21 +57,21 @@ public abstract class ClientCommand implements ClientCommandHelper {
         }
 
         LiteralCommandNode<FabricClientCommandSource> register = dispatcher.register(command);
-        for (String alias : getAliases()) {
-            dispatcher.register(literal(alias)
+        for (String alias : this.getAliases()) {
+            dispatcher.register(this.literal(alias)
                 .executes(command.getCommand())
                 .requires(command.getRequirement())
-                .redirect(register, getRedirectModifier(alias)));
+                .redirect(register, this.getRedirectModifier(alias)));
 
             if (alias.startsWith("cookie")) {
                 alias = alias.substring(6);
             }
 
             String namespace = String.format("%s:%s", identifier.getNamespace(), alias);
-            dispatcher.register(literal(namespace)
+            dispatcher.register(this.literal(namespace)
                 .executes(command.getCommand())
                 .requires(command.getRequirement())
-                .redirect(register, getRedirectModifier(namespace)));
+                .redirect(register, this.getRedirectModifier(namespace)));
         }
 
         String name = register.getName();
@@ -80,10 +80,10 @@ public abstract class ClientCommand implements ClientCommandHelper {
         }
         String namespace = String.format("%s:%s", identifier.getNamespace(), name);
 
-        dispatcher.register(literal(namespace)
+        dispatcher.register(this.literal(namespace)
             .executes(command.getCommand())
             .requires(command.getRequirement())
-            .redirect(register, getRedirectModifier(namespace)));
+            .redirect(register, this.getRedirectModifier(namespace)));
     }
 
     /**

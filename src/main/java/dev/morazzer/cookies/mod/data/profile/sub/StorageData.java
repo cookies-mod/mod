@@ -2,7 +2,6 @@ package dev.morazzer.cookies.mod.data.profile.sub;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
@@ -106,7 +105,7 @@ public class StorageData implements JsonSerializable {
 
         @Override
         public String asString() {
-            return name();
+            return this.name();
         }
     }
 
@@ -116,8 +115,6 @@ public class StorageData implements JsonSerializable {
             itemStack.remove(DataComponentTypes.ENCHANTMENTS);
             if (itemStack.isEmpty()) {
                 return new StorageItem(location, page, slot, VOID_ITEM);
-            } else if (itemStack.isOf(Items.DEBUG_STICK)) {
-                return new StorageItem(location, page, slot, ItemStack.EMPTY);
             } else {
                 return new StorageItem(location, page, slot, itemStack);
             }
@@ -125,13 +122,16 @@ public class StorageData implements JsonSerializable {
 
         @Override
         public ItemStack itemStack() {
-            if (itemStack.isOf(Items.DEBUG_STICK)) {
+            if (this.itemStack.isOf(Items.DEBUG_STICK)) {
                 return ItemStack.EMPTY;
             }
-            return itemStack;
+            return this.itemStack;
         }
 
         public ItemStack getActualItemStack() {
+            if (this.itemStack.isEmpty()) {
+                return VOID_ITEM;
+            }
             return this.itemStack;
         }
     }

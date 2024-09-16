@@ -22,12 +22,6 @@ public class ButtonOption extends Option<Runnable, ButtonOption> {
         this.buttonText = Text.translatable(buttonText);
     }
 
-    @SuppressWarnings("MissingJavadoc")
-    public ButtonOption(Text name, Text description, Runnable value, Text buttonText) {
-        super(name, description, value);
-        this.buttonText = buttonText;
-    }
-
     @Override
     @Contract("_->fail")
     public void read(@NotNull JsonElement jsonElement) {

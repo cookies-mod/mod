@@ -1,6 +1,5 @@
 package dev.morazzer.cookies.mod.utils.mixins;
 
-import dev.morazzer.cookies.mod.utils.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import net.minecraft.client.network.PingMeasurer;
 import net.minecraft.network.packet.s2c.query.PingResultS2CPacket;

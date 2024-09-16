@@ -13,12 +13,13 @@ import org.jetbrains.annotations.NotNull;
 public class DevCommand extends ClientCommand {
     @Override
     public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-        final LiteralArgumentBuilder<FabricClientCommandSource> dev = literal("dev");
+        final LiteralArgumentBuilder<FabricClientCommandSource> dev = super.literal("dev");
 
         ClientCommand[] clientCommands = new ClientCommand[] {
             new DebugSubCommand(),
             new ToolsSubCommand(),
-            new ExtraLoggingCommand()
+            new ExtraLoggingCommand(),
+			new ModifyDungeonRoom()
         };
 
         for (ClientCommand clientCommand : clientCommands) {

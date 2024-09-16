@@ -10,8 +10,8 @@ import dev.morazzer.cookies.mod.features.farming.jacob.HighlightUnclaimedJacobsC
  * Utility class to load all farming related features.
  */
 @SuppressWarnings("MissingJavadoc")
-public class FarmingFeatures {
-    public static void load() {
+public interface FarmingFeatures {
+	static void load() {
         Loader.load("HighlightUnclaimedJacobContest", HighlightUnclaimedJacobsContest::load);
         Loader.load("ShowSpeedOnRancherBoots", RancherBootsNumbers::new);
         Loader.load("RancherBootsOverlay", RancherBootsOverlay::new);

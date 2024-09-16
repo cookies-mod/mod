@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.misc.render;
 
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
-import dev.morazzer.cookies.mod.utils.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;

@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.events;
 
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -52,24 +53,17 @@ public class InventoryEvents {
         if (!(screen instanceof HandledScreen<?> handledScreen)) {
             return;
         }
-        inventoryEvent.open((HandledScreen<?>) screen);
+        inventoryEvent.open(handledScreen);
     }
 
     private static InventoryEvent registerInternal(
         String name, Predicate<HandledScreen<?>> shouldInstrument, InventoryEvent inventoryEvent) {
-        boolean regex = name.startsWith("cookies-regex:");
-        final String finalName;
-        if (regex) {
-            finalName = name.substring(14);
-        } else {
-            finalName = name;
-        }
         return screen -> {
             if (screen.getTitle() == null) {
                 return;
             }
             String literalName = screen.getTitle().getString();
-            if ((!regex || !literalName.matches(finalName)) && !literalName.equalsIgnoreCase(finalName)) {
+            if (!CookiesUtils.match(literalName, name)) {
                 return;
             }
 

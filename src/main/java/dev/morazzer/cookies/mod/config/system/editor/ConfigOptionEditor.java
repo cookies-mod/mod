@@ -9,6 +9,9 @@ import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.ScreenRect;
+import net.minecraft.client.gui.tooltip.WidgetTooltipPositioner;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -173,7 +176,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @return Whether there is a dragged element.
      */
     public boolean isDragging() {
-        return isDragging;
+        return this.isDragging;
     }
 
     /**
@@ -182,7 +185,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @param dragging If there is something being dragged.
      */
     public void setDragging(boolean dragging) {
-        isDragging = dragging;
+        this.isDragging = dragging;
     }
 
     /**
@@ -245,6 +248,12 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
         float tickDelta,
         int optionWidth
     ) {
+		if (mouseX > 2 && mouseX < this.getTextRenderer().getWidth(this.option.getName()) + 2
+			&& mouseY > 0 && mouseY < 16) {
+			drawContext.drawTooltip(this.getTextRenderer(), this.option.getDescriptionOrdered(),
+					new WidgetTooltipPositioner(
+							ScreenRect.empty()), mouseX, mouseY);
+		}
     }
 
     /**

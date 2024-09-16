@@ -9,9 +9,9 @@ import dev.morazzer.cookies.mod.features.misc.utils.UtilsFeatures;
  * Utility class to load all miscellaneous features.
  */
 @SuppressWarnings("MissingJavadoc")
-public class MiscFeatures {
+public interface MiscFeatures {
 
-    public static void load() {
+	static void load() {
         Loader.load("ItemFeatures", ItemFeatures::load);
         Loader.load("UtilityFeatures", UtilsFeatures::load);
         Loader.load("PingDisplay", PingDisplay::load);

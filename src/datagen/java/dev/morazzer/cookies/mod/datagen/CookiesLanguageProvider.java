@@ -24,8 +24,8 @@ public abstract class CookiesLanguageProvider extends FabricLanguageProvider imp
     public interface CookiesTranslationBuilder extends FabricLanguageProvider.TranslationBuilder {
 
         default void addConfig(String key, String name, String tooltip) {
-            add(key + TranslationKeys.NAME_SUFFIX, name);
-            add(key + TranslationKeys.TOOLTIP_SUFFIX, tooltip);
+            this.add(key + TranslationKeys.NAME_SUFFIX, name);
+            this.add(key + TranslationKeys.TOOLTIP_SUFFIX, tooltip);
         }
 
     }
