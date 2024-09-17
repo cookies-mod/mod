@@ -11,8 +11,6 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMap;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
-import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
-import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.PartyUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.TabUtils;
 
@@ -72,9 +70,10 @@ public final class DungeonInstance {
 		this.type = type;
 		this.floor = floor;
 		this.serverId = serverId;
-		if (DevUtils.isDevEnvironment()) {
-			CookiesUtils.sendMessage("Created dungeon instance, %s:%s for server %s".formatted(type, floor, serverId));
-		}
+		DungeonFeatures.sendDebugMessage("Created dungeon instance, %s:%s for server %s".formatted(
+				type,
+				floor,
+				serverId));
 		this.dungeonMap = new DungeonMap(this);
 		this.partyLeader = PartyUtils.getPartyLeader();
 		this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
@@ -109,9 +108,7 @@ public final class DungeonInstance {
 	 */
 	public void unload() {
 		this.send(new DungeonLeavePacket());
-		if (DevUtils.isDevEnvironment()) {
-			CookiesUtils.sendInformation("Unloading %s".formatted(this.serverId));
-		}
+		DungeonFeatures.sendDebugMessage("Unloading %s".formatted(this.serverId));
 		this.mapRenderer = null;
 	}
 
@@ -229,8 +226,7 @@ public final class DungeonInstance {
 				continue;
 			}
 
-			this.send(new DungeonSyncPlayerLocation(
-					dungeonPlayer.getName(),
+			this.send(new DungeonSyncPlayerLocation(dungeonPlayer.getName(),
 					dungeonPlayer.getX(),
 					dungeonPlayer.getY(),
 					dungeonPlayer.getRotation().getTarget()));
@@ -265,8 +261,8 @@ public final class DungeonInstance {
 	 * Called when on room change, this is mainly for debug reasons.
 	 */
 	private void onRoomUpdate() {
-		if (DevUtils.isDevEnvironment() && this.currentRoom != null) {
-			CookiesUtils.sendMessage(this.currentRoom.name());
+		if (this.currentRoom != null) {
+			DungeonFeatures.sendDebugMessage(this.currentRoom.name());
 		}
 	}
 
@@ -462,9 +458,7 @@ public final class DungeonInstance {
 	 */
 	public void setPhase(DungeonPhase phase) {
 		DungeonEvents.DUNGEON_PHASE_CHANGE.invoker().accept(phase);
-		if (DevUtils.isDevEnvironment()) {
-			CookiesUtils.sendInformation("Change phase to " + phase);
-		}
+		DungeonFeatures.sendDebugMessage("Change phase to " + phase);
 		this.phase = phase;
 	}
 
