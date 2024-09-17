@@ -1,6 +1,9 @@
 package dev.morazzer.cookies.mod.events;
 
+import dev.morazzer.cookies.mod.utils.cookies.CookiesEventUtils;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+
+import java.util.function.BiConsumer;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.event.Event;
@@ -11,22 +14,31 @@ import net.minecraft.text.Text;
 /**
  * Event wrapper for chat messages to remove boilerplate code.
  */
-public interface ChatMessageEvent {
+public interface ChatMessageEvents {
 
 	/**
 	 * Event that will trigger on chat messages.
 	 */
-	Event<ChatMessageEvent> EVENT = EventFactory.createArrayBacked(ChatMessageEvent.class, callbacks -> message -> {
-		for (ChatMessageEvent callback : callbacks) {
+	Event<ChatMessageEvents> EVENT = EventFactory.createArrayBacked(ChatMessageEvents.class, callbacks -> message -> {
+		for (ChatMessageEvents callback : callbacks) {
 			callback.onMessage(message);
 		}
 	});
 
 	/**
-	 * Registers the underlying chat message listener.
+	 * Event that is called before chat messages are modified by the fabric api.
+	 */
+	Event<BiConsumer<Text, Boolean>> BEFORE_MODIFY = CookiesEventUtils.biConsumer();
+
+	/**
+	 * Registers the underlying chat message listeners.
 	 */
 	static void register() {
-		ClientReceiveMessageEvents.GAME.register(ChatMessageEvent::game);
+		ClientReceiveMessageEvents.GAME.register(ChatMessageEvents::game);
+		ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+			BEFORE_MODIFY.invoker().accept(message, overlay);
+			return true;
+		});
 	}
 
 	/**
@@ -51,7 +63,7 @@ public interface ChatMessageEvent {
 	 * @param search The search.
 	 * @see CookiesUtils#match(String, String) Here for more information on  the search string
 	 */
-	static void register(final ChatMessageEvent event, final String search) {
+	static void register(final ChatMessageEvents event, final String search) {
 		EVENT.register(message -> {
 			if (CookiesUtils.match(message, search)) {
 				event.onMessage(message);

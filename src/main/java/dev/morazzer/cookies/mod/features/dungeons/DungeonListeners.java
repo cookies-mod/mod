@@ -4,6 +4,7 @@ import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomIdPacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
+import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.events.IslandChangeEvent;
 import dev.morazzer.cookies.mod.events.ScoreboardUpdateEvent;
 import dev.morazzer.cookies.mod.events.WebsocketEvent;
@@ -15,7 +16,6 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.client.MinecraftClient;
@@ -43,7 +43,7 @@ public class DungeonListeners {
 		Packet.onReceive(DungeonUpdateRoomIdPacket.class, DungeonListeners::updateRoomId);
 		Packet.onReceive(DungeonSyncPlayerLocation.class, DungeonListeners::syncPlayerLocation);
 		Packet.onReceive(DungeonUpdateRoomSecrets.class, DungeonListeners::updateRoomSecrets);
-		ClientReceiveMessageEvents.GAME.register(DungeonListeners::receiveGameMessage);
+		ChatMessageEvents.BEFORE_MODIFY.register(DungeonListeners::receiveGameMessage);
 		WebsocketEvent.CONNECT.register(DungeonListeners::connectWebsocket);
 	}
 
