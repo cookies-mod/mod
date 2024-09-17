@@ -7,7 +7,6 @@ import dev.morazzer.cookies.mod.features.dungeons.DungeonPlayer;
 
 import dev.morazzer.cookies.mod.utils.RenderUtils;
 
-import dev.morazzer.cookies.mod.utils.accessors.TextRenderUtils;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 
 import net.minecraft.block.MapColor;
@@ -263,16 +262,6 @@ public class DungeonMapRenderer {
 	 */
 	private void drawRoomCheckmark(DrawContext drawContext, Checkmark checkmark, int locationX, int locationY) {
 		if (checkmark == null || checkmark.getIdentifier() == null) {
-			return;
-		}
-		if (checkmark == Checkmark.UNKNOWN) {
-			drawContext.getMatrices().push();
-			drawContext.getMatrices().translate(locationX + ROOM_SIZE / 2f + 1, locationY + 3, 0);
-			drawContext.getMatrices().scale(2, 2, 0);
-			TextRenderUtils.disableShadows();
-			drawContext.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer, "?", 0, 0, 0xFF000000);
-			TextRenderUtils.enableShadows();
-			drawContext.getMatrices().pop();
 			return;
 		}
 		final Identifier identifier = checkmark.getIdentifier();
