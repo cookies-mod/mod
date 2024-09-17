@@ -18,10 +18,13 @@ import java.util.function.BiConsumer;
 
 import lombok.Getter;
 
+import net.minecraft.util.Identifier;
+
 /**
  * Main entrypoint for all dungeon related functionality, this also is responsible for dungeon session handling.
  */
 public class DungeonFeatures {
+	private static final Identifier SEND_DEBUG_MESSAGES = DevUtils.createIdentifier("dungeons/send_debug_messages");
 	private DungeonInstance currentInstance = null;
 	private final Cache<String, DungeonInstance> cache = CacheBuilder.newBuilder()
 			.maximumSize(10)
@@ -36,9 +39,7 @@ public class DungeonFeatures {
 	 * @param listener The information about the removed instance.
 	 */
 	private void removeInstance(RemovalNotification<String, DungeonInstance> listener) {
-		if (DevUtils.isDevEnvironment()) {
-			CookiesUtils.sendMessage("Destroying dungeon instance for server " + listener.getKey());
-		}
+		sendDebugMessage("Destroying dungeon instance for server " + listener.getKey());
 		Optional.ofNullable(listener.getValue()).ifPresent(DungeonInstance::destroy);
 	}
 
@@ -56,7 +57,7 @@ public class DungeonFeatures {
 		instance = this;
 		ChatMessageEvents.register(
 				this::onDungeonJoin,
-				"cookies-regex:-+\\n(\\[.*?] )?[a-zA-Z0-9_]{1,16} entered (.*?), Floor (.*?)!\n.*");
+				"cookies-regex:-+\\n(\\[.*?] )?[a-zA-Z0-9_]{1,16} entered (.*?), (Floor (.*?)|Entrance)!\n.*");
 		DungeonListeners.initialize();
 	}
 
@@ -69,10 +70,14 @@ public class DungeonFeatures {
 		final String entered = string.split("entered ")[1].split("\n")[0];
 		final String[] split = entered.split(",");
 		final String type = split[0];
-		final String floor = split[1].trim().substring(6).replace("!", "");
-
 		final DungeonType dungeonType = DungeonType.of(type);
-		final int floorLevel = RomanNumerals.romanToArabic(floor);
+		final int floorLevel;
+		if (split[1].contains("Entrance")) {
+			floorLevel = 0;
+		} else {
+			final String floor = split[1].trim().substring(6).replace("!", "");
+			floorLevel = RomanNumerals.romanToArabic(floor);
+		}
 
 		this.awaitDungeonCreation(dungeonType, floorLevel);
 	}
@@ -84,6 +89,7 @@ public class DungeonFeatures {
 	 * @param floorLevel  The floor that was joined.
 	 */
 	private void awaitDungeonCreation(DungeonType dungeonType, int floorLevel) {
+		sendDebugMessage("Awaiting dungeon creation " + dungeonType.name().toLowerCase() + " " + floorLevel);
 		this.dungeonInstanceCreator = new CompletableFuture<>();
 		PartyUtils.request();
 		this.dungeonInstanceCreator.whenComplete(this.createDungeon(dungeonType, floorLevel));
@@ -129,9 +135,7 @@ public class DungeonFeatures {
 		this.exitDungeon();
 		this.setInstance(this.cache.getIfPresent(serverId));
 		if (this.currentInstance != null) {
-			if (DevUtils.isDevEnvironment()) {
-				CookiesUtils.sendMessage("Restored dungeon session " + this.currentInstance.serverId());
-			}
+			sendDebugMessage("Restored dungeon session " + this.currentInstance.serverId());
 		}
 		if (this.currentInstance == null && this.dungeonInstanceCreator != null) {
 			this.dungeonInstanceCreator.complete(serverId);
@@ -145,9 +149,8 @@ public class DungeonFeatures {
 	public void exitDungeon() {
 		if (this.currentInstance != null) {
 			this.currentInstance.unload();
-			if (DevUtils.isDevEnvironment()) {
-				CookiesUtils.sendMessage("Removed dungeon session " + this.currentInstance.serverId());
-			}
+			sendDebugMessage("Removed dungeon session " + this.currentInstance.serverId());
+
 		}
 		this.currentInstance = null;
 	}
@@ -163,5 +166,12 @@ public class DungeonFeatures {
 			return null;
 		}
 		return this.currentInstance;
+	}
+
+	public static void sendDebugMessage(String message) {
+		if (!DevUtils.isEnabled(SEND_DEBUG_MESSAGES)) {
+			return;
+		}
+		CookiesUtils.sendInformation(message);
 	}
 }
