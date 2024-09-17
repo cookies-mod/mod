@@ -205,9 +205,10 @@ public class WebsocketConnection implements WebSocket.Listener {
 	/**
 	 * Disconnects from the backend server without attempting a reconnect.
 	 */
-	private void disconnect() {
+	public void disconnect() {
 		if (this.webSocket != null && !this.webSocket.isOutputClosed()) {
 			this.webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "Disconnected");
+			this.webSocket = null;
 		}
 	}
 }

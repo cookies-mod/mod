@@ -138,6 +138,7 @@ public class ApiManager {
 	private static void disconnectApi() {
 		if (WebsocketConnection.getInstance() != null) {
 			WebsocketConnection.getInstance().cancelSchedule();
+			WebsocketConnection.getInstance().disconnect();
 		}
 		if (!isAuthenticated) {
 			return;
@@ -167,11 +168,11 @@ public class ApiManager {
 		}
 		if (lastAuthenticatedUser != null &&
 			lastAuthenticatedUser.equals(MinecraftClient.getInstance().getSession().getUuidOrNull())) {
-			finishAuth();
+			CookiesMod.getExecutorService().submit(ApiManager::finishAuth);
 			return;
 		}
 		ApiAuthProcess.setup();
-		CookiesMod.getExecutorService().execute(ApiAuthProcess::start);
+		CookiesMod.getExecutorService().submit(ApiAuthProcess::start);
 		ApiAuthProcess.getCurrent().whenComplete(ApiManager::completeAuthentication);
 		if (authTask != null) {
 			authTask.cancel(false);
