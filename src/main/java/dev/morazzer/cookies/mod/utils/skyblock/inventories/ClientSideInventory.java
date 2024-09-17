@@ -30,6 +30,7 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
     private static final Identifier TEXTURE = Identifier.ofVanilla("textures/gui/container/generic_54.png");
     private static final int BACKGROUND_WIDTH = 176;
     protected final InventoryContents inventoryContents;
+	protected boolean drawBackground = true;
     private final int rows;
     private final List<Disabled> disableds = new ArrayList<>();
     private final int backgroundHeight;
@@ -68,7 +69,7 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
         this.inventoryContents = new InventoryContents(this.rows, this);
     }
 
-    public void initPagination(List<ItemStack> items, Position from, Position to, ItemStack first) {
+    public void initPagination(List<ItemStack> items, Position from, Position to, List<ItemStack> first) {
         this.pagination = new Pagination(items, from, to, first);
     }
 
@@ -124,7 +125,7 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
     @Override
     protected void init() {
         super.init();
-        this.x = (this.width - this.BACKGROUND_WIDTH) / 2;
+        this.x = (this.width - BACKGROUND_WIDTH) / 2;
         this.y = (this.height - this.backgroundHeight) / 2;
     }
 
@@ -143,7 +144,9 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderInGameBackground(context);
+		if (this.drawBackground) {
+        	renderInGameBackground(context);
+		}
         int i = (this.width - BACKGROUND_WIDTH) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
         context.drawTexture(TEXTURE, i, j, 0, 0, BACKGROUND_WIDTH, this.rows * 18 + 17);

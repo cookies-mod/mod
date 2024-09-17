@@ -6,11 +6,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -42,10 +47,24 @@ public class StorageData implements JsonSerializable {
      */
     public void saveItems(List<Pair<Integer, ItemStack>> itemStacks, int page, StorageLocation location) {
         this.items.removeAll(this.getItems(page, location));
-        itemStacks.stream().map(pair ->  StorageItem.create(location, page, pair.getLeft(), pair.getRight())).forEach(this.items::add);
+        itemStacks.stream().map(pair -> this.createItem(pair.getRight(), page, pair.getLeft(), location)).forEach(this.items::add);
     }
 
-    /**
+
+	public StorageItem createItem(ItemStack itemStack, int page, int slot, StorageLocation location) {
+		return StorageItem.create(location, page, slot, itemStack);
+	}
+
+	public void saveItem(ItemStack itemStack, int page, int slot, StorageLocation location) {
+		this.removeItem(page, slot, location);
+		this.items.add(this.createItem(itemStack, page, slot, location));
+	}
+
+	public void removeItem(int page, int slot, StorageLocation location) {
+		this.items.remove(this.getItem(page, slot, location));
+	}
+
+	/**
      * Gets the content of a specific page of the storage.
      *
      * @param page     The page to get.
@@ -58,6 +77,14 @@ public class StorageData implements JsonSerializable {
             .filter(item -> item.page() == page)
             .toList();
     }
+
+	public StorageItem getItem(int page, int slot, StorageLocation location) {
+		return this.items.stream()
+				.filter(item -> item.storageLocation() == location)
+				.filter(item -> item.page() == page)
+				.filter(item -> item.slot() == slot)
+				.findFirst().orElse(null);
+	}
 
     /**
      * Gets all items across both ender chest and backpacks.
@@ -96,11 +123,12 @@ public class StorageData implements JsonSerializable {
         this.items.clear();
     }
 
-
+	@Getter@AllArgsConstructor
     public enum StorageLocation implements StringIdentifiable {
-        ENDER_CHEST,
-        BACKPACK;
+        ENDER_CHEST(TranslationKeys.ITEM_SOURCE_ENDERCHEST),
+        BACKPACK(TranslationKeys.ITEM_SOURCE_BACKPACK),;
 
+		private final String translationKey;
         public static final Codec<StorageLocation> CODEC = StringIdentifiable.createCodec(StorageLocation::values);
 
         @Override

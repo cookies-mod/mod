@@ -1,325 +1,510 @@
 package dev.morazzer.cookies.mod.services;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import dev.morazzer.cookies.mod.CookiesMod;
-import dev.morazzer.cookies.mod.data.profile.ProfileData;
-import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
+import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
 import dev.morazzer.cookies.mod.events.ItemStackEvents;
-import dev.morazzer.cookies.mod.render.Renderable;
 import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
+import dev.morazzer.cookies.mod.render.types.Timed;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+
+import dev.morazzer.cookies.mod.utils.items.types.MiscDataComponentTypes;
+
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
-import java.util.ArrayList;
+
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import java.util.function.Predicate;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * The service for easy interaction with the {@link IslandChestStorage}.
  */
 public class ItemSearchService {
 
-    static final List<Renderable> currentlyActive = new CopyOnWriteArrayList<>();
-    static ItemStack currentlySearched;
-    static List<ItemStack> modifiedStacks = new CopyOnWriteArrayList<>();
+	static ScheduledFuture<?> schedule;
+	@Nullable
+	static ItemStack currentlySearched;
+	static List<ItemStack> modifiedStacks = new CopyOnWriteArrayList<>();
 
-    static {
-        ItemStackEvents.EVENT.register(ItemSearchService::modify);
-    }
+	static {
+		ItemStackEvents.EVENT.register(ItemSearchService::modify);
+	}
 
-    /**
-     * Adds a chest to the currently active profile, and ignores it if there is no active profile.
-     *
-     * @param first  The first chest block.
-     * @param second The second chest block (or null).
-     * @param stacks The items in the chest.
-     */
-    public static void add(BlockPos first, BlockPos second, List<ItemStack> stacks) {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
-            return;
-        }
+	/**
+	 * Performs whatever action is associated with the provided parameters.
+	 * @param type The type of action.
+	 * @param data The data related to the action.
+	 * @param item The item which is subject of the action.
+	 */
+	public static void performAction(ItemCompound.CompoundType type, Object data, Item<?> item) {
+		if (!LocationUtils.Island.PRIVATE_ISLAND.isActive() && type == ItemCompound.CompoundType.CHEST_POS) {
+			CookiesUtils.sendFailedMessage(Text.literal("You need to be on your island to highlight chests!"));
+			return;
+		}
+		setActiveStackWithColor(item.itemStack());
+		final RepositoryItem repositoryItem = item.itemStack().get(CookiesDataComponentTypes.REPOSITORY_ITEM);
+		final int color = getColor(repositoryItem);
+		switch (type) {
+			case CHEST_POS -> highlightChests(item, color);
+			case STORAGE_PAGE -> openStorage((StorageItemSource.Context) data);
+			case STORAGE -> sendCommand("storage");
+			case SACKS -> sendCommand("sacks");
+		}
+	}
 
-        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
-        islandStorage.add(first, second, stacks);
-    }
+	/**
+	 * Executes a command as the player.
+	 * @param command The command to execute.
+	 */
+	public static void sendCommand(String command) {
+		Optional.ofNullable(MinecraftClient.getInstance().player)
+				.ifPresent(player -> player.networkHandler.sendCommand(command));
+	}
 
-    /**
-     * Removes a chest from the currently active profile, or ignores it if there is no active profile.
-     *
-     * @param pos The position of the chest borken (either left or right works for double chests)
-     */
-    public static void chestBreak(BlockPos pos) {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
-            return;
-        }
+	/**
+	 * Gets the highlight color for the item.
+	 * @param repositoryItem The item.
+	 * @return The color, or {@link Constants#FAIL_COLOR} if no color was found.
+	 */
+	public static int getColor(RepositoryItem repositoryItem) {
+		final int color;
+		if (repositoryItem != null && repositoryItem.getTier() != null) {
+			final Formatting formatting = repositoryItem.getTier().getFormatting();
+			color = switch (formatting) {
+				case GREEN -> Constants.SUCCESS_COLOR;
+				case WHITE -> 0xFFEBEBEB;
+				default -> Objects.requireNonNullElse(formatting.getColorValue(), Constants.FAIL_COLOR);
+			};
+		} else {
+			color = Constants.FAIL_COLOR;
+		}
+		return 0xFF << 24 | color & 0xFFFFFF;
+	}
 
-        final IslandChestStorage islandStorage = currentProfile.get().getGlobalProfileData().getIslandStorage();
-        islandStorage.remove(pos);
-    }
+	/**
+	 * Performs the actions associated with the compound, if items are from the same source it will perform an item specific action.
+	 * @param itemCompound The item compound.
+	 */
+	public static void performActions(ItemCompound itemCompound) {
+		if (!LocationUtils.Island.PRIVATE_ISLAND.isActive() &&
+			(itemCompound.type() == ItemCompound.CompoundType.MULTIPLE ||
+			 itemCompound.type() == ItemCompound.CompoundType.CHEST)) {
+			if (itemCompound.type() == ItemCompound.CompoundType.CHEST) {
+				CookiesUtils.sendFailedMessage(Text.literal("You need to be on your island to highlight chests!"));
+				return;
+			}
+			final Item<?>[] array = itemCompound.items()
+					.stream()
+					.filter(Predicate.not(item -> item.source() == ItemSources.CHESTS))
+					.toArray(Item[]::new);
+			if (array.length == 0) {
+				return;
+			}
+			itemCompound = new ItemCompound(array[0]);
+			for (int i = 1; i < array.length; i++) {
+				itemCompound.add(array[i]);
+			}
+		}
+		if (itemCompound.type() == ItemCompound.CompoundType.MULTIPLE ||
+			itemCompound.type() == ItemCompound.CompoundType.CHEST) {
 
-    /**
-     * Highlights the chests associated with the provided context for 10s and also displays a title to notify the
-     * user of the highlight.
-     *
-     * @param context The context to highlight.
-     */
-    public static synchronized void highlight(ItemCompound context) {
-        removeActive(currentlyActive, currentlySearched);
-        currentlySearched = context.itemStack();
+			highlightAll(itemCompound);
+			return;
+		}
+		performAction(itemCompound.type(), itemCompound.data(), itemCompound.items().iterator().next());
+	}
 
-        final RepositoryItem data = ItemUtils.getData(context.itemStack(), CookiesDataComponentTypes.REPOSITORY_ITEM);
-        final int color;
-        if (data != null && data.getTier() != null) {
-            final Formatting formatting = data.getTier().getFormatting();
-            switch (formatting) {
-                case GREEN -> color = Constants.SUCCESS_COLOR;
-                case WHITE -> color = 0xFFEBEBEB;
-                default -> color = Objects.requireNonNullElse(formatting.getColorValue(), Constants.SUCCESS_COLOR);
-            }
-        } else {
-            color = Constants.SUCCESS_COLOR;
-        }
-        context.itemStack().set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, 0xFF000000 | color);
+	/**
+	 * Adds an item to the currently modified list.
+	 */
+	public static void add(ItemStack itemStack) {
+		modifiedStacks.add(itemStack);
+	}
 
-        if (LocationUtils.Island.PRIVATE_ISLAND.isActive()) {
-            for (Item<?> item : context.items()) {
-                if (item.source() != ItemSources.CHESTS) {
-                    continue;
-                }
-                final BiBlockPosKey data1 = (BiBlockPosKey) item.data();
-                final BlockHighlight first = new BlockHighlight(data1.first(), color);
-                final BlockHighlight second = data1.second() != null ? new BlockHighlight(data1.second(), color) : null;
+	/**
+	 * Opens the storage at the page of the provided data.
+	 * @param data The data.
+	 */
+	private static void openStorage(StorageItemSource.Context data) {
+		final String command = switch (data.location()) {
+			case BACKPACK -> "bp";
+			case ENDER_CHEST -> "ec";
+		};
+		sendCommand(command + " " + (data.page() + 1));
+	}
 
-                WorldRender.addRenderable(first);
-                if (second != null) {
-                    WorldRender.addRenderable(second);
-                }
+	/**
+	 * Sets the active item stacks and assigns it's background color.
+	 * @param stack The stack to set.
+	 * @return The color.
+	 */
+	public static int setActiveStackWithColor(ItemStack stack) {
+		RepositoryItem repositoryItem = stack.get(CookiesDataComponentTypes.REPOSITORY_ITEM);
+		final int color = getColor(repositoryItem);
+		stack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, color);
+		setActiveStack(stack);
+		return color;
+	}
 
-                currentlyActive.add(first);
-                if (second != null) {
-                    currentlyActive.add(second);
-                }
-            }
-        }
-        final ArrayList<Renderable> copy = new ArrayList<>(currentlyActive);
-        CookiesMod.getExecutorService()
-            .schedule(() -> removeActive(copy, context.itemStack()), 10, TimeUnit.SECONDS);
-        MinecraftClient.getInstance().inGameHud.setTitleTicks(4, 40, 4);
-        MinecraftClient.getInstance().inGameHud.setTitle(context.itemStack().getName());
-        MinecraftClient.getInstance().inGameHud.setSubtitle(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_HIGHLIGHT)
-            .withColor(Constants.MAIN_COLOR));
-    }
+	/**
+	 * Highlights all possible data sources associated with the item compound.
+	 * @param itemCompound The item compound.
+	 */
+	public static void highlightAll(ItemCompound itemCompound) {
+		int color = setActiveStackWithColor(itemCompound.itemStack());
 
-    /**
-     * Removes the active highlight.
-     *
-     * @param renderables All currently active highlights that should be removed.
-     * @param current     The currently active item.
-     */
-    public static void removeActive(List<Renderable> renderables, ItemStack current) {
-        renderables.forEach(WorldRender::removeRenderable);
-        currentlyActive.clear();
-        for (ItemStack modifiedStack : modifiedStacks) {
-            if (isSame(modifiedStack, currentlySearched)) {
-                modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
-            }
-        }
-        if (isSame(current, currentlySearched)) {
-            currentlySearched = null;
-        }
-    }
+		Set<BlockPos> addedHighlight = new HashSet<>();
+		if (LocationUtils.Island.PRIVATE_ISLAND.isActive()) {
+			for (Item<?> item : itemCompound.items()) {
+				if (item.source() != ItemSources.CHESTS) {
+					continue;
+				}
 
-    /**
-     * Whether the two items are the same.
-     * <br>
-     * This will be figured out by the following criteria. <br>
-     * 1. Skyblock ID <br>
-     * 2. Enchants <br>
-     * 3. Attributes <br>
-     * 4. Custom Name <br>
-     * 5. Modifier <br>
-     * <br>
-     * If one is not present on both, that criteria is considered a match. <br>
-     * If on is missing on either but present on the other, it is not considered a match and will return false.
-     *
-     * @param first  The first item stack to check.
-     * @param second The second item stack to check.
-     * @return Whether the two items are (more or less) the same.
-     */
-    public static boolean isSame(ItemStack first, ItemStack second) {
-        if (first == null || second == null) {
-            return false;
-        }
+				final IslandChestStorage.ChestItem data = (IslandChestStorage.ChestItem) item.data();
+				if (!addedHighlight.contains(data.blockPos())) {
+					highlightChest(data.blockPos(), color);
+					addedHighlight.add(data.blockPos());
+				}
+				final Optional<BlockPos> blockPos = data.secondChest();
+				if (blockPos.isPresent()) {
+					if (!addedHighlight.contains(blockPos.get())) {
+						highlightChest(blockPos.get(), color);
+						addedHighlight.add(blockPos.get());
+					}
+				}
+			}
+		}
+	}
 
-        if (first.getItem() == Items.ENCHANTED_BOOK && isSame(first, second, CookiesDataComponentTypes.SKYBLOCK_ID)) {
-            return true;
-        }
+	/**
+	 * Highlights a chest in the world.
+	 * @param item The item to highlight.
+	 * @param color The color the highlight should be in.
+	 */
+	public static void highlightChests(Item<?> item, int color) {
+		if (item.source() != ItemSources.CHESTS) {
+			return;
+		}
 
-        if (!isSame(first, second, CookiesDataComponentTypes.SKYBLOCK_ID)) {
-            return false;
-        }
-        if (!isSame(first, second, CookiesDataComponentTypes.ENCHANTMENTS)) {
-            return false;
-        }
-        if (!isSame(first, second, CookiesDataComponentTypes.ATTRIBUTES)) {
-            return false;
-        }
-        if (!isSame(first, second, DataComponentTypes.CUSTOM_NAME)) {
-            return false;
-        }
-        return isSame(first, second, CookiesDataComponentTypes.MODIFIER);
-    }
+		final IslandChestStorage.ChestItem data = (IslandChestStorage.ChestItem) item.data();
+		highlightChest(data.blockPos(), color);
+		data.secondChest().ifPresent(blockPos -> highlightChest(blockPos, color));
+	}
 
-    private static <T> boolean isSame(ItemStack first, ItemStack second, ComponentType<T> type) {
-        T firstComponent = ItemUtils.getData(first, type);
-        T secondComponent = ItemUtils.getData(second, type);
+	/**
+	 * Highlights a chest at the specified position.
+	 * @param blockPos The position.
+	 * @param color The color to highlight in.
+	 */
+	public static void highlightChest(BlockPos blockPos, int color) {
+		if (blockPos == null) {
+			return;
+		}
 
-        if (firstComponent == null || secondComponent == null) {
-            return firstComponent == null && secondComponent == null;
-        }
+		WorldRender.addRenderable(new Timed(new BlockHighlight(blockPos, color), 10, TimeUnit.SECONDS));
+	}
 
-        if (firstComponent instanceof Map<?, ?> firstMap && secondComponent instanceof Map<?, ?> secondMap) {
-            for (Object firstMapKey : firstMap.keySet()) {
-                if (!secondMap.containsKey(firstMapKey)) {
-                    return false;
-                }
-                if (!Objects.equals(secondMap.get(firstMapKey), firstMap.get(firstMapKey))) {
-                    return false;
-                }
-            }
-        } else if (firstComponent instanceof Text firstText && secondComponent instanceof Text secondText &&
-                   (firstText.getString() == null || !firstText.getString().equalsIgnoreCase(secondText.getString()))) {
-            return false;
-        }
+	/**
+	 * Sets the active item stack and initiates the removal of the highlight.
+	 * @param stack The stack.
+	 */
+	private static void setActiveStack(ItemStack stack) {
+		removeActiveStack();
+		currentlySearched = stack;
+		if (schedule != null) {
+			schedule.cancel(false);
+		}
+		schedule = CookiesMod.getExecutorService().schedule(ItemSearchService::removeActiveStack, 10,
+            TimeUnit.SECONDS);
+	}
 
-        return Objects.deepEquals(firstComponent, secondComponent);
-    }
+	/**
+	 * Removes the currently active stack and clears all highlights from it.
+	 */
+	private static void removeActiveStack() {
+		if (currentlySearched != null) {
+			currentlySearched.remove(MiscDataComponentTypes.ITEM_SEARCH_MATCH_SAME);
+		}
+		currentlySearched = null;
+		for (ItemStack modifiedStack : modifiedStacks) {
+			if (modifiedStack.contains(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED)) {
+				modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+				final Integer remove = modifiedStack.remove(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED);
+				if (remove != null && remove != 0) {
+					modifiedStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, remove);
+				}
+			}
+		}
+		modifiedStacks.clear();
+	}
 
-    private static void modify(ItemStack itemStack) {
-        if (currentlySearched == null) {
-            return;
-        }
+	/**
+	 * Whether the two items are the same.
+	 * <br>
+	 * This will be figured out by the following criteria. <br>
+	 * 1. Skyblock ID <br>
+	 * 2. Enchants <br>
+	 * 3. Attributes <br>
+	 * 4. Custom Name <br>
+	 * 5. Modifier <br>
+	 * <br>
+	 * If one is not present on both, that criteria is considered a match. <br>
+	 * If on is missing on either but present on the other, it is not considered a match and will return false.
+	 *
+	 * @param first  The first item stack to check.
+	 * @param second The second item stack to check.
+	 * @return Whether the two items are (more or less) the same.
+	 */
+	public static boolean isSame(ItemStack first, ItemStack second) {
+		if (first == null || second == null) {
+			return false;
+		}
+		if (first.getItem() != second.getItem()) {
+			return false;
+		}
 
-        if (isSame(itemStack, currentlySearched)) {
-            itemStack.set(
-                CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR,
-                ItemUtils.getData(currentlySearched, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR));
-            modifiedStacks.add(itemStack);
-        }
-    }
+		if (first.getItem() == Items.ENCHANTED_BOOK && isSame(first, second, CookiesDataComponentTypes.SKYBLOCK_ID)) {
+			return true;
+		}
 
-    /**
-     * A data class to store both a {@link BiBlockPosKey} and a {@link List<ItemStack>}.
-     *
-     * @param blockPos The block key for the chest.
-     * @param stacks   The stacks in the chest.
-     */
-    public record IslandItems(BiBlockPosKey blockPos, List<ItemStack> stacks) {}
+		if (!isSame(first, second, CookiesDataComponentTypes.SKYBLOCK_ID)) {
+			return false;
+		}
+		if (!isSame(first, second, CookiesDataComponentTypes.ENCHANTMENTS)) {
+			return false;
+		}
+		if (!isSame(first, second, CookiesDataComponentTypes.ATTRIBUTES)) {
+			return false;
+		}
+		if (!isSame(first, second, DataComponentTypes.CUSTOM_NAME)) {
+			return false;
+		}
+		return isSame(first, second, CookiesDataComponentTypes.MODIFIER);
+	}
 
-    /**
-     * A data class to save two {@link BlockPos}.
-     *
-     * @param first  The first position.
-     * @param second The second position (or null).
-     */
-    public record BiBlockPosKey(BlockPos first, BlockPos second) {
-        /**
-         * A codec for serialization and deserialization of the {@link BiBlockPosKey}.
-         */
-        public static final Codec<BiBlockPosKey> CODEC =
-            Codec.STRING.flatXmap(s -> DataResult.success(new BiBlockPosKey(s)), b -> DataResult.success(b.toString()));
+	private static <T> boolean isSame(ItemStack first, ItemStack second, ComponentType<T> type) {
+		T firstComponent = ItemUtils.getData(first, type);
+		T secondComponent = ItemUtils.getData(second, type);
 
-        /**
-         * Parses the serialized string value to a key.
-         *
-         * @param key The serialized key.
-         */
-        public BiBlockPosKey(String key) {
-            this(BlockPos.fromLong(getFirst(key)), BlockPos.fromLong(getSecond(key)));
-        }
+		if (firstComponent == null || secondComponent == null) {
+			return firstComponent == null && secondComponent == null;
+		}
 
-        /**
-         * Gets the first block pos from the key.
-         *
-         * @param key The key.
-         * @return The block pos (as long).
-         */
-        public static long getFirst(String key) {
-            final String[] split = key.split(";");
-            return Long.parseLong(split[0]);
-        }
+		if (firstComponent instanceof Map<?, ?> firstMap && secondComponent instanceof Map<?, ?> secondMap) {
+			for (Object firstMapKey : firstMap.keySet()) {
+				if (!secondMap.containsKey(firstMapKey)) {
+					return false;
+				}
+				if (!Objects.equals(secondMap.get(firstMapKey), firstMap.get(firstMapKey))) {
+					return false;
+				}
+			}
+		} else if (firstComponent instanceof Text firstText && secondComponent instanceof Text secondText &&
+				   (firstText.getString() == null || !firstText.getString().equalsIgnoreCase(secondText.getString()))) {
+			return false;
+		}
 
-        /**
-         * Gets the second block pos from the key.
-         *
-         * @param key The key.
-         * @return The block pos (as long).
-         */
-        public static long getSecond(String key) {
-            final String[] split = key.split(";");
-            return Long.parseLong(split.length == 2 ? split[1] : "0");
-        }
+		return Objects.deepEquals(firstComponent, secondComponent);
+	}
 
-        @Override
-        public boolean equals(Object other) {
-            if (other instanceof BiBlockPosKey otherBi) {
-                return otherBi.first().asLong() == this.first().asLong() &&
-                       (this.second() == null || otherBi.second().asLong() == this.second().asLong());
-            } else if (other instanceof BlockPos blockPos) {
-                return blockPos.asLong() == this.first().asLong() ||
-                       (this.second() != null && blockPos.asLong() == this.second().asLong());
-            }
-            return false;
-        }
+	/**
+	 * Modifies the provided stack to be highlighted in the same color as the currently searched item.
+	 * @param itemStack The item stack to modify.
+	 */
+	public static void modify(ItemStack itemStack) {
+		if (currentlySearched == null) {
+			return;
+		}
+		if (itemStack.contains(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED)) {
+			add(itemStack);
+			return;
+		}
+		final IsSameResult isSame;
+		if (currentlySearched.get(MiscDataComponentTypes.ITEM_SEARCH_MATCH_SAME) != null) {
+			isSame = matchSame(itemStack, currentlySearched);
+		} else {
+			isSame = IsSameResult.wrapBoolean(isSame(itemStack, currentlySearched));
+		}
 
-        @Override
-        public int hashCode() {
-            if (this.second() == null) {
-                return Long.hashCode(this.first.asLong());
-            }
+		if (isSame != IsSameResult.NO) {
+			final int saveColor;
+			final Integer i = itemStack.get(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+			if (i == null) {
+				saveColor = 0;
+			} else {
+				saveColor = i;
+			}
+			final Integer data = ItemUtils.getData(currentlySearched, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+			if (data == null) {
+				return;
+			}
+			final int color = data & 0xFFFFFF;
+			itemStack.set(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED, saveColor);
+			itemStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR,
+					(isSame == IsSameResult.YES ? 0xFF : 0x66) << 24 | color);
+			modifiedStacks.add(itemStack);
+		}
+	}
 
-            long first = Math.min(this.first().asLong(), this.second().asLong());
-            long second = Math.max(this.second().asLong(), this.first().asLong());
-            int result = Long.hashCode(first);
-            result = 31 * result + Long.hashCode(second);
+	/**
+	 * Appends the item source information and left click text to the tooltip.
+	 * @param type The type of compound.
+	 * @param compoundData The data.
+	 * @param tooltip The tooltip to append to.
+	 */
+	public static void appendMultiTooltip(@Nullable ItemCompound.CompoundType type, Object compoundData, List<Text> tooltip) {
+		switch (type) {
+			case CHEST -> tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST)
+					.formatted(Formatting.YELLOW));
+			case CHEST_POS -> {
+				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_CHEST)
+						.formatted(Formatting.YELLOW));
+				final IslandChestStorage.ChestItem data = (IslandChestStorage.ChestItem) compoundData;
+				tooltip.add(Text.translatable(TranslationKeys.BLOCK_XYZ,
+						data.blockPos().getX(),
+						data.blockPos().getY(),
+						data.blockPos().getZ()).formatted(Formatting.DARK_GRAY));
+			}
+			case SACKS -> tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_SACKS)
+					.formatted(Formatting.YELLOW));
+			case STORAGE -> tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE)
+					.formatted(Formatting.YELLOW));
+			case STORAGE_PAGE -> {
+				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE)
+						.formatted(Formatting.YELLOW));
+				final StorageItemSource.Context data = (StorageItemSource.Context) compoundData;
+				if (data == null) {
+					break;
+				}
+				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_VALUE)
+						.append(Text.literal(": " + (data.page() + 1)))
+						.formatted(Formatting.DARK_GRAY));
+				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_STORAGE)
+						.append(Text.literal(": ").append(Text.translatable(data.location().getTranslationKey())))
+						.formatted(Formatting.DARK_GRAY));
+			}
+			case MULTIPLE -> {
+				if (LocationUtils.Island.PRIVATE_ISLAND.isActive()) {
+					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT)
+							.formatted(Formatting.YELLOW));
+					break;
+				}
+				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS)
+						.formatted(Formatting.YELLOW));
+			}
+			case null, default -> tooltip.add(Text.literal("An error occurred :c " + type).formatted(Formatting.RED));
+		}
+	}
 
-            return result;
-        }
+	/**
+	 * Whether the two items are the same, this will take multiple things into account like UUID, Timestamp, Lore and so on.
+	 * @param itemStack First item.
+	 * @param currentlySearched Second item.
+	 * @return Whether the two are the same.
+	 */
+	private static IsSameResult matchSame(ItemStack itemStack, ItemStack currentlySearched) {
+		final UUID uuid = itemStack.get(CookiesDataComponentTypes.UUID);
+		boolean failedOne = false;
+		if (uuid != null) {
+			if (uuid.equals(currentlySearched.get(CookiesDataComponentTypes.UUID))) {
+				return IsSameResult.YES;
+			}
+			failedOne = true;
+		}
 
-        @Override
-        public String toString() {
-            if (this.second() == null) {
-                return String.valueOf(this.first.asLong());
-            }
+		if (itemStack.get(DataComponentTypes.LORE) != null || currentlySearched.get(DataComponentTypes.LORE) != null) {
+			final List<Text> lines = Optional.ofNullable(itemStack.get(DataComponentTypes.LORE))
+					.map(LoreComponent::lines)
+					.orElse(Collections.emptyList());
+			final List<Text> otherLines = Optional.ofNullable(currentlySearched.get(DataComponentTypes.LORE))
+					.map(LoreComponent::lines)
+					.orElse(Collections.emptyList());
 
-            long first = Math.min(this.first().asLong(), this.second().asLong());
-            long second = Math.max(this.second().asLong(), this.first().asLong());
-            return "%s;%s".formatted(first, second);
-        }
-    }
+			if (lines.size() != otherLines.size()) {
+				failedOne = true;
+			} else {
+				for (int i = 0; i < lines.size(); i++) {
+					final Text line = lines.get(i);
+					final Text otherLine = otherLines.get(i);
+					if (!line.getString().equals(otherLine.getString())) {
+						failedOne = true;
+						break;
+					}
+				}
+			}
+		}
 
+
+		if (itemStack.get(CookiesDataComponentTypes.TIMESTAMP) != null ||
+			currentlySearched.get(CookiesDataComponentTypes.TIMESTAMP) != null) {
+			long timestamp = Optional.ofNullable(itemStack.get(CookiesDataComponentTypes.TIMESTAMP))
+					.map(Instant::toEpochMilli)
+					.orElse(-1L);
+			long otherTimestamp = Optional.ofNullable(currentlySearched.get(CookiesDataComponentTypes.TIMESTAMP))
+					.map(Instant::toEpochMilli)
+					.orElse(-1L);
+
+			if (timestamp != otherTimestamp) {
+				failedOne = true;
+			}
+		}
+
+		if (itemStack.getCount() != currentlySearched.getCount()) {
+			failedOne = true;
+		}
+
+		if (isSame(itemStack, currentlySearched)) {
+			if (failedOne) {
+				return IsSameResult.ALMOST;
+			}
+			return IsSameResult.YES;
+		}
+		return IsSameResult.NO;
+	}
+
+	/**
+	 * Result used to distinguish between three states of matching.
+	 */
+	enum IsSameResult {
+		YES,
+		ALMOST,
+		NO;
+
+		public static IsSameResult wrapBoolean(boolean equals) {
+			return equals ? YES : NO;
+		}
+	}
 }

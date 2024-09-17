@@ -6,6 +6,8 @@ import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,4 +50,15 @@ public class SackItemSource implements ItemSource<Object> {
     public ItemSources getType() {
         return ItemSources.SACKS;
     }
+
+	@Override
+	public void remove(Item<?> item) {
+		final Optional<ProfileData> optionalProfileData = ProfileStorage.getCurrentProfile();
+		if (optionalProfileData.isEmpty()) {
+			return;
+		}
+
+		final ProfileData profileData = optionalProfileData.get();
+		profileData.getSackTracker().set(item.itemStack().get(CookiesDataComponentTypes.REPOSITORY_ITEM), 0);
+	}
 }

@@ -38,6 +38,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_INVENTORY, "Inventory");
 		translationBuilder.add(ITEM_SOURCE_SACK, "Sack");
 		translationBuilder.add(ITEM_SOURCE_STORAGE, "Storage");
+		translationBuilder.add(ITEM_SOURCE_ENDERCHEST, "Enderchest");
+		translationBuilder.add(ITEM_SOURCE_BACKPACK, "Backpack");
 
 		this.addItemStats(translationBuilder);
 		this.addMisc(translationBuilder);
@@ -60,45 +62,35 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_DUNGEON, "Dungeon Config", "Various settings related to dungeons");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_USE_BACKEND,
+		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
 				"Relay to backend",
 				"Whether information should be exchanged with the backend or not");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
 				"Show player names",
 				"Shows the names of the players on the map.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_OVER_TEXT,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_OVER_TEXT,
 				"Player over room",
 				"Renders the player name over the dungeon room text.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
 				"Keep wither doors",
 				"Prevents wither doors from changing to normal ones.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
 				"Show secrets",
 				"Shows information about the secrets in rooms.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
 				"Show puzzle name",
 				"Shows the puzzle name (if known).");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
 				"Show status color",
 				"Shows the current room status as color.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
 				"Map background",
 				"Renders a monochrome background behind the map.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
 				"Background color",
 				"The color to use for the map background");
 	}
@@ -142,6 +134,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(RANCHER_BOOTS_RESET_TO_DEFAULT, "Reset to default");
 		translationBuilder.add(RANCHER_BOOTS_FARMING_SPEEDS, "Farming Speeds");
 
+		translationBuilder.add(BLOCK_XYZ, "(%s, %s, %s)");
 		translationBuilder.add(PAGE, "Page");
 		translationBuilder.add(PAGE_WITH_NUMBER, "Page %s");
 		translationBuilder.add(PAGE_NEXT, "Next Page");
@@ -173,7 +166,18 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 	private void addItemSearchScreen(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.add(SCREEN_ITEM_SEARCH, "Item Search");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_HIGHLIGHT, "Highlighting Chests");
-		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT, "Left-click to highlight all chests!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_OVERVIEW, "Right-click to show overview!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_OVERVIEW_TITLE, "(%s/%s) Item Pages");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_REMOVE_FROM_CACHE, "Right-click to remove from cache!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT, "Left-click to highlight all items and chests!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS, "Left-click to highlight all items!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST, "Left-click to highlight all chests!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_CHEST, "Left-click to highlight chest!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_SACKS, "Left-click to open sacks!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE, "Left-click to open and highlight storage!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE, "Left-click to open storage page!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_VALUE, "Page");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_STORAGE, "Type");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_TOTAL, "Total");
 	}
 
@@ -278,13 +282,11 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DEV_DATA_REPO_BRANCH, "Data repo branch", "The branch of the data repo.");
 		translationBuilder.addConfig(CONFIG_DEV_BACKEND_RECONNECT, "Press button to ", "Reconnect to the backend.");
 		translationBuilder.add(CONFIG_DEV_BACKEND_RECONNECT_VALUE, "Reconnect");
-		translationBuilder.addConfig(
-				CONFIG_DEV_BACKEND_CONNECT,
+		translationBuilder.addConfig(CONFIG_DEV_BACKEND_CONNECT,
 				"Connect to backend",
 				"Whether the mod should connect to the backend or not.");
 		translationBuilder.addConfig(CONFIG_DEV_BACKEND_SERVER, "Server Url", "Used to set the backend server url.");
-		translationBuilder.addConfig(
-				CONFIG_DEV_BACKEND_VERSION_SUFFIX,
+		translationBuilder.addConfig(CONFIG_DEV_BACKEND_VERSION_SUFFIX,
 				"Use version scheme",
 				"Appends the current api version to the url.");
 		translationBuilder.add(CONFIG_DEV_BACKEND, "Backend");
@@ -309,8 +311,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_FARMING_SHOW_COMPOST_PRICE_BREAKDOWN,
 				"Compost upgrade price",
 				"Shows the amount of items required to max an upgrade.");
-		translationBuilder.addConfig(CONFIG_FARMING_COMPOST_SORT_ORDER, "Item sort", "How the items should be sorted" +
-                                                                                     ".");
+		translationBuilder.addConfig(
+				CONFIG_FARMING_COMPOST_SORT_ORDER,
+				"Item sort",
+				"How the items should be sorted" + ".");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_ASCENDING, "Ascending");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING, "Descending");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_UNSORTED, "Unsorted");
@@ -332,8 +336,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER,
 				"Craft Helper",
 				"Shows the items required to craft something and your progress in the inventory.");
-		translationBuilder.addConfig(
-				CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS,
+		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS,
 				"Craft Helper Location",
 				"Edits the location of the craft helper.");
 		translationBuilder.add(CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS_BUTTON, "Edit");

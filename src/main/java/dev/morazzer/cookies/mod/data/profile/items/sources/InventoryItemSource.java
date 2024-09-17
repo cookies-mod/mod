@@ -22,6 +22,9 @@ public class InventoryItemSource implements ItemSource<Integer> {
     @Override
     public Collection<Item<?>> getAllItems() {
         Set<Item<?>> items = new HashSet<>();
+		if (MinecraftClient.getInstance().player == null) {
+			return items;
+		}
         final PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
         for (int i = 0; i < inventory.size() - 1; i++) {
             final ItemStack stack = inventory.getStack(i);
@@ -34,4 +37,9 @@ public class InventoryItemSource implements ItemSource<Integer> {
     public ItemSources getType() {
         return ItemSources.INVENTORY;
     }
+
+	@Override
+	public void remove(Item<?> item) {
+		// won't work on inventory
+	}
 }
