@@ -3,7 +3,7 @@ package dev.morazzer.cookies.mod.features.dungeons;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
-import dev.morazzer.cookies.mod.events.ChatMessageEvent;
+import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
@@ -54,7 +54,7 @@ public class DungeonFeatures {
 			throw new IllegalStateException("DungeonFeatures has already been initialized");
 		}
 		instance = this;
-		ChatMessageEvent.register(
+		ChatMessageEvents.register(
 				this::onDungeonJoin,
 				"cookies-regex:-+\\n(\\[.*?] )?[a-zA-Z0-9_]{1,16} entered (.*?), Floor (.*?)!\n.*");
 		DungeonListeners.initialize();

@@ -14,7 +14,7 @@ public interface EventLoader {
 
     static void load() {
         ClientReceiveMessageEvents.GAME.register(ChatListener::lookForProfileIdMessage);
-        ChatMessageEvent.register();
+        ChatMessageEvents.register();
 		LocationUtils.register();
 		PartyUtils.register();
     }
