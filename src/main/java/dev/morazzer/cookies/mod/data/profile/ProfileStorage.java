@@ -76,7 +76,7 @@ public class ProfileStorage {
     }
 
     private static void loadCurrentProfile() {
-        loadCurrentProfile(false);
+		CookiesMod.getExecutorService().execute(() -> loadCurrentProfile(false));
     }
 
     /**
