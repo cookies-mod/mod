@@ -65,7 +65,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(
 				CONFIG_DUNGEON_USE_FEATURES,
 				"Enabled dungeon features",
-				"Enables or disables all dungeon features, this will not work for ongoing runs.");
+				"Enables or disables all dungeon features. This will not work for ongoing runs.");
 		translationBuilder.addConfig(
 				CONFIG_DUNGEON_USE_BACKEND,
 				"Relay to backend",
@@ -74,7 +74,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(
 				CONFIG_DUNGEON_RENDER_MAP,
 				"Enable map",
-				"Enables or disables the map rendering, this will not disable the underlying features.");
+				"Enables or disables the map rendering. This will not disable the underlying features.");
 		translationBuilder.addConfig(
 				CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
