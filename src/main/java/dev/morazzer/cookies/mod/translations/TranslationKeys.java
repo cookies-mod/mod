@@ -19,6 +19,8 @@ public interface TranslationKeys {
 	String LEFT_CLICK_TO_SET = MOD + ".right_click_to_set";
 	String LEFT_CLICK_TO_VIEW = MOD + ".left_click_to_view";
 
+	String BLOCK_XYZ = MOD + ".block_xyz";
+
 	String PAGE = MOD + ".page";
 	String PAGE_WITH_NUMBER = PAGE + ".with_number";
 	String PAGE_PREVIOUS = PAGE + ".previous";
@@ -112,7 +114,18 @@ public interface TranslationKeys {
 	//<editor-fold desc="Item Search (Screen)">
 	String SCREEN_ITEM_SEARCH = MOD + SCREEN_PART + ".item_search";
 	String SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT = SCREEN_ITEM_SEARCH + ".click_to_highlight";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".no_chests";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".all_chest";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_CHEST = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".chest";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_SACKS = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".open_chests";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".open_storage";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE = SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT + ".open_storage_page";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_VALUE =SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE + ".page";
+	String SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_STORAGE =SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE + ".storage";
 	String SCREEN_ITEM_SEARCH_HIGHLIGHT = SCREEN_ITEM_SEARCH + ".highlight";
+	String SCREEN_ITEM_SEARCH_OVERVIEW = SCREEN_ITEM_SEARCH + ".overview";
+	String SCREEN_ITEM_SEARCH_OVERVIEW_TITLE = SCREEN_ITEM_SEARCH_OVERVIEW + ".title";
+	String SCREEN_ITEM_SEARCH_REMOVE_FROM_CACHE = SCREEN_ITEM_SEARCH + ".remove_from_cache";
 	String SCREEN_ITEM_SEARCH_TOTAL = SCREEN_ITEM_SEARCH + ".total";
 	//</editor-fold>
 
@@ -132,6 +145,8 @@ public interface TranslationKeys {
 	String ITEM_SOURCE_INVENTORY = ITEM_SOURCE + ".inventory";
 	String ITEM_SOURCE_SACK = ITEM_SOURCE + ".sack";
 	String ITEM_SOURCE_STORAGE = ITEM_SOURCE + ".storage";
+	String ITEM_SOURCE_ENDERCHEST = ITEM_SOURCE + ".enderchest";
+	String ITEM_SOURCE_BACKPACK = ITEM_SOURCE + ".backpack";
 	//</editor-fold>
 
 	//<editor-fold desc="Config">

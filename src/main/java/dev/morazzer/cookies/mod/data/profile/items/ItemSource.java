@@ -19,4 +19,6 @@ public interface ItemSource<T> {
      * @return The type.
      */
     ItemSources getType();
+
+	void remove(Item<?> item);
 }

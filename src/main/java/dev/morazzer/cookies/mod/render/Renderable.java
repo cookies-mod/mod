@@ -22,9 +22,23 @@ public interface Renderable {
         return true;
     }
 
+	/**
+	 * @return Whether this requires the entity outline shader to be enabled or not.
+	 */
+	default boolean requiresEntityOutlineShader() {
+		return false;
+	}
+
     /**
      * Called right after the renderable has been removed from the global render context.
      */
     default void remove() {}
 
+	/**
+	 * Whether the renderable should be removed, this may be used for self removing renderables.
+	 * @return If it should be removed.
+	 */
+	default boolean shouldRemove() {
+		return false;
+	}
 }
