@@ -46,6 +46,9 @@ public class DungeonMapRenderer {
 		if (this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance()) {
 			return;
 		}
+		if (!DungeonConfig.getInstance().renderMap.getValue()) {
+			return;
+		}
 		if (this.dungeonMap.getTopLeftPixel() == null) {
 			return;
 		}

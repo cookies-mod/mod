@@ -62,35 +62,53 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_DUNGEON, "Dungeon Config", "Various settings related to dungeons");
-		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_USE_FEATURES,
+				"Enabled dungeon features",
+				"Enables or disables all dungeon features, this will not work for ongoing runs.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_USE_BACKEND,
 				"Relay to backend",
 				"Whether information should be exchanged with the backend or not");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_MAP,
+				"Enable map",
+				"Enables or disables the map rendering, this will not disable the underlying features.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
 				"Show player names",
 				"Shows the names of the players on the map.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_OVER_TEXT,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_OVER_TEXT,
 				"Player over room",
 				"Renders the player name over the dungeon room text.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
 				"Keep wither doors",
 				"Prevents wither doors from changing to normal ones.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
 				"Show secrets",
 				"Shows information about the secrets in rooms.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
 				"Show puzzle name",
 				"Shows the puzzle name (if known).");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
 				"Show status color",
 				"Shows the current room status as color.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
 				"Map background",
 				"Renders a monochrome background behind the map.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
 				"Background color",
 				"The color to use for the map background");
 	}

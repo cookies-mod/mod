@@ -289,9 +289,11 @@ public interface TranslationKeys {
 	//<editor-fold desc="Config/Dungeon">
 	String CONFIG_DUNGEON = CONFIG + ".dungeon";
 
+	String CONFIG_DUNGEON_USE_FEATURES = CONFIG_DUNGEON + ".use_features";
 	String CONFIG_DUNGEON_USE_BACKEND = CONFIG_DUNGEON + ".use_backend";
 
 	String CONFIG_DUNGEON_RENDER = CONFIG_DUNGEON + ".render";
+	String CONFIG_DUNGEON_RENDER_MAP = CONFIG_DUNGEON_RENDER + ".map";
 	String CONFIG_DUNGEON_SHOW_PLAYER_SKULLS = CONFIG_DUNGEON_RENDER + ".show_player_skulls";
 	String CONFIG_DUNGEON_SHOW_PLAYER_NAMES = CONFIG_DUNGEON_RENDER + ".show_player_names";
 	String CONFIG_DUNGEON_RENDER_OVER_TEXT = CONFIG_DUNGEON_RENDER + ".over_text";

@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.dungeons;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
@@ -67,6 +68,9 @@ public class DungeonFeatures {
 	 * @param string The chat message.
 	 */
 	private void onDungeonJoin(String string) {
+		if (!DungeonConfig.getInstance().useDungeonFeatures.getValue()) {
+			return;
+		}
 		final String entered = string.split("entered ")[1].split("\n")[0];
 		final String[] split = entered.split(",");
 		final String type = split[0];

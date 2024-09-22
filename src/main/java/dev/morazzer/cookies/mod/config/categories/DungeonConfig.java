@@ -30,9 +30,11 @@ public class DungeonConfig extends Category {
 				.build(), CONFIG_DUNGEON);
 	}
 
+	public BooleanOption useDungeonFeatures = new BooleanOption(CONFIG_DUNGEON_USE_FEATURES, true);
 	public BooleanOption relayToBackend = new BooleanOption(CONFIG_DUNGEON_USE_BACKEND, true);
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
+	public BooleanOption renderMap = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP, true);
 	public BooleanOption showPlayerSkulls = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS, true);
 	public BooleanOption showPlayerNames = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_NAMES, true);
 	public BooleanOption renderOverRoomText = new BooleanOption(CONFIG_DUNGEON_RENDER_OVER_TEXT, true);
