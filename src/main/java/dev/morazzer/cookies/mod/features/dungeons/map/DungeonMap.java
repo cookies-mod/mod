@@ -667,6 +667,9 @@ public class DungeonMap {
 	 * @param dungeonRoom The room to set at the given position.
 	 */
 	private void setRoom(int x, int y, @NotNull DungeonRoom dungeonRoom) {
+		if (x < 0 || y < 0 || x >= this.roomMap.length || y >= this.roomMap.length) {
+			return;
+		}
 		final DungeonPosition dungeonPosition = new DungeonPosition(0, 0, this.instance);
 		dungeonPosition.setRoomMapX(x);
 		dungeonPosition.setRoomMapY(y);

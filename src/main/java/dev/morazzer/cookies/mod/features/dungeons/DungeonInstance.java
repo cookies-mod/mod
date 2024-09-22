@@ -36,6 +36,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 /**
  * This class represents a dungeon instance, this contains a set of immutable information about the dungeon. <br>
@@ -414,7 +415,11 @@ public final class DungeonInstance {
 	 * @param index The index to get.
 	 * @return Gets the player at the specified index, the client will always be the last index.
 	 */
+	@Nullable
 	public DungeonPlayer getPlayer(final int index) {
+		if (this.players.length <= index) {
+			return null;
+		}
 		return this.players[index];
 	}
 
@@ -422,6 +427,7 @@ public final class DungeonInstance {
 	 * @param name The name to get.
 	 * @return The dungeon player associated with the provided name.
 	 */
+	@Nullable
 	public DungeonPlayer getPlayer(final String name) {
 		final int playerIndex = this.getPlayerIndex(name);
 		if (playerIndex == -1) {
@@ -436,7 +442,7 @@ public final class DungeonInstance {
 	 * @param start The current index.
 	 * @return The new index.
 	 */
-	public int applyOffset(int start) {
+	public int applyOffset(@Range(from = 0, to = 4) int start) {
 		if (start < this.players.length - 1 && this.players[start] != null && this.players[start].isSkip()) {
 			return this.applyOffset(start + 1);
 		}
