@@ -4,6 +4,8 @@ import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomIdPacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.events.IslandChangeEvent;
 import dev.morazzer.cookies.mod.events.ScoreboardUpdateEvent;
@@ -13,6 +15,7 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 
+import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -127,7 +130,19 @@ public class DungeonListeners {
 		if (mapRenderer == null) {
 			return;
 		}
+		if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen) {
+			return;
+		}
+		final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;
+		final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
+		drawContext.getMatrices().push();
+		drawContext.getMatrices()
+				.translate(position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
+						position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
+						1000);
+		drawContext.getMatrices().scale(position.scale, position.scale, 1);
 		mapRenderer.render(drawContext);
+		drawContext.getMatrices().pop();
 	}
 
 	private static void clientTick(MinecraftClient minecraftClient) {

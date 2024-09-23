@@ -14,6 +14,8 @@ import java.util.Set;
 
 import lombok.Getter;
 
+import lombok.Setter;
+
 import net.minecraft.block.MapColor;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
@@ -40,18 +42,22 @@ public class DungeonMap {
 	private final DungeonInstance instance;
 	private int mapId = -1;
 	@Getter
+	@Setter
 	private Vector2i topLeftPixel;
 	private int roomSize;
 	private int halfRoomSize;
 	private int doorRoomSize;
 	private final DungeonRoom[][] roomMap;
 	@Getter
+	@Setter
 	private int roomsInX = 0;
 	@Getter
+	@Setter
 	private int roomsInY = 0;
 	@Getter
 	private final Set<DungeonDoor> doors = new HashSet<>();
 	@Getter
+	@Setter
 	private Vector2i bottomRightPixel;
 	private Vector2i lastMapPosition;
 	private long lastRoomSwitch;
@@ -429,7 +435,7 @@ public class DungeonMap {
 	 * @param doorType The type of the door.
 	 */
 	@Contract
-	private void addDoor(int x, int y, boolean left, @NotNull DungeonDoor.Type doorType) {
+	public void addDoor(int x, int y, boolean left, @NotNull DungeonDoor.Type doorType) {
 		for (DungeonDoor door : this.doors) {
 			if (door.x() == x && door.y() == y && door.left() == left) {
 				DungeonDoor.Type existing = door.type();
@@ -666,7 +672,7 @@ public class DungeonMap {
 	 * @param y           The y to set the room at.
 	 * @param dungeonRoom The room to set at the given position.
 	 */
-	private void setRoom(int x, int y, @NotNull DungeonRoom dungeonRoom) {
+	public void setRoom(int x, int y, @NotNull DungeonRoom dungeonRoom) {
 		if (x < 0 || y < 0 || x >= this.roomMap.length || y >= this.roomMap.length) {
 			return;
 		}

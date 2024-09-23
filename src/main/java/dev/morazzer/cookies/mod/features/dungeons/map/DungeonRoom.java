@@ -407,7 +407,7 @@ public class DungeonRoom {
 	 *
 	 * @param checkmark The checkmark.
 	 */
-	void setCheckmark(Checkmark checkmark) {
+	public void setCheckmark(Checkmark checkmark) {
 		if (checkmark == Checkmark.UNKNOWN && this.roomType != RoomType.UNKNOWN) {
 			return;
 		}

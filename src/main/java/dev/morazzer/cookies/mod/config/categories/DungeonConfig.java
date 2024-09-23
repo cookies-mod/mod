@@ -1,12 +1,16 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
+import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Row;
 
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+import dev.morazzer.cookies.mod.config.system.options.ButtonOption;
 import dev.morazzer.cookies.mod.config.system.options.ColorOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
+import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 
 import java.awt.Color;
@@ -34,6 +38,8 @@ public class DungeonConfig extends Category {
 	public BooleanOption relayToBackend = new BooleanOption(CONFIG_DUNGEON_USE_BACKEND, true);
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
+	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION, this::reposition, CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT);
+	public HudElementPosition hudElementPosition = new HudElementPosition(0, 0, 1);
 	public BooleanOption renderMap = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP, true);
 	public BooleanOption showPlayerSkulls = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS, true);
 	public BooleanOption showPlayerNames = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_NAMES, true);
@@ -41,11 +47,17 @@ public class DungeonConfig extends Category {
 	public BooleanOption keepWitherDoor = new BooleanOption(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR, true);
 	public BooleanOption showSecrets = new BooleanOption(CONFIG_DUNGEON_RENDER_SHOW_SECRETS, true);
 	public BooleanOption showPuzzleName = new BooleanOption(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME, true);
-	public BooleanOption showRoomStatusAsTextColor = new BooleanOption(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR, true);
+	public BooleanOption showRoomStatusAsTextColor =
+			new BooleanOption(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR, true);
 	public BooleanOption showMapBackground = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND, true);
-	public ColorOption mapBackgroundColor = new ColorOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR, Color.DARK_GRAY)
-			.withAlpha()
-			.onlyIf(this.showMapBackground);
+	public ColorOption mapBackgroundColor =
+			new ColorOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR, Color.DARK_GRAY).withAlpha()
+					.onlyIf(this.showMapBackground);
+
+
+	private void reposition() {
+		CookiesMod.openScreen(new DungeonMapRepositionScreen());
+	}
 
 	@Override
 	public Row getRow() {

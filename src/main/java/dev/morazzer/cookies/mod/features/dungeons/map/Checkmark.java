@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
  */
 @Getter
 @RequiredArgsConstructor
-enum Checkmark {
+public enum Checkmark {
 
 	UNKNOWN(119, texture("question_mark.png")),
 	OPENED(-1, null),

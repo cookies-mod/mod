@@ -76,6 +76,14 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Enable map",
 				"Enables or disables the map rendering. This will not disable the underlying features.");
 		translationBuilder.addConfig(
+				CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
+				"To reposition",
+				"Allows you to scale and move the dungeon map.");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT, "Click Here!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
+		translationBuilder.addConfig(
 				CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");

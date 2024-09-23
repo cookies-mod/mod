@@ -66,18 +66,25 @@ public final class DungeonInstance {
 	private DungeonRoomData lastRoom;
 	private final UUID partyLeader;
 	private final boolean relayToBackend;
+	@Getter
+	private final boolean debugInstance;
 
 	public DungeonInstance(DungeonType type, int floor, String serverId) {
 		this.type = type;
 		this.floor = floor;
 		this.serverId = serverId;
-		DungeonFeatures.sendDebugMessage("Created dungeon instance, %s:%s for server %s".formatted(
-				type,
+		DungeonFeatures.sendDebugMessage("Created dungeon instance, %s:%s for server %s".formatted(type,
 				floor,
 				serverId));
 		this.dungeonMap = new DungeonMap(this);
 		this.partyLeader = PartyUtils.getPartyLeader();
-		this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
+		if (serverId.contains("cookies_internal_")) {
+			this.relayToBackend = false;
+			this.debugInstance = true;
+		} else {
+			this.debugInstance = false;
+			this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
+		}
 	}
 
 	/**
