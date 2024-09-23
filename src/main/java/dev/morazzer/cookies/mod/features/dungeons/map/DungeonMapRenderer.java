@@ -28,8 +28,8 @@ public class DungeonMapRenderer {
 	private final DungeonInstance dungeonInstance;
 	private final DungeonMap dungeonMap;
 	private static final int ROOM_SIZE = 20;
-	private static final int HALLWAY_SIZE = 4;
-	private static final int TOTAL_SIZE = ROOM_SIZE + HALLWAY_SIZE;
+	public static final int HALLWAY_SIZE = 4;
+	public static final int TOTAL_SIZE = ROOM_SIZE + HALLWAY_SIZE;
 	private static final int DOOR_SIZE = 6;
 
 	public DungeonMapRenderer(DungeonInstance dungeonInstance) {
@@ -43,7 +43,7 @@ public class DungeonMapRenderer {
 	 * @param drawContext The draw context
 	 */
 	public void render(DrawContext drawContext) {
-		if (this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance()) {
+		if (!this.dungeonInstance.isDebugInstance() && this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance()) {
 			return;
 		}
 		if (!DungeonConfig.getInstance().renderMap.getValue()) {
