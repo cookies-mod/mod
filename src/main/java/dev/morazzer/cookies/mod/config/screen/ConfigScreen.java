@@ -305,7 +305,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
                 continue;
             }
 
-            final int finalX = this.optionsLeft - 1;
+            final int finalX = this.optionsLeft - 1 + (((this.optionsRight - this.optionsLeft) - optionWidth) / 2);
             final int finalY = this.optionsTop + optionsY + 1;
 
             if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1)) &&
@@ -330,7 +330,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
             }
 
             final int foldableDepth = this.activeFoldables.get(processedOption.getFoldable());
-            return this.optionDefaultWidth - (2 * this.innerPadding) * (foldableDepth + 1);
+            return this.optionDefaultWidth - (this.innerPadding * (foldableDepth + 1));
         }
 
         return this.optionDefaultWidth;
