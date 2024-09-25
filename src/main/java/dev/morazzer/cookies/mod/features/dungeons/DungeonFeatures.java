@@ -6,6 +6,11 @@ import com.google.common.cache.RemovalNotification;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
+import dev.morazzer.cookies.mod.features.dungeons.solver.terminals.ChangeAllToSameColorTerminalSolver;
+import dev.morazzer.cookies.mod.features.dungeons.solver.terminals.CorrectAllThePanesTerminalSolver;
+import dev.morazzer.cookies.mod.features.dungeons.solver.terminals.SelectAllColorsTerminalSolver;
+import dev.morazzer.cookies.mod.features.dungeons.solver.terminals.ClickInOrderTerminalSolver;
+import dev.morazzer.cookies.mod.features.dungeons.solver.terminals.StartsWithTerminalSolver;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.maths.RomanNumerals;
@@ -60,6 +65,11 @@ public class DungeonFeatures {
 				this::onDungeonJoin,
 				"cookies-regex:-+\\n(\\[.*?] )?[a-zA-Z0-9_]{1,16} entered (.*?), (Floor (.*?)|Entrance)!\n.*");
 		DungeonListeners.initialize();
+		new SelectAllColorsTerminalSolver();
+		new StartsWithTerminalSolver();
+		new ClickInOrderTerminalSolver();
+		new CorrectAllThePanesTerminalSolver();
+		new ChangeAllToSameColorTerminalSolver();
 	}
 
 	/**

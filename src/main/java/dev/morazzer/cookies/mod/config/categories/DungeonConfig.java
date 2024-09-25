@@ -4,6 +4,7 @@ import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.config.system.Category;
+import dev.morazzer.cookies.mod.config.system.Foldable;
 import dev.morazzer.cookies.mod.config.system.Row;
 
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
@@ -37,8 +38,12 @@ public class DungeonConfig extends Category {
 	public BooleanOption useDungeonFeatures = new BooleanOption(CONFIG_DUNGEON_USE_FEATURES, true);
 	public BooleanOption relayToBackend = new BooleanOption(CONFIG_DUNGEON_USE_BACKEND, true);
 
+	public TerminalFoldable terminalFoldable = new TerminalFoldable();
+
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
-	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION, this::reposition, CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT);
+	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
+			this::reposition,
+			CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT);
 	public HudElementPosition hudElementPosition = new HudElementPosition(0, 0, 1);
 	public BooleanOption renderMap = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP, true);
 	public BooleanOption showPlayerSkulls = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS, true);
@@ -68,4 +73,23 @@ public class DungeonConfig extends Category {
 	public int getColumn() {
 		return 2;
 	}
+
+	public static class TerminalFoldable extends Foldable {
+
+		public BooleanOption preventMissclicks = new BooleanOption(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS, true);
+		public BooleanOption changeAllToSameColorTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME, true);
+		public BooleanOption clickInOrderTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_CLICK_IN_ORDER, true);
+		public BooleanOption correctAllThePanesTerminal =
+				new BooleanOption(CONFIG_DUNGEON_TERMINAL_CORRECT_ALL_PANES, true);
+		public BooleanOption selectAllColorsTerminal =
+				new BooleanOption(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS, true);
+		public BooleanOption startsWithTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
+				true);
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_TERMINAL;
+		}
+	}
+
 }

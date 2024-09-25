@@ -154,9 +154,15 @@ public class CookiesUtils {
 	 * @return Whether the two strings match.
 	 */
 	public static boolean match(String string, String search) {
+		String withoutPrefix;
+		if (search.startsWith("cookies-")) {
+			withoutPrefix = search.substring(search.indexOf(':') + 1);
+		} else {
+			withoutPrefix = search;
+		}
 		return switch (search.split(":")[0]) {
-			case "cookies-regex" -> string.matches(search.split(":")[1]);
-			case "cookies-equals" -> string.equals(search.split(":")[1]);
+			case "cookies-regex" -> string.matches(withoutPrefix);
+			case "cookies-equals" -> string.equals(withoutPrefix);
 			default -> string.equalsIgnoreCase(search);
 		};
 	}

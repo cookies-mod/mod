@@ -1,7 +1,6 @@
 package dev.morazzer.cookies.mod.config.system;
 
 import com.google.gson.JsonElement;
-import net.minecraft.text.Text;
 
 /**
  * A foldable that will be displayed as such in the config.
@@ -13,7 +12,7 @@ public abstract class Foldable implements SaveLoadHelper {
      *
      * @return The name.
      */
-    public abstract Text getName();
+    public abstract String getName();
 
     /**
      * @see SaveLoadHelper#load_(JsonElement)

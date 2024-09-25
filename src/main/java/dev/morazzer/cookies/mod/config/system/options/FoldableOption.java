@@ -16,7 +16,7 @@ public class FoldableOption extends Option<Object, FoldableOption> {
     private final int id;
 
     public FoldableOption(Foldable foldable, int id) {
-        super("<fixme>", foldable); //TODO
+        super(foldable.getName(), foldable);
         this.id = id;
     }
 

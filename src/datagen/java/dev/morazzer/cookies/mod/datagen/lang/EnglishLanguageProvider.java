@@ -62,63 +62,70 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_DUNGEON, "Dungeon Config", "Various settings related to dungeons");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_USE_FEATURES,
+		translationBuilder.addConfig(CONFIG_DUNGEON_USE_FEATURES,
 				"Enabled dungeon features",
 				"Enables or disables all dungeon features. This will not work for ongoing runs.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_USE_BACKEND,
+		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
 				"Relay to backend",
 				"Whether information should be exchanged with the backend or not");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP,
 				"Enable map",
 				"Enables or disables the map rendering. This will not disable the underlying features.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
 				"To reposition",
 				"Allows you to scale and move the dungeon map.");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT, "Click Here!");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
 				"Show player names",
 				"Shows the names of the players on the map.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_OVER_TEXT,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_OVER_TEXT,
 				"Player over room",
 				"Renders the player name over the dungeon room text.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
 				"Keep wither doors",
 				"Prevents wither doors from changing to normal ones.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
 				"Show secrets",
 				"Shows information about the secrets in rooms.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
 				"Show puzzle name",
 				"Shows the puzzle name (if known).");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
 				"Show status color",
 				"Shows the current room status as color.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
 				"Map background",
 				"Renders a monochrome background behind the map.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
 				"Background color",
 				"The color to use for the map background");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
+				"Prevent Missclicks",
+				"Prevents you from clicking wrong options.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME,
+				"Change all to same",
+				"Enables the change all to same solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CLICK_IN_ORDER,
+				"Click in order",
+				"Enables the click in order solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CORRECT_ALL_PANES,
+				"Correct all panes",
+				"Enables the correct all panes solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS,
+				"Select all colors",
+				"Enables the select all colors solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
+				"Starts with",
+				"Enables the starts with solver.");
 	}
 
 	private void addPlotPriceBreakdown(CookiesTranslationBuilder translationBuilder) {
@@ -337,8 +344,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_FARMING_SHOW_COMPOST_PRICE_BREAKDOWN,
 				"Compost upgrade price",
 				"Shows the amount of items required to max an upgrade.");
-		translationBuilder.addConfig(
-				CONFIG_FARMING_COMPOST_SORT_ORDER,
+		translationBuilder.addConfig(CONFIG_FARMING_COMPOST_SORT_ORDER,
 				"Item sort",
 				"How the items should be sorted" + ".");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_ASCENDING, "Ascending");
