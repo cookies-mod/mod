@@ -93,8 +93,8 @@ public final class DungeonInstance {
 	public int getRoomAmount() {
 		return switch (this.floor) {
 			case 0 -> 4;
-			case 1, 2, 3, 4 -> 5;
-			case 5, 6, 7 -> 6;
+			case 1, 2, 3 -> 5;
+			case 4, 5, 6, 7 -> 6;
 			default -> -1;
 		};
 	}
