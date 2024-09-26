@@ -46,7 +46,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 			this.items.clear();
 		}
 		this.items.add(stack);
-		if (stack.getName().getString().toLowerCase(Locale.ROOT).startsWith(letter)) {
+		if (stack.getName().getString().trim().toLowerCase(Locale.ROOT).startsWith(letter)) {
 			if (stack.hasGlint()) {
 				stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, this.doneItem);
 			} else {
