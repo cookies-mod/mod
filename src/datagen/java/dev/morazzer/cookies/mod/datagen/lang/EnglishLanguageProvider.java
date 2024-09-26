@@ -106,9 +106,19 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
 				"Background color",
 				"The color to use for the map background");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP,
+				"Spirit Leap",
+				"Settings related to the spirit leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, "Enable UI", "Enables the spirit leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP,
+				"Show dungeon map",
+				"Shows the dungeon map in the ui.‚");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
 		translationBuilder.addConfig(
-				CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
+				CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
+				"Background color",
+				"Changes the background color of the ui widgets.‚");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
 				"Prevent Missclicks",
 				"Prevents you from clicking wrong options.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME,

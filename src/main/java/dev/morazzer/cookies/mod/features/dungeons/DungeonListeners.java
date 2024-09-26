@@ -130,16 +130,17 @@ public class DungeonListeners {
 		if (mapRenderer == null) {
 			return;
 		}
-		if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen) {
+		if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen ||
+			SpiritLeapOverlay.isOpen) {
 			return;
 		}
 		final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;
 		final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
 		drawContext.getMatrices().push();
-		drawContext.getMatrices()
-				.translate(position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
-						position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
-						1000);
+		drawContext.getMatrices().translate(
+				position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
+				position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
+				1000);
 		drawContext.getMatrices().scale(position.scale, position.scale, 1);
 		mapRenderer.render(drawContext);
 		drawContext.getMatrices().pop();

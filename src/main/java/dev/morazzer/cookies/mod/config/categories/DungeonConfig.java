@@ -39,6 +39,7 @@ public class DungeonConfig extends Category {
 	public BooleanOption relayToBackend = new BooleanOption(CONFIG_DUNGEON_USE_BACKEND, true);
 
 	public TerminalFoldable terminalFoldable = new TerminalFoldable();
+	public SpiritLeapFoldable spiritLeapFoldable = new SpiritLeapFoldable();
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
@@ -74,17 +75,31 @@ public class DungeonConfig extends Category {
 		return 2;
 	}
 
+	public static class SpiritLeapFoldable extends Foldable {
+
+		public BooleanOption spiritLeapUi = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, true);
+		public BooleanOption showMap = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP, true);
+		public ColorOption colorOption =
+				new ColorOption(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR, new Color(0xFFDCD3FF, true)).withAlpha();
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_SPIRIT_LEAP;
+		}
+	}
+
 	public static class TerminalFoldable extends Foldable {
 
 		public BooleanOption preventMissclicks = new BooleanOption(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS, true);
-		public BooleanOption changeAllToSameColorTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME, true);
+		public BooleanOption changeAllToSameColorTerminal =
+				new BooleanOption(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME, true);
 		public BooleanOption clickInOrderTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_CLICK_IN_ORDER, true);
 		public BooleanOption correctAllThePanesTerminal =
 				new BooleanOption(CONFIG_DUNGEON_TERMINAL_CORRECT_ALL_PANES, true);
 		public BooleanOption selectAllColorsTerminal =
 				new BooleanOption(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS, true);
 		public BooleanOption startsWithTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
-				true);
+            true);
 
 		@Override
 		public String getName() {
