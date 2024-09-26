@@ -5,7 +5,6 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
-import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.LongLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -14,26 +13,16 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
-import java.util.concurrent.atomic.AtomicReference;
-import org.checkerframework.checker.units.qual.A;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.gradle.api.tasks.options.Option;
+
 import java.io.IOException;
 import javax.inject.Inject;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 public abstract class CreateBuildInfo extends DefaultTask {
-    private boolean isStable;
-
     @Inject
     public CreateBuildInfo() {
         this.setGroup("generation");
@@ -41,21 +30,11 @@ public abstract class CreateBuildInfo extends DefaultTask {
         this.getProject().getTasks().getByName("build").dependsOn(this);
     }
 
-    @Option(option = "isStable", description = "Indicates that this is a release instead of a beta release")
-    public void setIsStable(boolean flag) {
-        this.isStable = flag;
-    }
-
-    @Input
-    public boolean isStable() {
-        return isStable;
-    }
-
     @TaskAction
     public void createBuildInfo() {
         CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
             .setStorage(
-                getOutputDir().get().getAsFile().toPath()
+					this.getOutputDir().get().getAsFile().toPath()
                     .resolve("dev/morazzer/mods/cookies/generated/BuildInfo.java")
             );
         compilationUnit.addImport("net.fabricmc.loader.api.SemanticVersion");
@@ -65,7 +44,7 @@ public abstract class CreateBuildInfo extends DefaultTask {
 
         final BlockStmt blockStmt = new BlockStmt();
         blockStmt.addStatement(new ReturnStmt(new MethodCallExpr("SemanticVersion.parse",
-            new StringLiteralExpr(getProject().getVersion().toString()))));
+            new StringLiteralExpr(this.getProject().getVersion().toString()))));
 
         buildInfoClass.addFieldWithInitializer(
             "SemanticVersion",
@@ -85,7 +64,7 @@ public abstract class CreateBuildInfo extends DefaultTask {
             Modifier.Keyword.STATIC
         );
 
-        try (Git git = GitUtils.findGit(getProject())) {
+        try (Git git = GitUtils.findGit(this.getProject())) {
             buildInfoClass.addFieldWithInitializer(
                 "String",
                 "branch",
@@ -98,7 +77,7 @@ public abstract class CreateBuildInfo extends DefaultTask {
             buildInfoClass.addFieldWithInitializer(
                 new PrimitiveType(PrimitiveType.Primitive.BOOLEAN),
                 "isStable",
-                new BooleanLiteralExpr(isStable),
+                new BooleanLiteralExpr(!this.getProject().getVersion().toString().contains("-")),
                 Modifier.Keyword.FINAL,
                 Modifier.Keyword.PUBLIC,
                 Modifier.Keyword.STATIC
