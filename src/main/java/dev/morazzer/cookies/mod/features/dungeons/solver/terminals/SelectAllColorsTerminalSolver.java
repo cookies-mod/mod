@@ -72,7 +72,8 @@ public class SelectAllColorsTerminalSolver extends TerminalSolver {
 	}
 
 	private static String sanitize(String in) {
-		return in.replaceAll("^light gray", "silver")
+		return in.toLowerCase(Locale.ROOT)
+				.replaceAll("^light gray", "silver")
 				.replaceAll("^cocoa", "brown")
 				.replaceAll("^rose", "red")
 				.replaceAll("^wool", "white")
@@ -80,7 +81,6 @@ public class SelectAllColorsTerminalSolver extends TerminalSolver {
 				.replaceAll("^lapis", "blue")
 				.replaceAll("^dandelion", "yellow")
 				.replaceAll("^ink", "black")
-				.replaceAll("^cactus", "green")
-				.toLowerCase(Locale.ROOT);
+				.replaceAll("^cactus", "green");
 	}
 }
