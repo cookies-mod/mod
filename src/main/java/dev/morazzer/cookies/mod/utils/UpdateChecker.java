@@ -64,7 +64,7 @@ public class UpdateChecker {
             if (BuildInfo.isStable) {
                 version = latestModInfo.get("version");
             } else {
-                version = latestModInfo.get("beta_version");
+                version = latestModInfo.get("version_beta");
             }
             try {
                 final SemanticVersion parse = SemanticVersion.parse(version.getAsString());
