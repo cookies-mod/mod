@@ -70,6 +70,7 @@ public class DungeonFeatures {
 		new ClickInOrderTerminalSolver();
 		new CorrectAllThePanesTerminalSolver();
 		new ChangeAllToSameColorTerminalSolver();
+		SpiritLeapOverlay.init(this);
 	}
 
 	/**

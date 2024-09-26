@@ -36,7 +36,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class DungeonMapRepositionScreen extends CookiesScreen {
 	private final HudElementPosition position;
-	private DungeonMapRenderer renderer;
+	public DungeonMapRenderer renderer;
 	private boolean isDragging;
 	private long lastSizeChange = -1;
 
@@ -155,23 +155,23 @@ public class DungeonMapRepositionScreen extends CookiesScreen {
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		super.renderBackground(context, mouseX, mouseY, delta);
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredTextWithShadow(this.textRenderer,
 				Text.translatable(TranslationKeys.CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1),
 				context.getScaledWindowWidth() / 2,
-				context.getScaledWindowHeight() / 2 - textRenderer.fontHeight,
+				context.getScaledWindowHeight() / 2 - this.textRenderer.fontHeight,
 				0xFFAAAAAA);
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredTextWithShadow(this.textRenderer,
 				Text.translatable(TranslationKeys.CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2),
 				context.getScaledWindowWidth() / 2,
 				context.getScaledWindowHeight() / 2,
 				0xFFAAAAAA);
 
 		if (this.lastSizeChange + 2000 > System.currentTimeMillis()) {
-			context.drawCenteredTextWithShadow(textRenderer,
+			context.drawCenteredTextWithShadow(this.textRenderer,
 					Text.translatable(TranslationKeys.CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3,
 							"%.2f".formatted(this.position.scale)),
 					context.getScaledWindowWidth() / 2,
-					context.getScaledWindowHeight() / 2 + textRenderer.fontHeight,
+					context.getScaledWindowHeight() / 2 + this.textRenderer.fontHeight,
 					0xFFAAAAAA);
 		}
 
@@ -193,7 +193,7 @@ public class DungeonMapRepositionScreen extends CookiesScreen {
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		if (isDragging) {
+		if (this.isDragging) {
 			this.position.x += (float) deltaX / MinecraftClient.getInstance().getWindow().getScaledWidth();
 			this.position.y += (float) deltaY / MinecraftClient.getInstance().getWindow().getScaledHeight();
 		}
