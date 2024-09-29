@@ -23,6 +23,7 @@ import net.minecraft.util.Pair;
 public class StorageTracker {
 
     private static final String LOGGER_KEY = "StorageTracker";
+	private String lastTitle;
 
     @SuppressWarnings("MissingJavadoc")
     public StorageTracker() {
@@ -41,6 +42,7 @@ public class StorageTracker {
             !genericContainerScreen.getTitle().getString().contains("Backpack§r (Slot #")) {
             return;
         }
+		this.lastTitle = genericContainerScreen.getTitle().getString();
         ScreenEvents.remove(screen).register(ExceptionHandler.wrap(this::remove));
     }
 
@@ -69,7 +71,8 @@ public class StorageTracker {
             return;
         }
 
-        final String literalTitle = screen.getTitle().getString();
+        final String literalTitle = this.lastTitle;
+		this.lastTitle = null;
         boolean isEnderChest = literalTitle.startsWith("Ender Chest");
 
         final int page;
