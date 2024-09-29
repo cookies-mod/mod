@@ -79,6 +79,8 @@ public class HotmUtils {
 		if (lines == null || lines.isEmpty()) {
 			return;
 		}
+		final String string = lines.getLast().getString().toLowerCase(Locale.ROOT);
+		boolean unlocked = !string.startsWith("click to unlock") && !string.startsWith("requires");
 
 		final int level = this.getLevel(lines.getFirst());
 		if (level > 0) {
@@ -92,7 +94,7 @@ public class HotmUtils {
 		}
 		final String type = name.getString().toLowerCase(Locale.ROOT).replaceAll(" ", "_").replaceAll("\\W", "");
 		itemStack.set(HotmDataComponentTypes.HOTM_PERK_TYPE, type);
-		this.save(type, level, !disabled);
+		this.save(type, unlocked ? level : 0, !disabled);
 	}
 
 	/**
