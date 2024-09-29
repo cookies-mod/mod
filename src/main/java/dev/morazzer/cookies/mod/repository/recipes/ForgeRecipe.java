@@ -3,10 +3,14 @@ package dev.morazzer.cookies.mod.repository.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.morazzer.cookies.mod.data.profile.ProfileData;
+import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+
 import lombok.Getter;
 
 /**
@@ -28,8 +32,8 @@ public class ForgeRecipe implements Recipe {
      */
     public ForgeRecipe(JsonObject jsonObject) {
         this.type = ForgeRecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase(Locale.ROOT));
-        if (jsonObject.has("time")) {
-            this.duration = jsonObject.get("time").getAsLong();
+        if (jsonObject.has("duration")) {
+            this.duration = jsonObject.get("duration").getAsLong();
         } else {
             this.duration = -1;
         }
@@ -64,6 +68,20 @@ public class ForgeRecipe implements Recipe {
     public Ingredient getOutput() {
         return this.output;
     }
+
+	/**
+	 * @return The time that is required to forge for the current player.
+	 */
+	public long getPlayerDuration() {
+		double playerDuration = this.duration;
+
+		final Optional<ProfileData> optionalProfile = ProfileStorage.getCurrentProfile();
+		if (optionalProfile.isPresent()) {
+			playerDuration *= optionalProfile.get().getHotmData().getQuickForgeMultiplier();
+		}
+
+		return (long) Math.ceil(playerDuration);
+	}
 
     /**
      * The different types of forge actions.

@@ -111,6 +111,8 @@ public class VisitorHelper {
         RepositoryItem repositoryItem,
         int amount,
         int amountOfItem,
+		long lastForgeTime,
+		boolean usedForge,
         boolean childrenFinished,
         int depth) {
         if (depth == 0) {

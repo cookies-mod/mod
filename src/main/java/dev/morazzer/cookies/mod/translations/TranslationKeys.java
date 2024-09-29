@@ -143,6 +143,7 @@ public interface TranslationKeys {
 	String ITEM_SOURCE_ALL = ITEM_SOURCE + ".all";
 	String ITEM_SOURCE_CHEST = ITEM_SOURCE + ".chest";
 	String ITEM_SOURCE_INVENTORY = ITEM_SOURCE + ".inventory";
+	String ITEM_SOURCE_FORGE = ITEM_SOURCE + ".forge";
 	String ITEM_SOURCE_SACK = ITEM_SOURCE + ".sack";
 	String ITEM_SOURCE_STORAGE = ITEM_SOURCE + ".storage";
 	String ITEM_SOURCE_ENDERCHEST = ITEM_SOURCE + ".enderchest";

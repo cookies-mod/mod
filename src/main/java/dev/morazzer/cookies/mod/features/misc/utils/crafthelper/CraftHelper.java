@@ -1,6 +1,5 @@
 package dev.morazzer.cookies.mod.features.misc.utils.crafthelper;
 
-import com.google.common.collect.Lists;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
@@ -11,26 +10,38 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculatio
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
+import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
+
+import dev.morazzer.cookies.mod.utils.minecraft.NonCacheMutableText;
+import dev.morazzer.cookies.mod.utils.minecraft.SupplierTextContent;
+
+import dev.morazzer.cookies.mod.utils.skyblock.ForgeUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import java.util.function.Supplier;
+
 import lombok.Getter;
+
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joml.Vector2ic;
 
@@ -39,416 +50,476 @@ import org.joml.Vector2ic;
  * respective amount of items that are required.
  */
 public class CraftHelper {
-    /**
-     * Logging key for the {@link DevUtils#log(String, Object, Object...)} method.
-     */
-    public static final String LOGGING_KEY = "crafthelper";
-    private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
-    private static final Identifier DEBUG_HITBOX = DevUtils.createIdentifier("craft_helper/hitbox");
-    private CraftHelperLocation location = CraftHelperLocation.RIGHT;
-    @Getter
-    private static CraftHelper instance;
-    private final int buttonWidthHeight = 8;
-    @Getter
-    private RepositoryItem selectedItem;
-    @Getter
-    private RecipeCalculationResult calculation;
-    private int yOffset = 0;
-    private List<OrderedText> tooltip = new ArrayList<>();
-    private int buttonX;
-    private int buttonY;
-    private int width = 0;
-    private int scrolled = 1;
+	/**
+	 * Logging key for the {@link DevUtils#log(String, Object, Object...)} method.
+	 */
+	public static final String LOGGING_KEY = "crafthelper";
+	private static final Identifier DEBUG_INFO = DevUtils.createIdentifier("craft_helper/debug");
+	private static final Identifier DEBUG_HITBOX = DevUtils.createIdentifier("craft_helper/hitbox");
+	private CraftHelperLocation location = CraftHelperLocation.RIGHT;
+	@Getter
+	private static CraftHelper instance;
+	private final int buttonWidthHeight = 8;
+	@Getter
+	private RepositoryItem selectedItem;
+	@Getter
+	private RecipeCalculationResult calculation;
+	private int yOffset = 0;
+	private List<MutableText> tooltip = new ArrayList<>();
+	private int buttonX;
+	private int buttonY;
+	private int width = 0;
+	private int scrolled = 1;
 
-    @SuppressWarnings("MissingJavadoc")
-    public CraftHelper() {
-        instance = this;
-        ConfigManager.getConfig().helpersConfig.craftHelperLocation.withCallback((oldValue, newValue) -> this.location =
-            newValue);
-        ProfileSwapEvent.AFTER_SET_NO_UUID.register(this::profileSwap);
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!(screen instanceof InventoryScreenAccessor)) {
-                return;
-            }
-            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
-                return;
-            }
-            if (!ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
-                return;
-            }
+	@SuppressWarnings("MissingJavadoc")
+	public CraftHelper() {
+		instance = this;
+		ConfigManager.getConfig().helpersConfig.craftHelperLocation.withCallback((oldValue, newValue) -> this.location =
+				newValue);
+		ProfileSwapEvent.AFTER_SET_NO_UUID.register(this::profileSwap);
+		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+			if (!(screen instanceof InventoryScreenAccessor)) {
+				return;
+			}
+			if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+				return;
+			}
+			if (!ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
+				return;
+			}
 
-            this.recalculate();
-            this.location = ConfigManager.getConfig().helpersConfig.craftHelperLocation.getValue();
-            ScreenEvents.afterRender(screen).register(this::afterRender);
-            ScreenMouseEvents.beforeMouseClick(screen).register(this::clicked);
-            ScreenMouseEvents.beforeMouseScroll(screen).register(this::beforeScroll);
-        });
-    }
+			this.recalculate();
+			this.location = ConfigManager.getConfig().helpersConfig.craftHelperLocation.getValue();
+			ScreenEvents.afterRender(screen).register(this::afterRender);
+			ScreenMouseEvents.beforeMouseClick(screen).register(this::clicked);
+			ScreenMouseEvents.beforeMouseScroll(screen).register(this::beforeScroll);
+		});
+	}
 
-    /**
-     * Sets the currently selected item that is displayed and invokes a recalculation.
-     *
-     * @param item The item to use.
-     */
-    public static void setSelectedItem(RepositoryItem item) {
-        if (item == null) {
-            instance.calculation = null;
-            instance.selectedItem = null;
-            ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(null));
-            instance.recalculate();
-            return;
-        }
+	/**
+	 * Sets the currently selected item that is displayed and invokes a recalculation.
+	 *
+	 * @param item The item to use.
+	 */
+	public static void setSelectedItem(RepositoryItem item) {
+		if (item == null) {
+			instance.calculation = null;
+			instance.selectedItem = null;
+			ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(null));
+			instance.recalculate();
+			return;
+		}
 
-        final Optional<Recipe> first = item.getRecipes().stream().findFirst();
-        if (first.isEmpty()) {
-            instance.calculation = null;
-            instance.selectedItem = null;
-            instance.recalculate();
-            return;
-        }
-        instance.selectedItem = item;
-        instance.calculation = RecipeCalculator.calculate(item);
-        ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
-        instance.recalculate();
-        instance.scrolled = 1;
-    }
+		final Optional<Recipe> first = item.getRecipes().stream().findFirst();
+		if (first.isEmpty()) {
+			instance.calculation = null;
+			instance.selectedItem = null;
+			instance.recalculate();
+			return;
+		}
+		instance.selectedItem = item;
+		instance.calculation = RecipeCalculator.calculate(item);
+		ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
+		instance.recalculate();
+		instance.scrolled = 1;
+	}
 
-    @SuppressWarnings("MissingJavadoc")
-    public static boolean append(
-        String prefix,
-        List<MutableText> text,
-        RecipeResult<?> calculationResult,
-        int depth,
-        EvaluationContext parent,
-        StackCountContext stackCountContext,
-        Formatter formatter) {
-        EvaluationContext context = new EvaluationContext(calculationResult, parent);
-        final int amount = getAmount(context, calculationResult.getAmount(), stackCountContext);
-        final int amountThroughParents =
-            getAmountThroughParents(context, calculationResult.getAmount(), stackCountContext);
-        DevUtils.runIf(DEBUG_INFO,
-            () -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(amount,
-                amountThroughParents,
-                calculationResult.getAmount()))));
-        if (amountThroughParents == calculationResult.getAmount()) {
-            DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Parent full, skipping")));
-            return true;
-        }
+	@SuppressWarnings("MissingJavadoc")
+	public static boolean append(
+			String prefix,
+			List<MutableText> text,
+			RecipeResult<?> calculationResult,
+			int depth,
+			EvaluationContext parent,
+			StackCountContext stackCountContext,
+			Formatter formatter) {
+		EvaluationContext context = new EvaluationContext(calculationResult, parent);
+		final int amount = getAmount(context, calculationResult.getAmount(), stackCountContext);
+		final int amountThroughParents =
+				getAmountThroughParents(context, calculationResult.getAmount(), stackCountContext);
+		DevUtils.runIf(DEBUG_INFO,
+				() -> text.add(Text.literal("Amount: %s, through parents: %s, required: %s".formatted(amount,
+						amountThroughParents,
+						calculationResult.getAmount()))));
+		if (amountThroughParents == calculationResult.getAmount()) {
+			DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Parent full, skipping")));
+			return true;
+		}
 
-        if (calculationResult instanceof RecipeCalculationResult subResult) {
-            int index = text.size();
+		if (calculationResult instanceof RecipeCalculationResult subResult) {
+			int index = text.size();
 
-            boolean childrenFinished = true;
-            stackCountContext.integers.push(amount);
-            if (amount == calculationResult.getAmount()) {
-                DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Skipping childs, parent full")));
-            }
-            for (int i = 0; i < subResult.getRequired().size(); i++) {
-                if (amount == calculationResult.getAmount()) {
-                    continue;
-                }
-                RecipeResult<?> recipeResult = subResult.getRequired().get(i);
-                String newPrefix;
-                boolean isLast = i + 1 == subResult.getRequired().size();
-                if (prefix.isEmpty()) {
-                    newPrefix = isLast ? "└ " : "├ ";
-                } else {
-                    newPrefix = prefix.replace("├", "│").replace("└", "  ") + (isLast ? "└ " : "├ ");
-                }
+			boolean childrenFinished = true;
+			stackCountContext.integers.push(amount);
+			if (amount == calculationResult.getAmount()) {
+				DevUtils.runIf(DEBUG_INFO, () -> text.add(Text.literal("Skipping childs, parent full")));
+			}
+			for (int i = 0; i < subResult.getRequired().size(); i++) {
+				if (amount == calculationResult.getAmount()) {
+					continue;
+				}
+				RecipeResult<?> recipeResult = subResult.getRequired().get(i);
+				String newPrefix;
+				boolean isLast = i + 1 == subResult.getRequired().size();
+				if (prefix.isEmpty()) {
+					newPrefix = isLast ? "└ " : "├ ";
+				} else {
+					newPrefix = prefix.replace("├", "│").replace("└", "  ") + (isLast ? "└ " : "├ ");
+				}
 
-                childrenFinished &=
-                    append(newPrefix, text, recipeResult, depth + 1, context, stackCountContext, formatter);
-            }
-            stackCountContext.integers.pop();
+				childrenFinished &=
+						append(newPrefix, text, recipeResult, depth + 1, context, stackCountContext, formatter);
+			}
+			stackCountContext.integers.pop();
 
-            childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
+			childrenFinished = childrenFinished && !subResult.getRequired().isEmpty();
 
-            text.add(index, formatter.format(prefix,
-                calculationResult.getId(),
-                calculationResult.getRepositoryItem(),
-                calculationResult.getAmount() - amountThroughParents,
-                amount - amountThroughParents,
-                childrenFinished,
-                depth));
+			text.add(index, formatter.format(prefix,
+					calculationResult.getId(),
+					calculationResult.getRepositoryItem(),
+					calculationResult.getAmount() - amountThroughParents,
+					amount - amountThroughParents,
+					stackCountContext.getLastTimeStarted(calculationResult.getRepositoryItem()),
+					stackCountContext.usedForge(calculationResult.getRepositoryItem()),
+					childrenFinished,
+					depth));
 
-            return childrenFinished;
-        } else {
-            text.add(formatter.format(prefix,
-                calculationResult.getId(),
-                calculationResult.getRepositoryItem(),
-                calculationResult.getAmount() - amountThroughParents,
-                amount - amountThroughParents,
-                false,
-                depth));
-        }
+			return childrenFinished;
+		} else {
+			text.add(formatter.format(prefix,
+					calculationResult.getId(),
+					calculationResult.getRepositoryItem(),
+					calculationResult.getAmount() - amountThroughParents,
+					amount - amountThroughParents,
+					stackCountContext.getLastTimeStarted(calculationResult.getRepositoryItem()),
+					stackCountContext.usedForge(calculationResult.getRepositoryItem()),
+					false,
+					depth));
+		}
 
-        return amount == calculationResult.getAmount();
-    }
+		return amount == calculationResult.getAmount();
+	}
 
-    private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
-        int amount = 0;
+	private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {
+		int amount = 0;
 
-        if (context.parent() != null) {
-            amount = getAmountThroughParents(context, max, stackCountContext);
-        }
+		if (context.parent() != null) {
+			amount = getAmountThroughParents(context, max, stackCountContext);
+		}
 
-        amount += stackCountContext.take(context.recipeResult().getRepositoryItem(), max - amount);
+		amount += stackCountContext.take(context.recipeResult().getRepositoryItem(), max - amount);
 
-        return Math.min(amount, max);
-    }
+		return Math.min(amount, max);
+	}
 
-    private static int getAmountThroughParents(
-        EvaluationContext context, int max, StackCountContext stackCountContext) {
-        int amount = 0;
-        amount += (stackCountContext.integers.peek() *
-                   (context.recipeResult().getAmount() / context.parent().recipeResult().getAmount()));
-        return Math.min(amount, max);
-    }
+	private static int getAmountThroughParents(
+			EvaluationContext context, int max, StackCountContext stackCountContext) {
+		int amount = 0;
+		amount += (stackCountContext.integers.peek() *
+				   (context.recipeResult().getAmount() / context.parent().recipeResult().getAmount()));
+		return Math.min(amount, max);
+	}
 
-    public static MutableText formatted(
-        String prefix,
-        String id,
-        RepositoryItem repositoryItem,
-        int amount,
-        int amountOfItem,
-        boolean childrenFinished,
-        int depth) {
-        final MutableText literal = Text.empty().append(Text.literal(prefix).formatted(Formatting.DARK_GRAY));
+	public static MutableText formatted(
+			String prefix,
+			String id,
+			RepositoryItem repositoryItem,
+			int amount,
+			int amountOfItem,
+			long lastForgeStarted,
+			boolean usedForge,
+			boolean childrenFinished,
+			int depth) {
+		final MutableText literal = Text.empty().append(Text.literal(prefix).formatted(Formatting.DARK_GRAY));
 
-        final double percentage = (double) amountOfItem / amount;
-        //noinspection DataFlowIssue
-        final int color =
-            ColorUtils.calculateBetween(Formatting.RED.getColorValue(), Formatting.GREEN.getColorValue(), percentage);
+		final double percentage = (double) amountOfItem / amount;
+		//noinspection DataFlowIssue
+		final int color = ColorUtils.calculateBetween(Formatting.RED.getColorValue(),
+				Formatting.GREEN.getColorValue(),
+				percentage);
 
 
-        if (percentage == 1) {
-            if (depth == 0) {
-                literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.GREEN));
-            } else {
-                literal.append(Text.literal(Constants.Emojis.YES).formatted(Formatting.GREEN, Formatting.BOLD));
-            }
-        } else {
-            if (childrenFinished) {
-                if (depth == 0) {
-                    literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.YELLOW));
-                } else {
-                    literal.append(Text.literal(Constants.Emojis.WARNING).formatted(Formatting.YELLOW));
-                }
-            } else {
-                if (depth == 0) {
-                    literal.append(Text.literal(Constants.Emojis.FLAG_EMPTY).formatted(Formatting.RED));
-                } else {
-                    literal.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
-                }
-            }
-        }
+		if (percentage == 1) {
+			if (depth == 0) {
+				literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.GREEN));
+			} else {
+				literal.append(Text.literal(Constants.Emojis.YES).formatted(Formatting.GREEN, Formatting.BOLD));
+			}
+		} else {
+			if (childrenFinished) {
+				if (depth == 0) {
+					literal.append(Text.literal(Constants.Emojis.FLAG_FILLED).formatted(Formatting.YELLOW));
+				} else {
+					literal.append(Text.literal(Constants.Emojis.WARNING).formatted(Formatting.YELLOW));
+				}
+			} else {
+				if (depth == 0) {
+					literal.append(Text.literal(Constants.Emojis.FLAG_EMPTY).formatted(Formatting.RED));
+				} else {
+					literal.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
+				}
+			}
+		}
 
-        literal.append(" ");
-        final String formatted =
-            "%s/%s".formatted(MathUtils.NUMBER_FORMAT.format(amountOfItem), MathUtils.NUMBER_FORMAT.format(amount));
-        literal.append(Text.literal(formatted).withColor(color));
-        literal.append(" ");
-        if (repositoryItem != null) {
-            literal.append(repositoryItem.getFormattedName());
-        } else {
-            literal.append(id);
-        }
+		literal.append(" ");
+		final String formatted =
+				"%s/%s".formatted(MathUtils.NUMBER_FORMAT.format(amountOfItem),
+						MathUtils.NUMBER_FORMAT.format(amount));
+		literal.append(Text.literal(formatted).withColor(color));
+		literal.append(" ");
+		if (repositoryItem != null) {
+			literal.append(repositoryItem.getFormattedName());
+		} else {
+			literal.append(id);
+		}
+		if (lastForgeStarted != -1 && usedForge) {
+			Text forgeTime = TextUtils.literal(" (", Formatting.DARK_GRAY).append(MutableText.of(new SupplierTextContent(CraftHelper.getSupplier(() -> ForgeUtils.getForgeTime(
+					repositoryItem), lastForgeStarted)))).append(")");
+			return new NonCacheMutableText(literal).append(forgeTime);
+		}
 
-        return literal;
-    }
+		return literal;
+	}
 
-    private void beforeScroll(
-        Screen screen, double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
+	/**
+	 *
+	 * @param forgeTime The supplier for the time
+	 * @param lastForgeStartedSeconds The last started forge time in seconds
+	 * @return The formatted time remaining.
+	 */
+	private static Supplier<String> getSupplier(Supplier<Long> forgeTime, long lastForgeStartedSeconds) {
+		return () -> {
+			final long time = forgeTime.get();
+			if (time == -1) {
+				return "unknown";
+			}
+			final long delta = (System.currentTimeMillis() / 1000) - lastForgeStartedSeconds;
+			int remaining = (int) (time - delta);
+			if (remaining <= 0) {
+				return "Done";
+			}
 
-        if (!this.shouldRender(screen)) {
-            return;
-        }
+			StringBuilder stringBuilder = new StringBuilder();
+			int seconds = remaining % 60;
+			int minutesRemaining = remaining / 60;
+			int minutes = minutesRemaining % 60;
+			int hoursRemaining = minutesRemaining/ 60;
+			int hours = hoursRemaining % 24;
+			int daysRemaining = hoursRemaining / 24;
 
-        if (this.tooltip.size() < 30) {
-            return;
-        }
+			if (daysRemaining != 0) {
+				stringBuilder.append(daysRemaining).append("d ");
+			}
+			if (hours != 0) {
+				stringBuilder.append(hours).append("h ");
+			}
+			if (minutes != 0) {
+				stringBuilder.append(minutes).append("m ");
+			}
+			if (seconds != 0) {
+				stringBuilder.append(seconds).append("s");
+			}
 
-        final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
-            screen.height,
-            this.calculateX(screen),
-            this.calculateY(screen),
+			return stringBuilder.toString().trim();
+		};
+	}
+
+	private void beforeScroll(
+			Screen screen, double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
+
+		if (!this.shouldRender(screen)) {
+			return;
+		}
+
+		if (this.tooltip.size() < 30) {
+			return;
+		}
+
+		final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
+				screen.height,
+				this.calculateX(screen),
+				this.calculateY(screen),
 				this.width,
-            0);
-        final int x = position.x();
-        final int y = position.y();
+				0);
+		final int x = position.x();
+		final int y = position.y();
 
-        if (mouseX > x && mouseX < x + this.width && mouseY > y && mouseY < y + 270) {
-            this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
-        }
-    }
+		if (mouseX > x && mouseX < x + this.width && mouseY > y && mouseY < y + 270) {
+			this.scrolled = (int) Math.max(1, Math.min(this.scrolled - verticalScroll, this.tooltip.size() - 29));
+		}
+	}
 
-    private void clicked(Screen screen, double mouseX, double mouseY, int button) {
+	private void clicked(Screen screen, double mouseX, double mouseY, int button) {
 
-        if (!this.shouldRender(screen)) {
-            return;
-        }
+		if (!this.shouldRender(screen)) {
+			return;
+		}
 
-        final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
-            screen.height,
-            this.calculateX(screen),
-            this.calculateY(screen),
-			this.width,
-            0);
+		final Vector2ic position = CraftHelperTooltipPositioner.INSTANCE.getPosition(screen.width,
+				screen.height,
+				this.calculateX(screen),
+				this.calculateY(screen),
+				this.width,
+				0);
 
-        final int x = position.x();
-        final int y = position.y();
-        final int buttonX = x + this.buttonX;
-        final int buttonY = y + this.buttonY;
+		final int x = position.x();
+		final int y = position.y();
+		final int buttonX = x + this.buttonX;
+		final int buttonY = y + this.buttonY;
 
-        if (mouseX >= buttonX && mouseX <= buttonX + this.buttonWidthHeight && mouseY >= buttonY &&
-            mouseY <= buttonY + this.buttonWidthHeight) {
-            setSelectedItem(null);
-        }
-    }
+		if (mouseX >= buttonX && mouseX <= buttonX + this.buttonWidthHeight && mouseY >= buttonY &&
+			mouseY <= buttonY + this.buttonWidthHeight) {
+			setSelectedItem(null);
+		}
+	}
 
-    private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
-        if (!this.shouldRender(screen)) {
-            return;
-        }
-
-
-        final int x = this.calculateX(screen);
-        final int y = this.calculateY(screen);
-
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0, 0, -100);
-        final int size = this.tooltip.size();
-        final List<OrderedText> tooltip;
-        if (this.tooltip.size() > 30) {
-            tooltip = new ArrayList<>(this.tooltip.subList(Math.min(size - 29, this.scrolled),
-                Math.min(29 + this.scrolled, size)));
-            tooltip.addFirst(this.tooltip.getFirst());
-        } else {
-            tooltip = this.tooltip;
-        }
-
-        drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
-            tooltip,
-            CraftHelperTooltipPositioner.INSTANCE,
-            x,
-            y);
+	private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
+		if (!this.shouldRender(screen)) {
+			return;
+		}
 
 
-        if (DevUtils.isEnabled(DEBUG_HITBOX)) {
-            drawContext.getMatrices().translate(0, 0, 1000);
-            drawContext.drawBorder(x + this.buttonX,
-                y + this.buttonY,
-                this.buttonWidthHeight,
-                this.buttonWidthHeight,
-                -1);
-        }
-        drawContext.getMatrices().pop();
-    }
+		final int x = this.calculateX(screen);
+		final int y = this.calculateY(screen);
 
-    private int calculateX(Screen screen) {
-        return switch (this.location) {
-            case LEFT -> 0;
-            case LEFT_INVENTORY -> InventoryScreenAccessor.getX(screen) - 1;
-            case RIGHT_INVENTORY -> InventoryScreenAccessor.getX(screen) + 1;
-            case RIGHT -> screen.width;
-        };
-    }
+		drawContext.getMatrices().push();
+		drawContext.getMatrices().translate(0, 0, -100);
+		final int size = this.tooltip.size();
+		final List<MutableText> tooltip;
+		if (this.tooltip.size() > 30) {
+			tooltip = new ArrayList<>(this.tooltip.subList(Math.min(size - 29, this.scrolled),
+					Math.min(29 + this.scrolled, size)));
+			tooltip.addFirst(this.tooltip.getFirst());
+		} else {
+			tooltip = this.tooltip;
+		}
 
-    private int calculateY(Screen screen) {
-        return InventoryScreenAccessor.getY(screen) + InventoryScreenAccessor.getBackgroundHeight(screen) / 2 - this.yOffset;
-    }
+		drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
+				tooltip.stream().map(Text::asOrderedText).toList(),
+				CraftHelperTooltipPositioner.INSTANCE,
+				x,
+				y);
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean shouldRender(Screen screen) {
-        if (InventoryScreenAccessor.isDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER)) {
-            return false;
-        }
-        return this.calculation != null && !this.tooltip.isEmpty();
-    }
 
-    private void profileSwap() {
-        final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        if (currentProfile.isEmpty()) {
-            return;
-        }
-        final ProfileData profileData = currentProfile.get();
-        if (profileData.getSelectedCraftHelperItem() != null && !profileData.getSelectedCraftHelperItem().isEmpty()) {
-            String item = profileData.getSelectedCraftHelperItem();
-            final RepositoryItem repositoryItem = RepositoryItem.of(item);
-            if (repositoryItem != null) {
-                DevUtils.log(LOGGING_KEY, "Swapping craft item to %s", item);
-                setSelectedItem(repositoryItem);
-            }
-        } else {
-            DevUtils.log(LOGGING_KEY, "Craft item of profile empty, setting to null.");
-            setSelectedItem(null);
-        }
-    }
+		if (DevUtils.isEnabled(DEBUG_HITBOX)) {
+			drawContext.getMatrices().translate(0, 0, 1000);
+			drawContext.drawBorder(x + this.buttonX,
+					y + this.buttonY,
+					this.buttonWidthHeight,
+					this.buttonWidthHeight,
+					-1);
+		}
+		drawContext.getMatrices().pop();
+	}
 
-    private void recalculate() {
-        if (this.calculation == null) {
-            return;
-        }
+	private int calculateX(Screen screen) {
+		return switch (this.location) {
+			case LEFT -> 0;
+			case LEFT_INVENTORY -> InventoryScreenAccessor.getX(screen) - 1;
+			case RIGHT_INVENTORY -> InventoryScreenAccessor.getX(screen) + 1;
+			case RIGHT -> screen.width;
+		};
+	}
 
-        long start = System.nanoTime();
-        List<MutableText> tooltip = new ArrayList<>();
-        append("",
-            tooltip,
-			this.calculation,
-            0,
-            new EvaluationContext(this.calculation, null),
-            new StackCountContext(),
-            CraftHelper::formatted);
+	private int calculateY(Screen screen) {
+		return InventoryScreenAccessor.getY(screen) + InventoryScreenAccessor.getBackgroundHeight(screen) / 2 -
+			   this.yOffset;
+	}
 
-        if (!tooltip.isEmpty()) {
-            this.addClose(tooltip);
-        }
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	private boolean shouldRender(Screen screen) {
+		if (InventoryScreenAccessor.isDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER)) {
+			return false;
+		}
+		return this.calculation != null && !this.tooltip.isEmpty();
+	}
 
-        DevUtils.runIf(DEBUG_INFO,
-            () -> tooltip.add(Text.literal(("Time to calculate: %sμs").formatted((System.nanoTime() - start) / 1000))));
-        this.tooltip = Lists.transform(tooltip, Text::asOrderedText);
-        this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
-    }
+	private void profileSwap() {
+		final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
+		if (currentProfile.isEmpty()) {
+			return;
+		}
+		final ProfileData profileData = currentProfile.get();
+		if (profileData.getSelectedCraftHelperItem() != null && !profileData.getSelectedCraftHelperItem().isEmpty()) {
+			String item = profileData.getSelectedCraftHelperItem();
+			final RepositoryItem repositoryItem = RepositoryItem.of(item);
+			if (repositoryItem != null) {
+				DevUtils.log(LOGGING_KEY, "Swapping craft item to %s", item);
+				setSelectedItem(repositoryItem);
+			}
+		} else {
+			DevUtils.log(LOGGING_KEY, "Craft item of profile empty, setting to null.");
+			setSelectedItem(null);
+		}
+	}
 
-    private void addClose(List<MutableText> tooltip) {
-        int maxSize = 0;
-        final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        for (MutableText orderedText : tooltip) {
-            int size = textRenderer.getWidth(orderedText);
-            if (size > maxSize) {
-                maxSize = size;
-            }
-        }
+	private void recalculate() {
+		if (this.calculation == null) {
+			return;
+		}
 
-        final MutableText orderedText = tooltip.getFirst();
-        int size = textRenderer.getWidth(orderedText);
-        if (size != maxSize) {
-            int spaceSize = textRenderer.getWidth(" ");
-            int delta = maxSize - size;
-            orderedText.append(StringUtils.leftPad("", delta / spaceSize - 1));
-        }
+		long start = System.nanoTime();
+		List<MutableText> tooltip = new ArrayList<>();
+		append("",
+				tooltip,
+				this.calculation,
+				0,
+				new EvaluationContext(this.calculation, null),
+				new StackCountContext(),
+				CraftHelper::formatted);
 
-        this.width = maxSize + (size == maxSize ? 5 : 0);
+		if (!tooltip.isEmpty()) {
+			this.addClose(tooltip);
+		}
 
-        orderedText.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
+		DevUtils.runIf(DEBUG_INFO,
+				() -> tooltip.add(Text.literal(("Time to calculate: %sμs").formatted(
+						(System.nanoTime() - start) / 1000))));
+		this.tooltip = tooltip;
+		this.yOffset = (Math.min(this.tooltip.size(), 30) * 9) / 2;
+	}
 
-        int buttonOffset = switch (this.location) {
-            case RIGHT_INVENTORY, LEFT -> 8;
-            case RIGHT, LEFT_INVENTORY -> 10;
-        };
-        this.buttonX = textRenderer.getWidth(orderedText) - buttonOffset;
-        this.buttonY = 0;
-    }
+	private void addClose(List<MutableText> tooltip) {
+		int maxSize = 0;
+		final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+		for (MutableText orderedText : tooltip) {
+			int size = textRenderer.getWidth(orderedText);
+			if (size > maxSize) {
+				maxSize = size;
+			}
+		}
 
-    public interface Formatter {
-        MutableText format(
-            String prefix,
-            String id,
-            RepositoryItem repositoryItem,
-            int amount,
-            int amountOfItem,
-            boolean childrenFinished,
-            int depth);
-    }
+		final MutableText orderedText = tooltip.getFirst();
+		int size = textRenderer.getWidth(orderedText);
+		if (size != maxSize) {
+			int spaceSize = textRenderer.getWidth(" ");
+			int delta = maxSize - size;
+			orderedText.append(StringUtils.leftPad("", delta / spaceSize - 1));
+		}
+
+		this.width = maxSize + (size == maxSize ? 5 : 0);
+
+		orderedText.append(Text.literal(Constants.Emojis.NO).formatted(Formatting.RED, Formatting.BOLD));
+
+		int buttonOffset = switch (this.location) {
+			case RIGHT_INVENTORY, LEFT -> 8;
+			case RIGHT, LEFT_INVENTORY -> 10;
+		};
+		this.buttonX = textRenderer.getWidth(orderedText) - buttonOffset;
+		this.buttonY = 0;
+	}
+
+	public interface Formatter {
+		MutableText format(
+				String prefix,
+				String id,
+				RepositoryItem repositoryItem,
+				int amount,
+				int amountOfItem,
+				long lastForgeStarted,
+				boolean usedForge,
+				boolean childrenFinished,
+				int depth);
+	}
 
 }

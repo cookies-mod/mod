@@ -14,6 +14,7 @@ public interface MiningFeatures {
         Loader.load("HotmUtils", HotmUtils::new);
         Loader.load("CommissionCompletionHighlighter", CommissionCompletionHighlighter::new);
         Loader.load("PuzzlerSolver", PuzzlerSolver::new);
+		Loader.load("ForgeFeatures", ForgeFeatures::init);
     }
 
 }

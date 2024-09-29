@@ -1,12 +1,8 @@
 package dev.morazzer.cookies.mod.data.profile.profile;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
+import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,42 +24,10 @@ import org.slf4j.LoggerFactory;
  * The data for the island chests.
  */
 @Getter
-public class IslandChestStorage implements JsonSerializable {
+public class IslandChestStorage implements CodecJsonSerializable<List<IslandChestStorage.ChestItem>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IslandChestStorage.class);
 	private final List<ChestItem> items = new ArrayList<>();
-
-	@Override
-	public void read(@NotNull JsonElement jsonElement) {
-		try {
-			if (jsonElement.isJsonArray()) {
-				final DataResult<List<ChestItem>> parse = ChestItem.LIST_CODEC.parse(JsonOps.INSTANCE, jsonElement);
-				if (parse.isSuccess()) {
-					this.items.addAll(parse.getOrThrow());
-				} else {
-					LOGGER.warn("Failed to load island chest data, trying to load partial. {}",
-							parse.error().get().message());
-					try {
-						this.items.addAll(parse.getOrThrow());
-					} catch (Exception e) {
-						LOGGER.error("Failed to load partial data, continuing with empty list.");
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public @NotNull JsonElement write() {
-		final DataResult<JsonElement> result = ChestItem.LIST_CODEC.encodeStart(JsonOps.INSTANCE, this.items);
-		if (result.isError()) {
-			LOGGER.warn("Failed to save island chest data! {}", result.error().get().message());
-			return new JsonArray();
-		}
-		return result.getOrThrow();
-	}
 
 	public void save(BlockPos blockPos, BlockPos secondChest, ItemStack stack, int slot) {
 		this.items.add(ChestItem.create(blockPos, secondChest, stack, slot));
@@ -94,6 +57,26 @@ public class IslandChestStorage implements JsonSerializable {
 
 	public void clear() {
 		this.items.clear();
+	}
+
+	@Override
+	public Codec<List<ChestItem>> getCodec() {
+		return ChestItem.LIST_CODEC;
+	}
+
+	@Override
+	public void load(List<ChestItem> value) {
+		this.items.addAll(value);
+	}
+
+	@Override
+	public List<ChestItem> getValue() {
+		return this.items;
+	}
+
+	@Override
+	public Logger getLogger() {
+		return LOGGER;
 	}
 
 	public record ChestItem(BlockPos blockPos, Optional<BlockPos> secondChest, ItemStack itemStack, int slot) {

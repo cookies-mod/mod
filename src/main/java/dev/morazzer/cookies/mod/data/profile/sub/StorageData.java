@@ -1,17 +1,12 @@
 package dev.morazzer.cookies.mod.data.profile.sub;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
-import dev.morazzer.cookies.mod.utils.json.JsonSerializable;
+import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,21 +16,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
-import org.jetbrains.annotations.NotNull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data that contains all items that are currently in the storage of the selected profile.
  */
-public class StorageData implements JsonSerializable {
+public class StorageData implements CodecJsonSerializable<List<StorageData.StorageItem>> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(StorageData.class);
     private static final ItemStack VOID_ITEM = new ItemStack(Items.DEBUG_STICK);
-
-    private static final Codec<StorageItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        StorageLocation.CODEC.fieldOf("location").forGetter(StorageItem::storageLocation),
-        Codec.INT.fieldOf("page").forGetter(StorageItem::page),
-        Codec.INT.fieldOf("slot").forGetter(StorageItem::slot),
-        ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::getActualItemStack)).apply(instance, StorageItem::create));
-
-    private static final Codec<List<StorageItem>> LIST_CODEC = CODEC.listOf();
     private final List<StorageItem> items = new ArrayList<>();
 
     /**
@@ -95,33 +85,29 @@ public class StorageData implements JsonSerializable {
         return this.items;
     }
 
-    @Override
-    public void read(@NotNull JsonElement jsonElement) {
-        final JsonArray asJsonArray = jsonElement.getAsJsonArray();
-        final DataResult<List<StorageItem>> parse = LIST_CODEC.parse(JsonOps.INSTANCE, asJsonArray);
-
-        final Optional<List<StorageItem>> storageItems = parse.resultOrPartial();
-        if (storageItems.isEmpty()) {
-            return;
-        }
-        final List<StorageItem> items = storageItems.get();
-        this.items.addAll(items);
-    }
-
-    @Override
-    public @NotNull JsonElement write() {
-        final DataResult<JsonElement> jsonElementDataResult = LIST_CODEC.encodeStart(JsonOps.INSTANCE, this.items);
-        if (jsonElementDataResult.isError()) {
-            final DataResult.Error<JsonElement> jsonElementError = jsonElementDataResult.error().get();
-            ExceptionHandler.handleException(new RuntimeException(jsonElementError.message()));
-        }
-        final Optional<JsonElement> jsonElement = jsonElementDataResult.resultOrPartial();
-        return Optional.ofNullable(jsonElement).orElseGet(Optional::empty).orElseGet(JsonArray::new);
-    }
-
     public void clear() {
         this.items.clear();
     }
+
+	@Override
+	public Codec<List<StorageItem>> getCodec() {
+		return StorageItem.LIST_CODEC;
+	}
+
+	@Override
+	public void load(List<StorageItem> value) {
+		this.items.addAll(value);
+	}
+
+	@Override
+	public List<StorageItem> getValue() {
+		return this.items;
+	}
+
+	@Override
+	public Logger getLogger() {
+		return LOGGER;
+	}
 
 	@Getter@AllArgsConstructor
     public enum StorageLocation implements StringIdentifiable {
@@ -138,7 +124,14 @@ public class StorageData implements JsonSerializable {
     }
 
     public record StorageItem(StorageLocation storageLocation, int page, int slot, ItemStack itemStack) {
-        public static StorageItem create(StorageLocation location, int page, int slot, ItemStack itemStack) {
+		private static final Codec<StorageItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				StorageLocation.CODEC.fieldOf("location").forGetter(StorageItem::storageLocation),
+				Codec.INT.fieldOf("page").forGetter(StorageItem::page),
+				Codec.INT.fieldOf("slot").forGetter(StorageItem::slot),
+				ItemStack.CODEC.fieldOf("item").forGetter(StorageItem::getActualItemStack)).apply(instance, StorageItem::create));
+		private static final Codec<List<StorageItem>> LIST_CODEC = CODEC.listOf();
+
+		public static StorageItem create(StorageLocation location, int page, int slot, ItemStack itemStack) {
             itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE);
             itemStack.remove(DataComponentTypes.ENCHANTMENTS);
             if (itemStack.isEmpty()) {

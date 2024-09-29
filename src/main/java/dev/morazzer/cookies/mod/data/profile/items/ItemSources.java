@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.data.profile.items;
 
+import dev.morazzer.cookies.mod.data.profile.items.sources.ForgeItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.InventoryItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.IslandChestItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.SackItemSource;
@@ -23,7 +24,8 @@ public enum ItemSources {
     CHESTS(Text.translatable(TranslationKeys.ITEM_SOURCE_CHEST), IslandChestItemSource.getInstance()),
     STORAGE(Text.translatable(TranslationKeys.ITEM_SOURCE_STORAGE), StorageItemSource.getInstance()),
     SACKS(Text.translatable(TranslationKeys.ITEM_SOURCE_SACK), SackItemSource.getInstance()),
-    INVENTORY(Text.translatable(TranslationKeys.ITEM_SOURCE_INVENTORY), InventoryItemSource.getInstance());
+    INVENTORY(Text.translatable(TranslationKeys.ITEM_SOURCE_INVENTORY), InventoryItemSource.getInstance()),
+	FORGE(Text.translatable(TranslationKeys.ITEM_SOURCE_FORGE), ForgeItemSource.getInstance());
 
     private final Text name;
     private final ItemSource<?> itemSource;
