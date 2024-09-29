@@ -3,6 +3,8 @@ package dev.morazzer.cookies.mod.data.profile;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
+import dev.morazzer.cookies.mod.data.profile.sub.ForgeTracker;
+import dev.morazzer.cookies.mod.data.profile.sub.HotmData;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
@@ -37,6 +39,8 @@ public class ProfileData {
     private StorageData storageData = new StorageData();
     @Exclude
     private GlobalProfileData globalProfileData;
+	private ForgeTracker forgeTracker = new ForgeTracker();
+	private HotmData hotmData = new HotmData();
 
     /**
      * Create a profile.

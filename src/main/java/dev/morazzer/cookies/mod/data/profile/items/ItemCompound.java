@@ -45,7 +45,7 @@ public final class ItemCompound {
 				case SACKS -> SACKS;
 				case CHESTS -> data != null ? CHEST_POS : CHEST;
 				case STORAGE -> data != null ? STORAGE_PAGE : STORAGE;
-				case INVENTORY -> null;
+				case null, default -> null;
 			};
 		}
 	}

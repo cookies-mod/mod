@@ -36,6 +36,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_ALL, "All items");
 		translationBuilder.add(ITEM_SOURCE_CHEST, "Chest");
 		translationBuilder.add(ITEM_SOURCE_INVENTORY, "Inventory");
+		translationBuilder.add(ITEM_SOURCE_FORGE, "Forge");
 		translationBuilder.add(ITEM_SOURCE_SACK, "Sack");
 		translationBuilder.add(ITEM_SOURCE_STORAGE, "Storage");
 		translationBuilder.add(ITEM_SOURCE_ENDERCHEST, "Enderchest");
