@@ -163,7 +163,7 @@ public class HotmUtils {
 				if (perk == null) {
 					return;
 				}
-				int amount = perk.calculateNextN(9, perkLevel);
+				int amount = perk.calculateNextN(10, perkLevel);
 				lines.add(index++,
 						Text.literal("%s ".formatted(numberFormat.format(amount)))
 								.append(perk.powderTypes().getName())
