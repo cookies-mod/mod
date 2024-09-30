@@ -14,6 +14,8 @@ public class ItemFeatures {
         Loader.load("SackInventoryTracker", SackInventoryTracker::new);
         Loader.load("StorageTracker", StorageTracker::new);
         Loader.load("ChestTracker", ChestTracker::new);
+		Loader.load("MiscItemTracker", MiscItemTracker::register);
+		Loader.load("AccessoryTracker", AccessoryTracker::register);
     }
 
 }

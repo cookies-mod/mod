@@ -14,8 +14,13 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("MissingJavadoc")
 public class StackCountContext {
-	private static final ItemSources[] ITEM_SOURCES =
-			{ItemSources.INVENTORY, ItemSources.SACKS, ItemSources.STORAGE, ItemSources.FORGE};
+	private static final ItemSources[] ITEM_SOURCES = {ItemSources.INVENTORY,
+			ItemSources.SACKS,
+			ItemSources.STORAGE,
+			ItemSources.FORGE,
+			ItemSources.ACCESSORY_BAG,
+			ItemSources.SACK_OF_SACKS,
+			ItemSources.VAULT};
 
 	Map<RepositoryItem, Long> itemMap = new HashMap<>();
 	Stack<Integer> integers = new Stack<>();

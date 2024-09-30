@@ -13,6 +13,9 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Data for the forge.
+ */
 @Getter
 public class ForgeTracker implements CodecJsonSerializable<List<ForgeTracker.Data>> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ForgeTracker.class);
@@ -46,6 +49,10 @@ public class ForgeTracker implements CodecJsonSerializable<List<ForgeTracker.Dat
 	@Override
 	public Logger getLogger() {
 		return LOGGER;
+	}
+
+	public void remove(int slot) {
+		this.data.removeIf(data -> data.slot == slot);
 	}
 
 	public record Data(RepositoryItem repositoryItem, long startedSeconds, int slot) {

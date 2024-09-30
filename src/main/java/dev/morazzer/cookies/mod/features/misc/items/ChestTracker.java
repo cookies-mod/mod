@@ -128,7 +128,7 @@ public class ChestTracker {
 			return;
 		}
 		final ProfileData profileData = optionalProfileData.get();
-		profileData.getGlobalProfileData().getIslandStorage().remove(blockPos);
+		profileData.getGlobalProfileData().getIslandStorage().removeBlock(blockPos);
 	}
 
 	private void openScreen(MinecraftClient minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
@@ -178,8 +178,8 @@ public class ChestTracker {
 		}
 		final ProfileData profileData = currentProfile.get();
 		final IslandChestStorage islandStorage = profileData.getGlobalProfileData().getIslandStorage();
-		islandStorage.remove(this.first);
-		islandStorage.remove(this.second);
+		islandStorage.removeBlock(this.first);
+		islandStorage.removeBlock(this.second);
 		for (Slot slot : handledScreen.getScreenHandler().slots) {
 			if (slot.inventory instanceof PlayerInventory || slot.getStack().isEmpty()) {
 				continue;

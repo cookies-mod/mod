@@ -27,7 +27,6 @@ public interface JsonSerializable {
      *
      * @return The json element.
      */
-    @NotNull
     JsonElement write();
 
 }

@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.utils.skyblock;
 
 import dev.morazzer.cookies.mod.events.IslandChangeEvent;
+import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.ScoreboardUtils;
@@ -77,6 +78,8 @@ public class LocationUtils {
 		if (DevUtils.isEnabled(SEND_ISLAND_DEBUG)) {
 			CookiesUtils.sendMessage(serverName + " " + island);
 		}
+		ServerSwapEvent.SERVER_SWAP.invoker().onServerSwap();
+		ServerSwapEvent.SERVER_SWAP_ID.invoker().accept(serverName);
 	}
 
 	/**

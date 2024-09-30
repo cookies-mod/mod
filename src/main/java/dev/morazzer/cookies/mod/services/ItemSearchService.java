@@ -65,6 +65,7 @@ public class ItemSearchService {
 
 	/**
 	 * Performs whatever action is associated with the provided parameters.
+	 *
 	 * @param type The type of action.
 	 * @param data The data related to the action.
 	 * @param item The item which is subject of the action.
@@ -81,12 +82,16 @@ public class ItemSearchService {
 			case CHEST_POS -> highlightChests(item, color);
 			case STORAGE_PAGE -> openStorage((StorageItemSource.Context) data);
 			case STORAGE -> sendCommand("storage");
-			case SACKS -> sendCommand("sacks");
+			case SACKS, SACK_OF_SACKS -> sendCommand("sacks");
+			case ACCESSORIES -> sendCommand("accessorybag");
+			case POTION_BAG -> sendCommand("potionbag");
+			case VAULT -> sendCommand("bank");
 		}
 	}
 
 	/**
 	 * Executes a command as the player.
+	 *
 	 * @param command The command to execute.
 	 */
 	public static void sendCommand(String command) {
@@ -96,6 +101,7 @@ public class ItemSearchService {
 
 	/**
 	 * Gets the highlight color for the item.
+	 *
 	 * @param repositoryItem The item.
 	 * @return The color, or {@link Constants#FAIL_COLOR} if no color was found.
 	 */
@@ -115,7 +121,9 @@ public class ItemSearchService {
 	}
 
 	/**
-	 * Performs the actions associated with the compound, if items are from the same source it will perform an item specific action.
+	 * Performs the actions associated with the compound, if items are from the same source it will perform an item
+	 * specific action.
+	 *
 	 * @param itemCompound The item compound.
 	 */
 	public static void performActions(ItemCompound itemCompound) {
@@ -156,6 +164,7 @@ public class ItemSearchService {
 
 	/**
 	 * Opens the storage at the page of the provided data.
+	 *
 	 * @param data The data.
 	 */
 	private static void openStorage(StorageItemSource.Context data) {
@@ -168,6 +177,7 @@ public class ItemSearchService {
 
 	/**
 	 * Sets the active item stacks and assigns it's background color.
+	 *
 	 * @param stack The stack to set.
 	 * @return The color.
 	 */
@@ -181,6 +191,7 @@ public class ItemSearchService {
 
 	/**
 	 * Highlights all possible data sources associated with the item compound.
+	 *
 	 * @param itemCompound The item compound.
 	 */
 	public static void highlightAll(ItemCompound itemCompound) {
@@ -211,7 +222,8 @@ public class ItemSearchService {
 
 	/**
 	 * Highlights a chest in the world.
-	 * @param item The item to highlight.
+	 *
+	 * @param item  The item to highlight.
 	 * @param color The color the highlight should be in.
 	 */
 	public static void highlightChests(Item<?> item, int color) {
@@ -226,8 +238,9 @@ public class ItemSearchService {
 
 	/**
 	 * Highlights a chest at the specified position.
+	 *
 	 * @param blockPos The position.
-	 * @param color The color to highlight in.
+	 * @param color    The color to highlight in.
 	 */
 	public static void highlightChest(BlockPos blockPos, int color) {
 		if (blockPos == null) {
@@ -239,6 +252,7 @@ public class ItemSearchService {
 
 	/**
 	 * Sets the active item stack and initiates the removal of the highlight.
+	 *
 	 * @param stack The stack.
 	 */
 	private static void setActiveStack(ItemStack stack) {
@@ -342,6 +356,7 @@ public class ItemSearchService {
 
 	/**
 	 * Modifies the provided stack to be highlighted in the same color as the currently searched item.
+	 *
 	 * @param itemStack The item stack to modify.
 	 */
 	public static void modify(ItemStack itemStack) {
@@ -381,11 +396,13 @@ public class ItemSearchService {
 
 	/**
 	 * Appends the item source information and left click text to the tooltip.
-	 * @param type The type of compound.
+	 *
+	 * @param type         The type of compound.
 	 * @param compoundData The data.
-	 * @param tooltip The tooltip to append to.
+	 * @param tooltip      The tooltip to append to.
 	 */
-	public static void appendMultiTooltip(@Nullable ItemCompound.CompoundType type, Object compoundData, List<Text> tooltip) {
+	public static void appendMultiTooltip(
+			@Nullable ItemCompound.CompoundType type, Object compoundData, List<Text> tooltip) {
 		switch (type) {
 			case CHEST -> tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST)
 					.formatted(Formatting.YELLOW));
@@ -425,13 +442,26 @@ public class ItemSearchService {
 				tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS)
 						.formatted(Formatting.YELLOW));
 			}
+			case POTION_BAG ->
+					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_POTION_BAG)
+							.formatted(Formatting.YELLOW));
+			case SACK_OF_SACKS ->
+					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_SACK_OF_SACKS)
+							.formatted(Formatting.YELLOW));
+			case VAULT -> tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_VAULT)
+					.formatted(Formatting.YELLOW));
+			case ACCESSORIES ->
+					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG)
+							.formatted(Formatting.YELLOW));
 			case null, default -> tooltip.add(Text.literal("An error occurred :c " + type).formatted(Formatting.RED));
 		}
 	}
 
 	/**
-	 * Whether the two items are the same, this will take multiple things into account like UUID, Timestamp, Lore and so on.
-	 * @param itemStack First item.
+	 * Whether the two items are the same, this will take multiple things into account like UUID, Timestamp, Lore and
+	 * so on.
+	 *
+	 * @param itemStack         First item.
 	 * @param currentlySearched Second item.
 	 * @return Whether the two are the same.
 	 */
