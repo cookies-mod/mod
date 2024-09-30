@@ -5,7 +5,10 @@ import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
+import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
+
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,8 +40,7 @@ public class IslandChestItemSource implements ItemSource<IslandChestStorage.Ches
 		List<IslandChestStorage.ChestItem> items = profileData.getGlobalProfileData().getIslandStorage().getItems();
 
 		Collection<Item<?>> item = new ArrayList<>();
-		items.forEach(chestItem -> item.add(new Item<>(
-				chestItem.itemStack(),
+		items.forEach(chestItem -> item.add(new Item<>(chestItem.itemStack(),
 				ItemSources.CHESTS,
 				chestItem.itemStack().getCount(),
 				chestItem)));
@@ -54,11 +56,12 @@ public class IslandChestItemSource implements ItemSource<IslandChestStorage.Ches
 	@Override
 	public void remove(Item<?> item) {
 		final IslandChestStorage.ChestItem data = (IslandChestStorage.ChestItem) item.data();
-		final Optional<ProfileData> optionalProfileData = ProfileStorage.getCurrentProfile();
-		if (optionalProfileData.isEmpty()) {
-			return;
-		}
-		final ProfileData profileData = optionalProfileData.get();
-		profileData.getGlobalProfileData().getIslandStorage().remove(data);
+
+		ProfileStorage.getCurrentProfile()
+				.map(ProfileData::getGlobalProfileData)
+				.map(GlobalProfileData::getIslandStorage)
+				.map(FunctionUtils.function(IslandChestStorage::remove))
+				.orElse(FunctionUtils.noOp())
+				.accept(data);
 	}
 }

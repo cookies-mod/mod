@@ -29,6 +29,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -141,7 +142,7 @@ public class RepositoryItem {
             case Identifier identifier -> (identifier.getNamespace().equalsIgnoreCase("cookies") ||
                                            identifier.getNamespace().equalsIgnoreCase("skyblock")) &&
                                           identifier.getPath().equals(this.internalId);
-            case Ingredient ingredient -> equals(ingredient.getRepositoryItem());
+            case Ingredient ingredient -> this.equals(ingredient.getRepositoryItem());
             case RepositoryItem repositoryItem -> Objects.equals(this.internalId, repositoryItem.getInternalId());
             default -> super.equals(obj);
         };
@@ -172,7 +173,8 @@ public class RepositoryItem {
         final ProfileComponent component = new ProfileComponent(new GameProfile(UUID.randomUUID(), "meowora"));
         component.properties().put("textures", new Property("textures", this.skin));
         itemStack.set(DataComponentTypes.PROFILE, component);
-        itemStack.set(CookiesDataComponentTypes.CUSTOM_LORE, this.lore);
+        itemStack.set(DataComponentTypes.LORE, new LoreComponent(this.lore, this.lore));
+		itemStack.set(CookiesDataComponentTypes.SKYBLOCK_ID, this.internalId);
         return itemStack;
     }
 

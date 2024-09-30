@@ -3,8 +3,10 @@ package dev.morazzer.cookies.mod.data.profile;
 import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
+import dev.morazzer.cookies.mod.data.profile.sub.AccessoryItemData;
 import dev.morazzer.cookies.mod.data.profile.sub.ForgeTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.HotmData;
+import dev.morazzer.cookies.mod.data.profile.sub.MiscItemData;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
@@ -41,6 +43,8 @@ public class ProfileData {
     private GlobalProfileData globalProfileData;
 	private ForgeTracker forgeTracker = new ForgeTracker();
 	private HotmData hotmData = new HotmData();
+	private MiscItemData miscTracker = new MiscItemData();
+	private AccessoryItemData accessoryTracker = new AccessoryItemData();
 
     /**
      * Create a profile.
@@ -79,7 +83,7 @@ public class ProfileData {
      * Called right after all serializable fields have been set.
      */
     public void load() {
-        this.globalProfileData = GlobalProfileStorage.load(profileUuid);
+        this.globalProfileData = GlobalProfileStorage.load(this.profileUuid);
     }
 
     /**

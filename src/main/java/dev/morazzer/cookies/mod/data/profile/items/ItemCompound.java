@@ -29,13 +29,21 @@ public final class ItemCompound {
 		STORAGE_PAGE,
 		STORAGE,
 		SACKS,
-		MULTIPLE;
+		MULTIPLE,
+		ACCESSORIES,
+		SACK_OF_SACKS,
+		VAULT,
+		POTION_BAG;
 
 		public static CompoundType[] getFor(ItemSources itemSources) {
 			return switch (itemSources) {
 				case STORAGE -> new CompoundType[] {STORAGE, STORAGE_PAGE};
 				case CHESTS -> new CompoundType[] {CHEST, CHEST_POS};
 				case SACKS -> new CompoundType[] {SACKS};
+				case VAULT -> new CompoundType[] {VAULT};
+				case POTION_BAG -> new CompoundType[] {POTION_BAG};
+				case ACCESSORY_BAG -> new CompoundType[] {ACCESSORIES};
+				case SACK_OF_SACKS -> new CompoundType[] {SACK_OF_SACKS};
 				case null, default -> new CompoundType[0];
 			};
 		}
@@ -45,6 +53,10 @@ public final class ItemCompound {
 				case SACKS -> SACKS;
 				case CHESTS -> data != null ? CHEST_POS : CHEST;
 				case STORAGE -> data != null ? STORAGE_PAGE : STORAGE;
+				case VAULT -> VAULT;
+				case SACK_OF_SACKS -> SACK_OF_SACKS;
+				case POTION_BAG -> POTION_BAG;
+				case ACCESSORY_BAG -> ACCESSORIES;
 				case null, default -> null;
 			};
 		}
@@ -74,6 +86,10 @@ public final class ItemCompound {
 			case SACKS -> this.setSacksType();
 			case CHESTS -> this.handleChest(item);
 			case STORAGE -> this.handleStorage(item);
+			default -> {
+				this.type = CompoundType.of(item.source(), null);
+				this.data = Unit.INSTANCE;
+			}
 		}
 	}
 
@@ -123,21 +139,21 @@ public final class ItemCompound {
 		this.amount += item.amount();
 	}
 
-	public int amount() {return amount;}
+	public int amount() {return this.amount;}
 
-	public ItemStack itemStack() {return itemStack;}
+	public ItemStack itemStack() {return this.itemStack;}
 
-	public Set<Item<?>> items() {return items;}
+	public Set<Item<?>> items() {return this.items;}
 
-	public CompoundType type() {return type;}
+	public CompoundType type() {return this.type;}
 
-	public Object data() {return data;}
+	public Object data() {return this.data;}
 
 	public String name() {return this.itemStack.getName().getString();}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(amount, itemStack, items);
+		return Objects.hash(this.amount, this.itemStack, this.items);
 	}
 
 	@Override
@@ -155,7 +171,7 @@ public final class ItemCompound {
 
 	@Override
 	public String toString() {
-		return "ItemCompound[" + "amount=" + amount + ", " + "itemStack=" + itemStack + ", " + "items=" + items + ']';
+		return "ItemCompound[" + "amount=" + this.amount + ", " + "itemStack=" + this.itemStack + ", " + "items=" + this.items + ']';
 	}
 
 

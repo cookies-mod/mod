@@ -35,6 +35,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -100,9 +102,9 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 	private void addItem(Item<?> item) {
 		final RepositoryItem repositoryItem = item.itemStack().get(CookiesDataComponentTypes.REPOSITORY_ITEM);
 		final List<ItemCompound> itemCompounds =
-				Optional.ofNullable(itemMap.get(repositoryItem)).orElseGet(ArrayList::new);
+				Optional.ofNullable(this.itemMap.get(repositoryItem)).orElseGet(ArrayList::new);
 		if (itemCompounds.isEmpty()) {
-			itemMap.put(repositoryItem, itemCompounds);
+			this.itemMap.put(repositoryItem, itemCompounds);
 		}
 		final ItemCompound items = itemCompounds.stream()
 				.filter(itemCompound -> ItemSearchService.isSame(itemCompound.itemStack(), item.itemStack()))
@@ -216,12 +218,37 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 	}
 
 	private Predicate<? super ItemCompound> matches(String s) {
-		return item -> item.itemStack()
-				.getName()
-				.getString()
-				.toLowerCase(Locale.ROOT)
-				.contains(s.toLowerCase(Locale.ROOT));
+		return item -> this.matches(item, s);
 	}
+
+	private boolean matches(ItemCompound item, String search) {
+		String lowerSearch = search.toLowerCase(Locale.ROOT);
+
+		if (item.itemStack().getName().getString().toLowerCase(Locale.ROOT).contains(lowerSearch)) {
+			return true;
+		}
+
+		final LoreComponent loreComponent = item.itemStack().get(DataComponentTypes.LORE);
+		if (loreComponent != null) {
+			for (Text line : loreComponent.lines()) {
+				if (line.getString()
+						.trim()
+						.replaceAll("§[a-f0-9lmnor]", "")
+						.toLowerCase(Locale.ROOT)
+						.contains(lowerSearch)) {
+					return true;
+				}
+			}
+		}
+
+		if (lowerSearch.startsWith("$")) {
+			final String skyblockId = item.itemStack().get(CookiesDataComponentTypes.SKYBLOCK_ID);
+			return skyblockId != null && (lowerSearch.length() == 1 ||
+										  skyblockId.toLowerCase(Locale.ROOT).contains(lowerSearch.substring(1)));
+		}
+		return false;
+	}
+
 
 	@Override
 	public void resize(MinecraftClient client, int width, int height) {
@@ -413,7 +440,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 	private void appendTooltip(List<Text> tooltip, ItemCompound itemCompound) {
 		tooltip.add(Text.empty());
 
-		int storage = 0, sacks = 0, chests = 0;
+		int storage = 0, sacks = 0, chests = 0, misc = 0;
 
 		for (Item<?> item : itemCompound.items()) {
 			if (!this.itemSourceCategories.has(item.source())) {
@@ -423,6 +450,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 				case STORAGE -> storage += item.amount();
 				case SACKS -> sacks += item.amount();
 				case CHESTS -> chests += item.amount();
+				default -> misc += item.amount();
 			}
 		}
 
@@ -448,9 +476,15 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 					.formatted(Formatting.GRAY)
 					.append(this.formattedText(chests)));
 		}
+		if (misc > 0) {
+			locations++;
+			tooltip.add(Text.translatable(TranslationKeys.ITEM_SOURCE_MISC)
+					.formatted(Formatting.GRAY)
+					.append(this.formattedText(misc)));
+		}
 		if (this.itemSourceCategories.getSources().length > 1 && locations > 1) {
 			tooltip.add(TextUtils.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_TOTAL, Formatting.GRAY)
-					.append(this.formattedText(storage + sacks + chests)));
+					.append(this.formattedText(storage + sacks + chests + misc)));
 		}
 
 		tooltip.add(Text.empty());
@@ -480,7 +514,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 	private MutableText formattedText(int amount) {
 		return Text.literal(": ")
 				.append(Text.literal(NumberFormat.getIntegerInstance(Locale.ENGLISH).format(amount))
-				.formatted(Formatting.YELLOW));
+						.formatted(Formatting.YELLOW));
 	}
 
 	int getTabX(int index) {

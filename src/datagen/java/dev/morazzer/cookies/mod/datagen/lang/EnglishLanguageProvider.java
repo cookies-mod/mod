@@ -36,7 +36,11 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_ALL, "All items");
 		translationBuilder.add(ITEM_SOURCE_CHEST, "Chest");
 		translationBuilder.add(ITEM_SOURCE_INVENTORY, "Inventory");
+		translationBuilder.add(ITEM_SOURCE_MISC, "Misc");
 		translationBuilder.add(ITEM_SOURCE_FORGE, "Forge");
+		translationBuilder.add(ITEM_SOURCE_VAULT, "Vault");
+		translationBuilder.add(ITEM_SOURCE_SACK_OF_SACKS, "Sack of Sacks");
+		translationBuilder.add(ITEM_SOURCE_POTION_BAG, "Potion Bag");
 		translationBuilder.add(ITEM_SOURCE_SACK, "Sack");
 		translationBuilder.add(ITEM_SOURCE_STORAGE, "Storage");
 		translationBuilder.add(ITEM_SOURCE_ENDERCHEST, "Enderchest");
@@ -215,6 +219,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(SCREEN_ITEM_SEARCH_REMOVE_FROM_CACHE, "Right-click to remove from cache!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT, "Left-click to highlight all items and chests!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS, "Left-click to highlight all items!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_VAULT, "Left-click to open Bank (Vault)!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG, "Left-click to open accessory bag!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_SACK_OF_SACKS, "Left-click to open sack-of-sacks!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_POTION_BAG, "Left-click to open potion bag!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST, "Left-click to highlight all chests!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_CHEST, "Left-click to highlight chest!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_SACKS, "Left-click to open sacks!");

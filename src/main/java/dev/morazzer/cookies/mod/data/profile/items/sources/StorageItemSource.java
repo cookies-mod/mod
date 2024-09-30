@@ -7,6 +7,8 @@ import dev.morazzer.cookies.mod.data.profile.items.ItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -50,17 +52,16 @@ public class StorageItemSource implements ItemSource<StorageItemSource.Context> 
 
 	@Override
 	public void remove(Item<?> item) {
-		final Optional<ProfileData> optionalProfileData = ProfileStorage.getCurrentProfile();
-		if (optionalProfileData.isEmpty()) {
-			return;
-		}
-
-		final ProfileData profileData = optionalProfileData.get();
 		Context context = (Context) item.data();
 		final StorageData.StorageLocation location = context.location();
 		final int page = context.page;
 		final int slot = context.slot;
-		profileData.getStorageData().removeItem(page, slot, location);
+
+		ProfileStorage.getCurrentProfile()
+				.map(ProfileData::getStorageData)
+				.map(FunctionUtils.function(StorageData::removeItem))
+				.orElseGet(FunctionUtils::noOp3)
+				.accept(page, slot, location);
 	}
 
 	public record Context(StorageData.StorageLocation location, int page, int slot) {
@@ -72,7 +73,7 @@ public class StorageItemSource implements ItemSource<StorageItemSource.Context> 
 		}
 
 		public boolean pageEquals(Object object) {
-			if (object instanceof  Context context) {
+			if (object instanceof Context context) {
 				return this.page == context.page && this.location == context.location;
 			}
 			return false;

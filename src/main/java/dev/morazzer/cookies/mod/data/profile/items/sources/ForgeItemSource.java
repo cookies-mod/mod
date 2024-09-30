@@ -10,6 +10,8 @@ import dev.morazzer.cookies.mod.data.profile.sub.ForgeTracker;
 
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +51,8 @@ public class ForgeItemSource implements ItemSource<ForgeItemSource.Context> {
 			return null;
 		}
 
-		return new Item<>(repositoryItem.constructItemStack(),
+		return new Item<>(
+				repositoryItem.constructItemStack(),
 				ItemSources.FORGE,
 				1,
 				new Context(data.slot(), data.startedSeconds()));
@@ -62,7 +65,13 @@ public class ForgeItemSource implements ItemSource<ForgeItemSource.Context> {
 
 	@Override
 	public void remove(Item<?> item) {
-		// Not supported :c
+		final Context data = (Context) item.data();
+
+		ProfileStorage.getCurrentProfile()
+				.map(ProfileData::getForgeTracker)
+				.map(FunctionUtils.function(ForgeTracker::remove))
+				.orElseGet(FunctionUtils::noOp)
+				.accept(data.slot());
 	}
 
 	public record Context(int slot, long startTime) {}
