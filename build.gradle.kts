@@ -39,7 +39,7 @@ configurations.implementation.get().extendsFrom(includeInJar)
 
 dependencies {
 	annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.34")!!)
-	compileOnly("org.jetbrains:annotations:24.1.0")
+	compileOnly("org.jetbrains:annotations:25.0.0")
 
 	includeInJar("dev.morazzer.cookies:entities:0.2.0")
 	// Hypixel mod api fabric
