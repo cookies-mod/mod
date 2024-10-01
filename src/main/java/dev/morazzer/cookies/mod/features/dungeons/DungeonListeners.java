@@ -2,13 +2,11 @@ package dev.morazzer.cookies.mod.features.dungeons;
 
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
-import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomIdPacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.events.ChatMessageEvents;
 import dev.morazzer.cookies.mod.events.IslandChangeEvent;
-import dev.morazzer.cookies.mod.events.ScoreboardUpdateEvent;
 import dev.morazzer.cookies.mod.events.WebsocketEvent;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 
@@ -39,11 +37,9 @@ public class DungeonListeners {
 	 * Registers all listeners.
 	 */
 	public static void initialize() {
-		ScoreboardUpdateEvent.EVENT.register(DungeonListeners::updateScoreboard);
 		ClientTickEvents.END_CLIENT_TICK.register(DungeonListeners::clientTick);
 		HudRenderCallback.EVENT.register(DungeonListeners::hudRenderCallback);
 		IslandChangeEvent.EVENT.register(DungeonListeners::onIslandChange);
-		Packet.onReceive(DungeonUpdateRoomIdPacket.class, DungeonListeners::updateRoomId);
 		Packet.onReceive(DungeonSyncPlayerLocation.class, DungeonListeners::syncPlayerLocation);
 		Packet.onReceive(DungeonUpdateRoomSecrets.class, DungeonListeners::updateRoomSecrets);
 		ChatMessageEvents.BEFORE_MODIFY.register(DungeonListeners::receiveGameMessage);
@@ -93,15 +89,6 @@ public class DungeonListeners {
 		} else {
 			DungeonFeatures.getInstance().exitDungeon();
 		}
-	}
-
-	private static void updateRoomId(DungeonUpdateRoomIdPacket packet) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-
-		instance.getDungeonMap().setRoom(packet.roomMapX, packet.roomMapY, instance.getRoom(packet.roomIdentifier));
 	}
 
 	private static void updateRoomSecrets(DungeonUpdateRoomSecrets packet) {
@@ -158,21 +145,12 @@ public class DungeonListeners {
 		}
 
 		instance.updatePlayers();
+		instance.updatePuzzles();
 		if (ticks % 5 == 0) {
 			instance.periodicalTicks5();
 		}
 		if (ticks % 2 == 0) {
 			instance.syncPlayers();
-		}
-	}
-
-	private static void updateScoreboard(int line, String string) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		if (string.contains(instance.serverId().replace("mini", "m"))) {
-			instance.onServerLineUpdate(string);
 		}
 	}
 

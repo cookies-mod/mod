@@ -11,9 +11,11 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMap;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
+import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 import dev.morazzer.cookies.mod.utils.skyblock.PartyUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.TabUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
 
 import org.jetbrains.annotations.Nullable;
@@ -60,14 +63,15 @@ public final class DungeonInstance {
 	private final DungeonMap dungeonMap;
 	@Getter
 	private DungeonMapRenderer mapRenderer;
-	@Getter
-	private DungeonRoomData currentRoom;
-	@Getter
-	private DungeonRoomData lastRoom;
 	private final UUID partyLeader;
 	private final boolean relayToBackend;
 	@Getter
 	private final boolean debugInstance;
+	private String[] puzzles = null;
+	@Getter
+	private final List<Pair<PuzzleType, Integer>> knownPuzzles = new ArrayList<>();
+	@Getter
+	private long lastPuzzleUpdate = -1;
 
 	public DungeonInstance(DungeonType type, int floor, String serverId) {
 		this.type = type;
@@ -145,46 +149,6 @@ public final class DungeonInstance {
 	 * Called when the instance is removed from the cache.
 	 */
 	public void destroy() {
-	}
-
-	/**
-	 * @param id The room id.
-	 * @return The data associated with the room id.
-	 */
-	public DungeonRoomData getRoom(String id) {
-		for (DungeonRoomData dungeonRoomData : DungeonRoomData.DUNGEON_ROOMS) {
-			if (dungeonRoomData.matches(id)) {
-				return dungeonRoomData;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Called whenever the server line (the first line under the skyblock line) was updated.
-	 *
-	 * @param line The new server line.
-	 */
-	public void onServerLineUpdate(String line) {
-		final String[] split = line.split(" ");
-		if (split.length != 3) {
-			return;
-		}
-		final String s = split[2];
-		final DungeonRoomData room = this.getRoom(s);
-		if (room == null) {
-			this.lastRoom = this.currentRoom;
-			this.currentRoom = null;
-			this.onRoomUpdate();
-			return;
-		}
-
-		if (this.currentRoom == room) {
-			return;
-		}
-		this.lastRoom = this.currentRoom;
-		this.currentRoom = room;
-		this.onRoomUpdate();
 	}
 
 	/**
@@ -266,12 +230,59 @@ public final class DungeonInstance {
 	}
 
 	/**
-	 * Called when on room change, this is mainly for debug reasons.
+	 * Updates the list of puzzles based on the info in tab.
 	 */
-	private void onRoomUpdate() {
-		if (this.currentRoom != null) {
-			DungeonFeatures.sendDebugMessage(this.currentRoom.name());
+	public void updatePuzzles() {
+		final ClientPlayerEntity player = this.getPlayer();
+		if (player == null) {
+			return;
 		}
+		final Collection<PlayerListEntry> listedPlayerListEntries = player.networkHandler.getListedPlayerListEntries();
+		final List<PlayerListEntry> list = listedPlayerListEntries.stream()
+				.filter(TabUtils.isInColumn(2))
+				.sorted(Comparator.comparingInt(TabUtils::getRow))
+				.filter(entry -> TabUtils.getRow(entry) >= 7 && TabUtils.getRow(entry) <= 12)
+				.toList();
+
+		list.forEach(this::handlePuzzleEntry);
+	}
+
+	private void handlePuzzleEntry(PlayerListEntry playerListEntry) {
+		final Text displayName = playerListEntry.getDisplayName();
+		if (displayName == null) {
+			return;
+		}
+
+		this.handlePuzzleEntry(displayName, TabUtils.getRow(playerListEntry));
+	}
+
+	private void handlePuzzleEntry(Text text, int row) {
+		String literal = text.getString().trim();
+		if (literal.isEmpty() || literal.isBlank()) {
+			return;
+		}
+		if (literal.startsWith("Puzzles")) {
+			if (this.puzzles == null) {
+				this.puzzles = new String[Integer.parseInt(literal.replaceAll("\\D", ""))];
+			}
+			return;
+		}
+		if (this.puzzles == null) {
+			return;
+		}
+		final int index = row - 8;
+		final String puzzleName = literal.substring(0, literal.lastIndexOf(":"));
+		if (this.puzzles[index] == null) {
+			this.puzzles[index] = puzzleName;
+		}
+		if (this.puzzles[index].equals(puzzleName)) {
+			return;
+		}
+		this.puzzles[index] = puzzleName;
+		this.knownPuzzles.removeIf(pair -> pair.getRight() == index);
+		this.knownPuzzles.add(new Pair<>(PuzzleType.ofName(puzzleName), index));
+		this.knownPuzzles.sort(Comparator.comparingInt(Pair::getRight));
+		this.lastPuzzleUpdate = System.currentTimeMillis();
 	}
 
 	/**

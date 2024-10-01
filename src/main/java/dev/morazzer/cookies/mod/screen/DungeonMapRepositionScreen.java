@@ -7,7 +7,6 @@ import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonFeatures;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonPlayer;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonRoomData;
 import dev.morazzer.cookies.mod.features.dungeons.map.Checkmark;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonDoor;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMap;
@@ -18,11 +17,10 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
 
+import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 import dev.morazzer.cookies.mod.features.dungeons.map.RoomType;
 
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-
-import java.util.Collections;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -125,7 +123,7 @@ public class DungeonMapRepositionScreen extends CookiesScreen {
 
 		DungeonRoom twelve = new DungeonRoom(instance, RoomType.PUZZLE);
 		twelve.setCheckmark(Checkmark.DONE);
-		twelve.setData(new DungeonRoomData(Collections.emptyList(), "Ice Fill", 0));
+		twelve.setPuzzleType(PuzzleType.ICE_FILL);
 		dungeonMap.setRoom(2, 5, twelve);
 
 		dungeonMap.addDoor(0, 1, false, DungeonDoor.Type.UNKNOWN);

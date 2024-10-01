@@ -290,10 +290,10 @@ public class DungeonMapRenderer {
 			}
 
 			final String name;
-			if (roomAt.getData() == null) {
+			if (roomAt.getPuzzleType() == null) {
 				name = "???";
 			} else {
-				name = roomAt.getData().name();
+				name = roomAt.getPuzzleType().getDisplayName();
 			}
 			final String[] lines = name.split(" ");
 			final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
