@@ -41,4 +41,6 @@ public interface Renderable {
 	default boolean shouldRemove() {
 		return false;
 	}
+
+    default void load() {}
 }

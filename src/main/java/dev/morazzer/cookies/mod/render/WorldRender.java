@@ -34,6 +34,7 @@ public class WorldRender {
 	 */
 	public synchronized static void addRenderable(final Renderable renderable) {
 		renderables.add(renderable);
+		renderable.load();
 	}
 
 	/**
