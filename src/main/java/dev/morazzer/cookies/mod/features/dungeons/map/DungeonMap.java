@@ -150,6 +150,7 @@ public class DungeonMap {
 		if (!playerMapPosition.equals(this.lastMapPosition)) {
 			this.lastMapPosition = playerMapPosition;
 			this.lastRoomSwitch = System.currentTimeMillis();
+			this.instance.swapRoom(this.lastMapPosition);
 		}
 	}
 
@@ -345,7 +346,11 @@ public class DungeonMap {
 			return;
 		}
 		for (DungeonRoom puzzle : this.puzzles) {
-			puzzle.setPuzzleType(knownPuzzles.get(puzzle.getPuzzleId()).getLeft());
+			final PuzzleType puzzleType = knownPuzzles.get(puzzle.getPuzzleId()).getLeft();
+			if (puzzle.getPuzzleType() == puzzleType) {
+				continue;
+			}
+			puzzle.setPuzzleType(puzzleType);
 		}
 	}
 
