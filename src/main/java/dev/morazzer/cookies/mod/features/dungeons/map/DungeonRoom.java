@@ -4,7 +4,6 @@ import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonRoomData;
 
 import dev.morazzer.cookies.mod.render.Renderable;
 
@@ -37,7 +36,7 @@ public class DungeonRoom {
 	private final DungeonInstance instance;
 	private boolean isActive;
 	private RoomType roomType;
-	private DungeonRoomData data;
+	private PuzzleType puzzleType;
 	private Checkmark checkmark;
 	private DungeonRoom mergedWith;
 	private Collection<DungeonPosition> position = new ArrayList<>();
@@ -50,6 +49,7 @@ public class DungeonRoom {
 	private List<Renderable> waypoints = null;
 	private int maxSecrets = -1;
 	private int collectedSecrets = -1;
+	private int puzzleId = -1;
 
 	public DungeonRoom(DungeonInstance instance, RoomType roomType) {
 		this.debugRoomColor = counter++;
@@ -393,6 +393,9 @@ public class DungeonRoom {
 	 * @param roomType The room type.
 	 */
 	public void setRoomType(RoomType roomType) {
+		if (this.roomType == roomType) {
+			return;
+		}
 		if ((this.roomType == null || this.roomType == RoomType.UNKNOWN) && roomType != RoomType.UNKNOWN) {
 			this.setCheckmark(Checkmark.OPENED);
 		}
@@ -417,17 +420,6 @@ public class DungeonRoom {
 		this.checkmark = checkmark;
 	}
 
-
-	/**
-	 * Set the room data.
-	 *
-	 * @param data The data.
-	 */
-	public void setData(DungeonRoomData data) {
-		this.data = data;
-		this.maxSecrets = data.secrets();
-	}
-
 	/**
 	 * @return The text color of the room, this may be different based on room type.
 	 */
@@ -441,9 +433,8 @@ public class DungeonRoom {
 				case DONE -> Constants.SUCCESS_COLOR;
 				case FAILED -> Constants.FAIL_COLOR;
 				default -> {
-					if (this.data == null) {
-						final int rgb = 0xAAAAAA;
-						yield (0xFF000000 | rgb);
+					if (this.getPuzzleType() == null) {
+						yield 0xFFAAAAAA;
 					}
 					yield -1;
 				}

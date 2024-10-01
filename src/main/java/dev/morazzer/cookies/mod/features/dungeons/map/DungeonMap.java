@@ -1,15 +1,15 @@
 package dev.morazzer.cookies.mod.features.dungeons.map;
 
-import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomIdPacket;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonPlayer;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonRoomData;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
@@ -26,6 +26,7 @@ import net.minecraft.item.map.MapDecoration;
 import net.minecraft.item.map.MapState;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
 
 import org.jetbrains.annotations.Contract;
@@ -61,6 +62,7 @@ public class DungeonMap {
 	private Vector2i bottomRightPixel;
 	private Vector2i lastMapPosition;
 	private long lastRoomSwitch;
+	private final Set<DungeonRoom> puzzles = new LinkedHashSet<>();
 
 	public DungeonMap(DungeonInstance instance) {
 		this.instance = instance;
@@ -312,12 +314,23 @@ public class DungeonMap {
 				this.addDoors(x, y, roomMapX, roomMapY, mapState);
 			}
 		}
+		int puzzleCount = 0;
 		for (int x = 0; x < this.roomMap.length; x++) {
 			int roomMapX = this.roomXToMapX(x);
 			for (int y = 0; y < this.roomMap.length; y++) {
 				int roomMapY = this.roomYToMapY(y);
 				byte color = mapState.colors[this.roomIndexToMapIndex(x, y)];
 				RoomType roomType = this.getType(color);
+				if (roomType == RoomType.PUZZLE) {
+					final DungeonRoom roomAt = this.getRoomAt(x, y);
+					if (roomAt == null) {
+						continue;
+					}
+					if (roomAt.getPuzzleId() == -1) {
+						this.puzzles.add(roomAt);
+					}
+					roomAt.setPuzzleId(puzzleCount++);
+				}
 				if (roomType != null) {
 					this.updateRoom(x, y, roomType);
 				}
@@ -327,34 +340,12 @@ public class DungeonMap {
 				}
 			}
 		}
-		final Vector2i playerMapPosition = this.getPlayerRoomMapPosition();
-		final DungeonRoom roomAt = this.getRoomAt(playerMapPosition.x, playerMapPosition.y);
-		if (this.canUpdateRooms() && roomAt != null &&
-			(roomAt.getData() == null || roomAt.getData() != this.instance.getCurrentRoom()) &&
-			this.instance.getCurrentRoom() != null) {
-			this.setRoomData(roomAt, playerMapPosition.x, playerMapPosition.y, this.instance.getCurrentRoom(), true);
+		final List<Pair<PuzzleType, Integer>> knownPuzzles = this.instance.getKnownPuzzles();
+		if (knownPuzzles.size() != this.puzzles.size()) {
+			return;
 		}
-	}
-
-	/**
-	 * Sets the room data for the room at the give position, and notify other clients so they know about the room
-	 * change.
-	 *
-	 * @param roomAt       The room to change.
-	 * @param x            The position of the room.
-	 * @param y            The position of the room.
-	 * @param roomData     The data to attach to the room.
-	 * @param foundLocally Whether the data was found by the client or others, if true notify others.
-	 */
-	@Contract
-	private void setRoomData(
-			@NotNull DungeonRoom roomAt, int x, int y, @NotNull DungeonRoomData roomData, boolean foundLocally) {
-		roomAt.setData(roomData);
-		if (foundLocally) {
-			if (roomData.id().isEmpty()) {
-				return;
-			}
-			this.instance.send(new DungeonUpdateRoomIdPacket(x, y, roomData.id().getFirst()));
+		for (DungeonRoom puzzle : this.puzzles) {
+			puzzle.setPuzzleType(knownPuzzles.get(puzzle.getPuzzleId()).getLeft());
 		}
 	}
 
@@ -626,8 +617,7 @@ public class DungeonMap {
 		if (dungeonRoom == null) {
 			this.setNewRoom(x, y, roomType);
 		} else {
-			if (dungeonRoom.getRoomType() != roomType && dungeonRoom.getData() == null ||
-				dungeonRoom.getRoomType() == RoomType.UNKNOWN) {
+			if (dungeonRoom.getRoomType() != roomType || dungeonRoom.getRoomType() == RoomType.UNKNOWN) {
 				dungeonRoom.setRoomType(roomType);
 				dungeonRoom.setCheckmark(Checkmark.OPENED);
 			}
@@ -648,21 +638,6 @@ public class DungeonMap {
 		DungeonRoom dungeonRoom = new DungeonRoom(this.instance, roomType);
 		dungeonRoom.setCheckmark(roomType == RoomType.UNKNOWN ? Checkmark.UNKNOWN : Checkmark.OPENED);
 		this.setRoom(x, y, dungeonRoom);
-	}
-
-	/**
-	 * Sets the room data for the given coordinate.
-	 *
-	 * @param x        The room x.
-	 * @param y        The room y.
-	 * @param roomData The room data to set.
-	 */
-	@Contract
-	public void setRoom(int x, int y, @Nullable DungeonRoomData roomData) {
-		final DungeonRoom roomAt = this.getRoomAt(x, y);
-		if (roomAt != null && roomData != null) {
-			this.setRoomData(roomAt, x, y, roomData, false);
-		}
 	}
 
 	/**

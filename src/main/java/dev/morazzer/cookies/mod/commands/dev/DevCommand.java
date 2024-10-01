@@ -18,8 +18,7 @@ public class DevCommand extends ClientCommand {
         ClientCommand[] clientCommands = new ClientCommand[] {
             new DebugSubCommand(),
             new ToolsSubCommand(),
-            new ExtraLoggingCommand(),
-			new ModifyDungeonRoom()
+            new ExtraLoggingCommand()
         };
 
         for (ClientCommand clientCommand : clientCommands) {
