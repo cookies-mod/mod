@@ -13,4 +13,8 @@ public abstract class PuzzleSolver {
 
 	protected void exitRoom() {}
 
+	protected void resetPuzzle() {}
+
+	public void onChatMessage(String message) {}
+
 }

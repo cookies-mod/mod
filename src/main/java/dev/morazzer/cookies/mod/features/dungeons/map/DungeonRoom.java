@@ -309,9 +309,9 @@ public class DungeonRoom {
 	 * @param puzzleType The puzzle type.
 	 */
 	public void setPuzzleType(PuzzleType puzzleType) {
+		this.puzzleType = puzzleType;
 		if (this.instance.getCurrentRoom() == this) {
 			this.instance.loadPuzzle(this);
 		}
-		this.puzzleType = puzzleType;
 	}
 }

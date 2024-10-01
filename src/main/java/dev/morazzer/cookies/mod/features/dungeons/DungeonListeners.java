@@ -13,7 +13,9 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolver;
 import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -80,6 +82,12 @@ public class DungeonListeners {
 			if (string.replaceAll("§[a-f0-9lmnopr]", "").contains("> EXTRA STATS <")) {
 				instance.setPhase(DungeonPhase.AFTER);
 			}
+
+			instance.getPuzzleSolverInstance()
+					.getCurrent()
+					.map(FunctionUtils.function(PuzzleSolver::onChatMessage))
+					.orElseGet(FunctionUtils::noOp)
+					.accept(string.replaceAll("§[a-f0-9lmnor]", ""));
 		}
 	}
 

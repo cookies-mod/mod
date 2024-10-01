@@ -21,9 +21,11 @@ import org.slf4j.LoggerFactory;
 public class PuzzleSolverInstance {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(PuzzleSolverInstance.class);
-	private static final List<Function<DungeonInstance, PuzzleSolver>> SOLVERS = Collections.emptyList();
+	private static final List<Function<DungeonInstance, PuzzleSolver>> SOLVERS =
+			Collections.singletonList(ThreeWeirdosPuzzleSolver::new);
 
 	private final Map<PuzzleType, PuzzleSolver> solverMap = new HashMap<>();
+	private PuzzleSolver current;
 
 	public PuzzleSolverInstance(DungeonInstance dungeonInstance) {
 		for (Function<DungeonInstance, PuzzleSolver> solver : SOLVERS) {
@@ -36,11 +38,25 @@ public class PuzzleSolverInstance {
 	}
 
 	public void onEnterPuzzleRoom(DungeonRoom dungeonRoom) {
-		this.getSolver(dungeonRoom).ifPresent(PuzzleSolver::enterRoom);
+		this.getSolver(dungeonRoom).ifPresent(this::enter);
+	}
+
+	private void enter(PuzzleSolver puzzleSolver) {
+		this.current = puzzleSolver;
+		puzzleSolver.enterRoom();
 	}
 
 	public void onExitRoom(DungeonRoom dungeonRoom) {
-		this.getSolver(dungeonRoom).ifPresent(PuzzleSolver::exitRoom);
+		this.getSolver(dungeonRoom).ifPresent(this::exit);
+	}
+
+	private void exit(PuzzleSolver puzzleSolver) {
+		this.current = null;
+		puzzleSolver.exitRoom();
+	}
+
+	public Optional<PuzzleSolver> getCurrent() {
+		return Optional.ofNullable(this.current);
 	}
 
 	public Optional<PuzzleSolver> getSolver(PuzzleType puzzleType) {

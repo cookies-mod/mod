@@ -75,6 +75,7 @@ public final class DungeonInstance {
 	private final List<Pair<PuzzleType, Integer>> knownPuzzles = new ArrayList<>();
 	@Getter
 	private long lastPuzzleUpdate = -1;
+	@Getter
 	private final PuzzleSolverInstance puzzleSolverInstance;
 	@Getter
 	private DungeonRoom currentRoom;
