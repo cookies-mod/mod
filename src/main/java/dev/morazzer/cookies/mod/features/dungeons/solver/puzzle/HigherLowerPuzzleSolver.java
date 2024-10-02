@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 import dev.morazzer.cookies.mod.render.WorldRender;
@@ -38,10 +37,6 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private Entity first, second;
 	private long enteredBlaze = -1;
 	private long startedBlaze = 1;
-
-	public HigherLowerPuzzleSolver(DungeonInstance dungeonInstance) {
-
-	}
 
 	@Override
 	protected PuzzleType getType() {

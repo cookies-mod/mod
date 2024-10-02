@@ -1,6 +1,5 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
-import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 
@@ -40,9 +39,6 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 
 	private final List<Renderable> renderables = new ArrayList<>();
 	private final Set<String> solved = new HashSet<>();
-
-	public ThreeWeirdosPuzzleSolver(DungeonInstance instance) {
-	}
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {

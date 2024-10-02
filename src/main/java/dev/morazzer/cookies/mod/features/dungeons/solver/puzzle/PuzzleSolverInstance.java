@@ -1,11 +1,8 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
@@ -20,19 +17,22 @@ import org.slf4j.LoggerFactory;
 public class PuzzleSolverInstance {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(PuzzleSolverInstance.class);
-	private static final List<Function<DungeonInstance, PuzzleSolver>> SOLVERS =
-			Arrays.asList(ThreeWeirdosPuzzleSolver::new, HigherLowerPuzzleSolver::new);
 
 	private final Map<PuzzleType, PuzzleSolver> solverMap = new HashMap<>();
 	private PuzzleSolver current;
 
 	public PuzzleSolverInstance(DungeonInstance dungeonInstance) {
-		for (Function<DungeonInstance, PuzzleSolver> solver : SOLVERS) {
-			final PuzzleSolver apply = solver.apply(dungeonInstance);
-			if (this.solverMap.containsKey(apply.getType())) {
-				LOGGER.warn("Duplicate solver for puzzle type {}", apply.getType());
+		for (PuzzleType puzzleType : PuzzleType.values()) {
+			final Optional<PuzzleSolver> apply = puzzleType.getSolverFunction().apply(dungeonInstance);
+			if (apply.isEmpty()) {
+				LOGGER.warn("No logger present for {}", puzzleType);
+				continue;
 			}
-			this.solverMap.put(apply.getType(), apply);
+			final PuzzleSolver puzzleSolver = apply.get();
+			if (this.solverMap.containsKey(puzzleSolver.getType())) {
+				LOGGER.warn("Duplicate solver for puzzle type {}", puzzleSolver.getType());
+			}
+			this.solverMap.put(puzzleSolver.getType(), puzzleSolver);
 		}
 	}
 

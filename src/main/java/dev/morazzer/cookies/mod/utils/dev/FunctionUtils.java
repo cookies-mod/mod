@@ -1,8 +1,11 @@
 package dev.morazzer.cookies.mod.utils.dev;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.util.TriConsumer;
 
@@ -27,7 +30,11 @@ public class FunctionUtils {
         return o -> (t1, t2, t3, t4) -> consumer.accept(o, t1, t2, t3, t4);
     }
 
-    public interface QuadConsumer<T1, T2, T3, T4> {
+	public static <T> Supplier<Optional<T>> wrapOptionalSupplier(Supplier<T> supplier) {
+		return () -> Optional.ofNullable(supplier.get());
+	}
+
+	public interface QuadConsumer<T1, T2, T3, T4> {
         void accept(T1 t1, T2 t2, T3 t3, T4 t4);
     }
 
