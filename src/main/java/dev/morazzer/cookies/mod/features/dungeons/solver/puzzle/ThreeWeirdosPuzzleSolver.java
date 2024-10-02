@@ -26,12 +26,16 @@ import net.minecraft.util.math.BlockPos;
 
 public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 	private static final Pattern PATTERN = Pattern.compile("\\[NPC] (\\w+): (.+)");
-	private static final List<String> correctMessages = Arrays.asList("The reward is not in my chest!",
+	private static final List<String> CORRECT_MESSAGES = Arrays.asList("The reward is not in my chest!",
 			"At least one of them is lying, and the reward is not in \\w+'s chest.?",
 			"My chest doesn't have the reward\\. We are all telling the truth.?",
 			"My chest has the reward and I'm telling the truth!",
 			"The reward isn't in any of our chests.?",
 			"Both of them are telling the truth\\. Also, \\w+ has the reward in their chest.?");
+	private static final List<BlockPos> DIRECTIONS = Arrays.asList(new BlockPos(0, 0, 1),
+			new BlockPos(1, 0, 0),
+			new BlockPos(0, 0, -1),
+			new BlockPos(-1, 0, 0));
 
 	private final List<Renderable> renderables = new ArrayList<>();
 	private final Set<String> solved = new HashSet<>();
@@ -65,7 +69,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 
 		String npc = matcher.group(1);
 		String message = matcher.group(2);
-		boolean isCorrect = correctMessages.stream().anyMatch(message::matches);
+		boolean isCorrect = CORRECT_MESSAGES.stream().anyMatch(message::matches);
 
 		if (this.solved.contains(npc)) {
 			return;
@@ -94,12 +98,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 	}
 
 	private void addHighlight(BlockPos center, boolean correct, String npc) {
-		final List<BlockPos> directions = Arrays.asList(new BlockPos(0, 0, 1),
-				new BlockPos(1, 0, 0),
-				new BlockPos(0, 0, -1),
-				new BlockPos(-1, 0, 0));
-
-		for (BlockPos direction : directions) {
+		for (BlockPos direction : DIRECTIONS) {
 			final BlockPos add = center.add(direction);
 			if (MinecraftClient.getInstance().world == null) {
 				return;
