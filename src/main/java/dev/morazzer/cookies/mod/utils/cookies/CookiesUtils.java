@@ -167,4 +167,37 @@ public class CookiesUtils {
 		};
 	}
 
+	public static String stripColor(String input) {
+		return input.replaceAll("§[0-9a-fklmnor]", "");
+	}
+
+	public static String formattedMs(long time) {
+		StringBuilder stringBuilder = new StringBuilder();
+		long milliSeconds = time % 1000;
+		long secondsRemaining = time / 1000;
+		long seconds = secondsRemaining % 60;
+		long minutesRemaining = secondsRemaining / 60;
+		long minutes = minutesRemaining % 60;
+		long hoursRemaining = minutesRemaining/ 60;
+		long hours = hoursRemaining % 24;
+		long daysRemaining = hoursRemaining / 24;
+
+		if (daysRemaining != 0) {
+			stringBuilder.append(daysRemaining).append("d ");
+		}
+		if (hours != 0) {
+			stringBuilder.append(hours).append("h ");
+		}
+		if (minutes != 0) {
+			stringBuilder.append(minutes).append("m ");
+		}
+		if (seconds != 0) {
+			stringBuilder.append(seconds).append("s ");
+		}
+		if (milliSeconds != 0) {
+			stringBuilder.append(milliSeconds).append("ms");
+		}
+
+		return stringBuilder.toString().trim();
+	}
 }

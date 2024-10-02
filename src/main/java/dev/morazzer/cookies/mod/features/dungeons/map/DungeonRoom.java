@@ -1,25 +1,23 @@
 package dev.morazzer.cookies.mod.features.dungeons.map;
 
-import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
-import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
-
-import dev.morazzer.cookies.mod.render.Renderable;
-
-import dev.morazzer.cookies.mod.utils.cookies.Constants;
-import dev.morazzer.cookies.mod.utils.maths.InterpolatedInteger;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
+import dev.morazzer.cookies.mod.render.Renderable;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.maths.InterpolatedInteger;
 import lombok.Getter;
 import lombok.Setter;
+import org.joml.Vector2i;
 
 /**
  * A dungeon room, this holds various information that is needed to render and display data associated with this room.
@@ -306,6 +304,7 @@ public class DungeonRoom {
 
 	/**
 	 * Sets the puzzle type and invokes the solver loading.
+	 *
 	 * @param puzzleType The puzzle type.
 	 */
 	public void setPuzzleType(PuzzleType puzzleType) {
@@ -313,5 +312,19 @@ public class DungeonRoom {
 		if (this.instance.getCurrentRoom() == this) {
 			this.instance.loadPuzzle(this);
 		}
+	}
+
+	public Optional<Vector2i> getCenter() {
+		if (this.position.size() > 1) {
+			return Optional.empty();
+		}
+
+		return this.position.stream().findFirst().map(DungeonRoom::toRoomPosition);
+	}
+
+	private static Vector2i toRoomPosition(DungeonPosition dungeonPosition) {
+		return new Vector2i(
+				DungeonPosition.target(dungeonPosition::getWorldX),
+				DungeonPosition.target(dungeonPosition::getWorldY));
 	}
 }

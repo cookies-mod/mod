@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
+import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 
 import dev.morazzer.cookies.mod.render.Renderable;
@@ -44,13 +45,13 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 	}
 
 	@Override
-	protected void enterRoom() {
-		super.enterRoom();
+	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		super.onRoomEnter(dungeonRoom);
 		this.renderables.forEach(WorldRender::addRenderable);
 	}
 
 	@Override
-	protected void exitRoom() {
+	protected void onRoomExit() {
 		this.renderables.forEach(WorldRender::removeRenderable);
 	}
 

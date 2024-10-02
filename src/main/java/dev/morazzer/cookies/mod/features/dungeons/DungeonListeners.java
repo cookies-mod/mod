@@ -15,6 +15,7 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolver;
 import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 
@@ -69,17 +70,17 @@ public class DungeonListeners {
 		if (instance == null) {
 			return;
 		}
-		final String string = text.getString();
+		final String string = CookiesUtils.stripColor(text.getString());
 		if (isOverlay) {
 			if (!string.endsWith("Secrets")) {
 				instance.processSecrets(null);
 				return;
 			}
-			final String s = string.replaceAll("(?i)§[a-f0-9]", "").replaceAll(".* (\\d+/\\d+ Secrets).*", "$1");
+			final String s = string.replaceAll(".* (\\d+/\\d+ Secrets).*", "$1");
 			final String[] split = s.split(" ");
 			instance.processSecrets(split[0]);
 		} else {
-			if (string.replaceAll("§[a-f0-9lmnopr]", "").contains("> EXTRA STATS <")) {
+			if (string.contains("> EXTRA STATS <")) {
 				instance.setPhase(DungeonPhase.AFTER);
 			}
 
@@ -87,7 +88,7 @@ public class DungeonListeners {
 					.getCurrent()
 					.map(FunctionUtils.function(PuzzleSolver::onChatMessage))
 					.orElseGet(FunctionUtils::noOp)
-					.accept(string.replaceAll("§[a-f0-9lmnor]", ""));
+					.accept(string);
 		}
 	}
 
@@ -160,6 +161,8 @@ public class DungeonListeners {
 		if (ticks % 2 == 0) {
 			instance.syncPlayers();
 		}
+
+		instance.getPuzzleSolverInstance().getCurrent().ifPresent(PuzzleSolver::tick);
 	}
 
 	/**
