@@ -69,6 +69,10 @@ public class PuzzleSolverInstance {
 		puzzleSolver.onRoomExit();
 	}
 
+	public void unloadCurrent() {
+		this.getCurrent().ifPresent(this::exit);
+	}
+
 	public Optional<PuzzleSolver> getCurrent() {
 		return Optional.ofNullable(this.current);
 	}

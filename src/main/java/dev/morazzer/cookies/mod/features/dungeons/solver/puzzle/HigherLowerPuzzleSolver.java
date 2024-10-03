@@ -52,7 +52,7 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		if (center.isEmpty()) {
 			return;
 		}
-		if (this.isDebug()) {
+		if (isDebugEnabled()) {
 			this.addDebugRenderable(new BlockHighlight(new BlockPos(center.get().x + 1, 118, center.get().y),
 					Constants.MAIN_COLOR));
 		}

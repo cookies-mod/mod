@@ -21,11 +21,11 @@ import net.minecraft.world.World;
  * Base class of all puzzle solvers.
  */
 public abstract class PuzzleSolver {
-	protected static final Identifier DEBUG = DevUtils.createDevelopmentEnvIdentifier("dungeon/puzzles/debug");
+	protected static final Identifier DEBUG = DevUtils.createIdentifier("dungeon/puzzles/debug");
 	private List<Renderable> debugRenderables = null;
 	private final List<Renderable> renderables = new ArrayList<>();
 	public PuzzleSolver() {
-		if (DevUtils.isEnabled(DEBUG)) {
+		if (isDebugEnabled()) {
 			this.debugRenderables = new ArrayList<>();
 		}
 	}
@@ -47,8 +47,8 @@ public abstract class PuzzleSolver {
 		WorldRender.addRenderable(renderable);
 	}
 
-	protected boolean isDebug() {
-		return this.debugRenderables != null;
+	protected static boolean isDebugEnabled() {
+		return DevUtils.isEnabled(DEBUG);
 	}
 
 	protected void clearDebugRenderables() {

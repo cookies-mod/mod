@@ -130,6 +130,7 @@ public final class DungeonInstance {
 	public void unload() {
 		this.send(new DungeonLeavePacket());
 		DungeonFeatures.sendDebugMessage("Unloading %s".formatted(this.serverId));
+		this.puzzleSolverInstance.unloadCurrent();
 		this.mapRenderer = null;
 	}
 

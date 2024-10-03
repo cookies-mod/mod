@@ -26,7 +26,6 @@ import dev.morazzer.cookies.mod.repository.constants.dungeons.WaterEntry;
 import dev.morazzer.cookies.mod.utils.RenderUtils;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
-import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.NonCacheMutableText;
 import dev.morazzer.cookies.mod.utils.minecraft.SupplierTextContent;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +70,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		super.onRoomEnter(dungeonRoom);
 		final Vector2i vector2i = dungeonRoom.getCenter().orElse(null);
 		if (vector2i == null) {
 			return;
@@ -87,7 +87,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			}
 			this.chestPosition = add;
 			this.puzzleDirection = direction;
-			if (this.isDebug()) {
+			if (isDebugEnabled()) {
 				this.addDebugRenderable(new BlockHighlight(add, Constants.SUCCESS_COLOR));
 			}
 			break;
@@ -114,7 +114,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			} else {
 				continue;
 			}
-			if (this.isDebug()) {
+			if (isDebugEnabled()) {
 				this.addDebugRenderable(new BlockHighlight(blockPos.mutableCopy(), Constants.SUCCESS_COLOR));
 			}
 		}
@@ -129,7 +129,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			}
 		}
 
-		if (this.isDebug() || DevUtils.isDevEnvironment()) {
+		if (isDebugEnabled()) {
 			CookiesUtils.sendMessage("Closed Doors: [%s]".formatted(String.join(", ",
 					closedDoors.stream().map(Enum::name).toList())));
 			CookiesUtils.sendMessage("Variants: " + variant);
@@ -229,8 +229,8 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			}
 		}
 
-		if (this.isDebug()) {
-			this.addRenderable(new WorldText(this.chestPosition.toCenterPos().add(0, 4, 0),
+		if (isDebugEnabled()) {
+			this.addDebugRenderable(new WorldText(this.chestPosition.toCenterPos().add(0, 4, 0),
 					Text.literal(String.valueOf(System.nanoTime() - totalTime))));
 		}
 

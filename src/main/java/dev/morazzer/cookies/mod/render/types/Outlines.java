@@ -105,26 +105,26 @@ public record Outlines(Vec3d start, Vec3d end, float red, float green, float blu
         final MatrixStack matrixStack = context.matrixStack();
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.lineWidth(lineWidth);
+        RenderSystem.lineWidth(this.lineWidth);
         RenderSystem.disableCull();
         RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(throughWalls ? GL11.GL_ALWAYS : GL11.GL_LEQUAL);
+        RenderSystem.depthFunc(this.throughWalls ? GL11.GL_ALWAYS : GL11.GL_LEQUAL);
 
         final Tessellator tessellator = RenderSystem.renderThreadTesselator();
         final BufferBuilder begin = tessellator.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
         WorldRenderer.drawBox(
             matrixStack,
             begin,
-            start.x,
-            start.y,
-            start.z,
-            end.x,
-            end.y,
-            end.z,
-            red,
-            green,
-            blue,
-            alpha
+            this.start.x,
+            this.start.y,
+            this.start.z,
+            this.end.x,
+            this.end.y,
+            this.end.z,
+            this.red,
+            this.green,
+            this.blue,
+            this.alpha
         );
         BufferRenderer.drawWithGlobalProgram(begin.end());
 
@@ -136,6 +136,7 @@ public record Outlines(Vec3d start, Vec3d end, float red, float green, float blu
 
     @Override
     public boolean shouldRender(WorldRenderContext context) {
-        return context.frustum().isVisible(start.x, start.y, start.z, end.x, end.y, end.z);
+        return context.frustum().isVisible(this.start.x, this.start.y, this.start.z, this.end.x, this.end.y, this.end.z)
+				|| context.frustum().isVisible(this.end.x, this.end.y, this.end.z, this.start.x, this.start.y, this.start.z);
     }
 }

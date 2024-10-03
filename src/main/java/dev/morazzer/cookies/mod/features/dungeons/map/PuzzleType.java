@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.features.dungeons.map;
 
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.CreeperBeamPuzzleSolver;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.HigherLowerPuzzleSolver;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.ThreeWeirdosPuzzleSolver;
 
@@ -26,7 +27,7 @@ public enum PuzzleType {
 	ICE_PATH("Ice Path"),
 	ICE_FILL("Ice Fill"),
 	HIGHER_LOWER("Higher Or Lower", "Higher Lower", FunctionUtils.wrapOptionalSupplier(HigherLowerPuzzleSolver::new)),
-	CREEPER("Creeper Beams", "Creeper"),
+	CREEPER("Creeper Beams", "Creeper", FunctionUtils.wrapOptionalSupplier(CreeperBeamPuzzleSolver::new)),
 	WATERBOARD("Water Board", FunctionUtils.wrapOptionalF(WaterBoardPuzzleSolver::new)),
 	BOULDER("Boulder"),
 	MAZE("Teleport Maze", "Maze"),
