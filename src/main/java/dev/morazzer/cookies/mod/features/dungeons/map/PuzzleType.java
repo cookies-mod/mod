@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.features.dungeons.map;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.HigherLowerPuzzleSolver;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.ThreeWeirdosPuzzleSolver;
 
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public enum PuzzleType {
 	ICE_FILL("Ice Fill"),
 	HIGHER_LOWER("Higher Or Lower", "Higher Lower", FunctionUtils.wrapOptionalSupplier(HigherLowerPuzzleSolver::new)),
 	CREEPER("Creeper Beams", "Creeper"),
-	WATERBOARD("Water Board"),
+	WATERBOARD("Water Board", FunctionUtils.wrapOptionalF(WaterBoardPuzzleSolver::new)),
 	BOULDER("Boulder"),
 	MAZE("Teleport Maze", "Maze"),
 	UNKNOWN("Unknown");

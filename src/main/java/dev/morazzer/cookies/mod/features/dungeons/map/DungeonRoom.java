@@ -314,7 +314,7 @@ public class DungeonRoom {
 		}
 	}
 
-	public Optional<Vector2i> getCenter() {
+	public Optional<Vector2i> getTopLeft() {
 		if (this.position.size() > 1) {
 			return Optional.empty();
 		}
@@ -322,9 +322,12 @@ public class DungeonRoom {
 		return this.position.stream().findFirst().map(DungeonRoom::toRoomPosition);
 	}
 
+	public Optional<Vector2i> getCenter() {
+		return this.getTopLeft().map(vector2i -> vector2i.add(15, 15));
+	}
+
 	private static Vector2i toRoomPosition(DungeonPosition dungeonPosition) {
-		return new Vector2i(
-				DungeonPosition.target(dungeonPosition::getWorldX),
+		return new Vector2i(DungeonPosition.target(dungeonPosition::getWorldX),
 				DungeonPosition.target(dungeonPosition::getWorldY));
 	}
 }

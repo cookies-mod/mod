@@ -30,6 +30,10 @@ public class FunctionUtils {
         return o -> (t1, t2, t3, t4) -> consumer.accept(o, t1, t2, t3, t4);
     }
 
+	public static <T, V> Function<T, Optional<V>> wrapOptionalF(Function<T, V> f) {
+		return t -> Optional.ofNullable(f.apply(t));
+	}
+
 	public static <T> Supplier<Optional<T>> wrapOptionalSupplier(Supplier<T> supplier) {
 		return () -> Optional.ofNullable(supplier.get());
 	}

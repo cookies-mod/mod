@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
-import dev.morazzer.cookies.mod.render.WorldRender;
+import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.render.types.Line;
 import dev.morazzer.cookies.mod.utils.accessors.GlowingEntityAccessor;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
@@ -32,7 +32,6 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private static final Pattern PATTERN = Pattern.compile("\\[Lv15] Blaze [\\d,]+/([\\d,]+)❤");
 	private Direction direction = null;
 	private int lastBlazeCount = -1;
-	private Line line = null;
 	private Entity first, second;
 	private long enteredBlaze = -1;
 	private long startedBlaze = 1;
@@ -45,12 +44,17 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		if (this.enteredBlaze == -1) {
 			this.enteredBlaze = System.currentTimeMillis();
 		}
+		super.onRoomEnter(dungeonRoom);
 	}
 
 	private void findDirection(DungeonRoom dungeonRoom) {
 		final Optional<Vector2i> center = dungeonRoom.getCenter();
 		if (center.isEmpty()) {
 			return;
+		}
+		if (this.isDebug()) {
+			this.addDebugRenderable(new BlockHighlight(new BlockPos(center.get().x + 1, 118, center.get().y),
+					Constants.MAIN_COLOR));
 		}
 
 		BlockPos platformLocation = center.map(vector2i -> new BlockPos(vector2i.x + 1, 118, vector2i.y)).get();
@@ -96,8 +100,7 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		}
 
 		this.lastBlazeCount = blazes.size();
-		WorldRender.removeRenderable(this.line);
-		this.line = null;
+		this.clearRenderables();
 		this.first = null;
 		this.second = null;
 
@@ -128,8 +131,7 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 				actualSecond = secondPos;
 			}
 
-			this.line = new Line(actualFirst, actualSecond, Constants.SUCCESS_COLOR, -1);
-			WorldRender.addRenderable(this.line);
+			this.addRenderable(new Line(actualFirst, actualSecond, Constants.SUCCESS_COLOR, -1));
 		}
 	}
 
@@ -138,8 +140,10 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		final long timeFromEnter = finishedAt - this.enteredBlaze;
 		final long timeFromStart = finishedAt - this.startedBlaze;
 
-		CookiesUtils.sendSuccessMessage("Finished blaze in " + CookiesUtils.formattedMs(timeFromStart) + " (from start)");
-		CookiesUtils.sendSuccessMessage("Finished blaze in " + CookiesUtils.formattedMs(timeFromEnter) + " (from enter)");
+		CookiesUtils.sendSuccessMessage(
+				"Finished blaze in " + CookiesUtils.formattedMs(timeFromStart) + " (from start)");
+		CookiesUtils.sendSuccessMessage(
+				"Finished blaze in " + CookiesUtils.formattedMs(timeFromEnter) + " (from enter)");
 	}
 
 	private void highlightBlaze(BlazeEntity blazeEntity, int count) {
@@ -159,6 +163,12 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	@Override
 	protected void onRoomExit() {
 		super.onRoomExit();
+		if (this.first != null) {
+			GlowingEntityAccessor.setGlowing(this.first, false);
+		}
+		if (this.second != null) {
+			GlowingEntityAccessor.setGlowing(this.second, false);
+		}
 		if (this.lastBlazeCount == 10 || this.lastBlazeCount == -1) {
 			this.enteredBlaze = -1;
 			this.startedBlaze = -1;
@@ -172,8 +182,7 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		this.enteredBlaze = -1;
 		this.first = null;
 		this.second = null;
-		WorldRender.removeRenderable(this.line);
-		this.line = null;
+		this.clearRenderables();
 		super.resetPuzzle();
 	}
 }

@@ -14,6 +14,7 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
 import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolverInstance;
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import dev.morazzer.cookies.mod.utils.skyblock.PartyUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.TabUtils;
 
@@ -157,6 +158,7 @@ public final class DungeonInstance {
 	 * Called when the instance is removed from the cache.
 	 */
 	public void destroy() {
+		WaterBoardPuzzleSolver.LeverType.remove(this);
 	}
 
 	/**
