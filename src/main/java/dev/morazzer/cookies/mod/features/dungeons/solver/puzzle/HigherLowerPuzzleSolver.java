@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
-import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
 import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.Line;
 import dev.morazzer.cookies.mod.utils.accessors.GlowingEntityAccessor;
@@ -37,11 +36,6 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private Entity first, second;
 	private long enteredBlaze = -1;
 	private long startedBlaze = 1;
-
-	@Override
-	protected PuzzleType getType() {
-		return PuzzleType.HIGHER_LOWER;
-	}
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {

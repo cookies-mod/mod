@@ -29,10 +29,10 @@ public class PuzzleSolverInstance {
 				continue;
 			}
 			final PuzzleSolver puzzleSolver = apply.get();
-			if (this.solverMap.containsKey(puzzleSolver.getType())) {
-				LOGGER.warn("Duplicate solver for puzzle type {}", puzzleSolver.getType());
+			if (this.solverMap.containsKey(puzzleType)) {
+				LOGGER.warn("Duplicate solver for puzzle type {}", puzzleType);
 			}
-			this.solverMap.put(puzzleSolver.getType(), puzzleSolver);
+			this.solverMap.put(puzzleType, puzzleSolver);
 		}
 	}
 
