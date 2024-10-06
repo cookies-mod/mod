@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -47,7 +48,11 @@ public class PuzzleSolverInstance {
 		return Optional.ofNullable(dungeonRoom).map(DungeonRoom::getPuzzleType).flatMap(this::getSolver);
 	}
 
-	private void enter(PuzzleSolver puzzleSolver, DungeonRoom dungeonRoom) {
+	public Collection<PuzzleSolver> getAll() {
+		return this.solverMap.values();
+	}
+
+    private void enter(PuzzleSolver puzzleSolver, DungeonRoom dungeonRoom) {
 		this.current = puzzleSolver;
 		puzzleSolver.onRoomEnter(dungeonRoom);
 	}

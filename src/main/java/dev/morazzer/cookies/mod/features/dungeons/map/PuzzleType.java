@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.features.dungeons.map;
 
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.CreeperBeamPuzzleSolver;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.HigherLowerPuzzleSolver;
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.QuizPuzzleSolver;
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.ThreeWeirdosPuzzleSolver;
 
 import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
@@ -21,7 +22,7 @@ import lombok.Getter;
 @Getter
 public enum PuzzleType {
 
-	QUIZ("Quiz"),
+	QUIZ("Quiz", FunctionUtils.wrapOptionalSupplier(QuizPuzzleSolver::new)),
 	TIC_TAC_TOE("Tic Tac Toe"),
 	WEIRDOS("Three Weirdos", FunctionUtils.wrapOptionalSupplier(ThreeWeirdosPuzzleSolver::new)),
 	ICE_PATH("Ice Path"),

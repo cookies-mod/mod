@@ -54,7 +54,6 @@ public class DungeonListeners {
 		WebsocketEvent.CONNECT.register(DungeonListeners::connectWebsocket);
 		WorldRenderEvents.BEFORE_ENTITIES.register(DungeonListeners::beforeEntities);
 		UseBlockCallback.EVENT.register(DungeonListeners::rightClickBlock);
-
 	}
 
 	private static void connectWebsocket() {
@@ -78,7 +77,7 @@ public class DungeonListeners {
 		if (instance == null) {
 			return;
 		}
-		final String string = CookiesUtils.stripColor(text.getString());
+		final String string = CookiesUtils.stripColor(text.getString()).trim();
 		if (isOverlay) {
 			if (!string.endsWith("Secrets")) {
 				instance.processSecrets(null);
@@ -97,6 +96,9 @@ public class DungeonListeners {
 					.map(FunctionUtils.function(PuzzleSolver::onChatMessage))
 					.orElseGet(FunctionUtils::noOp)
 					.accept(string);
+			instance.getPuzzleSolverInstance()
+					.getAll()
+					.forEach(puzzleSolver -> puzzleSolver.onUnloadedChatMessage(string));
 		}
 	}
 

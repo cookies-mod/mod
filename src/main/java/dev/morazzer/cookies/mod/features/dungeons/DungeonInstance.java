@@ -244,6 +244,9 @@ public final class DungeonInstance {
 	 * Updates the list of puzzles based on the info in tab.
 	 */
 	public void updatePuzzles() {
+		if (this.phase == DungeonPhase.BEFORE) {
+			return;
+		}
 		final ClientPlayerEntity player = this.getPlayer();
 		if (player == null) {
 			return;

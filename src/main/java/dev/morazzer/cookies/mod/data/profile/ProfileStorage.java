@@ -1,5 +1,12 @@
 package dev.morazzer.cookies.mod.data.profile;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.data.DataMigrations;
@@ -11,14 +18,6 @@ import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,11 +33,12 @@ public class ProfileStorage {
 	 * Registers the listeners for automatic profile swapping.
 	 */
 	public static void register() {
-		ProfileSwapEvent.AFTER_SET_NO_UUID.register(() -> {
+		ProfileSwapEvent.AFTER_SET_NO_UUID.register(() -> CookiesMod.getExecutorService().execute(() -> {
 			saveCurrentProfile();
 			loadCurrentProfile();
-		});
-		ServerSwapEvent.SERVER_SWAP.register(ProfileStorage::saveCurrentProfile);
+		}));
+		ServerSwapEvent.SERVER_SWAP.register(() -> CookiesMod.getExecutorService()
+				.execute(ProfileStorage::saveCurrentProfile));
 
 		CookiesMod.getExecutorService().scheduleAtFixedRate(ProfileStorage::saveCurrentProfile, 5, 5,
 				TimeUnit.MINUTES);
@@ -47,7 +47,7 @@ public class ProfileStorage {
 	/**
 	 * Save the current profile data instance to the file.
 	 */
-	public static void saveCurrentProfile() {
+	public static synchronized void saveCurrentProfile() {
 		if (profileData == null) {
 			return;
 		}
@@ -56,6 +56,7 @@ public class ProfileStorage {
 			return;
 		}
 
+		long started = System.currentTimeMillis();
 		final Path playerDirectory = PROFILE_DATA_FOLDER.resolve(profileData.getPlayerUuid().toString());
 		final Path profileFile = playerDirectory.resolve(profileData.getProfileUuid() + ".json");
 		DevUtils.log(LOGGING_KEY, "Saving profile data to %s", profileFile);
@@ -69,6 +70,7 @@ public class ProfileStorage {
 				StandardCharsets.UTF_8,
 				StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.CREATE));
+		DevUtils.log(LOGGING_KEY, "Saved profile in %sms", System.currentTimeMillis() - started);
 	}
 
 	private static void loadCurrentProfile() {
@@ -78,11 +80,12 @@ public class ProfileStorage {
 	/**
 	 * Load the current profile data instance from the file.
 	 */
-	public static void loadCurrentProfile(boolean skipCheck) {
+	public static synchronized void loadCurrentProfile(boolean skipCheck) {
 		if (PlayerStorage.getCurrentPlayer().isEmpty() || (SkyblockUtils.getLastProfileId().isEmpty() || skipCheck)) {
 			return;
 		}
 
+		long started = System.currentTimeMillis();
 		final Path playerDirectory = PROFILE_DATA_FOLDER.resolve(PlayerStorage.getCurrentPlayer().get().toString());
 		final Path profileFile = playerDirectory.resolve(SkyblockUtils.getLastProfileId().get() + ".json");
 
@@ -103,6 +106,7 @@ public class ProfileStorage {
 		profileData = JsonUtils.fromJson(new ProfileData(PlayerStorage.getCurrentPlayer().get(),
 				SkyblockUtils.getLastProfileId().get()), jsonObject);
 		profileData.load();
+		DevUtils.log(LOGGING_KEY, "Loaded profile in %sms", System.currentTimeMillis() - started);
 	}
 
 	/**
@@ -120,9 +124,10 @@ public class ProfileStorage {
 		if (Optional.ofNullable(profileData).map(ProfileData::isActive).orElse(false)) {
 			return Optional.of(profileData);
 		}
-
-		saveCurrentProfile();
-		loadCurrentProfile();
+		CookiesMod.getExecutorService().execute(() -> {
+			saveCurrentProfile();
+			loadCurrentProfile();
+		});
 
 		return Optional.ofNullable(profileData);
 	}

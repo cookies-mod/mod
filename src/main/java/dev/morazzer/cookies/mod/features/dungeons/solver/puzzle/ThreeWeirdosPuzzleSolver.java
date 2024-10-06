@@ -47,6 +47,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	protected void onRoomExit() {
+		super.onRoomExit();
 		this.renderables.forEach(WorldRender::removeRenderable);
 	}
 

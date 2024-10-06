@@ -1,14 +1,15 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.render.types.Line;
-import dev.morazzer.cookies.mod.render.types.Outlines;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Vector2i;
 
@@ -16,13 +17,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 	private static final Block[] BLOCKS = {Blocks.PRISMARINE, Blocks.SEA_LANTERN};
-	private static final int[] COLORS =
-			{Constants.SUCCESS_COLOR, Constants.FAIL_COLOR, Constants.MAIN_COLOR, 0xFFBED2FE, 0xFFFDFD96, 0xFF6EB5FF};
+	private static final int[] COLORS = {Constants.SUCCESS_COLOR, 0xFFBED2FE, 0xFFFDFD96, 0xFF6EB5FF};
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
@@ -49,34 +48,37 @@ public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 				.map(BlockPos.class::cast)
 				.toList();
 
-		final Box tempBox = new Box(center).offset(0, 0.26, 0);
-		final Box box = tempBox.withMaxY(tempBox.maxY + 1.1);
-		if (isDebugEnabled()) {
-			this.addDebugRenderable(new Outlines(box.getMaxPos(), box.getMinPos(), 0xFFFF00FF, 1, true));
+		final Vec3d creeperCenter = center.up().toCenterPos();
+		final Set<Connection> map = new HashSet<>();
+
+		for (int firstIndex = 0; firstIndex < list.size(); firstIndex++) {
+			final BlockPos firstPos = list.get(firstIndex);
+			for (int secondIndex = firstIndex; secondIndex < list.size(); secondIndex++) {
+				final BlockPos secondPos = list.get(secondIndex);
+				map.add(new Connection(creeperCenter, firstPos, secondPos));
+			}
 		}
 
+		final Set<BlockPos> usedBlocks = new HashSet<>();
+		final AtomicInteger currentColor = new AtomicInteger();
 
-		Set<BlockPos> used = new HashSet<>();
-		int lines = 0;
-
-		for (int i = 0; i < list.size() - 1; i++) {
-			final BlockPos pos1 = list.get(i);
-			for (int j = i + 1; j < list.size(); j++) {
-				final BlockPos pos2 = list.get(j);
-				final Optional<Vec3d> intersectionPoint = box.raycast(pos1.toCenterPos(), pos2.toCenterPos());
-				if (intersectionPoint.isPresent()) {
-					if (used.contains(pos1) || used.contains(pos2)) {
-						continue;
-					}
-					used.add(pos1);
-					used.add(pos2);
-					if (lines >= COLORS.length) {
-						return;
-					}
-					this.addRenderable(new Line(pos1.toCenterPos(), pos2.toCenterPos(), COLORS[lines++]));
-					break;
-				}
+		map.stream().sorted(Comparator.comparingDouble(Connection::distance)).filter(connection -> {
+			if (usedBlocks.contains(connection.pos1) || usedBlocks.contains(connection.pos2)) {
+				return false;
+			} else {
+				usedBlocks.add(connection.pos1);
+				usedBlocks.add(connection.pos2);
+				return true;
 			}
+		}).limit(4).forEach(connection -> this.addRenderable(new Line(
+				connection.pos1.toCenterPos(),
+				connection.pos2.toCenterPos(),
+				COLORS[Math.min(currentColor.getAndIncrement(), COLORS.length - 1)])));
+	}
+
+	record Connection(double distance, BlockPos pos1, BlockPos pos2) {
+		public Connection(Vec3d point, BlockPos pos1, BlockPos pos2) {
+			this(MathUtils.distance(point, pos1.toCenterPos(), pos2.toCenterPos()), pos1, pos2);
 		}
 	}
 }
