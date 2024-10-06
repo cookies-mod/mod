@@ -1,20 +1,19 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import java.awt.Color;
+
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.config.data.HudElementPosition;
 import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Foldable;
 import dev.morazzer.cookies.mod.config.system.Row;
-
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
 import dev.morazzer.cookies.mod.config.system.options.ButtonOption;
 import dev.morazzer.cookies.mod.config.system.options.ColorOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
-
-import java.awt.Color;
 
 import net.minecraft.item.Items;
 
@@ -95,6 +94,8 @@ public class DungeonConfig extends Category {
 		public BooleanOption higherLower = new BooleanOption(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER, true);
 		public BooleanOption quiz = new BooleanOption(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, true);
 		public BooleanOption threeWeirdos = new BooleanOption(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER, true);
+		public TextDisplayOption credit = new TextDisplayOption(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS,
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_LORE);
 		public BooleanOption waterBoard = new BooleanOption(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER, true);
 
 		@Override
@@ -114,7 +115,7 @@ public class DungeonConfig extends Category {
 		public BooleanOption selectAllColorsTerminal =
 				new BooleanOption(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS, true);
 		public BooleanOption startsWithTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
-            true);
+				true);
 
 		@Override
 		public String getName() {

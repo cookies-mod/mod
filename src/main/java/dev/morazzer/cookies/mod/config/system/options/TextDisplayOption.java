@@ -5,8 +5,10 @@ import dev.morazzer.cookies.mod.config.system.Option;
 import dev.morazzer.cookies.mod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookies.mod.config.system.editor.TextDisplayEditor;
 import dev.morazzer.cookies.mod.translations.TranslationKey;
+
 import lombok.Getter;
 import net.minecraft.text.Text;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +27,13 @@ public class TextDisplayOption extends Option<Text, TextDisplayOption> {
      * @param translationKey The translation key to use.
      */
     public TextDisplayOption(@NotNull @TranslationKey String translationKey) {
-        super(Text.translatable(translationKey), Text.empty(), Text.empty());
+        super(Text.translatable(translationKey), null, Text.empty());
         this.setColor(0xFFFFFFFF);
     }
+
+	public TextDisplayOption(@NotNull @TranslationKey String translationKey, String... descriptionParts) {
+		super(translationKey, Text.empty(), descriptionParts);
+	}
 
     /**
      * Sets the color for the bar.

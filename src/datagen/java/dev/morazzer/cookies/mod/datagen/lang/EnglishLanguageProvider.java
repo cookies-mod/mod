@@ -144,19 +144,23 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER,
 				"Creeper Beams",
 				"Enables the creeper beams puzzle solver.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER,
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER,
 				"Higher/Lower",
 				"Enables the higher or lower puzzle solver.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, "Quiz", "Enables the quiz puzzle solver.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER,
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER,
 				"Three Weirdos",
 				"Enables the three weirdos puzzle solver.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
 				"Water Board",
 				"Enables the water board solver.");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS, "Credits to Desco1");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_1, "The original oneflow solver was created by Desco1,");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_2, "check out their Github at Desco1/WaterSolver");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_3, "");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_4, "Furthermore thank you to drek1984, Jade and bonsai");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_5, "which where helping Desco1 with the original ");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_6, "and aswell Skytils for parts of the original solver.");
 	}
 
 	private void addPlotPriceBreakdown(CookiesTranslationBuilder translationBuilder) {
@@ -442,9 +446,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MISC, "Misc Config", "Miscellaneous settings");
 		translationBuilder.addConfig(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, "Scrollable Tooltips", """
-				Allows you to scroll through tooltips\r
-				\r
-				CTRL + Scroll -> move horizontal\r
+				Allows you to scroll through tooltips
+				
+				CTRL + Scroll -> move horizontal
 				SHIFT + Scroll -> chop tooltips""");
 		translationBuilder.addConfig(CONFIG_MISC_STORAGE_PREVIEW,
 				"Storage Preview",
