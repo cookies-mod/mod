@@ -1,12 +1,12 @@
 package dev.morazzer.cookies.mod.datagen.lang;
 
-import dev.morazzer.cookies.mod.datagen.CookiesLanguageProvider;
-
 import java.util.concurrent.CompletableFuture;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import dev.morazzer.cookies.mod.datagen.CookiesLanguageProvider;
 
 import net.minecraft.registry.RegistryWrapper;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 public class EnglishLanguageProvider extends CookiesLanguageProvider {
 	public EnglishLanguageProvider(
@@ -119,8 +119,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Show dungeon map",
 				"Shows the dungeon map in the ui.‚");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
-		translationBuilder.addConfig(
-				CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
 				"Background color",
 				"Changes the background color of the ui widgets.‚");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
@@ -141,6 +140,23 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
 				"Starts with",
 				"Enables the starts with solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE, "Puzzles", "All settings related to puzzles.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER,
+				"Creeper Beams",
+				"Enables the creeper beams puzzle solver.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER,
+				"Higher/Lower",
+				"Enables the higher or lower puzzle solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, "Quiz", "Enables the quiz puzzle solver.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER,
+				"Three Weirdos",
+				"Enables the three weirdos puzzle solver.");
+		translationBuilder.addConfig(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
+				"Water Board",
+				"Enables the water board solver.");
 	}
 
 	private void addPlotPriceBreakdown(CookiesTranslationBuilder translationBuilder) {
@@ -220,8 +236,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT, "Left-click to highlight all items and chests!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_NO_CHESTS, "Left-click to highlight all items!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_VAULT, "Left-click to open Bank (Vault)!");
-		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG, "Left-click to open accessory bag!");
-		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_SACK_OF_SACKS, "Left-click to open sack-of-sacks!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG,
+				"Left-click to open accessory bag!");
+		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_SACK_OF_SACKS,
+				"Left-click to open sack-of-sacks!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_POTION_BAG, "Left-click to open potion bag!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ALL_CHEST, "Left-click to highlight all chests!");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_CHEST, "Left-click to highlight chest!");

@@ -1,13 +1,11 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 
-import dev.morazzer.cookies.mod.render.Renderable;
-import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -36,23 +34,33 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 			new BlockPos(0, 0, -1),
 			new BlockPos(-1, 0, 0));
 
-	private final List<Renderable> renderables = new ArrayList<>();
 	private final Set<String> solved = new HashSet<>();
+
+	public ThreeWeirdosPuzzleSolver() {
+		super(DungeonConfig.getInstance().puzzleFoldable.threeWeirdos);
+	}
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.onRoomEnter(dungeonRoom);
-		this.renderables.forEach(WorldRender::addRenderable);
 	}
 
 	@Override
 	protected void onRoomExit() {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.onRoomExit();
-		this.renderables.forEach(WorldRender::removeRenderable);
 	}
 
 	@Override
 	public void onChatMessage(String literalMessage) {
+		if (this.isDisabled()) {
+			return;
+		}
 		final Matcher matcher = PATTERN.matcher(literalMessage);
 
 		if (!matcher.find()) {
@@ -99,8 +107,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 				this.solved.add(npc);
 				final BlockHighlight blockHighlight =
 						new BlockHighlight(add, correct ? Constants.SUCCESS_COLOR : Constants.FAIL_COLOR);
-				this.renderables.add(blockHighlight);
-				WorldRender.addRenderable(blockHighlight);
+				this.addRenderable(blockHighlight);
 				return;
 			}
 		}
@@ -108,8 +115,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	protected void resetPuzzle() {
-		this.renderables.forEach(WorldRender::removeRenderable);
-		this.renderables.clear();
+		this.clearRenderables();
 		this.solved.clear();
 	}
 }

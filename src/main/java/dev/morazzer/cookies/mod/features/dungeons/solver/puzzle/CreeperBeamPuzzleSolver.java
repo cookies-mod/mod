@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -23,10 +25,17 @@ public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 	private static final Block[] BLOCKS = {Blocks.PRISMARINE, Blocks.SEA_LANTERN};
 	private static final int[] COLORS = {Constants.SUCCESS_COLOR, 0xFFBED2FE, 0xFFFDFD96, 0xFF6EB5FF};
 
+	public CreeperBeamPuzzleSolver() {
+		super(DungeonConfig.getInstance().puzzleFoldable.creeperBeams);
+	}
+
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
 		this.clearRenderables();
 		super.onRoomEnter(dungeonRoom);
+		if (this.isDisabled()) {
+			return;
+		}
 		final BlockPos first = dungeonRoom.getTopLeft().map(block -> new BlockPos(block.x, 70, block.y)).orElse(null);
 		final BlockPos second =
 				dungeonRoom.getCenter().map(block -> new BlockPos(block.x + 15, 84, block.y + 15)).orElse(null);

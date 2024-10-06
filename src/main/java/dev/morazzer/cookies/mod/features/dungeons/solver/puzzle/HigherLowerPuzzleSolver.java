@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -36,8 +38,15 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private long enteredBlaze = -1;
 	private long startedBlaze = 1;
 
+	public HigherLowerPuzzleSolver() {
+		super(DungeonConfig.getInstance().puzzleFoldable.higherLower);
+	}
+
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		if (this.isDisabled()) {
+			return;
+		}
 		if (this.direction == null) {
 			this.findDirection(dungeonRoom);
 		}
@@ -67,6 +76,9 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	public void tick() {
+		if (this.isDisabled()) {
+			return;
+		}
 		Set<Pair<Entity, Integer>> blazes = new HashSet<>();
 
 		this.getWorld().map(ClientWorld::getEntities).orElse(Collections.emptyList()).forEach(entity -> {
@@ -162,6 +174,9 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	protected void onRoomExit() {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.onRoomExit();
 		if (this.first != null) {
 			GlowingEntityAccessor.setGlowing(this.first, false);

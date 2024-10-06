@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,11 +67,15 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 	private Vec3d leverPos;
 
 	public WaterBoardPuzzleSolver(DungeonInstance dungeon) {
+		super(DungeonConfig.getInstance().puzzleFoldable.waterBoard);
 		this.dungeon = dungeon;
 	}
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.onRoomEnter(dungeonRoom);
 		final Vector2i vector2i = dungeonRoom.getCenter().orElse(null);
 		if (vector2i == null) {
@@ -155,6 +161,9 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	public void tick() {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.tick();
 		long totalTime = System.nanoTime();
 		if (this.totalClicks == this.lastTotalClicks) {
@@ -239,6 +248,9 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	public void beforeRender(final float tickDelta) {
+		if (this.isDisabled()) {
+			return;
+		}
 		if (this.chestPosition == null) {
 			return;
 		}
@@ -284,6 +296,9 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	public void onInteract(World world, BlockHitResult blockHitResult, Hand hand) {
+		if (this.isDisabled()) {
+			return;
+		}
 		if (blockHitResult.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
@@ -307,11 +322,6 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 				return;
 			}
 		}
-	}
-
-	@Override
-	protected void onRoomExit() {
-		super.onRoomExit();
 	}
 
 	public enum Variant implements StringIdentifiable {

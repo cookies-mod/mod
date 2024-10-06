@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +25,31 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
  */
 public abstract class PuzzleSolver {
 	protected static final Identifier DEBUG = DevUtils.createIdentifier("dungeon/puzzles/debug");
+	private final BooleanOption option;
 	private List<Renderable> debugRenderables = null;
 	private final List<Renderable> renderables = new ArrayList<>();
 	boolean isLoaded = false;
 
-	public PuzzleSolver() {
+	public PuzzleSolver(BooleanOption option) {
+		this.option = option;
+		this.option.withCallback(this::toggle);
 		if (isDebugEnabled()) {
 			this.debugRenderables = new ArrayList<>();
 		}
+	}
+
+	private void toggle(Boolean oldValue, Boolean newValue) {
+		if (newValue) {
+			if (this.isLoaded) {
+				this.renderables.forEach(WorldRender::addRenderable);
+			}
+		} else {
+			this.removeRenderables();
+		}
+	}
+
+	public boolean isDisabled() {
+		return !this.option.isActive();
 	}
 
 	public void beforeRender(float tickDelta) {}

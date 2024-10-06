@@ -40,6 +40,7 @@ public class DungeonConfig extends Category {
 
 	public TerminalFoldable terminalFoldable = new TerminalFoldable();
 	public SpiritLeapFoldable spiritLeapFoldable = new SpiritLeapFoldable();
+	public PuzzleFoldable puzzleFoldable = new PuzzleFoldable();
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
@@ -85,6 +86,20 @@ public class DungeonConfig extends Category {
 		@Override
 		public String getName() {
 			return CONFIG_DUNGEON_SPIRIT_LEAP;
+		}
+	}
+
+	public static class PuzzleFoldable extends Foldable {
+
+		public BooleanOption creeperBeams = new BooleanOption(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER, true);
+		public BooleanOption higherLower = new BooleanOption(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER, true);
+		public BooleanOption quiz = new BooleanOption(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, true);
+		public BooleanOption threeWeirdos = new BooleanOption(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER, true);
+		public BooleanOption waterBoard = new BooleanOption(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER, true);
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_PUZZLE;
 		}
 	}
 

@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.repository.constants.dungeons.DungeonConstants;
 
 import java.util.ArrayList;
@@ -33,8 +34,15 @@ public class QuizPuzzleSolver extends PuzzleSolver {
 	private BlockPos center;
 	private Direction puzzleDirection;
 
+	public QuizPuzzleSolver() {
+		super(DungeonConfig.getInstance().puzzleFoldable.quiz);
+	}
+
 	@Override
 	public void onUnloadedChatMessage(String message) {
+		if (this.isDisabled()) {
+			return;
+		}
 		if (message.startsWith("[STATUE] Oruo the Omniscient")) {
 			this.solutionStrings.clear();
 			this.solution = null;
@@ -75,6 +83,9 @@ public class QuizPuzzleSolver extends PuzzleSolver {
 
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
+		if (this.isDisabled()) {
+			return;
+		}
 		super.onRoomEnter(dungeonRoom);
 		final Optional<Vector2i> center = dungeonRoom.getCenter();
 		if (isDebugEnabled()) {
