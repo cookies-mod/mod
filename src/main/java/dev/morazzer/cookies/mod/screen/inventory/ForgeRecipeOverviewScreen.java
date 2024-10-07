@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -68,7 +72,7 @@ public class ForgeRecipeOverviewScreen extends ClientSideInventory {
             return null;
         }
         final ItemStack itemStack = repositoryItem.constructItemStack();
-        final List<Text> texts = itemStack.get(CookiesDataComponentTypes.CUSTOM_LORE);
+        final List<Text> texts = Optional.ofNullable(itemStack.get(DataComponentTypes.LORE)).map(LoreComponent::lines).orElse(null);
         if (texts == null) {
             return null;
         }
