@@ -10,8 +10,11 @@ import dev.morazzer.cookies.mod.events.dungeon.DungeonEvents;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMap;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
+import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonType;
 import dev.morazzer.cookies.mod.features.dungeons.map.PuzzleType;
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolverInstance;
+import dev.morazzer.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import dev.morazzer.cookies.mod.utils.skyblock.PartyUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.TabUtils;
 
@@ -40,6 +43,7 @@ import net.minecraft.util.math.Vec3d;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.joml.Vector2i;
 
 /**
  * This class represents a dungeon instance, this contains a set of immutable information about the dungeon. <br>
@@ -72,6 +76,10 @@ public final class DungeonInstance {
 	private final List<Pair<PuzzleType, Integer>> knownPuzzles = new ArrayList<>();
 	@Getter
 	private long lastPuzzleUpdate = -1;
+	@Getter
+	private final PuzzleSolverInstance puzzleSolverInstance;
+	@Getter
+	private DungeonRoom currentRoom;
 
 	public DungeonInstance(DungeonType type, int floor, String serverId) {
 		this.type = type;
@@ -89,6 +97,7 @@ public final class DungeonInstance {
 			this.debugInstance = false;
 			this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
 		}
+		this.puzzleSolverInstance = new PuzzleSolverInstance(this);
 	}
 
 	/**
@@ -121,6 +130,7 @@ public final class DungeonInstance {
 	public void unload() {
 		this.send(new DungeonLeavePacket());
 		DungeonFeatures.sendDebugMessage("Unloading %s".formatted(this.serverId));
+		this.puzzleSolverInstance.unloadCurrent();
 		this.mapRenderer = null;
 	}
 
@@ -149,6 +159,7 @@ public final class DungeonInstance {
 	 * Called when the instance is removed from the cache.
 	 */
 	public void destroy() {
+		WaterBoardPuzzleSolver.LeverType.remove(this);
 	}
 
 	/**
@@ -233,6 +244,9 @@ public final class DungeonInstance {
 	 * Updates the list of puzzles based on the info in tab.
 	 */
 	public void updatePuzzles() {
+		if (this.phase == DungeonPhase.BEFORE) {
+			return;
+		}
 		final ClientPlayerEntity player = this.getPlayer();
 		if (player == null) {
 			return;
@@ -245,6 +259,32 @@ public final class DungeonInstance {
 				.toList();
 
 		list.forEach(this::handlePuzzleEntry);
+	}
+
+	/**
+	 * Attempts to load the puzzle solver for the given room.
+	 * @param dungeonRoom The puzzle room.
+	 */
+	public void loadPuzzle(DungeonRoom dungeonRoom) {
+		this.puzzleSolverInstance.onEnterPuzzleRoom(dungeonRoom);
+	}
+
+	/**
+	 * Attempts to unload the puzzle solver for the given room.
+	 * @param dungeonRoom The puzzle room.
+	 */
+	public void unloadPuzzle(DungeonRoom dungeonRoom) {
+		this.puzzleSolverInstance.onExitRoom(dungeonRoom);
+	}
+
+	/**
+	 * Swaps the current room and invokes puzzle solvers.
+	 * @param lastMapPosition The current room.
+	 */
+	public void swapRoom(Vector2i lastMapPosition) {
+		this.unloadPuzzle(this.currentRoom);
+		this.currentRoom = this.dungeonMap.getRoomAt(lastMapPosition.x, lastMapPosition.y);
+		this.loadPuzzle(this.currentRoom);
 	}
 
 	private void handlePuzzleEntry(PlayerListEntry playerListEntry) {

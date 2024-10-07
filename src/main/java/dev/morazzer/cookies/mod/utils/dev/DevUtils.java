@@ -105,7 +105,7 @@ public class DevUtils {
 	 * @param name The name of the tool.
 	 * @return The identifier.
 	 */
-	public Identifier createDevelopmentEnvIdentifier(final String name) {
+	public static Identifier createDevelopmentEnvIdentifier(final String name) {
 		if (!isDevEnvironment()) {
 			return ONLY_IN_DEV_ENV;
 		}

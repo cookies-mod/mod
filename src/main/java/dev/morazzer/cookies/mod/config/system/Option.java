@@ -54,9 +54,13 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      * @param description The description.
      * @param value       The initial value.
      */
-    protected Option(@NotNull Text name, @NotNull Text description, T value) {
+    protected Option(@NotNull Text name, Text description, T value) {
         this.name = name;
-        this.description = new Text[] {description};
+		if (description != null) {
+			this.description = new Text[] { description };
+		} else {
+			this.description = new Text[0];
+		}
         this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
         this.value = value;
     }
@@ -68,13 +72,11 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      * @param description The description.
      * @param value       The initial value.
      */
-    @Deprecated(forRemoval = true, since = "1.0.1")
-    public Option(Text name, T value, Text[] description) {
-        this.name = name;
-        this.description = description;
+    public Option(String name, T value, String[] description) {
+        this.name = Text.translatable(name);
+        this.description =  Arrays.stream(description).map(Text::translatable).toArray(Text[]::new);
         this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
         this.value = value;
-
     }
 
     /**

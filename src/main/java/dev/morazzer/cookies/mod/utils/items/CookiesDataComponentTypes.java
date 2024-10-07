@@ -212,10 +212,7 @@ public class CookiesDataComponentTypes {
 	}
 
 	public static boolean isCustomType(ComponentType<?> type) {
-		if (type instanceof CookiesDataComponent<?>) {
-			return true;
-		}
-		return list.contains(type);
+		return type instanceof CookiesDataComponent<?>;
 	}
 
 	private static <T, D> ComponentType<T> register(
@@ -233,8 +230,7 @@ public class CookiesDataComponentTypes {
 			ComponentType<D> source,
 			BiFunction<D, String, Boolean> test,
 			BiFunction<D, String, T> mapper) {
-		final ComponentType.Builder<T> builder = ComponentType.builder();
-		final ComponentType<T> build = operator.apply(builder).build();
+		final CookiesDataComponent<T> build = new CookiesDataComponent<>(null);
 		list.add(build);
 		dataTypes.add(new DataType<>(build, key, source, test, mapper));
 		return build;

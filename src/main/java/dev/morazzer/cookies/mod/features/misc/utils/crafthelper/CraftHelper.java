@@ -14,6 +14,7 @@ import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 
@@ -299,28 +300,8 @@ public class CraftHelper {
 				return "Done";
 			}
 
-			StringBuilder stringBuilder = new StringBuilder();
-			int seconds = remaining % 60;
-			int minutesRemaining = remaining / 60;
-			int minutes = minutesRemaining % 60;
-			int hoursRemaining = minutesRemaining/ 60;
-			int hours = hoursRemaining % 24;
-			int daysRemaining = hoursRemaining / 24;
 
-			if (daysRemaining != 0) {
-				stringBuilder.append(daysRemaining).append("d ");
-			}
-			if (hours != 0) {
-				stringBuilder.append(hours).append("h ");
-			}
-			if (minutes != 0) {
-				stringBuilder.append(minutes).append("m ");
-			}
-			if (seconds != 0) {
-				stringBuilder.append(seconds).append("s");
-			}
-
-			return stringBuilder.toString().trim();
+			return CookiesUtils.formattedMs(remaining * 1000L);
 		};
 	}
 

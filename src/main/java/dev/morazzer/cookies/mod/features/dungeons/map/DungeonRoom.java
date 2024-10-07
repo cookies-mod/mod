@@ -1,25 +1,23 @@
 package dev.morazzer.cookies.mod.features.dungeons.map;
 
-import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
-import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
-import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
-
-import dev.morazzer.cookies.mod.render.Renderable;
-
-import dev.morazzer.cookies.mod.utils.cookies.Constants;
-import dev.morazzer.cookies.mod.utils.maths.InterpolatedInteger;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonPosition;
+import dev.morazzer.cookies.mod.render.Renderable;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.maths.InterpolatedInteger;
 import lombok.Getter;
 import lombok.Setter;
+import org.joml.Vector2i;
 
 /**
  * A dungeon room, this holds various information that is needed to render and display data associated with this room.
@@ -120,154 +118,6 @@ public class DungeonRoom {
 		}
 
 		return "L";
-	}
-
-	/**
-	 * Find and set the rotation of the room.
-	 */
-	public void findRotation() {
-		this.rotation = this.calculateRotation();
-	}
-
-	/**
-	 * Calculate the rotation of the room based on a few criteria.
-	 *
-	 * @return The rotation of the room.
-	 */
-	public int calculateRotation() {
-		if (this.roomType == RoomType.FAIRY) {
-			return -1;
-		}
-
-		if (this.shape.equals("2x2")) {
-			return 0;
-		}
-
-		final List<Integer> xList =
-				this.position.stream().map(DungeonPosition.target(DungeonPosition::getRoomMapX)).distinct().toList();
-		final List<Integer> yList =
-				this.position.stream().map(DungeonPosition.target(DungeonPosition::getRoomMapY)).distinct().toList();
-
-		int xSize = xList.size();
-		int ySize = yList.size();
-
-		switch (this.shape) {
-			case "1x2", "1x3", "1x4" -> {
-				if (xSize == 1) {
-					return 0;
-				} else if (ySize == 1) {
-					return 1;
-				}
-			}
-		}
-
-		if (this.shape.equals("L")) {
-			final DungeonPosition dungeonPosition = this.position.stream().filter(pos1 -> {
-				int x1 = DungeonPosition.target(pos1::getRoomMapX);
-				int y1 = DungeonPosition.target(pos1::getRoomMapY);
-				return this.position.stream().filter(pos2 -> {
-					int x2 = DungeonPosition.target(pos2::getRoomMapX);
-					int y2 = DungeonPosition.target(pos2::getRoomMapY);
-
-					return (x1 == x2 && (y1 + 1 == y2 || y1 - 1 == y2)) || (y1 == y2 && (x1 + 1 == x2 || x1 - 1 == x2));
-				}).count() == 2;
-			}).findFirst().orElse(null);
-			if (dungeonPosition == null) {
-				return -1;
-			}
-
-			int cornerX = DungeonPosition.target(dungeonPosition::getRoomMapX);
-			int cornerY = DungeonPosition.target(dungeonPosition::getRoomMapY);
-
-			int minX = xList.stream().min(Integer::compareTo).orElse(0);
-			int maxX = xList.stream().max(Integer::compareTo).orElse(0);
-			int minY = yList.stream().min(Integer::compareTo).orElse(0);
-			int maxY = yList.stream().max(Integer::compareTo).orElse(0);
-
-			if (cornerX == minX && cornerY == maxY) {
-				return 2;
-			} else if (cornerX == maxX && cornerY == maxY) {
-				return 3;
-			} else if (cornerX == maxX && cornerY == minY) {
-				return 0;
-			} else if (cornerX == minX && cornerY == minY) {
-				return 1;
-			}
-		}
-
-		if (this.shape.equals("1x1")) {
-			DungeonPosition position = this.position.stream().findFirst().orElse(null);
-			if (position == null) {
-				return -1;
-			}
-			int x = DungeonPosition.target(position::getRoomMapX);
-			int y = DungeonPosition.target(position::getRoomMapY);
-
-			DungeonDoor top = null, left = null, bottom = null, right = null;
-			int hits = 0;
-
-			for (DungeonDoor door : this.instance.getDungeonMap().getDoors()) {
-				//	System.out.printf("Door at (%s:%s)%n", door.x(), door.y());
-				if (door.x() == x && door.y() == y) {
-					if (door.left() && left == null) {
-						left = door;
-						hits++;
-					} else if (bottom == null) {
-						bottom = door;
-						hits++;
-					}
-				} else if (door.x() == x && door.y() == y - 1 && !door.left() && top == null) {
-					top = door;
-					hits++;
-				} else if (door.x() == x + 1 && door.y() == y && door.left() && right == null) {
-					right = door;
-					hits++;
-				}
-			}
-
-			return switch (hits) {
-				case 4 -> 1;
-				case 3 -> {
-					if (left != null) {
-						yield 3;
-					} else if (right != null) {
-						yield 1;
-					} else if (bottom != null) {
-						yield 2;
-					}
-					yield 0;
-				}
-				case 2 -> {
-					if (top != null && bottom != null) {
-						yield 2;
-					} else if (left != null && right != null) {
-						yield 1;
-					} else if (left != null && bottom != null) {
-						yield 1;
-					} else if (top != null && right != null) {
-						yield 3;
-					} else if (top != null && left != null) {
-						yield 2;
-					} else if (right != null && bottom != null) {
-						yield 0;
-					}
-					yield -1;
-				}
-				case 1 -> {
-					if (left != null) {
-						yield 0;
-					} else if (right != null) {
-						yield 2;
-					} else if (bottom != null) {
-						yield 3;
-					} else {
-						yield 1;
-					}
-				}
-				default -> -1;
-			};
-		}
-		return -1;
 	}
 
 	/**
@@ -382,7 +232,6 @@ public class DungeonRoom {
 		}
 		this.position.add(dungeonPosition);
 		this.shape = this.findShape();
-		this.findRotation();
 		this.findMin();
 		this.findSize();
 	}
@@ -451,5 +300,34 @@ public class DungeonRoom {
 			}
 			default -> -1;
 		};
+	}
+
+	/**
+	 * Sets the puzzle type and invokes the solver loading.
+	 *
+	 * @param puzzleType The puzzle type.
+	 */
+	public void setPuzzleType(PuzzleType puzzleType) {
+		this.puzzleType = puzzleType;
+		if (this.instance.getCurrentRoom() == this) {
+			this.instance.loadPuzzle(this);
+		}
+	}
+
+	public Optional<Vector2i> getTopLeft() {
+		if (this.position.size() > 1) {
+			return Optional.empty();
+		}
+
+		return this.position.stream().findFirst().map(DungeonRoom::toRoomPosition);
+	}
+
+	public Optional<Vector2i> getCenter() {
+		return this.getTopLeft().map(vector2i -> vector2i.add(15, 15));
+	}
+
+	private static Vector2i toRoomPosition(DungeonPosition dungeonPosition) {
+		return new Vector2i(DungeonPosition.target(dungeonPosition::getWorldX),
+				DungeonPosition.target(dungeonPosition::getWorldY));
 	}
 }

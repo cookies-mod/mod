@@ -45,4 +45,9 @@ public record Timed(Renderable renderable, long timeToRemoved) implements Render
 	public void remove() {
 		this.renderable.remove();
 	}
+
+	@Override
+	public void load() {
+		this.renderable.load();
+	}
 }

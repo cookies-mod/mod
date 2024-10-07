@@ -6,8 +6,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -217,6 +219,12 @@ public sealed interface RenderUtils permits RenderUtils.Sealed {
             0xF000F0);
         matrixStack.pop();
     }
+
+	static Vec3d getInterpolated(Entity entity, double tickDelta) {
+		return new Vec3d(MathHelper.lerp(tickDelta, entity.lastRenderX, entity.getX()),
+		MathHelper.lerp(tickDelta, entity.lastRenderY, entity.getY()),
+		MathHelper.lerp(tickDelta, entity.lastRenderZ, entity.getZ()));
+	}
 
     final class Sealed implements RenderUtils {}
 }

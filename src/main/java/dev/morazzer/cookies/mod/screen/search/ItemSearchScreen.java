@@ -1,5 +1,15 @@
 package dev.morazzer.cookies.mod.screen.search;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.screen.TabConstants;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
@@ -12,22 +22,13 @@ import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.screen.ScrollbarScreen;
 import dev.morazzer.cookies.mod.services.ItemSearchService;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
-
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
+import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -43,8 +44,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-
-import org.lwjgl.glfw.GLFW;
 
 /**
  * The screen for the item search feature.
@@ -231,11 +230,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		final LoreComponent loreComponent = item.itemStack().get(DataComponentTypes.LORE);
 		if (loreComponent != null) {
 			for (Text line : loreComponent.lines()) {
-				if (line.getString()
-						.trim()
-						.replaceAll("§[a-f0-9lmnor]", "")
-						.toLowerCase(Locale.ROOT)
-						.contains(lowerSearch)) {
+				if (CookiesUtils.stripColor(line.getString()).trim().toLowerCase(Locale.ROOT).contains(lowerSearch)) {
 					return true;
 				}
 			}

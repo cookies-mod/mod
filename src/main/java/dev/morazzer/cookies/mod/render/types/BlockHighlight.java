@@ -36,11 +36,6 @@ public final class BlockHighlight implements Renderable {
 		this.color = color;
 		final ClientWorld clientWorld = MinecraftClient.getInstance().player.clientWorld;
 		this.entity = clientWorld.getBlockEntity(blockPos);
-		if (this.entity == null) {
-			return;
-		}
-		((BlockEntityAccessor) this.entity).cookies$setHighlighted(true);
-		((BlockEntityAccessor) this.entity).cookies$setHighlightedColor(color);
 	}
 
 	@Override
@@ -49,6 +44,15 @@ public final class BlockHighlight implements Renderable {
 			return;
 		}
 		((BlockEntityAccessor) this.entity).cookies$setHighlighted(false);
+	}
+
+	@Override
+	public void load() {
+		if (this.entity == null) {
+			return;
+		}
+		((BlockEntityAccessor) this.entity).cookies$setHighlighted(true);
+		((BlockEntityAccessor) this.entity).cookies$setHighlightedColor(this.color);
 	}
 
 	@Override
