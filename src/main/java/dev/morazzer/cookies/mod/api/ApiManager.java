@@ -12,7 +12,6 @@ import dev.morazzer.cookies.mod.events.WebsocketEvent;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.mods.cookies.generated.BuildInfo;
 
 import java.io.IOException;
@@ -24,6 +23,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
+
+import lombok.extern.slf4j.Slf4j;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
@@ -44,6 +45,7 @@ import org.apache.http.message.BasicHeader;
 /**
  * Class to handle all important backend activities, like authentication, connecting and disconnecting. <br>
  */
+@Slf4j
 public class ApiManager {
 
 	public static String USER_AGENT;
@@ -191,7 +193,7 @@ public class ApiManager {
 			if (throwable instanceof ApiAuthProcess.AuthException authException) {
 				handleApiAuthError(authException);
 			} else {
-				ExceptionHandler.handleException(throwable);
+				log.error("Failed to authenticate", throwable);
 				handleUnknown();
 			}
 			return;
@@ -261,7 +263,7 @@ public class ApiManager {
 					"Failed to connect to backed due to an internal error, trying again in one minute.");
 			return;
 		}
-		ExceptionHandler.handleException(throwable);
+		log.error("Failed to authenticate", throwable);
 		handleUnknown();
 	}
 
