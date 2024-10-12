@@ -312,6 +312,9 @@ public final class DungeonInstance {
 		}
 		final int index = row - 8;
 		final String puzzleName = literal.substring(0, literal.lastIndexOf(":"));
+		if (index >= this.puzzles.length) {
+			return;
+		}
 		if (this.puzzles[index] == null) {
 			this.puzzles[index] = puzzleName;
 		}
