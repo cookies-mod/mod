@@ -200,4 +200,26 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 		this.clearRenderables();
 		super.resetPuzzle();
 	}
+	
+	@Override
+	protected void onEnable() {
+		if (this.isLoaded) {
+			if (this.first != null) {
+				GlowingEntityAccessor.setGlowing(this.first, true);
+			}
+			if (this.second != null) {
+				GlowingEntityAccessor.setGlowing(this.second, true);
+			}
+		}
+	}
+	
+	@Override
+	protected void onDisalbe() {
+		if (this.first != null) {
+			GlowingEntityAccessor.setGlowing(this.first, false);
+		}
+		if (this.second != null) {
+			GlowingEntityAccessor.setGlowing(this.second, false);
+		}
+	}
 }
