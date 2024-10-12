@@ -271,7 +271,19 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			this.line = null;
 		}
 	}
-
+	
+	@Override
+	protected void onDisalbe() {
+		WorldRender.removeRenderable(this.line);
+	}
+	
+	@Override
+	protected void onEnable() {
+		if (this.line != null && this.isLoaded) {
+			WorldRender.addRenderable(this.line);
+		}
+	}
+	
 	private Supplier<String> getTextSupplier(double rawTime, LeverType leverType) {
 		return () -> {
 			final double time;

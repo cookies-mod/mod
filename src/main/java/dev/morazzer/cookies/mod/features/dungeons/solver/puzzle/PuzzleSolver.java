@@ -43,13 +43,23 @@ public abstract class PuzzleSolver {
 			if (this.isLoaded) {
 				this.renderables.forEach(WorldRender::addRenderable);
 			}
+			this.onEnable();
 		} else {
+			this.onDisalbe();
 			this.removeRenderables();
 		}
 	}
-
+	
+	protected void onDisalbe() {
+	
+	}
+	
+	protected void onEnable() {
+	
+	}
+	
 	public boolean isDisabled() {
-		return !this.option.isActive();
+		return !this.option.getValue();
 	}
 
 	public void beforeRender(float tickDelta) {}
@@ -100,6 +110,9 @@ public abstract class PuzzleSolver {
 	@MustBeInvokedByOverriders
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
 		this.isLoaded = true;
+		if (this.isDisabled()) {
+			return;
+		}
 		this.renderables.forEach(WorldRender::addRenderable);
 	}
 

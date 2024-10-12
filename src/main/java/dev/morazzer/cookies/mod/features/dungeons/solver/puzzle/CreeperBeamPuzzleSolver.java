@@ -32,10 +32,10 @@ public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 	@Override
 	protected void onRoomEnter(DungeonRoom dungeonRoom) {
 		this.clearRenderables();
-		super.onRoomEnter(dungeonRoom);
 		if (this.isDisabled()) {
 			return;
 		}
+		super.onRoomEnter(dungeonRoom);
 		final BlockPos first = dungeonRoom.getTopLeft().map(block -> new BlockPos(block.x, 70, block.y)).orElse(null);
 		final BlockPos second =
 				dungeonRoom.getCenter().map(block -> new BlockPos(block.x + 15, 84, block.y + 15)).orElse(null);
