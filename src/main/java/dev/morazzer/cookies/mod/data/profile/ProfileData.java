@@ -13,6 +13,8 @@ import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.json.Exclude;
 import dev.morazzer.cookies.mod.utils.json.Safe;
+
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -92,6 +94,10 @@ public class ProfileData {
     public void save() {
         GlobalProfileStorage.save(this.globalProfileData);
     }
+
+	public Optional<GlobalProfileData> getGlobalProfileData() {
+		return Optional.ofNullable(this.globalProfileData);
+	}
 
     /**
      * The profile in string representation.

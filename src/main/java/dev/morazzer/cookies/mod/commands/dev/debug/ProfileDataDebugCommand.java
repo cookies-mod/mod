@@ -34,7 +34,7 @@ public class ProfileDataDebugCommand extends ClientCommand {
 
     private void clearChests() {
         final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
-        currentProfile.ifPresent(profileData -> profileData.getGlobalProfileData().getIslandStorage().clear());
+        currentProfile.flatMap(ProfileData::getGlobalProfileData).ifPresent(global -> global.getIslandStorage().clear());
         sendSuccessMessage("Deleted all chest data for the current profile");
         save();
     }

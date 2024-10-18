@@ -32,10 +32,6 @@ public class GlobalProfileStorage {
      * @return The global profile data
      */
     public static GlobalProfileData load(UUID uuid) {
-        if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty()) {
-            return null;
-        }
-
         final Path profileFile = PROFILE_DATA_FOLDER.resolve(uuid + ".json");
 
         if (!Files.exists(profileFile)) {
