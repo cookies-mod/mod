@@ -1,5 +1,12 @@
 package dev.morazzer.cookies.mod.screen.search;
 
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Consumer;
+
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
@@ -10,15 +17,9 @@ import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.skyblock.InventoryUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ClientSideInventory;
-
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.Position;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import java.util.function.Consumer;
+import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.component.DataComponentTypes;
@@ -27,8 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import org.lwjgl.glfw.GLFW;
 
 public class InspectItemScreen extends ClientSideInventory {
 
@@ -40,9 +39,12 @@ public class InspectItemScreen extends ClientSideInventory {
 	public InspectItemScreen(ItemCompound compound, ItemSearchScreen itemSearchScreen) {
 		super(compound.itemStack().getName(), ROWS);
 		this.itemSearchScreen = itemSearchScreen;
-		super.initPagination(compound.items()
+		super.initPagination(compound.getUsedItems()
 				.stream()
-				.sorted(Comparator.<Item<?>>comparingInt(item -> item.source().ordinal())
+				.sorted(Comparator.<Item<?>, String>comparing(
+								item -> CookiesUtils.stripColor(item.itemStack().getName().getString()),
+								String::compareToIgnoreCase)
+						.thenComparingInt(item -> item.source().ordinal())
 						.thenComparingInt(this::ordered))
 				.map(this::modifyItem)
 				.toList(), new Position(1, 1), new Position(4, 7), null);
@@ -56,11 +58,6 @@ public class InspectItemScreen extends ClientSideInventory {
 						.setClickRunnable(InventoryUtils.wrapWithSound(this::backToOverview))
 						.build());
 		super.drawBackground = false;
-	}
-
-	private void backToOverview() {
-		this.itemSearchScreen.updateInventory();
-		CookiesMod.openScreen(this.itemSearchScreen);
 	}
 
 	private int ordered(Item<?> item) {
@@ -100,12 +97,9 @@ public class InspectItemScreen extends ClientSideInventory {
 		return copy;
 	}
 
-	@Override
-	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.itemSearchScreen.render(context, 0, 0, delta);
-		this.renderInGameBackground(context);
-		super.applyBlur(delta);
-		super.renderBackground(context, mouseX, mouseY, delta);
+	private void backToOverview() {
+		this.itemSearchScreen.updateInventory();
+		CookiesMod.openScreen(this.itemSearchScreen);
 	}
 
 	private Consumer<Integer> getItemClickConsumer(Item<?> item, ItemStack copy) {
@@ -117,8 +111,7 @@ public class InspectItemScreen extends ClientSideInventory {
 			item.source().getItemSource().remove(item);
 			this.pagination.removeItem(copy);
 		} else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			ItemSearchService.performAction(
-					ItemCompound.CompoundType.of(item.source(), item.data()),
+			ItemSearchService.performAction(ItemCompound.CompoundType.of(item.source(), item.data()),
 					item.data(),
 					item);
 			this.close();
@@ -158,5 +151,13 @@ public class InspectItemScreen extends ClientSideInventory {
 						this.pagination.getCurrentPage(),
 						this.pagination.getMaxPage())
 				.formatted(Formatting.DARK_GRAY);
+	}
+
+	@Override
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+		this.itemSearchScreen.render(context, 0, 0, delta);
+		this.renderInGameBackground(context);
+		super.applyBlur(delta);
+		super.renderBackground(context, mouseX, mouseY, delta);
 	}
 }

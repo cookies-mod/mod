@@ -28,7 +28,7 @@ public class InventoryItemSource implements ItemSource<Integer> {
         final PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
         for (int i = 0; i < inventory.size() - 1; i++) {
             final ItemStack stack = inventory.getStack(i);
-            items.add(new Item<>(stack, ItemSources.STORAGE, stack.getCount(), i));
+            items.add(new Item<>(stack, ItemSources.INVENTORY, stack.getCount(), i));
         }
         return items;
     }

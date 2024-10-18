@@ -37,6 +37,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_CHEST, "Chest");
 		translationBuilder.add(ITEM_SOURCE_INVENTORY, "Inventory");
 		translationBuilder.add(ITEM_SOURCE_MISC, "Misc");
+		translationBuilder.add(ITEM_SOURCE_ACCESSORY_BAG, "Accessory Bag");
+		translationBuilder.add(ITEM_SOURCE_CRAFTABLE, "Craftable");
 		translationBuilder.add(ITEM_SOURCE_FORGE, "Forge");
 		translationBuilder.add(ITEM_SOURCE_VAULT, "Vault");
 		translationBuilder.add(ITEM_SOURCE_SACK_OF_SACKS, "Sack of Sacks");
@@ -60,125 +62,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		this.addDevConfig(translationBuilder);
 		this.addFarmingConfig(translationBuilder);
 		this.addHelpersConfig(translationBuilder);
+		this.addItemSearchConfig(translationBuilder);
 		this.addMiningConfig(translationBuilder);
 		this.addMiscConfig(translationBuilder);
 		this.addDungeonConfig(translationBuilder);
-	}
-
-	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
-		translationBuilder.addConfig(CONFIG_DUNGEON, "Dungeon Config", "Various settings related to dungeons");
-		translationBuilder.addConfig(CONFIG_DUNGEON_USE_FEATURES,
-				"Enabled dungeon features",
-				"Enables or disables all dungeon features. This will not work for ongoing runs.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
-				"Relay to backend",
-				"Whether information should be exchanged with the backend or not");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP,
-				"Enable map",
-				"Enables or disables the map rendering. This will not disable the underlying features.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
-				"To reposition",
-				"Allows you to scale and move the dungeon map.");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT, "Click Here!");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
-				"Show player skulls",
-				"Shows the player skull instead of the map marker.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
-				"Show player names",
-				"Shows the names of the players on the map.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_OVER_TEXT,
-				"Player over room",
-				"Renders the player name over the dungeon room text.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
-				"Keep wither doors",
-				"Prevents wither doors from changing to normal ones.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
-				"Show secrets",
-				"Shows information about the secrets in rooms.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
-				"Show puzzle name",
-				"Shows the puzzle name (if known).");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
-				"Show status color",
-				"Shows the current room status as color.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
-				"Map background",
-				"Renders a monochrome background behind the map.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
-				"Background color",
-				"The color to use for the map background");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP,
-				"Spirit Leap",
-				"Settings related to the spirit leap ui.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, "Enable UI", "Enables the spirit leap ui.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP,
-				"Show dungeon map",
-				"Shows the dungeon map in the ui.‚");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
-				"Background color",
-				"Changes the background color of the ui widgets.‚");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
-				"Prevent Missclicks",
-				"Prevents you from clicking wrong options.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME,
-				"Change all to same",
-				"Enables the change all to same solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CLICK_IN_ORDER,
-				"Click in order",
-				"Enables the click in order solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CORRECT_ALL_PANES,
-				"Correct all panes",
-				"Enables the correct all panes solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS,
-				"Select all colors",
-				"Enables the select all colors solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
-				"Starts with",
-				"Enables the starts with solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE, "Puzzles", "All settings related to puzzles.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER,
-				"Creeper Beams",
-				"Enables the creeper beams puzzle solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER,
-				"Higher/Lower",
-				"Enables the higher or lower puzzle solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, "Quiz", "Enables the quiz puzzle solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER,
-				"Three Weirdos",
-				"Enables the three weirdos puzzle solver.");
-		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
-				"Water Board",
-				"Enables the water board solver.");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS, "Credits to Desco1");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_1, "The original oneflow solver was created by Desco1,");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_2, "check out their Github at Desco1/WaterSolver");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_3, "");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_4, "Furthermore thank you to drek1984, Jade and bonsai");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_5, "which where helping Desco1 with the original ");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_6, "and aswell Skytils for parts of the original solver.");
-	}
-
-	private void addPlotPriceBreakdown(CookiesTranslationBuilder translationBuilder) {
-		translationBuilder.add(PLOT_PRICE_BREAKDOWN_PLOTS_MISSING, "Plots missing");
-		translationBuilder.add(PLOT_PRICE_BREAKDOWN_PLOTS_OWNED, "Plots owned");
-		translationBuilder.add(PLOT_PRICE_BREAKDOWN_MISSING, "Missing");
-		translationBuilder.add(PLOT_PRICE_BREAKDOWN, "Breakdown");
-		translationBuilder.add(PLOT_PRICE_BREAKDOWN_COMPOST_BREAKDOWN, "Compost Breakdown");
-	}
-
-	private void addHotmUtils(CookiesTranslationBuilder translationBuilder) {
-		translationBuilder.add(HOTM_UTILS_COST_NEXT_10, "Cost (10)");
-		translationBuilder.add(HOTM_UTILS_COST_TOTAL, "Cost (Total)");
-	}
-
-	private void addCompostUpgrades(CookiesTranslationBuilder translationBuilder) {
-		translationBuilder.add(COMPOST_UPGRADE_MAX_TIER, "Max Tier");
-		translationBuilder.add(COMPOST_UPGRADE_REMAINING_COST, "Remaining Upgrade Cost");
 	}
 
 	private void addItemStats(CookiesTranslationBuilder translationBuilder) {
@@ -253,6 +140,30 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_VALUE, "Page");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_CLICK_TO_OPEN_STORAGE_PAGE_STORAGE, "Type");
 		translationBuilder.add(SCREEN_ITEM_SEARCH_TOTAL, "Total");
+
+		translationBuilder.add(ITEM_SEARCH_ALL, "All");
+		translationBuilder.add(ITEM_SEARCH_ARMOR, "Armor");
+		translationBuilder.add(ITEM_SEARCH_MATERIAL, "Material");
+		translationBuilder.add(ITEM_SEARCH_WEAPONS, "Weapons");
+		translationBuilder.add(ITEM_SEARCH_MINION, "Minions");
+	}
+
+	private void addHotmUtils(CookiesTranslationBuilder translationBuilder) {
+		translationBuilder.add(HOTM_UTILS_COST_NEXT_10, "Cost (10)");
+		translationBuilder.add(HOTM_UTILS_COST_TOTAL, "Cost (Total)");
+	}
+
+	private void addCompostUpgrades(CookiesTranslationBuilder translationBuilder) {
+		translationBuilder.add(COMPOST_UPGRADE_MAX_TIER, "Max Tier");
+		translationBuilder.add(COMPOST_UPGRADE_REMAINING_COST, "Remaining Upgrade Cost");
+	}
+
+	private void addPlotPriceBreakdown(CookiesTranslationBuilder translationBuilder) {
+		translationBuilder.add(PLOT_PRICE_BREAKDOWN_PLOTS_MISSING, "Plots missing");
+		translationBuilder.add(PLOT_PRICE_BREAKDOWN_PLOTS_OWNED, "Plots owned");
+		translationBuilder.add(PLOT_PRICE_BREAKDOWN_MISSING, "Missing");
+		translationBuilder.add(PLOT_PRICE_BREAKDOWN, "Breakdown");
+		translationBuilder.add(PLOT_PRICE_BREAKDOWN_COMPOST_BREAKDOWN, "Compost Breakdown");
 	}
 
 	private void addCleanupConfig(CookiesTranslationBuilder translationBuilder) {
@@ -421,6 +332,19 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Allows for tracking of chests on private island.");
 	}
 
+	private void addItemSearchConfig(CookiesTranslationBuilder translationBuilder) {
+		translationBuilder.addConfig(CONFIG_ITEM_SEARCH, "Item Search", "All item search related settings");
+		translationBuilder.addConfig(CONFIG_ITEM_SEARCH_CRAFTABLE, "Enable craftable", "Shows craftable items");
+		translationBuilder.addConfig(
+				CONFIG_ITEM_NON_SEARCH_CRAFTABLE,
+				"Show all craftable",
+				"Shows all craftable items, even if you dont have all items.");
+		translationBuilder.addConfig(
+				CONFIG_ITEM_SHOW_ONLY_MISSING,
+				"Only show missing items",
+				"Only shows items that are out of reach of the supercraft in the overview.");
+	}
+
 	private void addMiningConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MINING, "Mining", "All settings related to mining.");
 		translationBuilder.addConfig(CONFIG_MINING_MODIFY_COMMISSIONS,
@@ -489,5 +413,113 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK,
 				"Show forge recipes",
 				"Shows forge recipes in the recipe book");
+	}
+
+	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
+		translationBuilder.addConfig(CONFIG_DUNGEON, "Dungeon Config", "Various settings related to dungeons");
+		translationBuilder.addConfig(CONFIG_DUNGEON_USE_FEATURES,
+				"Enabled dungeon features",
+				"Enables or disables all dungeon features. This will not work for ongoing runs.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
+				"Relay to backend",
+				"Whether information should be exchanged with the backend or not");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP,
+				"Enable map",
+				"Enables or disables the map rendering. This will not disable the underlying features.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
+				"To reposition",
+				"Allows you to scale and move the dungeon map.");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT, "Click Here!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
+				"Show player skulls",
+				"Shows the player skull instead of the map marker.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
+				"Show player names",
+				"Shows the names of the players on the map.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_OVER_TEXT,
+				"Player over room",
+				"Renders the player name over the dungeon room text.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR,
+				"Keep wither doors",
+				"Prevents wither doors from changing to normal ones.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_SECRETS,
+				"Show secrets",
+				"Shows information about the secrets in rooms.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME,
+				"Show puzzle name",
+				"Shows the puzzle name (if known).");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR,
+				"Show status color",
+				"Shows the current room status as color.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND,
+				"Map background",
+				"Renders a monochrome background behind the map.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
+				"Background color",
+				"The color to use for the map background");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP,
+				"Spirit Leap",
+				"Settings related to the spirit leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, "Enable UI", "Enables the spirit leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP,
+				"Show dungeon map",
+				"Shows the dungeon map in the ui.‚");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
+				"Background color",
+				"Changes the background color of the ui widgets.‚");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
+				"Prevent Missclicks",
+				"Prevents you from clicking wrong options.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CHANGE_ALL_TO_SAME,
+				"Change all to same",
+				"Enables the change all to same solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CLICK_IN_ORDER,
+				"Click in order",
+				"Enables the click in order solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_CORRECT_ALL_PANES,
+				"Correct all panes",
+				"Enables the correct all panes solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS,
+				"Select all colors",
+				"Enables the select all colors solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
+				"Starts with",
+				"Enables the starts with solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE, "Puzzles", "All settings related to puzzles.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER,
+				"Creeper Beams",
+				"Enables the creeper beams puzzle solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER,
+				"Higher/Lower",
+				"Enables the higher or lower puzzle solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, "Quiz", "Enables the quiz puzzle solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER,
+				"Three Weirdos",
+				"Enables the three weirdos puzzle solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
+				"Water Board",
+				"Enables the water board solver.");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS, "Credits to Desco1");
+		translationBuilder.add(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_1,
+				"The original oneflow solver was created by Desco1,");
+		translationBuilder.add(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_2,
+				"check out their Github at Desco1/WaterSolver");
+		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_3, "");
+		translationBuilder.add(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_4,
+				"Furthermore thank you to drek1984, Jade and bonsai");
+		translationBuilder.add(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_5,
+				"which where helping Desco1 with the original ");
+		translationBuilder.add(
+				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_6,
+				"and aswell Skytils for parts of the original solver.");
 	}
 }

@@ -129,6 +129,7 @@ public class Ingredient implements RecipeResult<Ingredient> {
         return this.repositoryItem == null ? this.id : this.repositoryItem.getName().getString();
     }
 
+
     /**
      * Gets the ingredient as an item.
      *

@@ -153,6 +153,7 @@ public interface TranslationKeys {
 	String ITEM_SOURCE_SACK_OF_SACKS = ITEM_SOURCE + ".sack_of_sacks";
 	String ITEM_SOURCE_POTION_BAG = ITEM_SOURCE + ".potion_bag";
 	String ITEM_SOURCE_ACCESSORY_BAG = ITEM_SOURCE + ".accessory_bag";
+	String ITEM_SOURCE_CRAFTABLE = ITEM_SOURCE + ".craftable";
 	String ITEM_SOURCE_SACK = ITEM_SOURCE + ".sack";
 	String ITEM_SOURCE_STORAGE = ITEM_SOURCE + ".storage";
 	String ITEM_SOURCE_ENDERCHEST = ITEM_SOURCE + ".enderchest";
@@ -257,7 +258,13 @@ public interface TranslationKeys {
 	String CONFIG_HELPERS_ANVIL_HELPER = CONFIG_HELPERS + ".anvil_helper";
 	String CONFIG_HELPERS_CHEST_TRACKER = CONFIG_HELPERS + ".chest_tracker";
 	//</editor-fold>
+	//<editor-fold desc="Config/Item Search">
+	String CONFIG_ITEM_SEARCH = CONFIG + ".item_search";
 
+	String CONFIG_ITEM_SEARCH_CRAFTABLE = CONFIG_ITEM_SEARCH + ".craftable";
+	String CONFIG_ITEM_NON_SEARCH_CRAFTABLE = CONFIG_ITEM_SEARCH + ".non_craftable";
+	String CONFIG_ITEM_SHOW_ONLY_MISSING = CONFIG_ITEM_SEARCH + ".show_missing";
+			//</editor-fold>
 	//<editor-fold desc="Config/Mining">
 	String CONFIG_MINING = CONFIG + ".mining";
 

@@ -1,6 +1,7 @@
 package dev.morazzer.cookies.mod.data.profile.items;
 
 import dev.morazzer.cookies.mod.data.profile.items.sources.AccessoryItemSource;
+import dev.morazzer.cookies.mod.data.profile.items.sources.CraftableItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.ForgeItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.InventoryItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.IslandChestItemSource;
@@ -27,11 +28,11 @@ import net.minecraft.text.Text;
 @Getter
 public enum ItemSources {
 
-	CHESTS(Text.translatable(TranslationKeys.ITEM_SOURCE_CHEST), IslandChestItemSource.getInstance()),
-	STORAGE(Text.translatable(TranslationKeys.ITEM_SOURCE_STORAGE), StorageItemSource.getInstance()),
-	SACKS(Text.translatable(TranslationKeys.ITEM_SOURCE_SACK), SackItemSource.getInstance()),
-	INVENTORY(Text.translatable(TranslationKeys.ITEM_SOURCE_INVENTORY), InventoryItemSource.getInstance()),
-	FORGE(Text.translatable(TranslationKeys.ITEM_SOURCE_FORGE), ForgeItemSource.getInstance()),
+	CHESTS(Text.translatable(TranslationKeys.ITEM_SOURCE_CHEST), IslandChestItemSource.getInstance(), false),
+	STORAGE(Text.translatable(TranslationKeys.ITEM_SOURCE_STORAGE), StorageItemSource.getInstance(), true),
+	SACKS(Text.translatable(TranslationKeys.ITEM_SOURCE_SACK), SackItemSource.getInstance(), true),
+	INVENTORY(Text.translatable(TranslationKeys.ITEM_SOURCE_INVENTORY), InventoryItemSource.getInstance(), true),
+	FORGE(Text.translatable(TranslationKeys.ITEM_SOURCE_FORGE), ForgeItemSource.getInstance(), false),
 	VAULT(
 			Text.translatable(TranslationKeys.ITEM_SOURCE_VAULT),
 			vault -> MiscItemSource.get(MiscItemData.Type.VAULT, vault)),
@@ -41,14 +42,17 @@ public enum ItemSources {
 	POTION_BAG(
 			Text.translatable(TranslationKeys.ITEM_SOURCE_POTION_BAG),
 			potionBag -> MiscItemSource.get(MiscItemData.Type.POTION_BAG, potionBag)),
-	ACCESSORY_BAG(Text.translatable(TranslationKeys.ITEM_SOURCE_ACCESSORY_BAG), AccessoryItemSource.getInstance());
+	ACCESSORY_BAG(Text.translatable(TranslationKeys.ITEM_SOURCE_ACCESSORY_BAG), AccessoryItemSource.getInstance(), false),
+	CRAFTABLE(Text.translatable(TranslationKeys.ITEM_SOURCE_CRAFTABLE), new CraftableItemSource(), false);
 
 	private final Text name;
 	private final ItemSource<?> itemSource;
+	private final boolean supportsSupercraft;
 
 	ItemSources(Text name, Function<ItemSources, ItemSource<?>> itemSource) {
 		this.name = name;
 		this.itemSource = itemSource.apply(this);
+		this.supportsSupercraft = false;
 	}
 
 	public static Collection<Item<?>> getItems() {
