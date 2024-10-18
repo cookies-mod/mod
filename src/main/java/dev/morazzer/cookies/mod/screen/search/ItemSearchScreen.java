@@ -373,7 +373,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		}
 		if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
 			if (compound.data() instanceof CraftableItemSource.Data data) {
-				if (data.canSupercraft()) {
+				if (!data.showSupercraftWarning()) {
 					return;
 				}
 			}
@@ -558,7 +558,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		ItemSearchService.appendMultiTooltip(itemCompound.type(), itemCompound.data(), tooltip);
 
 		if (itemCompound.data() instanceof CraftableItemSource.Data data) {
-			if (data.canSupercraft()) {
+			if (!data.showSupercraftWarning()) {
 				return;
 			}
 		}

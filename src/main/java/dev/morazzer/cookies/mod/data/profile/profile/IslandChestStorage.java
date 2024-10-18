@@ -47,7 +47,7 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 		List<ChestItem> toAdd = new ArrayList<>();
 		while (iterator.hasNext()) {
 			final ChestItem chestItem = iterator.next();
-			if (chestItem.secondChest != null && chestItem.secondChest.equals(blockPos)) {
+			if (chestItem.secondChest != null && chestItem.secondChest.isPresent() && chestItem.secondChest.get().equals(blockPos)) {
 				iterator.remove();
 				toAdd.add(ChestItem.create(chestItem.blockPos, null, chestItem.itemStack, chestItem.slot));
 			}

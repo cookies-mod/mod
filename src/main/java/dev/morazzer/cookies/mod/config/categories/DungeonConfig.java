@@ -55,6 +55,7 @@ public class DungeonConfig extends Category {
 	public BooleanOption showPuzzleName = new BooleanOption(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME, true);
 	public BooleanOption showRoomStatusAsTextColor =
 			new BooleanOption(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR, true);
+	public BooleanOption showTrapAsCleared = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP_SHOW_TRAP_AS_CLEARED, true);
 	public BooleanOption showMapBackground = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND, true);
 	public ColorOption mapBackgroundColor =
 			new ColorOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR, Color.DARK_GRAY).withAlpha()
