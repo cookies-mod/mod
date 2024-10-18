@@ -59,8 +59,8 @@ public class DungeonMapRenderer {
 		if (DungeonConfig.getInstance().showMapBackground.getValue()) {
 			drawContext.fill(0,
 					0,
-					6 * TOTAL_SIZE,
-					6 * TOTAL_SIZE,
+					6 * TOTAL_SIZE - HALLWAY_SIZE,
+					6 * TOTAL_SIZE - HALLWAY_SIZE,
 					DungeonConfig.getInstance().mapBackgroundColor.getColorValue());
 		}
 		drawContext.getMatrices().push();

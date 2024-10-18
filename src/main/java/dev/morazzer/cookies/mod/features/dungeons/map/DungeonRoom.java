@@ -290,7 +290,12 @@ public class DungeonRoom {
 			};
 		}
 		return switch (this.checkmark) {
-			case OPENED -> this.roomType == RoomType.TRAP ? -1 : Constants.FAIL_COLOR;
+			case OPENED -> {
+				if (DungeonConfig.getInstance().showTrapAsCleared.getValue() && this.roomType == RoomType.TRAP) {
+					yield -1;
+				}
+				yield Constants.FAIL_COLOR;
+			}
 			case DONE -> Constants.SUCCESS_COLOR;
 			case CLEARED -> {
 				if (this.canHaveSecrets() && this.maxSecrets != -1 && this.collectedSecrets >= this.maxSecrets) {
