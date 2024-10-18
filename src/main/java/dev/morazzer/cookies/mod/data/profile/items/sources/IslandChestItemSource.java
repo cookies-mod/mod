@@ -29,7 +29,7 @@ public class IslandChestItemSource implements ItemSource<IslandChestStorage.Ches
 	@Override
 	public Collection<Item<?>> getAllItems() {
 		List<IslandChestStorage.ChestItem> items = ProfileStorage.getCurrentProfile()
-				.map(ProfileData::getGlobalProfileData)
+				.flatMap(ProfileData::getGlobalProfileData)
 				.map(GlobalProfileData::getIslandStorage)
 				.map(IslandChestStorage::getItems)
 				.orElse(Collections.emptyList());
@@ -53,7 +53,7 @@ public class IslandChestItemSource implements ItemSource<IslandChestStorage.Ches
 		final IslandChestStorage.ChestItem data = (IslandChestStorage.ChestItem) item.data();
 
 		ProfileStorage.getCurrentProfile()
-				.map(ProfileData::getGlobalProfileData)
+				.flatMap(ProfileData::getGlobalProfileData)
 				.map(GlobalProfileData::getIslandStorage)
 				.map(FunctionUtils.function(IslandChestStorage::remove))
 				.orElse(FunctionUtils.noOp())

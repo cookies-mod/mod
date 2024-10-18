@@ -3,7 +3,9 @@ package dev.morazzer.cookies.mod.features.misc.items;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
+import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 
 import java.util.Optional;
@@ -123,12 +125,11 @@ public class ChestTracker {
 			return;
 		}
 
-		final Optional<ProfileData> optionalProfileData = ProfileStorage.getCurrentProfile();
-		if (optionalProfileData.isEmpty()) {
-			return;
-		}
-		final ProfileData profileData = optionalProfileData.get();
-		profileData.getGlobalProfileData().getIslandStorage().removeBlock(blockPos);
+		ProfileStorage.getCurrentProfile().flatMap(ProfileData::getGlobalProfileData)
+				.map(GlobalProfileData::getIslandStorage)
+				.map(FunctionUtils.function(IslandChestStorage::removeBlock))
+				.orElseGet(FunctionUtils::noOp)
+				.accept(blockPos);
 	}
 
 	private void openScreen(MinecraftClient minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
@@ -172,12 +173,12 @@ public class ChestTracker {
 
 	private void saveScreen(Screen screen) {
 		HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
-		final Optional<ProfileData> currentProfile = ProfileStorage.getCurrentProfile();
+		final Optional<IslandChestStorage> currentProfile = ProfileStorage.getCurrentProfile()
+				.flatMap(ProfileData::getGlobalProfileData).map(GlobalProfileData::getIslandStorage);
 		if (currentProfile.isEmpty()) {
 			return;
 		}
-		final ProfileData profileData = currentProfile.get();
-		final IslandChestStorage islandStorage = profileData.getGlobalProfileData().getIslandStorage();
+		final IslandChestStorage islandStorage = currentProfile.get();
 		islandStorage.removeBlock(this.first);
 		islandStorage.removeBlock(this.second);
 		for (Slot slot : handledScreen.getScreenHandler().slots) {
