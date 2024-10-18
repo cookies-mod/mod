@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.commands.dev;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookies.mod.commands.dev.debug.ApiDebug;
 import dev.morazzer.cookies.mod.commands.dev.debug.GetRegionDebugCommand;
+import dev.morazzer.cookies.mod.commands.dev.debug.GetRepoItemDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.IsUsingMod;
 import dev.morazzer.cookies.mod.commands.dev.debug.LoadScreenDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.OpenCraftHelperPlacementScreen;
@@ -28,7 +29,8 @@ public class DebugSubCommand extends ClientCommand {
 	@Override
 	public @NotNull LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
 		final LiteralArgumentBuilder<FabricClientCommandSource> debug = super.literal("debug");
-		ClientCommand[] clientCommands = new ClientCommand[] {new RecipeDebugCommand(),
+		ClientCommand[] clientCommands = {
+				new RecipeDebugCommand(),
 				new RenderDebugCommand(),
 				new RecipeCalculationDebugCommand(),
 				new SwapProfilesDebugCommand(),
@@ -40,7 +42,9 @@ public class DebugSubCommand extends ClientCommand {
 				new OpenCraftHelperPlacementScreen(),
 				new ProfileDataDebugCommand(),
 				new ApiDebug(),
-				new IsUsingMod()};
+				new IsUsingMod(),
+				new GetRepoItemDebugCommand()
+		};
 
 		for (ClientCommand clientCommand : clientCommands) {
 			debug.then(clientCommand.getCommand());

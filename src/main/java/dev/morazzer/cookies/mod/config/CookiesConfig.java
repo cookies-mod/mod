@@ -6,6 +6,7 @@ import dev.morazzer.cookies.mod.config.categories.DevConfig;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.config.categories.FarmingConfig;
 import dev.morazzer.cookies.mod.config.categories.HelpersConfig;
+import dev.morazzer.cookies.mod.config.categories.ItemSearchConfig;
 import dev.morazzer.cookies.mod.config.categories.MiningConfig;
 import dev.morazzer.cookies.mod.config.categories.MiscConfig;
 import dev.morazzer.cookies.mod.config.system.Config;
@@ -31,6 +32,8 @@ public class CookiesConfig extends Config<CookiesConfig> {
     public CleanupConfig cleanupConfig = new CleanupConfig();
 	@Expose
 	public DungeonConfig dungeonConfig = new DungeonConfig();
+	@Expose
+	public ItemSearchConfig itemSearchConfig = new ItemSearchConfig();
 
     @Expose
     public DevConfig devConfig = new DevConfig();

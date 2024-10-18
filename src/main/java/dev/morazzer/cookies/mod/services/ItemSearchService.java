@@ -1,26 +1,5 @@
 package dev.morazzer.cookies.mod.services;
 
-import dev.morazzer.cookies.mod.CookiesMod;
-import dev.morazzer.cookies.mod.data.profile.items.Item;
-import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
-import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
-import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
-import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
-import dev.morazzer.cookies.mod.events.ItemStackEvents;
-import dev.morazzer.cookies.mod.render.WorldRender;
-import dev.morazzer.cookies.mod.render.types.BlockHighlight;
-import dev.morazzer.cookies.mod.render.types.Timed;
-import dev.morazzer.cookies.mod.repository.RepositoryItem;
-import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.cookies.Constants;
-import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
-import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
-import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-
-import dev.morazzer.cookies.mod.utils.items.types.MiscDataComponentTypes;
-
-import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,11 +10,33 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import java.util.function.Predicate;
+
+import dev.morazzer.cookies.mod.CookiesMod;
+import dev.morazzer.cookies.mod.data.profile.items.Item;
+import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
+import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
+import dev.morazzer.cookies.mod.data.profile.items.sources.CraftableItemSource;
+import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
+import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
+import dev.morazzer.cookies.mod.events.ItemStackEvents;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.render.WorldRender;
+import dev.morazzer.cookies.mod.render.types.BlockHighlight;
+import dev.morazzer.cookies.mod.render.types.Timed;
+import dev.morazzer.cookies.mod.repository.Ingredient;
+import dev.morazzer.cookies.mod.repository.RepositoryItem;
+import dev.morazzer.cookies.mod.translations.TranslationKeys;
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import dev.morazzer.cookies.mod.utils.items.types.MiscDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentType;
@@ -43,11 +44,10 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The service for easy interaction with the {@link IslandChestStorage}.
@@ -70,10 +70,10 @@ public class ItemSearchService {
 	 * @param data The data related to the action.
 	 * @param item The item which is subject of the action.
 	 */
-	public static void performAction(ItemCompound.CompoundType type, Object data, Item<?> item) {
+	public static boolean performAction(ItemCompound.CompoundType type, Object data, Item<?> item) {
 		if (!LocationUtils.Island.PRIVATE_ISLAND.isActive() && type == ItemCompound.CompoundType.CHEST_POS) {
 			CookiesUtils.sendFailedMessage(Text.literal("You need to be on your island to highlight chests!"));
-			return;
+			return false;
 		}
 		setActiveStackWithColor(item.itemStack());
 		final RepositoryItem repositoryItem = item.itemStack().get(CookiesDataComponentTypes.REPOSITORY_ITEM);
@@ -86,7 +86,12 @@ public class ItemSearchService {
 			case ACCESSORIES -> sendCommand("accessorybag");
 			case POTION_BAG -> sendCommand("potionbag");
 			case VAULT -> sendCommand("bank");
+			case CRAFTABLE -> {
+				handleCraftable((CraftableItemSource.Data) data);
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -126,20 +131,20 @@ public class ItemSearchService {
 	 *
 	 * @param itemCompound The item compound.
 	 */
-	public static void performActions(ItemCompound itemCompound) {
+	public static boolean performActions(ItemCompound itemCompound) {
 		if (!LocationUtils.Island.PRIVATE_ISLAND.isActive() &&
 			(itemCompound.type() == ItemCompound.CompoundType.MULTIPLE ||
 			 itemCompound.type() == ItemCompound.CompoundType.CHEST)) {
 			if (itemCompound.type() == ItemCompound.CompoundType.CHEST) {
 				CookiesUtils.sendFailedMessage(Text.literal("You need to be on your island to highlight chests!"));
-				return;
+				return false;
 			}
 			final Item<?>[] array = itemCompound.items()
 					.stream()
 					.filter(Predicate.not(item -> item.source() == ItemSources.CHESTS))
 					.toArray(Item[]::new);
 			if (array.length == 0) {
-				return;
+				return false;
 			}
 			itemCompound = new ItemCompound(array[0]);
 			for (int i = 1; i < array.length; i++) {
@@ -150,9 +155,9 @@ public class ItemSearchService {
 			itemCompound.type() == ItemCompound.CompoundType.CHEST) {
 
 			highlightAll(itemCompound);
-			return;
+			return true;
 		}
-		performAction(itemCompound.type(), itemCompound.data(), itemCompound.items().iterator().next());
+		return performAction(itemCompound.type(), itemCompound.data(), itemCompound.items().iterator().next());
 	}
 
 	/**
@@ -160,19 +165,6 @@ public class ItemSearchService {
 	 */
 	public static void add(ItemStack itemStack) {
 		modifiedStacks.add(itemStack);
-	}
-
-	/**
-	 * Opens the storage at the page of the provided data.
-	 *
-	 * @param data The data.
-	 */
-	private static void openStorage(StorageItemSource.Context data) {
-		final String command = switch (data.location()) {
-			case BACKPACK -> "bp";
-			case ENDER_CHEST -> "ec";
-		};
-		sendCommand(command + " " + (data.page() + 1));
 	}
 
 	/**
@@ -251,41 +243,6 @@ public class ItemSearchService {
 	}
 
 	/**
-	 * Sets the active item stack and initiates the removal of the highlight.
-	 *
-	 * @param stack The stack.
-	 */
-	private static void setActiveStack(ItemStack stack) {
-		removeActiveStack();
-		currentlySearched = stack;
-		if (schedule != null) {
-			schedule.cancel(false);
-		}
-		schedule = CookiesMod.getExecutorService().schedule(ItemSearchService::removeActiveStack, 10,
-            TimeUnit.SECONDS);
-	}
-
-	/**
-	 * Removes the currently active stack and clears all highlights from it.
-	 */
-	private static void removeActiveStack() {
-		if (currentlySearched != null) {
-			currentlySearched.remove(MiscDataComponentTypes.ITEM_SEARCH_MATCH_SAME);
-		}
-		currentlySearched = null;
-		for (ItemStack modifiedStack : modifiedStacks) {
-			if (modifiedStack.contains(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED)) {
-				modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
-				final Integer remove = modifiedStack.remove(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED);
-				if (remove != null && remove != 0) {
-					modifiedStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, remove);
-				}
-			}
-		}
-		modifiedStacks.clear();
-	}
-
-	/**
 	 * Whether the two items are the same.
 	 * <br>
 	 * This will be figured out by the following criteria. <br>
@@ -327,31 +284,6 @@ public class ItemSearchService {
 			return false;
 		}
 		return isSame(first, second, CookiesDataComponentTypes.MODIFIER);
-	}
-
-	private static <T> boolean isSame(ItemStack first, ItemStack second, ComponentType<T> type) {
-		T firstComponent = ItemUtils.getData(first, type);
-		T secondComponent = ItemUtils.getData(second, type);
-
-		if (firstComponent == null || secondComponent == null) {
-			return firstComponent == null && secondComponent == null;
-		}
-
-		if (firstComponent instanceof Map<?, ?> firstMap && secondComponent instanceof Map<?, ?> secondMap) {
-			for (Object firstMapKey : firstMap.keySet()) {
-				if (!secondMap.containsKey(firstMapKey)) {
-					return false;
-				}
-				if (!Objects.equals(secondMap.get(firstMapKey), firstMap.get(firstMapKey))) {
-					return false;
-				}
-			}
-		} else if (firstComponent instanceof Text firstText && secondComponent instanceof Text secondText &&
-				   (firstText.getString() == null || !firstText.getString().equalsIgnoreCase(secondText.getString()))) {
-			return false;
-		}
-
-		return Objects.deepEquals(firstComponent, secondComponent);
 	}
 
 	/**
@@ -453,8 +385,144 @@ public class ItemSearchService {
 			case ACCESSORIES ->
 					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG)
 							.formatted(Formatting.YELLOW));
+			case CRAFTABLE -> addCraftableTooltip(tooltip, compoundData);
 			case null, default -> tooltip.add(Text.literal("An error occurred :c " + type).formatted(Formatting.RED));
 		}
+	}
+
+	/**
+	 * Appends the tooltip used for craftable items.
+	 * @param tooltip The tooltip.
+	 * @param compoundData The data.
+	 */
+	private static void addCraftableTooltip(List<Text> tooltip, Object compoundData) {
+		if (compoundData instanceof CraftableItemSource.Data data) {
+			if (data.hasAllIngredients() && data.canSupercraft()) {
+				tooltip.add(Text.literal("You can craft this item!").formatted(Formatting.DARK_GREEN));
+			} else if (data.showSupercraftWarning()) {
+				tooltip.add(Text.literal("Some items are out of the supercraft reach!").formatted(Formatting.YELLOW));
+				tooltip.add(Text.literal("(Right-click to find items marked with " + Constants.Emojis.WARNING + ")").formatted(Formatting.DARK_GRAY));
+			}
+			MutableText bar = Text.literal("").formatted(Formatting.STRIKETHROUGH, Formatting.GRAY);
+			tooltip.add(bar);
+			int maxWidth = 0;
+			for (Map.Entry<Ingredient, CraftableItemSource.IngredientData> entry : data.amounts().entrySet()) {
+				final CraftableItemSource.IngredientData ingredientData = entry.getValue();
+				int amount = ingredientData.available();
+				Text text = Text.literal(" ")
+						.append(entry.getKey()
+								.getAsItem()
+								.getName()
+								.copy()
+								.append(Text.literal(": ")
+										.formatted(Formatting.GRAY)
+										.append(Text.literal("%s/%s".formatted(Math.min(entry.getKey().getAmount(),
+												amount), entry.getKey().getAmount())))));
+				final MutableText append;
+				if (ingredientData.hasAllItems()) {
+					if (ingredientData.canSupercraft()) {
+						append = Text.literal(Constants.Emojis.YES).formatted(Formatting.GREEN).append(text);
+					} else {
+						append = Text.literal(Constants.Emojis.WARNING).formatted(Formatting.YELLOW).append(text);
+					}
+				} else {
+					append = Text.literal(Constants.Emojis.NO).formatted(Formatting.RED).append(text);
+				}
+				maxWidth = Math.max(maxWidth, MinecraftClient.getInstance().textRenderer.getWidth(append));
+				tooltip.add(append);
+			}
+
+			final int width = MinecraftClient.getInstance().textRenderer.getWidth(" ");
+			bar.append(StringUtils.repeat(' ', maxWidth / width + 1));
+			tooltip.add(bar);
+			tooltip.add(Text.empty());
+			if (data.hasAllIngredients()) {
+				tooltip.add(Text.literal("Left-click to open recipe!").formatted(Formatting.YELLOW));
+			} else {
+				tooltip.add(Text.literal("Left-click to set as craft helper item!").formatted(Formatting.YELLOW));
+			}
+		}
+	}
+
+	private static void handleCraftable(CraftableItemSource.Data data) {
+		if (data.hasAllIngredients()) {
+			sendCommand("viewrecipe " + data.output().getId());
+		} else {
+			CraftHelper.setSelectedItem(data.output().getRepositoryItem());
+		}
+	}
+
+	/**
+	 * Opens the storage at the page of the provided data.
+	 *
+	 * @param data The data.
+	 */
+	private static void openStorage(StorageItemSource.Context data) {
+		final String command = switch (data.location()) {
+			case BACKPACK -> "bp";
+			case ENDER_CHEST -> "ec";
+		};
+		sendCommand(command + " " + (data.page() + 1));
+	}
+
+	/**
+	 * Sets the active item stack and initiates the removal of the highlight.
+	 *
+	 * @param stack The stack.
+	 */
+	private static void setActiveStack(ItemStack stack) {
+		removeActiveStack();
+		currentlySearched = stack;
+		if (schedule != null) {
+			schedule.cancel(false);
+		}
+		schedule = CookiesMod.getExecutorService().schedule(ItemSearchService::removeActiveStack, 10,
+				TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Removes the currently active stack and clears all highlights from it.
+	 */
+	private static void removeActiveStack() {
+		if (currentlySearched != null) {
+			currentlySearched.remove(MiscDataComponentTypes.ITEM_SEARCH_MATCH_SAME);
+		}
+		currentlySearched = null;
+		for (ItemStack modifiedStack : modifiedStacks) {
+			if (modifiedStack.contains(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED)) {
+				modifiedStack.remove(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
+				final Integer remove = modifiedStack.remove(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED);
+				if (remove != null && remove != 0) {
+					modifiedStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, remove);
+				}
+			}
+		}
+		modifiedStacks.clear();
+	}
+
+	private static <T> boolean isSame(ItemStack first, ItemStack second, ComponentType<T> type) {
+		T firstComponent = ItemUtils.getData(first, type);
+		T secondComponent = ItemUtils.getData(second, type);
+
+		if (firstComponent == null || secondComponent == null) {
+			return firstComponent == null && secondComponent == null;
+		}
+
+		if (firstComponent instanceof Map<?, ?> firstMap && secondComponent instanceof Map<?, ?> secondMap) {
+			for (Object firstMapKey : firstMap.keySet()) {
+				if (!secondMap.containsKey(firstMapKey)) {
+					return false;
+				}
+				if (!Objects.equals(secondMap.get(firstMapKey), firstMap.get(firstMapKey))) {
+					return false;
+				}
+			}
+		} else if (firstComponent instanceof Text firstText && secondComponent instanceof Text secondText &&
+				   (firstText.getString() == null || !firstText.getString().equalsIgnoreCase(secondText.getString()))) {
+			return false;
+		}
+
+		return Objects.deepEquals(firstComponent, secondComponent);
 	}
 
 	/**
