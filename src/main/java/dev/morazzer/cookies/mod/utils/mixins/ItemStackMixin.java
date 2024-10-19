@@ -70,9 +70,9 @@ public abstract class ItemStackMixin {
         if (enchantMap != null && itemConvertible.asItem() == Items.ENCHANTED_BOOK) {
             if (enchantMap.size() == 1) {
                 final Map.Entry<String, Integer> next = enchantMap.entrySet().iterator().next();
-                set(
-                    CookiesDataComponentTypes.SKYBLOCK_ID,
-                    "%s;%s".formatted(next.getKey(), next.getValue()).toUpperCase(Locale.ROOT));
+				final String internal_name = "%s;%s".formatted(next.getKey(), next.getValue()).toUpperCase(Locale.ROOT);
+				set(CookiesDataComponentTypes.SKYBLOCK_ID, internal_name);
+				set(CookiesDataComponentTypes.REPOSITORY_ITEM, RepositoryItem.of(internal_name));
             }
         }
 
