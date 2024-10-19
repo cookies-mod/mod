@@ -37,6 +37,7 @@ import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -169,7 +170,10 @@ public class RepositoryItem {
 		if (this.tier == null) {
 			return this.name.copy();
 		}
-		return this.name.copyContentOnly().formatted(this.tier.formatting);
+		if (this.name.getStyle().isEmpty()) {
+			return this.name.copy().setStyle(Style.EMPTY.withFormatting(this.tier.formatting));
+		}
+		return this.name.copy();
 	}
 
 	/**
