@@ -4,6 +4,7 @@ import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Runnables;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonFeatures;
+import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonPhase;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
@@ -30,7 +31,7 @@ public abstract class TerminalSolver {
 
 	protected final List<ItemStack> items = new ArrayList<>();
 
-	protected static final ItemStack SHOULD_CLICK =
+	protected final ItemStack shouldClick =
 			new ItemBuilder(Items.GREEN_STAINED_GLASS_PANE).hideTooltips().hideAdditionalTooltips().build();
 
 	protected final ItemStack doneItem =
@@ -82,9 +83,9 @@ public abstract class TerminalSolver {
 
 	protected Predicate<HandledScreen<?>> getFloorPredicate() {
 		return Predicates.<HandledScreen<?>>alwaysTrue()
-				.and(o -> DungeonFeatures.getInstance().getCurrentInstance() != null)
-				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().floor() == 7)
-				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().getPhase() == DungeonPhase.BOSS);
+				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().isPresent())
+				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().map(DungeonInstance::floor).orElse(-1) == 7)
+				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().map(DungeonInstance::getPhase).orElse(null) == DungeonPhase.BOSS);
 	}
 
 	protected Predicate<HandledScreen<?>> getDebugPredicate() {

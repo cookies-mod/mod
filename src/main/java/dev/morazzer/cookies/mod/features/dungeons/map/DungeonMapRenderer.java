@@ -43,7 +43,7 @@ public class DungeonMapRenderer {
 	 * @param drawContext The draw context
 	 */
 	public void render(DrawContext drawContext) {
-		if (!this.dungeonInstance.isDebugInstance() && this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance()) {
+		if (!this.dungeonInstance.isDebugInstance() && this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
 			return;
 		}
 		if (!DungeonConfig.getInstance().renderMap.getValue()) {

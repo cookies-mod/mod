@@ -156,6 +156,7 @@ public class LocationUtils {
 		DUNGEON_HUB("dungeon_hub"),
 		RIFT("rift"),
 		CATACOMBS("dungeon"),
+		MINESHAFT("mineshaft"),
 		UNKNOWN("*"),
 		NONE("");
 

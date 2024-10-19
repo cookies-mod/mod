@@ -175,12 +175,12 @@ public class DungeonFeatures {
 	 *
 	 * @return The instance.
 	 */
-	public DungeonInstance getCurrentInstance() {
+	public Optional<DungeonInstance> getCurrentInstance() {
 		if (this.currentInstance != null && this.currentInstance.getPlayer() == null) {
 			this.startDungeon("");
-			return null;
+			return Optional.empty();
 		}
-		return this.currentInstance;
+		return Optional.ofNullable(this.currentInstance);
 	}
 
 	public static void sendDebugMessage(String message) {

@@ -9,6 +9,9 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+import net.minecraft.util.math.Vec3d;
+
+import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,6 +168,10 @@ public class CookiesUtils {
 			case "cookies-equals" -> string.equals(withoutPrefix);
 			default -> string.equalsIgnoreCase(search);
 		};
+	}
+
+	public static Vector2i mapToXZ(Vec3d vec3d) {
+		return new Vector2i((int) vec3d.x, (int) vec3d.z);
 	}
 
 	public static String stripColor(String input) {

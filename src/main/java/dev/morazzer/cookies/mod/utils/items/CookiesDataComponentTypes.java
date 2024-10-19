@@ -72,6 +72,7 @@ public class CookiesDataComponentTypes {
 	public static final ComponentType<ItemStack> ORIGINAL_ITEM;
 	public static final ComponentType<ItemStack> SELF;
 	public static final ComponentType<Runnable> ITEM_CLICK_RUNNABLE;
+	public static final ComponentType<Runnable> ON_ITEM_CLICK_RUNNABLE;
 	public static final ComponentType<Consumer<Integer>> ITEM_CLICK_CONSUMER;
 	public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
 	public static final ComponentType<List<Text>> CUSTOM_LORE;
@@ -209,6 +210,7 @@ public class CookiesDataComponentTypes {
 		ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
 		CUSTOM_LORE = new CookiesDataComponent<>(Identifier.of("cookies:custom_lore"));
 		LORE_ITEMS = new CookiesDataComponent<>(Identifier.of("cookies:lore_items"));
+		ON_ITEM_CLICK_RUNNABLE = new CookiesDataComponent<>(Identifier.of("cookies:on_item_click_runnable"));
 	}
 
 	public static boolean isCustomType(ComponentType<?> type) {

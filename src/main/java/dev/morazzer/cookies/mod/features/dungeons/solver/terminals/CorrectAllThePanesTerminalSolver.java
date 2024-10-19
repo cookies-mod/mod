@@ -48,7 +48,7 @@ public class CorrectAllThePanesTerminalSolver extends TerminalSolver {
 			}
 		}
 		if (stack.getItem() == Items.RED_STAINED_GLASS_PANE) {
-			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, SHOULD_CLICK);
+			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, shouldClick);
 			return;
 		}
 		stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, this.doneItem);

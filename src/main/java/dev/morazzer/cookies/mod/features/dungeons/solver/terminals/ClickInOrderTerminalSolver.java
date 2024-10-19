@@ -18,8 +18,8 @@ public class ClickInOrderTerminalSolver extends TerminalSolver {
 	private final ItemStack thirdItem = this.doneItem.copy().withItem(Items.ORANGE_STAINED_GLASS_PANE);
 	private final ItemStack secondItem = this.doneItem.copy().withItem(Items.YELLOW_STAINED_GLASS_PANE);
 
-	private static final ItemStack FIRST_CLICK = SHOULD_CLICK;
-	private final ItemStack[] itemList = new ItemStack[] {FIRST_CLICK, this.secondItem, this.thirdItem, this.todo};
+	private final ItemStack firstClick = shouldClick;
+	private final ItemStack[] itemList = new ItemStack[] {this.firstClick, this.secondItem, this.thirdItem, this.todo};
 
 	private int lowestAmount = Integer.MAX_VALUE;
 

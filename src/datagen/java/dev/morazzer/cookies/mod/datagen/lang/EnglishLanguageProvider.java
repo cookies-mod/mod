@@ -461,7 +461,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(
 				CONFIG_DUNGEON_RENDER_MAP_SHOW_TRAP_AS_CLEARED,
 				"Show trap as cleared",
-				"Always shows the trap as cleared (white text) instead of red text.");
+				"Always shows the trap as cleared (white text) instead of opened (red text).");
 		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR,
 				"Background color",
 				"The color to use for the map background");
