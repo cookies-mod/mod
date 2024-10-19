@@ -133,7 +133,7 @@
   "cookies.config.dungeon.render.show_player_skulls.name": "Show player skulls",
   "cookies.config.dungeon.render.show_player_skulls.tooltip": "Shows the player skull instead of the map marker.",
   "cookies.config.dungeon.render.show_puzzle_as_done.name": "Show trap as cleared",
-  "cookies.config.dungeon.render.show_puzzle_as_done.tooltip": "Always shows the trap as cleared (white text) instead of red text.",
+  "cookies.config.dungeon.render.show_puzzle_as_done.tooltip": "Always shows the trap as cleared (white text) instead of opened (red text).",
   "cookies.config.dungeon.render.show_puzzle_name.name": "Show puzzle name",
   "cookies.config.dungeon.render.show_puzzle_name.tooltip": "Shows the puzzle name (if known).",
   "cookies.config.dungeon.render.show_secrets.name": "Show secrets",

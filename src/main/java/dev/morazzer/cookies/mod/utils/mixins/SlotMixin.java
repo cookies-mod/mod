@@ -54,7 +54,16 @@ public abstract class SlotMixin implements SlotAccessor {
         this.cookies$runnable = runnable;
     }
 
-    @Override
+	@Override
+	public Runnable cookies$getOnItemClickRunnable() {
+		final ItemStack stack = getStack();
+		if (stack != null) {
+			return ItemUtils.getData(stack, CookiesDataComponentTypes.ON_ITEM_CLICK_RUNNABLE);
+		}
+		return null;
+	}
+
+	@Override
     public Runnable cookies$getRunnable() {
         final ItemStack stack = getStack();
         if (stack != null) {

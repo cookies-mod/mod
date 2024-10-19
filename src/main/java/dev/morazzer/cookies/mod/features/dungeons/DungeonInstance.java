@@ -80,6 +80,8 @@ public final class DungeonInstance {
 	private final PuzzleSolverInstance puzzleSolverInstance;
 	@Getter
 	private DungeonRoom currentRoom;
+	@Getter
+	private final long timeStarted;
 
 	public DungeonInstance(DungeonType type, int floor, String serverId) {
 		this.type = type;
@@ -97,6 +99,7 @@ public final class DungeonInstance {
 			this.debugInstance = false;
 			this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
 		}
+		this.timeStarted = System.currentTimeMillis();
 		this.puzzleSolverInstance = new PuzzleSolverInstance(this);
 	}
 

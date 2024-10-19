@@ -19,7 +19,13 @@ public interface SlotAccessor {
         getAccessor(slot).cookies$setOnClick(onClick);
     }
 
-    void cookies$setOnClick(Consumer<Integer> onClick);
+	static Runnable getOnItemClickRunnable(Slot slot) {
+		return getAccessor(slot).cookies$getOnItemClickRunnable();
+	}
+
+	Runnable cookies$getOnItemClickRunnable();
+
+	void cookies$setOnClick(Consumer<Integer> onClick);
 
     private static SlotAccessor getAccessor(Slot slot) {
         //The cast is possible, though it correctly assumes it is not

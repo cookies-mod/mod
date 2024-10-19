@@ -208,6 +208,9 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 		if (SlotAccessor.getItem(slot) != null) {
 			cir.setReturnValue(true);
 		}
+		if (SlotAccessor.getOnItemClickRunnable(slot) != null) {
+			SlotAccessor.getOnItemClickRunnable(slot).run();
+		}
 	}
 
 	@ModifyArgs(

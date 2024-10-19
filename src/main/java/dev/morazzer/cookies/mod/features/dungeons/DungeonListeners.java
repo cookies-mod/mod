@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.dungeons;
 
+import java.util.Optional;
+
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
@@ -56,50 +58,48 @@ public class DungeonListeners {
 		UseBlockCallback.EVENT.register(DungeonListeners::rightClickBlock);
 	}
 
-	private static void connectWebsocket() {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		instance.subscribe();
+	private static void clientTick(MinecraftClient minecraftClient) {
+		getInstance().ifPresent(instance -> {
+			ticks++;
+			if (ticks % 20 == 0) {
+				ticks = 0;
+			}
+
+			instance.updatePlayers();
+			instance.updatePuzzles();
+			if (ticks % 5 == 0) {
+				instance.periodicalTicks5();
+			}
+			if (ticks % 2 == 0) {
+				instance.syncPlayers();
+			}
+
+			instance.getPuzzleSolverInstance().getCurrent().ifPresent(PuzzleSolver::tick);
+		});
 	}
 
-	private static void syncPlayerLocation(DungeonSyncPlayerLocation packet) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		instance.updatePlayer(packet);
-	}
-
-	private static void receiveGameMessage(Text text, boolean isOverlay) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		final String string = CookiesUtils.stripColor(text.getString()).trim();
-		if (isOverlay) {
-			if (!string.endsWith("Secrets")) {
-				instance.processSecrets(null);
+	private static void hudRenderCallback(DrawContext drawContext, RenderTickCounter renderTickCounter) {
+		getInstance().ifPresent(instance -> {
+			instance.updatePlayersFromWorld();
+			final DungeonMapRenderer mapRenderer = instance.getMapRenderer();
+			if (mapRenderer == null) {
 				return;
 			}
-			final String s = string.replaceAll(".* (\\d+/\\d+ Secrets).*", "$1");
-			final String[] split = s.split(" ");
-			instance.processSecrets(split[0]);
-		} else {
-			if (string.contains("> EXTRA STATS <")) {
-				instance.setPhase(DungeonPhase.AFTER);
+			if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen ||
+				SpiritLeapOverlay.isOpen) {
+				return;
 			}
-
-			instance.getPuzzleSolverInstance()
-					.getCurrent()
-					.map(FunctionUtils.function(PuzzleSolver::onChatMessage))
-					.orElseGet(FunctionUtils::noOp)
-					.accept(string);
-			instance.getPuzzleSolverInstance()
-					.getAll()
-					.forEach(puzzleSolver -> puzzleSolver.onUnloadedChatMessage(string));
-		}
+			final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;
+			final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
+			drawContext.getMatrices().push();
+			drawContext.getMatrices().translate(
+					position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
+					position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
+					1000);
+			drawContext.getMatrices().scale(position.scale, position.scale, 1);
+			mapRenderer.render(drawContext);
+			drawContext.getMatrices().pop();
+		});
 	}
 
 	private static void onIslandChange(LocationUtils.Island previous, LocationUtils.Island current) {
@@ -110,94 +110,73 @@ public class DungeonListeners {
 		}
 	}
 
+	private static void syncPlayerLocation(DungeonSyncPlayerLocation packet) {
+		getInstance().ifPresent(instance -> instance.updatePlayer(packet));
+	}
+
 	private static void updateRoomSecrets(DungeonUpdateRoomSecrets packet) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-
-		final DungeonRoom roomAt = instance.getDungeonMap().getRoomAt(packet.roomMapX, packet.roomMapY);
-		if (roomAt != null) {
-			if (roomAt.getMaxSecrets() < packet.maxSecrets) {
-				roomAt.setMaxSecrets(packet.maxSecrets);
+		getInstance().ifPresent(instance -> {
+			final DungeonRoom roomAt = instance.getDungeonMap().getRoomAt(packet.roomMapX, packet.roomMapY);
+			if (roomAt != null) {
+				if (roomAt.getMaxSecrets() < packet.maxSecrets) {
+					roomAt.setMaxSecrets(packet.maxSecrets);
+				}
+				roomAt.setCollectedSecrets(packet.collectedSecrets);
 			}
-			roomAt.setCollectedSecrets(packet.collectedSecrets);
-		}
+		});
 	}
 
+	private static void receiveGameMessage(Text text, boolean isOverlay) {
+		getInstance().ifPresent(instance -> {
+			final String string = CookiesUtils.stripColor(text.getString()).trim();
+			if (isOverlay) {
+				if (!string.endsWith("Secrets")) {
+					instance.processSecrets(null);
+					return;
+				}
+				final String s = string.replaceAll(".* (\\d+/\\d+ Secrets).*", "$1");
+				final String[] split = s.split(" ");
+				instance.processSecrets(split[0]);
+			} else {
+				if (string.contains("> EXTRA STATS <")) {
+					instance.setPhase(DungeonPhase.AFTER);
+				}
 
-	private static void hudRenderCallback(DrawContext drawContext, RenderTickCounter renderTickCounter) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		instance.updatePlayersFromWorld();
-		final DungeonMapRenderer mapRenderer = instance.getMapRenderer();
-		if (mapRenderer == null) {
-			return;
-		}
-		if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen ||
-			SpiritLeapOverlay.isOpen) {
-			return;
-		}
-		final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;
-		final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
-		drawContext.getMatrices().push();
-		drawContext.getMatrices().translate(
-				position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
-				position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
-				1000);
-		drawContext.getMatrices().scale(position.scale, position.scale, 1);
-		mapRenderer.render(drawContext);
-		drawContext.getMatrices().pop();
+				instance.getPuzzleSolverInstance()
+						.getCurrent()
+						.map(FunctionUtils.function(PuzzleSolver::onChatMessage))
+						.orElseGet(FunctionUtils::noOp)
+						.accept(string);
+				instance.getPuzzleSolverInstance()
+						.getAll()
+						.forEach(puzzleSolver -> puzzleSolver.onUnloadedChatMessage(string));
+			}
+		});
 	}
 
-	private static void clientTick(MinecraftClient minecraftClient) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-
-		ticks++;
-		if (ticks % 20 == 0) {
-			ticks = 0;
-		}
-
-		instance.updatePlayers();
-		instance.updatePuzzles();
-		if (ticks % 5 == 0) {
-			instance.periodicalTicks5();
-		}
-		if (ticks % 2 == 0) {
-			instance.syncPlayers();
-		}
-
-		instance.getPuzzleSolverInstance().getCurrent().ifPresent(PuzzleSolver::tick);
+	private static void connectWebsocket() {
+		getInstance().ifPresent(DungeonInstance::subscribe);
 	}
 
 	private static void beforeEntities(WorldRenderContext worldRenderContext) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return;
-		}
-		worldRenderContext.tickCounter().getTickDelta(false);
+		getInstance().ifPresent(instance -> {
+			worldRenderContext.tickCounter().getTickDelta(false);
 
-		instance.getPuzzleSolverInstance().getCurrent().map(FunctionUtils.function(PuzzleSolver::beforeRender))
-				.orElseGet(FunctionUtils::noOp).accept(worldRenderContext.tickCounter().getTickDelta(false));
+			instance.getPuzzleSolverInstance()
+					.getCurrent()
+					.map(FunctionUtils.function(PuzzleSolver::beforeRender))
+					.orElseGet(FunctionUtils::noOp)
+					.accept(worldRenderContext.tickCounter().getTickDelta(false));
+		});
 	}
 
 	private static ActionResult rightClickBlock(
 			PlayerEntity playerEntity, World world, Hand hand, BlockHitResult blockHitResult) {
-		final DungeonInstance instance = getInstance();
-		if (instance == null) {
-			return ActionResult.PASS;
-		}
-		instance.getPuzzleSolverInstance()
+		getInstance().ifPresent(instance -> instance.getPuzzleSolverInstance()
 				.getCurrent()
 				.map(FunctionUtils.function(PuzzleSolver::onInteract))
 				.orElseGet(FunctionUtils::noOp3)
-				.accept(world, blockHitResult, hand);
-
+				.accept(world, blockHitResult, hand));
 		return ActionResult.PASS;
 	}
 
@@ -205,7 +184,7 @@ public class DungeonListeners {
 	/**
 	 * @return The current dungeon instance or null if empty.
 	 */
-	private static DungeonInstance getInstance() {
+	private static Optional<DungeonInstance> getInstance() {
 		return DungeonFeatures.getInstance().getCurrentInstance();
 	}
 }

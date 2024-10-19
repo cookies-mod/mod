@@ -51,7 +51,7 @@ public class SelectAllColorsTerminalSolver extends TerminalSolver {
 			if (stack.hasGlint()) {
 				stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, this.doneItem);
 			} else {
-				stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, SHOULD_CLICK);
+				stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, shouldClick);
 			}
 		} else if (slot == 53) {
 			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_TOGGLE, Unit.INSTANCE);

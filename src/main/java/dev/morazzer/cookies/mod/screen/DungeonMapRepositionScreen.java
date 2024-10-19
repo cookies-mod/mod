@@ -41,8 +41,8 @@ public class DungeonMapRepositionScreen extends CookiesScreen {
 	public DungeonMapRepositionScreen() {
 		super(Text.empty());
 		this.position = DungeonConfig.getInstance().hudElementPosition;
-		if (DungeonFeatures.getInstance().getCurrentInstance() != null) {
-			final DungeonInstance currentInstance = DungeonFeatures.getInstance().getCurrentInstance();
+		if (DungeonFeatures.getInstance().getCurrentInstance().isPresent()) {
+			final DungeonInstance currentInstance = DungeonFeatures.getInstance().getCurrentInstance().orElse(null);
 			final DungeonPhase phase = currentInstance.getPhase();
 			if (phase == DungeonPhase.BOSS || phase == DungeonPhase.AFTER) {
 				this.mockMap();
