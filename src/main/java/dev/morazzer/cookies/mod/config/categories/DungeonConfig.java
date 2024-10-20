@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import dev.morazzer.cookies.mod.utils.cookies.Constants;
+
 import java.awt.Color;
 
 import dev.morazzer.cookies.mod.CookiesMod;
@@ -40,6 +42,7 @@ public class DungeonConfig extends Category {
 	public TerminalFoldable terminalFoldable = new TerminalFoldable();
 	public SpiritLeapFoldable spiritLeapFoldable = new SpiritLeapFoldable();
 	public PuzzleFoldable puzzleFoldable = new PuzzleFoldable();
+	public ClassColorFoldable classColorFoldable = new ClassColorFoldable();
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
@@ -75,13 +78,29 @@ public class DungeonConfig extends Category {
 	public int getColumn() {
 		return 2;
 	}
+	public static class ClassColorFoldable extends Foldable {
+
+		public ColorOption healer = new ColorOption(CONFIG_DUNGEON_CLASS_COLOR_HEALER, new Color(0xA933DC));
+		public ColorOption mage = new ColorOption(CONFIG_DUNGEON_CLASS_COLOR_MAGE, new Color(0x6EB5FF));
+		public ColorOption bers = new ColorOption(CONFIG_DUNGEON_CLASS_COLOR_BERS, new Color(0xEE9f27));
+		public ColorOption arch = new ColorOption(CONFIG_DUNGEON_CLASS_COLOR_ARCH, new Color(0xFF6666));
+		public ColorOption tank = new ColorOption(CONFIG_DUNGEON_CLASS_COLOR_TANK, new Color(Constants.SUCCESS_COLOR));
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_CLASS_COLOR;
+		}
+	}
 
 	public static class SpiritLeapFoldable extends Foldable {
 
 		public BooleanOption spiritLeapUi = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, true);
 		public BooleanOption showMap = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP, true);
+		public BooleanOption sortByClassName = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_SORT_BY_CLASS_NAME, false);
+		public BooleanOption colorInClassColor = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR, false);
 		public ColorOption colorOption =
-				new ColorOption(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR, new Color(0xFFDCD3FF, true)).withAlpha();
+				new ColorOption(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR, new Color(0xFFDCD3FF, true)).withAlpha()
+						.onlyIfNot(this.colorInClassColor);
 
 		@Override
 		public String getName() {
