@@ -42,7 +42,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 		final String letter =
 				string.replace("What starts with: '", "").replace("'?", "").trim().toLowerCase(Locale.ROOT);
 		boolean isDifferentTitle = (lastOpenPos == null || !lastOpened.equals(letter));
-		boolean isDifferentTerminal = lastOpenPos != null && lastOpenPos.distanceSquared(CookiesUtils.getPlayer()
+		boolean isDifferentTerminal = lastOpenPos == null || lastOpenPos.distanceSquared(CookiesUtils.getPlayer()
 				.map(PlayerEntity::getPos)
 				.map(CookiesUtils::mapToXZ)
 				.orElse(new Vector2i(0, 0))) > 25;
@@ -52,8 +52,11 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 				.orElse(-1L);
 		if (isDifferentTitle || isDifferentTerminal || isDifferentDungeon) {
 			lastOpenedSlots.clear();
-			lastOpenedSlots.add(0);
 			lastOpened = letter;
+			lastOpenPos = CookiesUtils.getPlayer()
+					.map(PlayerEntity::getPos)
+					.map(CookiesUtils::mapToXZ)
+					.orElse(new Vector2i(0, 0));
 			lastDungeonStartTime =
 					DungeonFeatures.getInstance().getCurrentInstance().map(DungeonInstance::getTimeStarted).orElse(-1L);
 		}

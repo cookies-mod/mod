@@ -471,11 +471,36 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, "Enable UI", "Enables the spirit leap ui.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP,
 				"Show dungeon map",
-				"Shows the dungeon map in the ui.‚");
+				"Shows the dungeon map in the ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SORT_BY_CLASS_NAME,
+				"Sort by class",
+				"Sorts the players by their class in the spirit overlay.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL, "Terminals", "All settings related to terminals.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR,
 				"Background color",
-				"Changes the background color of the ui widgets.‚");
+				"Changes the background color of the ui widgets.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR,
+				"Use class colors",
+				"Uses the class colors instead of the default color.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR,
+				"Class colors",
+				"The colors used for every class");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR_HEALER,
+				"Healer",
+				"The color used for healer.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR_MAGE,
+				"Mage",
+				"The color used for mage.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR_BERS,
+				"Berserk",
+				"The color used for berserk.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR_ARCH,
+				"Archer",
+				"The color used for archer.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR_TANK,
+				"Tank",
+				"The color used for tank.");
+
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_PREVENT_MISS_CLICKS,
 				"Prevent Missclicks",
 				"Prevents you from clicking wrong options.");

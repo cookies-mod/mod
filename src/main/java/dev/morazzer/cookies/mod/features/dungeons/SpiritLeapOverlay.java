@@ -10,6 +10,13 @@ import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.screen.CookiesScreen;
 import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -37,6 +44,7 @@ public class SpiritLeapOverlay {
 	public static boolean isOpen;
 	private static DungeonFeatures features;
 	private final HandledScreen<?> handledScreen;
+	private final Player[] actualPlayers = new Player[4];
 	private final Player[] players = new Player[4];
 	private int amountOfPlayers = -1;
 	private int rows = 1;
@@ -90,7 +98,6 @@ public class SpiritLeapOverlay {
 		int individualWidth = width / this.columns;
 		int individualHeight = height / this.rows;
 
-
 		for (int i = 0; i < this.players.length; i++) {
 			Player player = this.players[i];
 			if (player == null || player.slot.getStack().isEmpty()) {
@@ -125,12 +132,7 @@ public class SpiritLeapOverlay {
 
 			drawContext.getMatrices().pop();
 
-			drawContext.fill(
-					playerX,
-					playerY,
-					playerEndX,
-					playerEndY,
-					DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue());
+			drawContext.fill(playerX, playerY, playerEndX, playerEndY, getColor(player));
 			int size = (playerHeight / 16) * 14;
 			int skullOffsetY = (playerHeight - size) / 2;
 			if (player.dungeonPlayer == null || player.dungeonPlayer.getPlayer() == null) {
@@ -181,6 +183,29 @@ public class SpiritLeapOverlay {
 		drawContext.getMatrices().pop();
 	}
 
+	private int getColor(Player player) {
+		if (!DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
+			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
+		}
+		final String dungeonClass = Optional.ofNullable(player.dungeonPlayer())
+				.map(DungeonPlayer::getDungeonClass)
+				.map(String::toLowerCase)
+				.map(String::trim)
+				.orElse("");
+		if (dungeonClass.isEmpty()) {
+			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
+		}
+
+		return switch (dungeonClass.toCharArray()[0]) {
+			case 'h' -> DungeonConfig.getInstance().classColorFoldable.healer.getValue().getRGB();
+			case 'm' -> DungeonConfig.getInstance().classColorFoldable.mage.getValue().getRGB();
+			case 'b' -> DungeonConfig.getInstance().classColorFoldable.bers.getValue().getRGB();
+			case 'a' -> DungeonConfig.getInstance().classColorFoldable.arch.getValue().getRGB();
+			case 't' -> DungeonConfig.getInstance().classColorFoldable.tank.getValue().getRGB();
+			default -> DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
+		};
+	}
+
 	/**
 	 * Updates the cached data to reflect the inventory.
 	 *
@@ -190,7 +215,7 @@ public class SpiritLeapOverlay {
 		int slotId = slot.id;
 		if (slotId == 0) {
 			this.amountOfPlayers = -1;
-			Arrays.fill(this.players, null);
+			Arrays.fill(this.actualPlayers, null);
 		}
 		if (slotId < 11 || slotId > 15) {
 			return;
@@ -225,17 +250,35 @@ public class SpiritLeapOverlay {
 			case 4 -> noOffset == 2 ? -1 : noOffset > 2 ? noOffset - 1 : noOffset;
 			default -> -1;
 		};
-		if (index < 0 || index >= this.players.length) {
+		if (index < 0 || index >= this.actualPlayers.length) {
 			return;
 		}
-		this.players[index] = new Player(slot, dungeonPlayer, new Location());
+		this.actualPlayers[index] = new Player(slot, dungeonPlayer, new Location());
+		this.setPlayers();
+	}
+
+	private void setPlayers() {
+		if (DungeonConfig.getInstance().spiritLeapFoldable.sortByClassName.getValue()) {
+			System.arraycopy(this.actualPlayers, 0, this.players, 0, this.actualPlayers.length);
+			return;
+		}
+		final List<Player> players = Arrays.stream(this.actualPlayers)
+				.filter(Objects::nonNull)
+				.sorted(Comparator.comparing(player -> Optional.ofNullable(player.dungeonPlayer())
+						.map(DungeonPlayer::getDungeonClass)
+						.orElse(""), String::compareToIgnoreCase))
+				.toList();
+		for (int i = 0; i < players.size(); i++) {
+			final Player player = players.get(i);
+			this.players[i] = player;
+		}
 	}
 
 	/**
 	 * Handles the mouse interaction and blocks the interaction with the original inventory.
 	 */
 	private boolean mouseClicked(Screen screen, double mouseX, double mouseY, int button) {
-		for (Player player : this.players) {
+		for (Player player : this.actualPlayers) {
 			if (player == null) {
 				continue;
 			}
@@ -317,7 +360,7 @@ public class SpiritLeapOverlay {
 	 * @param dungeonPlayer The dungeon player corresponding with the player.
 	 * @param location      The location information of the player.
 	 */
-	private record Player(Slot slot, DungeonPlayer dungeonPlayer, Location location) {
+	private record Player(Slot slot, @Nullable DungeonPlayer dungeonPlayer, @NotNull Location location) {
 
 	}
 
@@ -327,4 +370,5 @@ public class SpiritLeapOverlay {
 	private static class Location {
 		int x, y, width, height;
 	}
+
 }
