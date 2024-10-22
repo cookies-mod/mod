@@ -1,9 +1,11 @@
 package dev.morazzer.cookies.mod.render.types;
 
 import dev.morazzer.cookies.mod.render.Renderable;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.util.math.Vec3d;
+
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
 /**
  * Renders a beacon beam in the world.
@@ -14,9 +16,18 @@ import net.minecraft.util.math.Vec3d;
  */
 public record BeaconBeam(Vec3d origin, int maxHeight, int color) implements Renderable {
 
-    @Override
-    public void render(WorldRenderContext context) {
-        BeaconBlockEntityRenderer.renderBeam(context.matrixStack(), context.consumers(), context.tickCounter()
-            .getTickDelta(true), 0, 0, maxHeight, color);
-    }
+	@Override
+	public void render(WorldRenderContext context) {
+		context.matrixStack().push();
+		context.matrixStack().translate(origin.getX() - 0.5, origin.getY() - 0.5, origin.getZ() - 0.5);
+		BeaconBlockEntityRenderer.renderBeam(
+				context.matrixStack(),
+				context.consumers(),
+				context.tickCounter().getTickDelta(true),
+				0,
+				0,
+				maxHeight,
+				color);
+		context.matrixStack().pop();
+	}
 }

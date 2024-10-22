@@ -226,6 +226,8 @@
   "cookies.config.mining.categories.hotm": "HOTM",
   "cookies.config.mining.highlight_disabled_hotm_perks.name": "Highlight disabled",
   "cookies.config.mining.highlight_disabled_hotm_perks.tooltip": "Change disabled perks to redstone.",
+  "cookies.config.mining.mod_helper.name": "Mod Helper",
+  "cookies.config.mining.mod_helper.tooltip": "Enables the mines of divan chest helper.",
   "cookies.config.mining.modify_commissions.name": "Modify commission items",
   "cookies.config.mining.modify_commissions.tooltip": "Visually changes the commission item to represent the stages a commission can be in.",
   "cookies.config.mining.name": "Mining",

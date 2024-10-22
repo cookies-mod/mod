@@ -351,6 +351,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Modify commission items",
 				"Visually changes the commission item to represent the stages a commission can be in.");
 
+		translationBuilder.addConfig(CONFIG_MINING_MOD_HELPER,
+				"Mod Helper",
+				"Enables the mines of divan chest helper.");
 		translationBuilder.addConfig(CONFIG_MINING_PUZZLER_SOLVER,
 				"Puzzler solver",
 				"Highlight the correct block for the puzzler.");

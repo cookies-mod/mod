@@ -3,9 +3,12 @@ package dev.morazzer.cookies.mod.render.types;
 import dev.morazzer.cookies.mod.render.Renderable;
 import dev.morazzer.cookies.mod.render.utils.CookiesRenderLayers;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -67,6 +70,14 @@ public record Box(Vec3d start, Vec3d end, float red, float green, float blue, fl
         );
     }
 
+	public Box(BlockPos origin, int color, boolean throughWalls) {
+		this(
+				origin.toCenterPos().subtract(0.5,0.5,0.5),
+				origin.toCenterPos().add(0.5,0.5,0.5),
+				color,
+				throughWalls
+		);
+	}
 
     @Override
     public void render(WorldRenderContext context) {
@@ -75,7 +86,8 @@ public record Box(Vec3d start, Vec3d end, float red, float green, float blue, fl
 
         WorldRenderer.renderFilledBox(
             matrixStack,
-            consumers.getBuffer(throughWalls ? CookiesRenderLayers.FILLED_THROUGH_WALLS : CookiesRenderLayers.FILLED),
+            consumers.getBuffer(throughWalls ? CookiesRenderLayers.FILLED_THROUGH_WALLS :
+					RenderLayer.getDebugFilledBox()),
             start.x,
             start.y,
             start.z,

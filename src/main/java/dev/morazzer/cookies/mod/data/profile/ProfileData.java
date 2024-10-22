@@ -10,6 +10,7 @@ import dev.morazzer.cookies.mod.data.profile.sub.MiscItemData;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.json.Exclude;
 import dev.morazzer.cookies.mod.utils.json.Safe;
@@ -86,6 +87,7 @@ public class ProfileData {
      */
     public void load() {
         this.globalProfileData = GlobalProfileStorage.load(this.profileUuid);
+		CraftHelper.swap();
     }
 
     /**
