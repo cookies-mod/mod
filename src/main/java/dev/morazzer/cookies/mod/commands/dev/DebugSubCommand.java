@@ -7,6 +7,7 @@ import dev.morazzer.cookies.mod.commands.dev.debug.GetRepoItemDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.IsUsingMod;
 import dev.morazzer.cookies.mod.commands.dev.debug.LoadScreenDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.OpenCraftHelperPlacementScreen;
+import dev.morazzer.cookies.mod.commands.dev.debug.PrintModStuffDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.ProfileDataDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.RecipeCalculationDebugCommand;
 import dev.morazzer.cookies.mod.commands.dev.debug.RecipeDebugCommand;
@@ -43,7 +44,8 @@ public class DebugSubCommand extends ClientCommand {
 				new ProfileDataDebugCommand(),
 				new ApiDebug(),
 				new IsUsingMod(),
-				new GetRepoItemDebugCommand()
+				new GetRepoItemDebugCommand(),
+				new PrintModStuffDebugCommand()
 		};
 
 		for (ClientCommand clientCommand : clientCommands) {

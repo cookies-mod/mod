@@ -77,7 +77,6 @@ public class CraftHelper {
 		instance = this;
 		ConfigManager.getConfig().helpersConfig.craftHelperLocation.withCallback((oldValue, newValue) -> this.location =
 				newValue);
-		ProfileSwapEvent.AFTER_SET_NO_UUID.register(this::profileSwap);
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			if (!(screen instanceof InventoryScreenAccessor)) {
 				return;
@@ -199,6 +198,10 @@ public class CraftHelper {
 		}
 
 		return amount == calculationResult.getAmount();
+	}
+
+	public static void swap() {
+		instance.profileSwap();
 	}
 
 	private static int getAmount(EvaluationContext context, int max, StackCountContext stackCountContext) {

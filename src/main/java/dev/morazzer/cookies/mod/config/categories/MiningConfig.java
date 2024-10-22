@@ -1,11 +1,13 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.config.system.Category;
 import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.config.system.Row;
 import dev.morazzer.cookies.mod.config.system.options.BooleanOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
-import dev.morazzer.cookies.mod.translations.TranslationKeys;
+import dev.morazzer.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
+
 import java.util.function.Predicate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +21,8 @@ public class MiningConfig extends Category {
 
     public BooleanOption modifyCommissions = new BooleanOption(CONFIG_MINING_MODIFY_COMMISSIONS, false);
     public BooleanOption puzzlerSolver = new BooleanOption(CONFIG_MINING_PUZZLER_SOLVER, false);
+    public BooleanOption modHelper = new BooleanOption(CONFIG_MINING_MOD_HELPER, true)
+			.withCallback(MinesOfDivanHelper::reset);
 
     @Parent
     public TextDisplayOption hotmParentDisplay = new TextDisplayOption(CONFIG_MINING_CATEGORIES_HOTM);
@@ -35,7 +39,12 @@ public class MiningConfig extends Category {
                 .or(o -> showTotalCost.getValue());
     }
 
-    @Override
+	public static MiningConfig getInstance() {
+		return ConfigManager.getConfig().miningConfig;
+	}
+
+
+	@Override
     public Row getRow() {
         return Row.TOP;
     }

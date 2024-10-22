@@ -195,6 +195,18 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
         return this.asOption();
     }
 
+	/**
+	 * Adds a callback that will be called when the value is changed.
+	 *
+	 * @param runnable The callback to add.
+	 * @return The option.
+	 */
+	@NotNull
+	public final O withCallback(@NotNull Runnable runnable) {
+		this.callbacks.add((v1,v2) -> runnable.run());
+		return this.asOption();
+	}
+
     /**
      * Only shows this option if the other option is false.
      *
