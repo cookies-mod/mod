@@ -386,22 +386,27 @@ public class ItemSearchService {
 					tooltip.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_CLICK_TO_HIGHLIGHT_ACCESSORY_BAG)
 							.formatted(Formatting.YELLOW));
 			case CRAFTABLE -> addCraftableTooltip(tooltip, compoundData);
+			case INVENTORY -> tooltip.add(Text.literal("This item is in your inventory!").formatted(Formatting.YELLOW));
+			case FORGE ->
+					tooltip.add(Text.literal("This item currently is in the forge!").formatted(Formatting.YELLOW));
 			case null, default -> tooltip.add(Text.literal("An error occurred :c " + type).formatted(Formatting.RED));
 		}
 	}
 
 	/**
 	 * Appends the tooltip used for craftable items.
-	 * @param tooltip The tooltip.
+	 *
+	 * @param tooltip      The tooltip.
 	 * @param compoundData The data.
 	 */
-	private static void addCraftableTooltip(List<Text> tooltip, Object compoundData) {
+	public static void addCraftableTooltip(List<Text> tooltip, Object compoundData) {
 		if (compoundData instanceof CraftableItemSource.Data data) {
 			if (data.hasAllIngredients() && data.canSupercraft()) {
 				tooltip.add(Text.literal("You can craft this item!").formatted(Formatting.DARK_GREEN));
 			} else if (data.showSupercraftWarning()) {
 				tooltip.add(Text.literal("Some items are out of the supercraft reach!").formatted(Formatting.YELLOW));
-				tooltip.add(Text.literal("(Right-click to find items marked with " + Constants.Emojis.WARNING + ")").formatted(Formatting.DARK_GRAY));
+				tooltip.add(Text.literal("(Right-click to find items marked with " + Constants.Emojis.WARNING + ")")
+						.formatted(Formatting.DARK_GRAY));
 			}
 			MutableText bar = Text.literal("").formatted(Formatting.STRIKETHROUGH, Formatting.GRAY);
 			tooltip.add(bar);
@@ -477,7 +482,7 @@ public class ItemSearchService {
 			schedule.cancel(false);
 		}
 		schedule = CookiesMod.getExecutorService().schedule(ItemSearchService::removeActiveStack, 10,
-				TimeUnit.SECONDS);
+            TimeUnit.SECONDS);
 	}
 
 	/**

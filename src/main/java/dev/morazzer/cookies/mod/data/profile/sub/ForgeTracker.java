@@ -57,7 +57,7 @@ public class ForgeTracker implements CodecJsonSerializable<List<ForgeTracker.Dat
 
 	public record Data(RepositoryItem repositoryItem, long startedSeconds, int slot) {
 		public static Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				RepositoryItem.CODEC.optionalFieldOf("item")
+				RepositoryItem.ID_CODEC.optionalFieldOf("item")
 						.xmap(item -> item.orElse(null), Optional::ofNullable)
 						.forGetter(Data::repositoryItem),
 				Codec.LONG.fieldOf("startedSeconds").forGetter(Data::startedSeconds),

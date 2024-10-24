@@ -24,6 +24,7 @@ public class RepositoryConstants {
 	public static ComposterUpgrades composterUpgrades;
 	public static Warps warps;
 	public static List<BlockPos> modLocations;
+	public static MuseumData museumData;
 
 	public static void load(Path path) {
 		hotm = new Hotm(RepositoryConstantsHelper.resolve(path.resolve("hotm.json"), JsonObject.class));
@@ -34,6 +35,8 @@ public class RepositoryConstants {
 		warps = new Warps(RepositoryConstantsHelper.resolve(path.resolve("warps.json"), JsonArray.class));
 		modLocations = loadModLocations(RepositoryConstantsHelper.resolve(path.resolve("mod_locations.json"),
             JsonArray.class));
+		museumData = MuseumData.load(RepositoryConstantsHelper.resolve(path.resolve("museum_data.json"),
+				JsonObject.class));
 		DungeonConstants.load(path.resolve("dungeons"));
 	}
 

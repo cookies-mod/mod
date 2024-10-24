@@ -84,14 +84,22 @@ public abstract class InventoryModifier {
         couldPlace.second(false);
     }
 
+	protected boolean shouldInstrument(int clicked) {
+		return clicked == 1;
+	}
+
     protected void click(int clicked) {
         if (clicked == 1) {
             new SelectSlotInventory(this.getItemPredicate().or(InventoryUtils.isSkyblockUiElement()),
                 this::selectNewSlot);
         } else {
-            this.clicked();
+            this.clicked(clicked);
         }
     }
+
+	protected void clicked(int clicked) {
+		this.clicked();
+	}
 
     private void selectNewSlot(Slot slot) {
         slotEntry.set(slot.getIndex());

@@ -5,6 +5,7 @@ import dev.morazzer.cookies.mod.features.dungeons.DungeonFeatures;
 import dev.morazzer.cookies.mod.features.farming.FarmingFeatures;
 import dev.morazzer.cookies.mod.features.mining.MiningFeatures;
 import dev.morazzer.cookies.mod.features.misc.MiscFeatures;
+import dev.morazzer.cookies.mod.features.search.MuseumHelper;
 
 /**
  * Utility class to load all features.
@@ -18,6 +19,7 @@ public interface 	Features {
         Loader.load("CleanupFeatures", CleanupFeatures::load);
         Loader.load("MiningFeatures", MiningFeatures::load);
         Loader.load("DungeonFeatures", DungeonFeatures::new);
+		Loader.load("MuseumItemSearch", MuseumHelper::init);
     }
 
 }

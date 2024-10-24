@@ -178,7 +178,9 @@ public final class ItemCompound {
 		SACK_OF_SACKS,
 		VAULT,
 		POTION_BAG,
-		CRAFTABLE;
+		CRAFTABLE,
+		INVENTORY,
+		FORGE;
 
 		public static CompoundType[] getFor(ItemSources itemSources) {
 			return switch (itemSources) {
@@ -190,7 +192,9 @@ public final class ItemCompound {
 				case ACCESSORY_BAG -> new CompoundType[] {ACCESSORIES};
 				case SACK_OF_SACKS -> new CompoundType[] {SACK_OF_SACKS};
 				case CRAFTABLE -> new CompoundType[] {CRAFTABLE};
-				case null, default -> new CompoundType[0];
+				case INVENTORY -> new CompoundType[] {INVENTORY};
+				case FORGE -> new CompoundType[] {FORGE};
+				case null -> new CompoundType[0];
 			};
 		}
 
@@ -204,7 +208,9 @@ public final class ItemCompound {
 				case POTION_BAG -> POTION_BAG;
 				case ACCESSORY_BAG -> ACCESSORIES;
 				case CRAFTABLE -> CRAFTABLE;
-				case null, default -> null;
+				case FORGE -> FORGE;
+				case INVENTORY -> INVENTORY;
+				case null -> null;
 			};
 		}
 	}

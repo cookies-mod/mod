@@ -3,7 +3,6 @@ package dev.morazzer.cookies.mod.features.misc.utils.crafthelper;
 import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
-import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
@@ -96,12 +95,16 @@ public class CraftHelper {
 		});
 	}
 
+	public static void setSelectedItem(RepositoryItem item) {
+		setSelectedItem(item, 1);
+	}
+
 	/**
 	 * Sets the currently selected item that is displayed and invokes a recalculation.
 	 *
 	 * @param item The item to use.
 	 */
-	public static void setSelectedItem(RepositoryItem item) {
+	public static void setSelectedItem(RepositoryItem item, int amount) {
 		if (item == null) {
 			instance.calculation = null;
 			instance.selectedItem = null;
@@ -118,7 +121,7 @@ public class CraftHelper {
 			return;
 		}
 		instance.selectedItem = item;
-		instance.calculation = RecipeCalculator.calculate(item);
+		instance.calculation = RecipeCalculator.calculate(item).multiply(amount);
 		ProfileStorage.getCurrentProfile().ifPresent(data -> data.setSelectedCraftHelperItem(item.getInternalId()));
 		instance.recalculate();
 		instance.scrolled = 1;

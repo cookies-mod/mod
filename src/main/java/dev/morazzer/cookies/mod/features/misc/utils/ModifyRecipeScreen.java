@@ -12,6 +12,8 @@ import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.types.MiscDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
+
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
@@ -61,8 +63,13 @@ public class ModifyRecipeScreen extends InventoryModifier {
         this.current = ItemUtils.getData(item, CookiesDataComponentTypes.REPOSITORY_ITEM);
     }
 
-    @Override
-    protected void clicked() {
+	@Override
+	protected boolean shouldInstrument(int clicked) {
+		return super.shouldInstrument(clicked) && Screen.hasControlDown();
+	}
+
+	@Override
+    protected void clicked(int button) {
         SoundUtils.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 0.5f);
         CraftHelper.setSelectedItem(this.current);
     }

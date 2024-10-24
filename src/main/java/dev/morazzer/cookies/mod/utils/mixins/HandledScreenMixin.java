@@ -127,6 +127,9 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 					cir.setReturnValue(true);
 					return;
 				}
+			} else if (keyCode == InputUtil.GLFW_KEY_N) {
+				MinecraftClient.getInstance().keyboard.setClipboard(stack.getName().getString());
+				cir.setReturnValue(true);
 			}
 		}
 	}
@@ -146,6 +149,9 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			int x,
 			int y,
 			Operation<Void> original) {
+		if (focusedSlot == null) {
+			return;
+		}
 		final ItemStack stack = this.focusedSlot.getStack();
 		final ItemTooltipComponent loreItems = ItemUtils.getData(stack, CookiesDataComponentTypes.LORE_ITEMS);
 
@@ -174,6 +180,10 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 						.formatted(Formatting.GOLD)
 						.asOrderedText()));
 			}
+			list.add(new OrderedTextTooltipComponent(Text.literal("[N] ")
+					.append(Text.literal("To copy name").formatted(Formatting.GRAY))
+					.formatted(Formatting.GOLD)
+					.asOrderedText()));
 		}
 		final TooltipComponent tooltipComponent = list.removeLast();
 		if (tooltipComponent instanceof OrderedTextTooltipComponent orderedTextTooltipComponent) {
