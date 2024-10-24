@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -14,33 +15,37 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.codecs.PrimitiveCodec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
+import dev.morazzer.cookies.mod.utils.dev.FunctionUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 
 /**
  * Class to represent an item.
@@ -49,23 +54,44 @@ import net.minecraft.util.Identifier;
 @SuppressWarnings("unused")
 public class RepositoryItem {
 
+
+	public static final RepositoryItem EMPTY = createEmpty();
+	public static final Codec<RepositoryItem> CODEC =
+			RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.fieldOf("internal_id")
+									.forGetter(RepositoryItem::getInternalId),
+							Codec.STRING.optionalFieldOf("minecraft_id", "minecraft:barrier")
+									.forGetter(RepositoryItem::getMinecraftId),
+							TextCodecs.CODEC.optionalFieldOf("name",
+											Text.literal("<name not found>").formatted(Formatting.RED))
+									.forGetter(RepositoryItem::getName),
+							TextCodecs.CODEC.listOf()
+									.optionalFieldOf("lore", Collections.emptyList())
+									.forGetter(RepositoryItem::getLore),
+							Codec.STRING.optionalFieldOf("category")
+									.forGetter(FunctionUtils.wrapOptionalF(RepositoryItem::getCategory)),
+							Codec.INT.optionalFieldOf("color", 0).forGetter(RepositoryItem::getColor),
+							Tier.CODEC.optionalFieldOf("tier", Tier.COMMON).forGetter(RepositoryItem::getTier),
+							SoulBoundType.CODEC.optionalFieldOf("soulboundtype", SoulBoundType.NONE)
+									.forGetter(RepositoryItem::getSoulboundtype),
+							Codec.DOUBLE.optionalFieldOf("value", 0d).forGetter(RepositoryItem::getValue),
+							Codec.DOUBLE.optionalFieldOf("motes_value", 0d).forGetter(RepositoryItem::getMotesValue),
+							Codec.BOOL.optionalFieldOf("museumable", false).forGetter(RepositoryItem::isMuseumable),
+							Codec.BOOL.optionalFieldOf("rift_transferrable", false)
+									.forGetter(RepositoryItem::isRiftTransferrable),
+							Codec.BOOL.optionalFieldOf("sackable", false).forGetter(RepositoryItem::isSackable),
+							Codec.STRING.optionalFieldOf("skin")
+									.forGetter(FunctionUtils.wrapOptionalF(RepositoryItem::getSkin)))
+					.apply(instance, RepositoryItem::create));
+
+	private static final Logger log = LoggerFactory.getLogger(RepositoryItem.class);
 	@Getter
 	private static final Map<String, RepositoryItem> itemMap = new ConcurrentHashMap<>();
-
 	/**
 	 * Codec to serialize and deserialize an repository item.
 	 */
-	public static final PrimitiveCodec<RepositoryItem> CODEC = new PrimitiveCodec<>() {
-		@Override
-		public <T> DataResult<RepositoryItem> read(DynamicOps<T> ops, T input) {
-			return ops.getStringValue(input).map(m -> m.toLowerCase(Locale.ENGLISH)).map(RepositoryItem::of);
-		}
-
-		@Override
-		public <T> T write(DynamicOps<T> ops, RepositoryItem value) {
-			return ops.createString(value.internalId);
-		}
-	};
+	public static final Codec<RepositoryItem> ID_CODEC =
+			Codec.STRING.xmap(s -> Optional.ofNullable(RepositoryItem.of(s)).orElse(EMPTY),
+					RepositoryItem::getInternalId);
 
 	@Setter(AccessLevel.PACKAGE)
 	private Set<Recipe> recipes;
@@ -82,7 +108,7 @@ public class RepositoryItem {
 	private double value;
 	@SerializedName("motes_value")
 	private double motesValue;
-	private String soulboundtype;
+	private SoulBoundType soulboundtype;
 	private boolean museumable;
 	@SerializedName("rift_transferrable")
 	private boolean riftTransferrable;
@@ -90,6 +116,7 @@ public class RepositoryItem {
 	private List<Text> lore;
 	//TODO gemslots, bazaarable, essence (already included in data)
 	private String skin;
+	private RepositoryItemMuseumData museumData;
 
 	/**
 	 * Loads a collection of items.
@@ -103,13 +130,12 @@ public class RepositoryItem {
 		}
 
 		try {
-			final String content = Files.readString(path, StandardCharsets.UTF_8);
-			final Text.Serializer serializer = new Text.Serializer(DynamicRegistryManager.EMPTY);
-			Gson gson = new GsonBuilder().registerTypeAdapter(Text.class, serializer).create();
-			final RepositoryItem[] repositoryItems = gson.fromJson(content, new TypeToken<>() {});
-			for (RepositoryItem repositoryItem : repositoryItems) {
+			final JsonElement jsonElement = JsonParser.parseString(Files.readString(path, StandardCharsets.UTF_8));
+			final DataResult<List<RepositoryItem>> parse = CODEC.listOf().parse(JsonOps.INSTANCE, jsonElement);
+			for (RepositoryItem repositoryItem : parse.resultOrPartial(log::error).orElse(Collections.emptyList())) {
 				repositoryItem.setRecipes(new HashSet<>());
 				repositoryItem.setUsedInRecipeAsIngredient(new HashSet<>());
+				repositoryItem.museumable = false;
 				itemMap.put(repositoryItem.internalId.toLowerCase(Locale.ROOT)
 						.replaceAll(":", "_")
 						.replaceAll(";", "_")
@@ -142,10 +168,77 @@ public class RepositoryItem {
 	 * @return The item.
 	 */
 	public static Optional<RepositoryItem> ofName(String name) {
+		String actualSearch;
+		if (name.endsWith("x1")) {
+			actualSearch = name.substring(0, name.length() - 3);
+		} else {
+			actualSearch = name;
+		}
 		return itemMap.values()
 				.stream()
-				.filter(repositoryItem -> repositoryItem.getName().getString().equalsIgnoreCase(name))
+				.filter(repositoryItem -> repositoryItem.getName().getString().equalsIgnoreCase(actualSearch))
 				.findFirst();
+	}
+
+	private static RepositoryItem createEmpty() {
+		return create("empty_" + UUID.randomUUID(),
+				"minecraft:barrier",
+				Text.literal("Not found").formatted(Formatting.RED),
+				Collections.emptyList(),
+				Optional.empty(),
+				0,
+				Tier.ADMIN,
+				SoulBoundType.SOULBOUND,
+				0D,
+				0D,
+				false,
+				false,
+				false,
+				Optional.empty());
+	}
+
+	private static RepositoryItem create(
+			String internalId,
+			String minecraftId,
+			Text name,
+			List<Text> lore,
+			Optional<String> category,
+			Integer color,
+			Tier tier,
+			SoulBoundType soulBoundType,
+			Double value,
+			Double motesValue,
+			Boolean museumable,
+			Boolean riftTransferrable,
+			Boolean sackable,
+			Optional<String> skin) {
+		RepositoryItem item = new RepositoryItem();
+		item.internalId = internalId;
+		item.minecraftId = minecraftId;
+		item.name = name;
+		item.lore = lore;
+		item.category = category.orElse(null);
+		item.color = color;
+		item.tier = tier;
+		item.soulboundtype = soulBoundType;
+		item.value = value;
+		item.motesValue = motesValue;
+		item.museumable = museumable;
+		item.riftTransferrable = riftTransferrable;
+		item.sackable = sackable;
+		item.skin = skin.orElse(null);
+		return item;
+	}
+
+	public Optional<RepositoryItemMuseumData> getMuseumData() {
+		return Optional.ofNullable(museumData);
+	}
+
+	public RepositoryItemMuseumData getOrCreateMuseumData() {
+		if (museumData == null) {
+			museumData = new RepositoryItemMuseumData();
+		}
+		return museumData;
 	}
 
 	@Override
@@ -176,6 +269,10 @@ public class RepositoryItem {
 		return this.name.copy();
 	}
 
+	public boolean isMuseumable() {
+		return this.museumData != null && museumData.getDonationType() != RepositoryItemMuseumData.DonationType.NONE;
+	}
+
 	/**
 	 * Creates a new item stack for the repository item.
 	 *
@@ -201,23 +298,43 @@ public class RepositoryItem {
 	 */
 	@Getter
 	@SuppressWarnings("MissingJavadoc")
-	public enum Tier {
-		@SerializedName("Common") COMMON(Formatting.WHITE),
-		@SerializedName("Uncommon") UNCOMMON(Formatting.GREEN),
-		@SerializedName("Rare") RARE(Formatting.BLUE),
-		@SerializedName("Epic") EPIC(Formatting.DARK_PURPLE),
-		@SerializedName("Legendary") LEGENDARY(Formatting.GOLD),
-		@SerializedName("Mythic") MYTHIC(Formatting.LIGHT_PURPLE),
-		@SerializedName("Special") SPECIAL(Formatting.RED),
-		@SerializedName("Very Special") VERY_SPECIAL(Formatting.RED),
-		@SerializedName("Ultimate") ULTIMATE(Formatting.DARK_RED),
-		@SerializedName("Admin") ADMIN(Formatting.DARK_RED);
+	public enum Tier implements StringIdentifiable {
+		COMMON(Formatting.WHITE),
+		UNCOMMON(Formatting.GREEN),
+		RARE(Formatting.BLUE),
+		EPIC(Formatting.DARK_PURPLE),
+		LEGENDARY(Formatting.GOLD),
+		MYTHIC(Formatting.LIGHT_PURPLE),
+		SPECIAL(Formatting.RED),
+		VERY_SPECIAL(Formatting.RED),
+		ULTIMATE(Formatting.DARK_RED),
+		ADMIN(Formatting.DARK_RED);
 
+		public static final Codec<Tier> CODEC =
+				StringIdentifiable.createCodec(Tier::values, String::toUpperCase).orElse(Tier.COMMON);
 
 		private final Formatting formatting;
 
 		Tier(Formatting formatting) {
 			this.formatting = formatting;
+		}
+
+		@Override
+		public String asString() {
+			return name();
+		}
+	}
+
+	public enum SoulBoundType implements StringIdentifiable {
+		COOP,
+		SOULBOUND,
+		NONE;
+
+		public static final Codec<SoulBoundType> CODEC = StringIdentifiable.createBasicCodec(SoulBoundType::values);
+
+		@Override
+		public String asString() {
+			return name();
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package dev.morazzer.cookies.mod.screen.search;
 
-import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,11 +12,13 @@ import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.services.ItemSearchService;
 import dev.morazzer.cookies.mod.utils.TextUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.skyblock.InventoryUtils;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ClientSideInventory;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import dev.morazzer.cookies.mod.utils.skyblock.inventories.Position;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.gui.DrawContext;
@@ -34,16 +34,17 @@ public class InspectItemScreen extends ClientSideInventory {
 	private static final Position LEFT_ARROW = new Position(5, 0);
 	private static final Position RIGHT_ARROW = new Position(5, 8);
 	private static final int ROWS = 6;
+	@Nullable
 	private final ItemSearchScreen itemSearchScreen;
 
-	public InspectItemScreen(ItemCompound compound, ItemSearchScreen itemSearchScreen) {
+	public InspectItemScreen(ItemCompound compound, @Nullable ItemSearchScreen itemSearchScreen) {
 		super(compound.itemStack().getName(), ROWS);
 		this.itemSearchScreen = itemSearchScreen;
 		super.initPagination(compound.getUsedItems()
 				.stream()
-				.sorted(Comparator.<Item<?>, String>comparing(
-								item -> CookiesUtils.stripColor(item.itemStack().getName().getString()),
-								String::compareToIgnoreCase)
+				.sorted(Comparator.<Item<?>, String>comparing(item -> CookiesUtils.stripColor(item.itemStack()
+								.getName()
+								.getString()), String::compareToIgnoreCase)
 						.thenComparingInt(item -> item.source().ordinal())
 						.thenComparingInt(this::ordered))
 				.map(this::modifyItem)
@@ -98,6 +99,10 @@ public class InspectItemScreen extends ClientSideInventory {
 	}
 
 	private void backToOverview() {
+		if (this.itemSearchScreen == null) {
+			close();
+			return;
+		}
 		this.itemSearchScreen.updateInventory();
 		CookiesMod.openScreen(this.itemSearchScreen);
 	}
@@ -155,7 +160,9 @@ public class InspectItemScreen extends ClientSideInventory {
 
 	@Override
 	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.itemSearchScreen.render(context, 0, 0, delta);
+		if (this.itemSearchScreen != null) {
+			this.itemSearchScreen.render(context, 0, 0, delta);
+		}
 		this.renderInGameBackground(context);
 		super.applyBlur(delta);
 		super.renderBackground(context, mouseX, mouseY, delta);

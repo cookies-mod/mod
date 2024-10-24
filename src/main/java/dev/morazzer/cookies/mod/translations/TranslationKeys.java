@@ -264,7 +264,8 @@ public interface TranslationKeys {
 	String CONFIG_ITEM_SEARCH_CRAFTABLE = CONFIG_ITEM_SEARCH + ".craftable";
 	String CONFIG_ITEM_NON_SEARCH_CRAFTABLE = CONFIG_ITEM_SEARCH + ".non_craftable";
 	String CONFIG_ITEM_SHOW_ONLY_MISSING = CONFIG_ITEM_SEARCH + ".show_missing";
-			//</editor-fold>
+	String CONFIG_ITEM_SHOW_IN_MUSEUM = CONFIG_ITEM_SEARCH + ".show_museum";
+	//</editor-fold>
 	//<editor-fold desc="Config/Mining">
 	String CONFIG_MINING = CONFIG + ".mining";
 
@@ -280,12 +281,12 @@ public interface TranslationKeys {
 	//<editor-fold desc="Config/Misc">
 	String CONFIG_MISC = CONFIG + ".misc";
 
+	String CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS = CONFIG_MISC + ".show_museum_armor_sets";
 	String CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS = CONFIG_MISC + ".scroll_tooltips";
 	String CONFIG_MISC_STORAGE_PREVIEW = CONFIG_MISC + ".storage_preview";
 	String CONFIG_MISC_SHOW_PING = CONFIG_MISC + ".show_ping";
 	String CONFIG_MISC_CATEGORIES_ITEMS = CONFIG_MISC + CATEGORIES_PART + ".items";
 	String CONFIG_MISC_SHOW_ITEM_CREATION_DATE = CONFIG_MISC + ".show_item_creation_date";
-	String CONFIG_MISC_SHOW_ITEM_DONATED_TO_MUSEUM = CONFIG_MISC + ".show_item_donated_to_museum";
 	String CONFIG_MISC_SHOW_ITEM_NPC_VALUE = CONFIG_MISC + ".show_item_npc_value";
 	String CONFIG_MISC_CATEGORIES_RENDER = CONFIG_MISC + CATEGORIES_PART + "render";
 	String CONFIG_MISC_HIDE_OWN_ARMOR = CONFIG_MISC + ".hide_own_armor";

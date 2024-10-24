@@ -4,7 +4,6 @@ import dev.morazzer.cookies.mod.config.ConfigManager;
 import dev.morazzer.cookies.mod.generated.utils.ItemAccessor;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
-import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
@@ -58,27 +57,6 @@ public class ItemStats {
         ) {
             list.add(Text.translatable(TranslationKeys.ITEM_STATS_OBTAINED).append(": %s".formatted(dateTimeFormatter.format(time))).formatted(
                 Formatting.LIGHT_PURPLE));
-        }
-
-        if (
-            ConfigManager.getConfig().miscConfig.showItemDonatedToMuseum.getValue()
-            && repositoryItem != null && repositoryItem.isMuseumable()
-        ) {
-            Boolean donatedMuseum = ItemUtils.getData(itemStack, CookiesDataComponentTypes.DONATED_MUSEUM);
-            if (donatedMuseum == null) {
-                donatedMuseum = false;
-            }
-            list.add(
-                Text.translatable(TranslationKeys.ITEM_STATS_MUSEUM).append(": ")
-                    .formatted(Formatting.LIGHT_PURPLE)
-                    .append(
-                        Text.literal(donatedMuseum ? Constants.Emojis.YES : Constants.Emojis.NO)
-                            .formatted(donatedMuseum ? Formatting.GREEN : Formatting.RED, Formatting.BOLD)
-                    ).append(
-                        Text.literal(" ").append(Text.translatable(donatedMuseum ? "gui.yes" : "gui.no"))
-                            .formatted(donatedMuseum ? Formatting.GREEN : Formatting.RED)
-                    )
-            );
         }
 
         if (

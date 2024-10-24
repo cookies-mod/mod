@@ -26,17 +26,17 @@ public class MiscConfig extends Category {
     @Expose
     public BooleanOption showPing = new BooleanOption(CONFIG_MISC_SHOW_PING, false);
 
+	@Expose
+	public BooleanOption showMuseumArmorSets = new BooleanOption(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, true);
+
     @Parent
     public TextDisplayOption itemSubCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_ITEMS);
 
     @Expose
-    public BooleanOption showItemCreationDate = new BooleanOption(CONFIG_MISC_SHOW_ITEM_CREATION_DATE, true);
+    public BooleanOption showItemCreationDate = new BooleanOption(CONFIG_MISC_SHOW_ITEM_CREATION_DATE, false);
 
     @Expose
-    public BooleanOption showItemDonatedToMuseum = new BooleanOption(CONFIG_MISC_SHOW_ITEM_DONATED_TO_MUSEUM, true);
-
-    @Expose
-    public BooleanOption showItemNpcValue = new BooleanOption(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, true);
+    public BooleanOption showItemNpcValue = new BooleanOption(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, false);
 
     @Parent
     public TextDisplayOption renderCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_RENDER);
@@ -84,7 +84,7 @@ public class MiscConfig extends Category {
     @Expose
     public BooleanOption showForgeRecipeStack = new BooleanOption(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK, true);
 
-    @Hidden
+	@Hidden
     @Expose
     public SliderOption<Integer> forgeRecipeSlot = SliderOption.integerOption("", 47);
 

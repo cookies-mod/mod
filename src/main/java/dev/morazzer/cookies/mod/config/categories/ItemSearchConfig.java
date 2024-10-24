@@ -22,6 +22,8 @@ public class ItemSearchConfig extends Category {
 	public BooleanOption enableNotCraftableItems = new BooleanOption(CONFIG_ITEM_NON_SEARCH_CRAFTABLE, false).onlyIf(enableCraftableItems);
 	public BooleanOption showOnlyMissingItems = new BooleanOption(CONFIG_ITEM_SHOW_ONLY_MISSING, true).onlyIf(enableCraftableItems);
 
+	public BooleanOption showInMuseum = new BooleanOption(CONFIG_ITEM_SHOW_IN_MUSEUM, true);
+
 	public ItemSearchConfig() {
 		super(new ItemBuilder(Items.CRAFTING_TABLE).build(), CONFIG_ITEM_SEARCH);
 	}

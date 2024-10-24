@@ -343,6 +343,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				CONFIG_ITEM_SHOW_ONLY_MISSING,
 				"Only show missing items",
 				"Only shows items that are out of reach of the supercraft in the overview.");
+		translationBuilder.addConfig(CONFIG_ITEM_SHOW_IN_MUSEUM,
+				"Show in museum",
+				"Shows the status of museum items.");
 	}
 
 	private void addMiningConfig(CookiesTranslationBuilder translationBuilder) {
@@ -372,6 +375,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MISC, "Misc Config", "Miscellaneous settings");
+		translationBuilder.addConfig(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, "Show museum armor sets", "Shows the components of an armor set in the description.");
 		translationBuilder.addConfig(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, "Scrollable Tooltips", """
 				Allows you to scroll through tooltips
 				
@@ -385,9 +389,6 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_ITEM_CREATION_DATE,
 				"Creation date",
 				"Shows the creation dates of items.");
-		translationBuilder.addConfig(CONFIG_MISC_SHOW_ITEM_DONATED_TO_MUSEUM,
-				"Donated to museum",
-				"Shows whether items are donated to the museum or not.");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, "NPC Value", "Show the npc value of items.");
 		translationBuilder.add(CONFIG_MISC_CATEGORIES_RENDER, "Render");
 		translationBuilder.addConfig(CONFIG_MISC_HIDE_OWN_ARMOR, "Hide own armor", "Hides your own armor.");

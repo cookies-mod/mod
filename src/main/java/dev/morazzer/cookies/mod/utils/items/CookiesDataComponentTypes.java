@@ -188,7 +188,7 @@ public class CookiesDataComponentTypes {
 				defaultTest(),
 				(nbtComponent, key) -> 0);
 		REPOSITORY_ITEM = register(
-				builder -> builder.codec(RepositoryItem.CODEC),
+				builder -> builder.codec(RepositoryItem.ID_CODEC),
 				"",
 				SKYBLOCK_ID,
 				value(true),
