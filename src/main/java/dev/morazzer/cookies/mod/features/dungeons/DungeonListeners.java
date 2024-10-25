@@ -86,7 +86,7 @@ public class DungeonListeners {
 				return;
 			}
 			if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen ||
-				SpiritLeapOverlay.isOpen) {
+                SpiritLeapOverlay.isOpen) {
 				return;
 			}
 			final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;

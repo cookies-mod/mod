@@ -56,6 +56,7 @@ public final class DungeonInstance {
 	private final DungeonType type;
 	private final int floor;
 	private final String serverId;
+	@Getter
 	private DungeonPlayer currentPlayer;
 	@Getter
 	private final DungeonPlayer[] players = new DungeonPlayer[5];

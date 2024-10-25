@@ -1,5 +1,6 @@
 package dev.morazzer.cookies.mod.config.categories;
 
+import dev.morazzer.cookies.mod.config.system.Parent;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 
 import java.awt.Color;
@@ -94,10 +95,18 @@ public class DungeonConfig extends Category {
 
 	public static class SpiritLeapFoldable extends Foldable {
 
+		public BooleanOption colorInClassColor = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR, false);
+
+		@Parent
+		public TextDisplayOption vanillaUi = new TextDisplayOption(CONFIG_DUNGEON_SPIRIT_LEAP_VANILLA);
+		public BooleanOption modifyNormalIfAvailable = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_MODIFY_DEFAULT_IF_AVAILABLE, true);
+		public BooleanOption usePlayerHeadsInsteadOfClassItems = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_USE_HEADS_IF_AVAILABLE, false).onlyIf(modifyNormalIfAvailable);
+
+		@Parent
+		public TextDisplayOption customUi = new TextDisplayOption(CONFIG_DUNGEON_SPIRIT_LEAP_CUSTOM);
 		public BooleanOption spiritLeapUi = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, true);
 		public BooleanOption showMap = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP, true);
 		public BooleanOption sortByClassName = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_SORT_BY_CLASS_NAME, false);
-		public BooleanOption colorInClassColor = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR, false);
 		public ColorOption colorOption =
 				new ColorOption(CONFIG_DUNGEON_SPIRIT_LEAP_COLOR, new Color(0xFFDCD3FF, true)).withAlpha()
 						.onlyIfNot(this.colorInClassColor);
