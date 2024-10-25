@@ -116,6 +116,13 @@ public final class DungeonInstance {
 		};
 	}
 
+	public boolean isLastColumnPuzzlesOnly() {
+		return switch (this.floor) {
+			case 4,5,6 -> true;
+			default -> false;
+		};
+	}
+
 	public DungeonType type() {
 		return this.type;
 	}
