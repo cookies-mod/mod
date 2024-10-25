@@ -1,6 +1,13 @@
 package dev.morazzer.cookies.mod.features.dungeons;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import com.google.common.base.Predicates;
 import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
@@ -9,16 +16,17 @@ import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import dev.morazzer.cookies.mod.screen.CookiesScreen;
 import dev.morazzer.cookies.mod.screen.DungeonMapRepositionScreen;
+import dev.morazzer.cookies.mod.utils.Result;
+import dev.morazzer.cookies.mod.utils.TextUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -29,6 +37,7 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -41,6 +50,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
  */
 public class SpiritLeapOverlay {
 	private static final Identifier DEBUG = DevUtils.createIdentifier("dungeons/spirit_skip");
+	private static final Logger log = LoggerFactory.getLogger(SpiritLeapOverlay.class);
 	public static boolean isOpen;
 	private static DungeonFeatures features;
 	private final HandledScreen<?> handledScreen;
@@ -49,6 +59,7 @@ public class SpiritLeapOverlay {
 	private int amountOfPlayers = -1;
 	private int rows = 1;
 	private int columns = 1;
+	private boolean enableCustomLeap = true;
 
 	/**
 	 * Modifies the screen to display the contents of the spirit leap instead of the spirit leap inventory.
@@ -73,6 +84,9 @@ public class SpiritLeapOverlay {
 	 * Blocks the rendering of the actual screen by enabling scissors and also translation all locations to the right.
 	 */
 	private void beforeRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		if (!enableCustomLeap) {
+			return;
+		}
 		drawContext.enableScissor(0, 0, 0, 0);
 		drawContext.getMatrices().push();
 		drawContext.getMatrices().translate(10000, 0, 0);
@@ -82,6 +96,9 @@ public class SpiritLeapOverlay {
 	 * Called after the main screen was rendered.
 	 */
 	private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float delta) {
+		if (!enableCustomLeap) {
+			return;
+		}
 		drawContext.disableScissor();
 		drawContext.getMatrices().pop();
 		drawContext.getMatrices().push();
@@ -136,7 +153,8 @@ public class SpiritLeapOverlay {
 			int size = (playerHeight / 16) * 14;
 			int skullOffsetY = (playerHeight - size) / 2;
 			if (player.dungeonPlayer == null || player.dungeonPlayer.getPlayer() == null) {
-				drawContext.fill(playerX + skullOffsetY,
+				drawContext.fill(
+						playerX + skullOffsetY,
 						playerY + skullOffsetY,
 						playerX + skullOffsetY + size,
 						playerY + skullOffsetY + size,
@@ -145,7 +163,8 @@ public class SpiritLeapOverlay {
 				drawContext.getMatrices().push();
 				drawContext.getMatrices().translate(playerX + skullOffsetY + size, playerY + skullOffsetY + size, 1);
 				drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
-				PlayerSkinDrawer.draw(drawContext,
+				PlayerSkinDrawer.draw(
+						drawContext,
 						player.dungeonPlayer.getPlayer().getSkinTextures().texture(),
 						0,
 						0,
@@ -176,34 +195,12 @@ public class SpiritLeapOverlay {
 		drawContext.getMatrices().push();
 		final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
 		final float halfSize = size / 2f;
-		drawContext.getMatrices().translate((drawContext.getScaledWindowWidth() / 2f) - halfSize,
+		drawContext.getMatrices().translate(
+				(drawContext.getScaledWindowWidth() / 2f) - halfSize,
 				drawContext.getScaledWindowHeight() / 2f * 0.8f,
 				1);
 		mapRenderer.render(drawContext);
 		drawContext.getMatrices().pop();
-	}
-
-	private int getColor(Player player) {
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
-			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
-		}
-		final String dungeonClass = Optional.ofNullable(player.dungeonPlayer())
-				.map(DungeonPlayer::getDungeonClass)
-				.map(String::toLowerCase)
-				.map(String::trim)
-				.orElse("");
-		if (dungeonClass.isEmpty()) {
-			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
-		}
-
-		return switch (dungeonClass.toCharArray()[0]) {
-			case 'h' -> DungeonConfig.getInstance().classColorFoldable.healer.getValue().getRGB();
-			case 'm' -> DungeonConfig.getInstance().classColorFoldable.mage.getValue().getRGB();
-			case 'b' -> DungeonConfig.getInstance().classColorFoldable.bers.getValue().getRGB();
-			case 'a' -> DungeonConfig.getInstance().classColorFoldable.arch.getValue().getRGB();
-			case 't' -> DungeonConfig.getInstance().classColorFoldable.tank.getValue().getRGB();
-			default -> DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
-		};
 	}
 
 	/**
@@ -241,7 +238,6 @@ public class SpiritLeapOverlay {
 		DungeonPlayer dungeonPlayer = features.getCurrentInstance()
 				.map(instance -> instance.getPlayer(slot.getStack().getName().getString()))
 				.orElseGet(() -> new DungeonPlayer(null, "meowora", "mage", "test"));
-
 		int noOffset = slotId - 11;
 		int index = switch (this.amountOfPlayers) {
 			case 1 -> noOffset == 2 ? 0 : -1;
@@ -254,14 +250,125 @@ public class SpiritLeapOverlay {
 			return;
 		}
 		this.actualPlayers[index] = new Player(slot, dungeonPlayer, new Location());
-		this.setPlayers();
+		if (index == actualPlayers.length - 1) {
+			this.setPlayers();
+		}
+	}
+
+	/**
+	 * Handles the mouse interaction and blocks the interaction with the original inventory.
+	 */
+	private boolean mouseClicked(Screen screen, double mouseX, double mouseY, int button) {
+		if (!enableCustomLeap) {
+			return true;
+		}
+		for (Player player : this.actualPlayers) {
+			if (player == null) {
+				continue;
+			}
+			if (CookiesScreen.isInBound(
+					(int) mouseX,
+					(int) mouseY,
+					player.location.x,
+					player.location.y,
+					player.location.width,
+					player.location.height)) {
+				clickedPlayer(player.slot, button);
+				break;
+			}
+		}
+
+
+		return false;
+	}
+
+	/**
+	 * Blocks all release interaction with the inventory.
+	 */
+	private boolean mouseRelease(Screen screen, double mouseX, double mouseY, int button) {
+		return !enableCustomLeap;
+	}
+
+	/**
+	 * Blocks all scroll interaction with the inventory.
+	 */
+	private boolean mouseScroll(Screen screen, double v, double v1, double v2, double v3) {
+		return !enableCustomLeap;
+	}
+
+	/**
+	 * Blocks all key interaction with the inventory.
+	 */
+	private boolean allowKey(Screen screen, int key, int scancode, int modifiers) {
+		if (!enableCustomLeap) {
+			return true;
+		}
+		if (this.handledScreen.shouldCloseOnEsc() && key == GLFW.GLFW_KEY_ESCAPE) {
+			this.handledScreen.close();
+		}
+		if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(key, scancode)) {
+			this.handledScreen.close();
+		}
+		return false;
+	}
+
+	private int getColor(Player player) {
+		if (!DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
+			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
+		}
+
+		return Optional.ofNullable(player)
+				.map(Player::dungeonPlayer)
+				.map(DungeonPlayer::getColor)
+				.orElseGet(OptionalInt::empty)
+				.orElseGet(DungeonConfig.getInstance().spiritLeapFoldable.colorOption::getColorValue);
 	}
 
 	private void setPlayers() {
+		if (modifyNormalIfAvailable()) {
+			final List<DungeonPlayer> dungeonPlayers = new ArrayList<>(features.getCurrentInstance()
+					.map(DungeonInstance::getPlayers)
+					.map(Arrays::asList)
+					.orElseGet(Collections::emptyList));
+			dungeonPlayers.removeIf(Objects::isNull);
+			final long count = dungeonPlayers.stream().map(DungeonPlayer::getDungeonClass).distinct().count();
+			if (count == 5) {
+				List<String> classes = List.of("Tank", "Mage", "Healer", "Berserk", "Archer");
+				int slotId = 11;
+				boolean failed = false;
+				List<Runnable> runnables = new ArrayList<>();
+				for (String currentClass : classes) {
+					final Result<Runnable, String> result =
+							setClass(currentClass, dungeonPlayers, actualPlayers, slotId++);
+					if (result.isError()) {
+						failed = true;
+						result.getError().ifPresent(CookiesUtils::sendFailedMessage);
+						break;
+					}
+					result.getResult().ifPresent(runnables::add);
+				}
+				if (!failed) {
+					enableCustomLeap = false;
+					isOpen = false;
+					try {
+						runnables.forEach(Runnable::run);
+					} catch (Exception e) {
+						CookiesUtils.sendFailedMessage("An error occurred while modifying the leap ui!");
+						log.error("Error while modifying leap ui", e);
+					}
+					return;
+				}
+			}
+		}
+		if (!DungeonConfig.getInstance().spiritLeapFoldable.spiritLeapUi.getValue()) {
+			enableCustomLeap = false;
+			return;
+		}
 		if (DungeonConfig.getInstance().spiritLeapFoldable.sortByClassName.getValue()) {
 			System.arraycopy(this.actualPlayers, 0, this.players, 0, this.actualPlayers.length);
 			return;
 		}
+		enableCustomLeap = true;
 		final List<Player> players = Arrays.stream(this.actualPlayers)
 				.filter(Objects::nonNull)
 				.sorted(Comparator.comparing(player -> Optional.ofNullable(player.dungeonPlayer())
@@ -274,57 +381,78 @@ public class SpiritLeapOverlay {
 		}
 	}
 
-	/**
-	 * Handles the mouse interaction and blocks the interaction with the original inventory.
-	 */
-	private boolean mouseClicked(Screen screen, double mouseX, double mouseY, int button) {
-		for (Player player : this.actualPlayers) {
-			if (player == null) {
-				continue;
+	public void clickedPlayer(Slot slot, int button) {
+		MinecraftClient.getInstance().interactionManager.clickSlot(
+				this.handledScreen.getScreenHandler().syncId,
+				slot.id,
+				button,
+				SlotActionType.PICKUP,
+				MinecraftClient.getInstance().player);
+	}
+
+	private boolean modifyNormalIfAvailable() {
+		return DungeonConfig.getInstance().spiritLeapFoldable.modifyNormalIfAvailable.getValue() &&
+			   amountOfPlayers == 4;
+	}
+
+	private Result<Runnable, String> setClass(
+			String name, List<DungeonPlayer> players, Player[] leapPlayers, int slotId) {
+		final Slot slot = handledScreen.getScreenHandler().getSlot(slotId);
+		final DungeonPlayer dungeonPlayer = players.stream()
+				.filter(Objects::nonNull)
+				.filter(player -> player.getDungeonClass().equals(name))
+				.findFirst()
+				.orElse(null);
+		Player leapPlayer = Arrays.stream(leapPlayers)
+				.filter(Objects::nonNull)
+				.filter(player -> player.dungeonPlayer == dungeonPlayer)
+				.findFirst()
+				.orElse(null);
+		boolean isSelf = leapPlayer == null;
+
+		if (dungeonPlayer == null) {
+			return Result.error("No player found for class %s".formatted(name));
+		}
+
+		return Result.success(() -> {
+			final Result<ItemBuilder, String> item =
+					dungeonPlayer.getItem(DungeonConfig.getInstance().spiritLeapFoldable.usePlayerHeadsInsteadOfClassItems.getValue());
+			final ItemBuilder itemBuilder =
+					item.getResult()
+							.orElseGet(() -> new ItemBuilder(Items.RED_DYE))
+							.setName("Leap to " + name)
+							.setLore(TextUtils.literal("Left-click to leap to the " + name, Formatting.YELLOW),
+									Text.empty(),
+									TextUtils.literal(name + ": " + dungeonPlayer.getName(), Formatting.GRAY))
+							.setGlint(isSelf)
+							.setClickRunnable(() -> {
+								if (isSelf) {
+									handledScreen.close();
+									CookiesUtils.sendFailedMessage("Can't leap to yourself!");
+								} else {
+									clickedPlayer(leapPlayer.slot, 1);
+								}
+							});
+
+			if (DevUtils.isEnabled(DEBUG)) {
+				itemBuilder.appendLore(Text.literal("Leap player: " + Optional.ofNullable(leapPlayer)
+						.map(Player::dungeonPlayer)
+						.map(DungeonPlayer::getName)
+						.orElse("<empty>")), Text.literal("Dungeon Player: " + dungeonPlayer.getName()));
 			}
-			if (CookiesScreen.isInBound((int) mouseX,
-					(int) mouseY,
-					player.location.x,
-					player.location.y,
-					player.location.width,
-					player.location.height)) {
-				MinecraftClient.getInstance().interactionManager.clickSlot(this.handledScreen.getScreenHandler().syncId,
-						player.slot.id,
-						button,
-						SlotActionType.PICKUP,
-						MinecraftClient.getInstance().player);
-				break;
+
+			if (DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
+				itemBuilder.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, dungeonPlayer.getColor().orElse(0));
 			}
-		}
 
-		return false;
-	}
+			if (item.isError()) {
+				itemBuilder.appendLore(
+						Text.empty(),
+						TextUtils.literal(item.getError().orElse("An error occurred while creating this item!")));
+			}
 
-	/**
-	 * Blocks all release interaction with the inventory.
-	 */
-	private boolean mouseRelease(Screen screen, double mouseX, double mouseY, int button) {
-		return false;
-	}
-
-	/**
-	 * Blocks all scroll interaction with the inventory.
-	 */
-	private boolean mouseScroll(Screen screen, double v, double v1, double v2, double v3) {
-		return false;
-	}
-
-	/**
-	 * Blocks all key interaction with the inventory.
-	 */
-	private boolean allowKey(Screen screen, int key, int scancode, int modifiers) {
-		if (this.handledScreen.shouldCloseOnEsc() && key == GLFW.GLFW_KEY_ESCAPE) {
-			this.handledScreen.close();
-		}
-		if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(key, scancode)) {
-			this.handledScreen.close();
-		}
-		return false;
+			slot.getStack().set(CookiesDataComponentTypes.OVERRIDE_ITEM, itemBuilder.build());
+		});
 	}
 
 	/**
@@ -334,7 +462,8 @@ public class SpiritLeapOverlay {
 	 */
 	public static void init(DungeonFeatures features) {
 		SpiritLeapOverlay.features = features;
-		InventoryEvents.beforeInit("Spirit Leap",
+		InventoryEvents.beforeInit(
+				"Spirit Leap",
 				Predicates.<HandledScreen<?>>alwaysTrue()
 						.and(o -> DungeonFeatures.getInstance().getCurrentInstance().isPresent())
 						.or(o -> DevUtils.isEnabled(DEBUG)),
@@ -347,7 +476,8 @@ public class SpiritLeapOverlay {
 	 * @param handledScreen The screen to modify.
 	 */
 	private static void open(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.spiritLeapUi.getValue()) {
+		if (!DungeonConfig.getInstance().spiritLeapFoldable.spiritLeapUi.getValue() &&
+			!DungeonConfig.getInstance().spiritLeapFoldable.modifyNormalIfAvailable.getValue()) {
 			return;
 		}
 		new SpiritLeapOverlay(handledScreen);

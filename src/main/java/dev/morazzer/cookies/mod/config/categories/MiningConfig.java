@@ -21,7 +21,7 @@ public class MiningConfig extends Category {
 
     public BooleanOption modifyCommissions = new BooleanOption(CONFIG_MINING_MODIFY_COMMISSIONS, false);
     public BooleanOption puzzlerSolver = new BooleanOption(CONFIG_MINING_PUZZLER_SOLVER, false);
-    public BooleanOption modHelper = new BooleanOption(CONFIG_MINING_MOD_HELPER, true)
+    public BooleanOption modHelper = new BooleanOption(CONFIG_MINING_MOD_HELPER, false)
 			.withCallback(MinesOfDivanHelper::reset);
 
     @Parent

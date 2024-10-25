@@ -438,6 +438,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
+		translationBuilder.add(CONFIG_DUNGEON_SPIRIT_LEAP_CUSTOM, "Spirit Leap - Custom");
+		translationBuilder.add(CONFIG_DUNGEON_SPIRIT_LEAP_VANILLA, "Spirit Leap - Vanilla");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");
@@ -473,6 +475,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Spirit Leap",
 				"Settings related to the spirit leap ui.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_ENABLE, "Enable UI", "Enables the spirit leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_MODIFY_DEFAULT_IF_AVAILABLE,
+				"Modify default ui",
+				"Changes the default ui if there is exactly one player per class.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_USE_HEADS_IF_AVAILABLE,
+				"Use heads if available",
+				"Uses the player heads instead of the class items.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_SHOW_MAP,
 				"Show dungeon map",
 				"Shows the dungeon map in the ui.");
