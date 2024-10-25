@@ -48,6 +48,9 @@ public class DungeonRoom {
 	private int maxSecrets = -1;
 	private int collectedSecrets = -1;
 	private int puzzleId = -1;
+	boolean isPuzzleDirty = false;
+	@Getter
+	private long becamePuzzleAt = -1;
 
 	public DungeonRoom(DungeonInstance instance, RoomType roomType) {
 		this.debugRoomColor = counter++;
@@ -161,6 +164,19 @@ public class DungeonRoom {
 		this.collectedSecrets = collected;
 	}
 
+	public void markPuzzleDirty() {
+		this.isPuzzleDirty = true;
+	}
+
+	public void markPuzzleClean() {
+		this.isPuzzleDirty = false;
+	}
+
+	@SuppressWarnings("SuspiciousGetterSetter")
+	public boolean isPuzzleDirty() {
+		return this.isPuzzleDirty;
+	}
+
 	/**
 	 * Sends a message to the other clients including information about secrets in the current room.
 	 */
@@ -244,6 +260,9 @@ public class DungeonRoom {
 	public void setRoomType(RoomType roomType) {
 		if (this.roomType == roomType) {
 			return;
+		}
+		if (roomType == RoomType.PUZZLE && this.becamePuzzleAt == -1) {
+			this.becamePuzzleAt = System.currentTimeMillis();
 		}
 		if ((this.roomType == null || this.roomType == RoomType.UNKNOWN) && roomType != RoomType.UNKNOWN) {
 			this.setCheckmark(Checkmark.OPENED);

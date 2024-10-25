@@ -225,7 +225,9 @@ public class MinesOfDivanHelper {
 			return;
 		}
 		final String clicked = literal.replaceAll(REGEX, "$1");
-		CookiesUtils.sendMessage(clicked);
+		if (DevUtils.isEnabled(DEBUG)) {
+			CookiesUtils.sendMessage(clicked);
+		}
 		Direction direction;
 		switch (clicked) {
 			case "Diamond" -> direction = Direction.EAST;
@@ -240,7 +242,13 @@ public class MinesOfDivanHelper {
 			return;
 		}
 		final BlockPos offset = lastEntityClicked.offset(direction.rotateYClockwise(), 3).offset(direction, 33);
-		CookiesUtils.sendMessage(offset.toString());
+		if (DevUtils.isEnabled(DEBUG)) {
+			CookiesUtils.sendMessage(offset.toString());
+		}
+		if (centerPos == offset) {
+			return;
+		}
+		CookiesUtils.sendSuccessMessage("Enabled solver!");
 		centerPos = offset;
 	}
 
