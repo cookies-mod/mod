@@ -250,7 +250,7 @@ public class SpiritLeapOverlay {
 			return;
 		}
 		this.actualPlayers[index] = new Player(slot, dungeonPlayer, new Location());
-		if (index == actualPlayers.length - 1) {
+		if (index == amountOfPlayers - 1) {
 			this.setPlayers();
 		}
 	}
@@ -273,7 +273,7 @@ public class SpiritLeapOverlay {
 					player.location.y,
 					player.location.width,
 					player.location.height)) {
-				clickedPlayer(player.slot, button);
+				clickedPlayer(player.slot);
 				break;
 			}
 		}
@@ -381,11 +381,11 @@ public class SpiritLeapOverlay {
 		}
 	}
 
-	public void clickedPlayer(Slot slot, int button) {
+	public void clickedPlayer(Slot slot) {
 		MinecraftClient.getInstance().interactionManager.clickSlot(
 				this.handledScreen.getScreenHandler().syncId,
 				slot.id,
-				button,
+				0,
 				SlotActionType.PICKUP,
 				MinecraftClient.getInstance().player);
 	}
@@ -430,7 +430,7 @@ public class SpiritLeapOverlay {
 									handledScreen.close();
 									CookiesUtils.sendFailedMessage("Can't leap to yourself!");
 								} else {
-									clickedPlayer(leapPlayer.slot, 1);
+									clickedPlayer(leapPlayer.slot);
 								}
 							});
 

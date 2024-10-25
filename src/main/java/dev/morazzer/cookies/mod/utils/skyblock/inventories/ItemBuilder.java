@@ -1,10 +1,12 @@
 package dev.morazzer.cookies.mod.utils.skyblock.inventories;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -198,8 +200,10 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder appendLore(Text text) {
-		final List<Text> texts = this.itemStack.get(CookiesDataComponentTypes.CUSTOM_LORE);
-		if (texts == null) {
+		final List<Text> texts = Optional.ofNullable(this.itemStack.get(CookiesDataComponentTypes.CUSTOM_LORE))
+				.map(ArrayList::new)
+				.orElseGet(ArrayList::new);
+		if (texts.isEmpty()) {
 			return this.setLore(text);
 		}
 		texts.add(text);

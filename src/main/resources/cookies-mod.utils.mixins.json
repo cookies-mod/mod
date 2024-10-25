@@ -12,6 +12,7 @@
     "spam.PlayerSkinProviderMixin",
     "PingMeasurerMixin",
     "ClientPlayNetworkHandlerMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "ItemPacketCodecMixin"
   ]
 }
