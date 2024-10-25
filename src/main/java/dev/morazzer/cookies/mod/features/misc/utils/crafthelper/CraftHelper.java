@@ -10,6 +10,8 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator
 import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeResult;
 import dev.morazzer.cookies.mod.utils.ColorUtils;
 import dev.morazzer.cookies.mod.utils.TextUtils;
+import dev.morazzer.cookies.mod.utils.compatibility.CompatibilityService;
+import dev.morazzer.cookies.mod.utils.compatibility.legendarytooltips.LegendaryTooltips;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
@@ -365,7 +367,6 @@ public class CraftHelper {
 			return;
 		}
 
-
 		final int x = this.calculateX(screen);
 		final int y = this.calculateY(screen);
 
@@ -381,12 +382,13 @@ public class CraftHelper {
 			tooltip = this.tooltip;
 		}
 
+		CompatibilityService.get(LegendaryTooltips.class).beforeTooltipRender(screen, drawContext);
 		drawContext.drawTooltip(MinecraftClient.getInstance().textRenderer,
 				tooltip.stream().map(Text::asOrderedText).toList(),
 				CraftHelperTooltipPositioner.INSTANCE,
 				x,
 				y);
-
+		CompatibilityService.get(LegendaryTooltips.class).afterTooltipRender(screen);
 
 		if (DevUtils.isEnabled(DEBUG_HITBOX)) {
 			drawContext.getMatrices().translate(0, 0, 1000);
