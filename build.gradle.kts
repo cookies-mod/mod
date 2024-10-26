@@ -1,7 +1,7 @@
 import org.gradle.jvm.tasks.Jar
 
 plugins {
-	id("fabric-loom")
+	id("fabric-loom") version "1.8-SNAPSHOT"
 	id("maven-publish")
 	id("dev.morazzer.cookies.internal.classified-jars")
 }
@@ -10,7 +10,6 @@ version = project.properties["mod_version"]!!
 group = project.properties["maven_group"]!!
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven("https://api.modrinth.com/maven")
 	maven("https://repo.hypixel.net/repository/Hypixel/")
@@ -18,6 +17,11 @@ repositories {
 		credentials {
 			username = project.findProperty("gpr.usr") as String? ?: System.getenv("USER")
 			password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+		}
+	}
+	mavenLocal {
+		content {
+			includeGroup("dev.morazzer.cookies")
 		}
 	}
 }
@@ -43,7 +47,9 @@ dependencies {
 
 	includeInJar("dev.morazzer.cookies:entities:0.2.0")
 	// Hypixel mod api fabric
-	include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")!!)
+	include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21") {
+		isTransitive = false
+	})
 	implementation("net.hypixel:mod-api:1.0.1")
 
 	minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
