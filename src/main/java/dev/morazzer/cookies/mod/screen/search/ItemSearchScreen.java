@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.screen.search;
 
+import dev.morazzer.cookies.mod.utils.RenderUtils;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,12 +32,14 @@ import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import dev.morazzer.cookies.mod.utils.minecraft.SoundUtils;
+
+import net.minecraft.client.render.RenderLayer;
+
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.component.DataComponentTypes;
@@ -192,7 +196,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		this.renderTopTabs(context, false, mouseX, mouseY);
 		this.renderBottomTabs(context, false, mouseX, mouseY);
 
-		context.drawTexture(ITEM_SEARCH_BACKGROUND,
+		context.drawTexture(
+				RenderLayer::getGuiTextured, ITEM_SEARCH_BACKGROUND,
 				this.x,
 				this.y,
 				0,
@@ -454,14 +459,15 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 				format = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT)
 						.format(itemContext.amount());
 			}
-			context.drawItemInSlot(MinecraftClient.getInstance().textRenderer,
+			context.drawStackOverlay(MinecraftClient.getInstance().textRenderer,
 					itemContext.itemStack(),
 					(int) (slotX / 0.5f),
 					(int) (slotY / 0.5f),
 					format);
 			context.getMatrices().pop();
 			if (mouseX > slotX && mouseY > slotY && mouseX < slotX + 16 && mouseY < slotY + 16) {
-				HandledScreen.drawSlotHighlight(context, slotX, slotY, 100);
+				RenderUtils.drawSlotHighlightBack(context, slotX, slotY);
+				RenderUtils.drawSlotHighlightFront(context, slotX, slotY);
 				final List<Text> tooltipFromItem =
 						Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemContext.itemStack());
 				this.appendTooltip(tooltipFromItem, itemContext);
@@ -580,7 +586,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		int tabX = this.x + this.getTabX(index);
 		int tabY = this.y + this.getTabY(top);
 
-		context.drawGuiTexture(identifiers[MathUtils.clamp(index, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
+		context.drawGuiTexture(RenderLayer::getGuiTextured,identifiers[MathUtils.clamp(index, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
 
 		final int offset = top ? 1 : -1;
 
@@ -592,7 +598,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		}
 
 		context.drawItem(itemStack, itemX, itemY);
-		context.drawItemInSlot(this.textRenderer, itemStack, itemX, itemY);
+		context.drawStackOverlay(this.textRenderer, itemStack, itemX, itemY);
 	}
 
 	private MutableText formattedText(int amount) {

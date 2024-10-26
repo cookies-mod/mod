@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import net.minecraft.client.gui.DrawContext;
 
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
@@ -34,7 +35,8 @@ public class FoldableEditor extends ConfigOptionEditor<Object, FoldableOption> {
 
 	@Override
 	public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
-		drawContext.drawGuiTexture(Identifier.ofVanilla("widget/button"),
+		drawContext.drawGuiTexture(
+				RenderLayer::getGuiTextured, Identifier.ofVanilla("widget/button"),
 				0,
 				0,
 				optionWidth,

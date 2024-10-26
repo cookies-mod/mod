@@ -14,26 +14,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TextFieldWidgetMixin {
 
 	@Inject(
-			method = "drawLayer(Ljava/lang/String;FFIZLorg/joml/Matrix4f;" +
-					 "Lnet/minecraft/client/render/VertexConsumerProvider;" +
-					 "Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)F",
+			method = "drawLayer(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
 			at = @At("HEAD"),
 			cancellable = true
 	)
-	public void draw(CallbackInfoReturnable<Float> cir, @Local(argsOnly = true) boolean shadow) {
+	public void draw(CallbackInfoReturnable<Float> cir, @Local(argsOnly = true, ordinal = 0) boolean shadow) {
 		if (shadow && TextRenderUtils.hasShadowsDisabled()) {
 			cir.setReturnValue(0.0F);
 		}
 	}
 
 	@Inject(
-			method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;" +
-					 "Lnet/minecraft/client/render/VertexConsumerProvider;" +
-					 "Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)F",
+			method = "drawLayer(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)F",
 			at = @At("HEAD"),
 			cancellable = true
 	)
-	public void drawOrdered(CallbackInfoReturnable<Float> cir, @Local(argsOnly = true) boolean shadow) {
+	public void drawOrdered(CallbackInfoReturnable<Float> cir, @Local(argsOnly = true, ordinal = 0) boolean shadow) {
 		if (shadow && TextRenderUtils.hasShadowsDisabled()) {
 			cir.setReturnValue(0.0F);
 		}

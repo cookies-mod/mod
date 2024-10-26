@@ -80,7 +80,7 @@ public class ExceptionHandler {
                                 exception.getMessage()
                             ))
                         ))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copy)))));
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copy)))), false);
         });
     }
 

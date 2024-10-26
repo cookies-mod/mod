@@ -4,9 +4,7 @@ import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonFeatures;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonPlayer;
-
 import dev.morazzer.cookies.mod.utils.RenderUtils;
-
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 
 import net.minecraft.block.MapColor;
@@ -15,6 +13,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -25,12 +24,12 @@ import net.minecraft.util.math.RotationAxis;
  */
 public class DungeonMapRenderer {
 
-	private final DungeonInstance dungeonInstance;
-	private final DungeonMap dungeonMap;
-	private static final int ROOM_SIZE = 20;
 	public static final int HALLWAY_SIZE = 4;
+	private static final int ROOM_SIZE = 20;
 	public static final int TOTAL_SIZE = ROOM_SIZE + HALLWAY_SIZE;
 	private static final int DOOR_SIZE = 6;
+	private final DungeonInstance dungeonInstance;
+	private final DungeonMap dungeonMap;
 
 	public DungeonMapRenderer(DungeonInstance dungeonInstance) {
 		this.dungeonInstance = dungeonInstance;
@@ -43,7 +42,8 @@ public class DungeonMapRenderer {
 	 * @param drawContext The draw context
 	 */
 	public void render(DrawContext drawContext) {
-		if (!this.dungeonInstance.isDebugInstance() && this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
+		if (!this.dungeonInstance.isDebugInstance() &&
+			this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
 			return;
 		}
 		if (!DungeonConfig.getInstance().renderMap.getValue()) {
@@ -83,124 +83,6 @@ public class DungeonMapRenderer {
 		for (DungeonPlayer player : this.dungeonInstance.getPlayers()) {
 			this.renderPlayer(drawContext, player);
 		}
-	}
-
-	/**
-	 * Renders the player onto the map.
-	 *
-	 * @param drawContext The draw context.
-	 * @param player      The player to render.
-	 */
-	private void renderPlayer(DrawContext drawContext, DungeonPlayer player) {
-		if (player == null || this.dungeonInstance.getDungeonMap().getTopLeftPixel() == null || player.isSkip()) {
-			return;
-		}
-		player.tick();
-		if (player.getPlayer() == null) {
-			return;
-		}
-		final int max = Math.max(this.dungeonMap.getRoomsInY(), this.dungeonMap.getRoomsInX());
-		int x = (int) (MathHelper.clampedMap(player.getInterpolatedX(),
-				this.dungeonMap.getTopLeftPixel().x,
-				this.dungeonMap.getBottomRightPixel().x,
-				0,
-				(6 * TOTAL_SIZE) * (((float) this.dungeonMap.getRoomsInX()) / max))) - 2;
-		int y = (int) (MathHelper.clampedMap(player.getInterpolatedY(),
-				this.dungeonMap.getTopLeftPixel().y,
-				this.dungeonMap.getBottomRightPixel().y,
-				0,
-				(6 * TOTAL_SIZE) * (((float) this.dungeonMap.getRoomsInY()) / max))) - 2;
-
-		drawContext.getMatrices().push();
-		drawContext.getMatrices().translate(x, y, 0);
-		if (DungeonConfig.getInstance().renderOverRoomText.getValue()) {
-			drawContext.getMatrices().translate(0, 0, 1000);
-		}
-		drawContext.getMatrices().push();
-		if (DungeonConfig.getInstance().showPlayerSkulls.getValue()) {
-			drawContext.getMatrices()
-					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
-			this.drawPlayerHead(drawContext, player);
-		} else {
-			drawContext.getMatrices()
-					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue()) - 180));
-			this.drawPlayerAsArrow(drawContext, player);
-		}
-		drawContext.getMatrices().pop();
-		if (DungeonConfig.getInstance().showPlayerNames.getValue()) {
-			RenderUtils.renderTextCenteredScaled(drawContext,
-					Text.literal(player.getName()),
-					0.5f,
-					0,
-					6,
-					player.isUsingMod() ? Constants.SUCCESS_COLOR : Constants.FAIL_COLOR);
-		}
-		drawContext.getMatrices().pop();
-	}
-
-	/**
-	 * Draws a player head.
-	 *
-	 * @param drawContext The draw context.
-	 * @param player      The player to draw the head of.
-	 */
-	private void drawPlayerHead(DrawContext drawContext, DungeonPlayer player) {
-		drawContext.getMatrices().translate(-4, -4, 0);
-		PlayerSkinDrawer.draw(drawContext, player.getPlayer().getSkinTextures().texture(), 0, 0, 8, true, true);
-	}
-
-	/**
-	 * Draws an arrow.
-	 *
-	 * @param drawContext The draw context.
-	 * @param player      The player the arrow belongs to.
-	 */
-	private void drawPlayerAsArrow(DrawContext drawContext, DungeonPlayer player) {
-		Identifier texture;
-		if (player.getPlayer() instanceof ClientPlayerEntity) {
-			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
-		} else {
-			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
-		}
-		drawContext.drawTexture(texture, -4, -4, 8, 8, 0, 0, 8, 8, 8, 8);
-	}
-
-	/**
-	 * Render a dungeon door onto the map.
-	 *
-	 * @param drawContext The draw context.
-	 * @param door        The dungeon door.
-	 */
-	private void renderDoor(DrawContext drawContext, DungeonDoor door) {
-		int roomX = door.x();
-		int roomY = door.y();
-		boolean isLeft = door.left();
-		int color = 0xFF << 24 | switch (door.type()) {
-			case BLOOD -> MapColor.RED.color;
-			case WITHER -> MapColor.BLACK.color;
-			case NORMAL -> MapColor.DIRT_BROWN.color;
-			case UNKNOWN -> MapColor.GRAY.color;
-			case TRAP -> MapColor.ORANGE.color;
-			case MINIBOSS -> MapColor.YELLOW.color;
-			case PUZZLE -> MapColor.PURPLE.color;
-			case FAIRY -> MapColor.PINK.color;
-			case null -> MapColor.BLUE.color;
-		};
-		int locationX, locationY, sizeX, sizeY;
-
-		if (isLeft) {
-			locationX = roomX * TOTAL_SIZE - HALLWAY_SIZE;
-			locationY = roomY * TOTAL_SIZE + (TOTAL_SIZE / 2) - DOOR_SIZE + 1;
-			sizeX = HALLWAY_SIZE;
-			sizeY = DOOR_SIZE;
-		} else {
-			locationX = roomX * TOTAL_SIZE + (TOTAL_SIZE / 2) - DOOR_SIZE + 1;
-			locationY = roomY * TOTAL_SIZE + TOTAL_SIZE - HALLWAY_SIZE;
-			sizeX = DOOR_SIZE;
-			sizeY = HALLWAY_SIZE;
-		}
-
-		drawContext.fill(locationX, locationY, locationX + sizeX, locationY + sizeY, color);
 	}
 
 	/**
@@ -256,19 +138,94 @@ public class DungeonMapRenderer {
 	}
 
 	/**
-	 * Renders the room checkmark onto the map.
+	 * Render a dungeon door onto the map.
 	 *
 	 * @param drawContext The draw context.
-	 * @param checkmark   The checkmark of the room.
-	 * @param locationX   The location x to render at.
-	 * @param locationY   The location y to render at.
+	 * @param door        The dungeon door.
 	 */
-	private void drawRoomCheckmark(DrawContext drawContext, Checkmark checkmark, int locationX, int locationY) {
-		if (checkmark == null || checkmark.getIdentifier() == null) {
+	private void renderDoor(DrawContext drawContext, DungeonDoor door) {
+		int roomX = door.x();
+		int roomY = door.y();
+		boolean isLeft = door.left();
+		int color = 0xFF << 24 | switch (door.type()) {
+			case BLOOD -> MapColor.RED.color;
+			case WITHER -> MapColor.BLACK.color;
+			case NORMAL -> MapColor.DIRT_BROWN.color;
+			case UNKNOWN -> MapColor.GRAY.color;
+			case TRAP -> MapColor.ORANGE.color;
+			case MINIBOSS -> MapColor.YELLOW.color;
+			case PUZZLE -> MapColor.PURPLE.color;
+			case FAIRY -> MapColor.PINK.color;
+			case null -> MapColor.BLUE.color;
+		};
+		int locationX, locationY, sizeX, sizeY;
+
+		if (isLeft) {
+			locationX = roomX * TOTAL_SIZE - HALLWAY_SIZE;
+			locationY = roomY * TOTAL_SIZE + (TOTAL_SIZE / 2) - DOOR_SIZE + 1;
+			sizeX = HALLWAY_SIZE;
+			sizeY = DOOR_SIZE;
+		} else {
+			locationX = roomX * TOTAL_SIZE + (TOTAL_SIZE / 2) - DOOR_SIZE + 1;
+			locationY = roomY * TOTAL_SIZE + TOTAL_SIZE - HALLWAY_SIZE;
+			sizeX = DOOR_SIZE;
+			sizeY = HALLWAY_SIZE;
+		}
+
+		drawContext.fill(locationX, locationY, locationX + sizeX, locationY + sizeY, color);
+	}
+
+	/**
+	 * Renders the player onto the map.
+	 *
+	 * @param drawContext The draw context.
+	 * @param player      The player to render.
+	 */
+	private void renderPlayer(DrawContext drawContext, DungeonPlayer player) {
+		if (player == null || this.dungeonInstance.getDungeonMap().getTopLeftPixel() == null || player.isSkip()) {
 			return;
 		}
-		final Identifier identifier = checkmark.getIdentifier();
-		drawContext.drawTexture(identifier, locationX, locationY, 0, 0, ROOM_SIZE, ROOM_SIZE, ROOM_SIZE, ROOM_SIZE);
+		player.tick();
+		if (player.getPlayer() == null) {
+			return;
+		}
+		final int max = Math.max(this.dungeonMap.getRoomsInY(), this.dungeonMap.getRoomsInX());
+		int x = (int) (MathHelper.clampedMap(player.getInterpolatedX(),
+				this.dungeonMap.getTopLeftPixel().x,
+				this.dungeonMap.getBottomRightPixel().x,
+				0,
+				(6 * TOTAL_SIZE) * (((float) this.dungeonMap.getRoomsInX()) / max))) - 2;
+		int y = (int) (MathHelper.clampedMap(player.getInterpolatedY(),
+				this.dungeonMap.getTopLeftPixel().y,
+				this.dungeonMap.getBottomRightPixel().y,
+				0,
+				(6 * TOTAL_SIZE) * (((float) this.dungeonMap.getRoomsInY()) / max))) - 2;
+
+		drawContext.getMatrices().push();
+		drawContext.getMatrices().translate(x, y, 0);
+		if (DungeonConfig.getInstance().renderOverRoomText.getValue()) {
+			drawContext.getMatrices().translate(0, 0, 1000);
+		}
+		drawContext.getMatrices().push();
+		if (DungeonConfig.getInstance().showPlayerSkulls.getValue() && player.getPlayer() != null) {
+			drawContext.getMatrices()
+					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
+			this.drawPlayerHead(drawContext, player);
+		} else {
+			drawContext.getMatrices()
+					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue()) - 180));
+			this.drawPlayerAsArrow(drawContext, player);
+		}
+		drawContext.getMatrices().pop();
+		if (DungeonConfig.getInstance().showPlayerNames.getValue()) {
+			RenderUtils.renderTextCenteredScaled(drawContext,
+					Text.literal(player.getName()),
+					0.5f,
+					0,
+					6,
+					player.isUsingMod() ? Constants.SUCCESS_COLOR : Constants.FAIL_COLOR);
+		}
+		drawContext.getMatrices().pop();
 	}
 
 	/**
@@ -335,6 +292,59 @@ public class DungeonMapRenderer {
 			this.renderSecretString(drawContext, secretString, locationX, locationY, roomAt.getRoomTextColor());
 			drawContext.getMatrices().pop();
 		}
+	}
+
+	/**
+	 * Renders the room checkmark onto the map.
+	 *
+	 * @param drawContext The draw context.
+	 * @param checkmark   The checkmark of the room.
+	 * @param locationX   The location x to render at.
+	 * @param locationY   The location y to render at.
+	 */
+	private void drawRoomCheckmark(DrawContext drawContext, Checkmark checkmark, int locationX, int locationY) {
+		if (checkmark == null || checkmark.getIdentifier() == null) {
+			return;
+		}
+		final Identifier identifier = checkmark.getIdentifier();
+		drawContext.drawTexture(
+				RenderLayer::getGuiTextured,
+				identifier,
+				locationX,
+				locationY,
+				0,
+				0,
+				ROOM_SIZE,
+				ROOM_SIZE,
+				ROOM_SIZE,
+				ROOM_SIZE);
+	}
+
+	/**
+	 * Draws a player head.
+	 *
+	 * @param drawContext The draw context.
+	 * @param player      The player to draw the head of.
+	 */
+	private void drawPlayerHead(DrawContext drawContext, DungeonPlayer player) {
+		drawContext.getMatrices().translate(-4, -4, 0);
+		PlayerSkinDrawer.draw(drawContext, player.getPlayer().getSkinTextures().texture(), 0, 0, 8, true, true, -1);
+	}
+
+	/**
+	 * Draws an arrow.
+	 *
+	 * @param drawContext The draw context.
+	 * @param player      The player the arrow belongs to.
+	 */
+	private void drawPlayerAsArrow(DrawContext drawContext, DungeonPlayer player) {
+		Identifier texture;
+		if (player.getPlayer() instanceof ClientPlayerEntity) {
+			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
+		} else {
+			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
+		}
+		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 8, 8, 0, 0, 8, 8, 8, 8);
 	}
 
 	private void renderSecretString(DrawContext drawContext, String secretString, int x, int y, int color) {

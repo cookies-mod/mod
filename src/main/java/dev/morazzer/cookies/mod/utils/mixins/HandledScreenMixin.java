@@ -1,25 +1,37 @@
 package dev.morazzer.cookies.mod.utils.mixins;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.authlib.properties.Property;
-import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
-import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
-import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
-import dev.morazzer.cookies.mod.utils.dev.DevInventoryUtils;
-import dev.morazzer.cookies.mod.utils.dev.DevUtils;
-import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
-import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
-import dev.morazzer.cookies.mod.utils.items.ItemTooltipComponent;
-import dev.morazzer.cookies.mod.utils.items.ItemUtils;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.authlib.properties.Property;
+import dev.morazzer.cookies.mod.config.ConfigKeys;
+import dev.morazzer.cookies.mod.utils.accessors.FocusedSlotAccessor;
+import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
+import dev.morazzer.cookies.mod.utils.accessors.SlotAccessor;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevInventoryUtils;
+import dev.morazzer.cookies.mod.utils.dev.DevUtils;
+import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
+import dev.morazzer.cookies.mod.utils.items.ItemTooltipComponent;
+import dev.morazzer.cookies.mod.utils.items.ItemUtils;
+import dev.morazzer.cookies.mod.utils.items.ScrollableTooltipHandler;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -42,16 +54,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
 /**
  * Allows for saving of screens/inventories.
  */
@@ -62,10 +64,8 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 	private static final Identifier ALLOW_SCREEN_SAVING = DevUtils.createIdentifier("save_handled_screens");
 	@Unique
 	private static final Identifier ITEM_DEBUG_MODE = DevUtils.createIdentifier("item_debug_mode");
-	@Shadow
-	@Nullable
-	protected Slot focusedSlot;
-
+	@Unique
+	private final List<Disabled> cookies$disabled = new ArrayList<>();
 	@Shadow
 	public int backgroundHeight;
 
@@ -77,8 +77,9 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 
 	@Shadow
 	public int y;
-	@Unique
-	private final List<Disabled> cookies$disabled = new ArrayList<>();
+	@Shadow
+	@Nullable
+	public Slot focusedSlot;
 
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	@SuppressWarnings("MissingJavadoc")
@@ -138,7 +139,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			method = "drawMouseoverTooltip", at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;" +
-					 "Ljava/util/List;Ljava/util/Optional;II)V"
+					 "Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/util/Identifier;)V"
 	)
 	)
 	public void drawTooltip(
@@ -148,6 +149,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			Optional<TooltipData> data,
 			int x,
 			int y,
+			@Nullable Identifier texture,
 			Operation<Void> original) {
 		if (focusedSlot == null) {
 			return;
@@ -156,7 +158,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 		final ItemTooltipComponent loreItems = ItemUtils.getData(stack, CookiesDataComponentTypes.LORE_ITEMS);
 
 		if (loreItems == null && !DevUtils.isEnabled(ITEM_DEBUG_MODE)) {
-			original.call(instance, textRenderer, text, data, x, y);
+			original.call(instance, textRenderer, text, data, x, y, texture);
 			return;
 		}
 		List<TooltipComponent> list =
@@ -192,7 +194,51 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 				list.add(tooltipComponent);
 			}
 		}
-		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE);
+		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE, null);
+	}
+
+	@Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+	public void onScroll(
+			CallbackInfoReturnable<Boolean> cir,
+			@Local(argsOnly = true, ordinal = 2) double horizontalAmount,
+			@Local(argsOnly = true, ordinal = 3) double verticalAmount) {
+		if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
+			return;
+		}
+		if (((Object) this) instanceof HandledScreen<?> handledScreen) {
+			Slot focusedSlot = FocusedSlotAccessor.getFocusedSlot(handledScreen);
+			if (handledScreen.getScreenHandler().getCursorStack().isEmpty() && focusedSlot != null &&
+				focusedSlot.hasStack()) {
+				final ItemStack stack = focusedSlot.getStack();
+				ScrollableTooltipHandler.scroll(stack, horizontalAmount, verticalAmount);
+				cir.setReturnValue(true);
+			}
+		}
+	}
+
+	@Override
+	public int cookies$getBackgroundWidth() {
+		return this.backgroundWidth;
+	}
+
+	@Override
+	public int cookies$getBackgroundHeight() {
+		return this.backgroundHeight;
+	}
+
+	@Override
+	public int cookies$getX() {
+		return this.x;
+	}
+
+	@Override
+	public int cookies$getY() {
+		return this.y;
+	}
+
+	@Override
+	public List<Disabled> cookies$getDisabled() {
+		return this.cookies$disabled;
 	}
 
 	@Inject(
@@ -226,7 +272,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 	@ModifyArgs(
 			method = "drawSlot", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/gui/DrawContext;drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;" +
+			target = "Lnet/minecraft/client/gui/DrawContext;drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;" +
 					 "Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"
 	)
 	)
@@ -236,30 +282,5 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 		if ((text = ItemUtils.getData(itemStack, CookiesDataComponentTypes.CUSTOM_SLOT_TEXT)) != null) {
 			args.set(4, text);
 		}
-	}
-
-	@Override
-	public int cookies$getBackgroundWidth() {
-		return this.backgroundWidth;
-	}
-
-	@Override
-	public int cookies$getBackgroundHeight() {
-		return this.backgroundHeight;
-	}
-
-	@Override
-	public int cookies$getX() {
-		return this.x;
-	}
-
-	@Override
-	public int cookies$getY() {
-		return this.y;
-	}
-
-	@Override
-	public List<Disabled> cookies$getDisabled() {
-		return this.cookies$disabled;
 	}
 }

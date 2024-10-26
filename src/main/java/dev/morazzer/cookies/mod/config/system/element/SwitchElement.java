@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.config.system.element;
 import dev.morazzer.cookies.mod.utils.maths.LinearInterpolatedInteger;
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import net.minecraft.client.gui.DrawContext;
+	import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -45,7 +46,7 @@ public class SwitchElement {
     public void render(@NotNull DrawContext drawContext) {
         value.tick();
 
-        drawContext.drawTexture(BAR, 0, 0, 0, 0, 48, 14, 48, 14);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, BAR, 0, 0, 0, 0, 48, 14, 48, 14);
 
         float animationPercentage = MathUtils.sigmoidZeroOne(value.getValue() / 100F);
         Identifier buttonIdentifier;
@@ -61,7 +62,7 @@ public class SwitchElement {
             buttonIdentifier = TOGGLE_ON;
         }
 
-        drawContext.drawTexture(buttonIdentifier, (int) (animationPercentage * 36), 0, 0, 0, 12, 14, 12, 14);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, buttonIdentifier, (int) (animationPercentage * 36), 0, 0, 0, 12, 14, 12, 14);
     }
 
     /**

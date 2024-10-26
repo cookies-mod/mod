@@ -105,6 +105,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CRAFT_HELPER_LINE_1, "Set the recipe as the selected");
 		translationBuilder.add(CRAFT_HELPER_LINE_2, "craft helper item!");
 
+		translationBuilder.add(CRAFT_HELPER_PLACEMENT, "Example Inventory");
+
 		translationBuilder.add(
 				BACKEND_WRONG_VERSION,
 				"Your version of the mod is outdated, please download a newer version to use the backend!");
@@ -391,11 +393,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Shows the creation dates of items.");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, "NPC Value", "Show the npc value of items.");
 		translationBuilder.add(CONFIG_MISC_CATEGORIES_RENDER, "Render");
-		translationBuilder.addConfig(CONFIG_MISC_HIDE_OWN_ARMOR, "Hide own armor", "Hides your own armor.");
-		translationBuilder.addConfig(CONFIG_MISC_HIDE_OTHER_ARMOR, "Hide others armor", "Hides others armor.");
-		translationBuilder.addConfig(CONFIG_MISC_SHOW_DYE_ARMOR,
-				"Show armor if dyed",
-				"Shows the armor if a dye is applied to it.");
+		translationBuilder.addConfig(CONFIG_MISC_HIDE_OTHER_ARMOR, "Hide armor", "Hides the armor from players.");
 		translationBuilder.addConfig(CONFIG_MISC_HIDE_FIRE_ON_ENTITIES, "Hide fire", "Hide fire from entities.");
 		translationBuilder.addConfig(CONFIG_MISC_HIDE_LIGHTNING_BOLT,
 				"Hide lightning",

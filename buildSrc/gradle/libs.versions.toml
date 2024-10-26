@@ -3,7 +3,7 @@ asm = "9.5"
 indra_git = "3.1.3"
 yumi_gradle_licenser = "1.0.+"
 quilt_parsers = "0.2.1"
-fabric_loom = "1.6-SNAPSHOT"
+fabric_loom = "1.8.9"
 
 [libraries]
 asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
