@@ -13,6 +13,8 @@
     "PingMeasurerMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
-    "ItemPacketCodecMixin"
+    "ItemPacketCodecMixin",
+    "ClickEventMixin",
+    "HoverEventMixin"
   ]
 }

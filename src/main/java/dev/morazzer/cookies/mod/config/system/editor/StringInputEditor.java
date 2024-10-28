@@ -1,14 +1,13 @@
 package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.StringInputOption;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.gui.DrawContext;
-
 import net.minecraft.client.gui.widget.TextFieldWidget;
-
 import net.minecraft.text.Text;
 
-import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Input option for strings, this will add a text field and a title above said text field.
@@ -38,6 +37,9 @@ public class StringInputEditor extends ConfigOptionEditor<String, StringInputOpt
 		this.textField.setEditable(true);
 		this.textField.setWidth(12);
 		this.textField.setMaxLength(1024);
+		this.textField.setEditable(true);
+		this.textField.setText(this.option.getValue());
+
 		this.option.withCallback(this::updateIfChanged);
 		super.init();
 	}
@@ -51,7 +53,8 @@ public class StringInputEditor extends ConfigOptionEditor<String, StringInputOpt
 	}
 
 	private void updateWidth(int optionWidth) {
-		this.textField.setWidth(Math.min(optionWidth - 8	, this.getTextRenderer().getWidth(this.option.getValue()) + 18));
+		this.textField.setWidth(Math.min(optionWidth - 8,
+				this.getTextRenderer().getWidth(this.option.getValue()) + 18));
 		this.textField.setText(this.option.getValue());
 	}
 
@@ -67,17 +70,25 @@ public class StringInputEditor extends ConfigOptionEditor<String, StringInputOpt
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return this.textField.keyPressed(keyCode, scanCode, modifiers) ||
-			   super.keyPressed(keyCode, scanCode, modifiers);
+		if (this.textField.isFocused() && (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER)) {
+			this.textField.setFocused(false);
+			return true;
+		}
+		if (this.textField.isFocused()) {
+			this.textField.keyPressed(keyCode, scanCode, modifiers);
+			return true;
+		}
+
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
-	public void charTyped(char character, int modifiers) {
+	public boolean charTyped(char character, int modifiers) {
 		if (this.textField.charTyped(character, modifiers)) {
-			return;
+			return true;
 		}
 
-		super.charTyped(character, modifiers);
+		return super.charTyped(character, modifiers);
 	}
 
 	@Override

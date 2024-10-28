@@ -152,8 +152,16 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
         if (this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
-            .keyPressed(keyCode, scanCode, modifiers));
+		AtomicBoolean hasBeenConsumed = new AtomicBoolean(false);
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> hasBeenConsumed.set(hasBeenConsumed.get() || processedOption.getEditor()
+            .keyPressed(keyCode, scanCode, modifiers)));
+		if (hasBeenConsumed.get()) {
+			return true;
+		}
+		if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
+			this.close();
+			return true;
+		}
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
@@ -367,8 +375,12 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
         if (this.searchField.charTyped(character, modifiers)) {
             return true;
         }
-        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
-            .charTyped(character, modifiers));
+		AtomicBoolean consumed = new AtomicBoolean(false);
+        this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> consumed.set(consumed.get() || processedOption.getEditor()
+            .charTyped(character, modifiers)));
+		if (consumed.get()) {
+			return true;
+		}
         return super.charTyped(character, modifiers);
     }
 

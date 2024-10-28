@@ -44,10 +44,10 @@ public class FarmingConfig extends Category {
         case DESCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING;
     })).onlyIf(showCompostPriceBreakdown);
 
-    @Parent
-    public TextDisplayOption visitorText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITOR);
+    //@Parent
+    //public TextDisplayOption visitorText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITOR);
 
-    public BooleanOption visitorMaterialHelper = new BooleanOption(CONFIG_FARMING_VISITOR_MATERIAL_HELPER, false);
+    //public BooleanOption visitorMaterialHelper = new BooleanOption(CONFIG_FARMING_VISITOR_MATERIAL_HELPER, false);
 
     @Parent
     public TextDisplayOption jacobsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_JACOBS);

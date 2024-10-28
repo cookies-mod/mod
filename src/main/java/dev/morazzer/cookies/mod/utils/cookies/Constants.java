@@ -65,6 +65,7 @@ public interface Constants {
          * Emoji to indicate a repetition.
          */
         String REPEAT_ARROW = "\uD83D\uDD01";
-    }
+		String MOVE =  "✥";
+	}
 
 }

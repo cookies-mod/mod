@@ -1,7 +1,7 @@
 package dev.morazzer.cookies.mod.features.misc.utils;
 
 import dev.morazzer.cookies.mod.features.Loader;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 
 /**
  * Utility class to load all utility features.
@@ -10,7 +10,7 @@ import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 public class UtilsFeatures {
 
     public static void load() {
-        Loader.load("CraftHelper", CraftHelper::new);
+        Loader.load("CraftHelper", CraftHelperManager::init);
         Loader.load("ModifiedRecipeScreen", ModifyRecipeScreen::new);
         Loader.load("StoragePreview", StoragePreview::new);
         Loader.load("AnvilHelper", AnvilHelper::new);

@@ -8,6 +8,7 @@ import dev.morazzer.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -15,7 +16,6 @@ import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Simple ingredient data.
@@ -25,7 +25,6 @@ public class Ingredient implements RecipeResult<Ingredient> {
 
     private final String id;
     private final int amount;
-    @Nullable
     private final RepositoryItem repositoryItem;
 
     /**
@@ -39,6 +38,11 @@ public class Ingredient implements RecipeResult<Ingredient> {
         this.amount = amount;
         this.repositoryItem = RepositoryItem.of(id);
     }
+
+	public RepositoryItem getRepositoryItemNotNull() {
+		return Optional.ofNullable(RepositoryItem.of(id))
+				.orElseGet(() -> RepositoryItem.createNotFound(id));
+	}
 
     /**
      * Creates an ingredient of the provided string.

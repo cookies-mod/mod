@@ -52,7 +52,7 @@ public class RecipeCalculationDebugCommand extends ClientCommand {
         }
 
         final Recipe recipe = first.get();
-        final RecipeCalculationResult calculate = RecipeCalculator.calculate(recipe);
+        final RecipeCalculationResult calculate = RecipeCalculator.calculate(recipe).getResult().orElseThrow();
         final String s = RecipePrinter.printRecipe(calculate);
 
         sendInformation("Recipes for " + repositoryItem.getName());

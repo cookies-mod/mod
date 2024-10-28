@@ -73,7 +73,7 @@ public class ConfigKeys {
     public static ConfigKey<Integer> MISC_FORGE_RECIPE_SLOT =
         new ConfigKey<>(config -> config.miscConfig.forgeRecipeSlot);
     public static ConfigKey<Boolean> HELPER_CRAFT_HELPER =
-        new ConfigKey<>(config -> config.helpersConfig.craftHelper);
+        new ConfigKey<>(config -> config.helpersConfig.craftHelper.craftHelper);
     public static ConfigKey<Integer> HELPER_CRAFT_HELPER_SLOT =
         new ConfigKey<>(config -> config.helpersConfig.craftHelperSlot);
 

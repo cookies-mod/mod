@@ -2,7 +2,7 @@ package dev.morazzer.cookies.mod.features.misc.utils;
 
 import dev.morazzer.cookies.mod.config.ConfigKey;
 import dev.morazzer.cookies.mod.config.ConfigKeys;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
@@ -71,7 +71,7 @@ public class ModifyRecipeScreen extends InventoryModifier {
 	@Override
     protected void clicked(int button) {
         SoundUtils.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 0.5f);
-        CraftHelper.setSelectedItem(this.current);
+        CraftHelperManager.pushNewCraftHelperItem(this.current, 1);
     }
 
     @Override

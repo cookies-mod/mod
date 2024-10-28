@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Editor to select a color value.
@@ -115,17 +116,24 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return this.textField.keyPressed(keyCode, scanCode, modifiers) ||
-			   super.keyPressed(keyCode, scanCode, modifiers);
+		if (this.textField.isFocused() && (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER)) {
+			this.textField.setFocused(false);
+			return true;
+		}
+		if (this.textField.isFocused()) {
+			this.textField.keyPressed(keyCode, scanCode, modifiers);
+			return true;
+		}
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override
-	public void charTyped(char character, int modifiers) {
+	public boolean charTyped(char character, int modifiers) {
 		if (this.textField.charTyped(character, modifiers)) {
-			return;
+			return true;
 		}
 
-		super.charTyped(character, modifiers);
+		return super.charTyped(character, modifiers);
 	}
 
 	@Override
