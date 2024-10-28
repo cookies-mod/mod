@@ -9,6 +9,7 @@ import dev.morazzer.cookies.mod.events.api.ScreenKeyEvents;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
+import dev.morazzer.cookies.mod.utils.compatibility.legendarytooltips.LegendaryTooltips;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -110,7 +111,9 @@ public class CraftHelperManager {
 
 				drawContext.getMatrices().push();
 				drawContext.getMatrices().translate(0, 0, -100);
+				LegendaryTooltips.getInstance().beforeTooltipRender(screen, drawContext);
 				instance.render(drawContext, x, y, mouseX - x, mouseY - y, tickDelta);
+				LegendaryTooltips.getInstance().afterTooltipRender(screen);
 				drawContext.getMatrices().pop();
 			});
 		}
