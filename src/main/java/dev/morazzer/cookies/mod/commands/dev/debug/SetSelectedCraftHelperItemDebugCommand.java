@@ -4,7 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookies.mod.commands.arguments.RealIdentifierArgument;
 import dev.morazzer.cookies.mod.commands.system.ClientCommand;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class SetSelectedCraftHelperItemDebugCommand extends ClientCommand {
         final RepositoryItem repositoryItem = RepositoryItem.of(item.getPath());
 
         if (repositoryItem != null) {
-            CraftHelper.setSelectedItem(repositoryItem);
+            CraftHelperManager.pushNewCraftHelperItem(repositoryItem, 1);
             sendSuccessMessage("Switched to item " + item);
         } else {
             sendFailedMessage("Could not find item " + item.getPath());

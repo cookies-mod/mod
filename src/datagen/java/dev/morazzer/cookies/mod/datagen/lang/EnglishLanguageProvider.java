@@ -319,9 +319,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_HELPERS,
 				"Helpers",
 				"Settings that help you with keeping track of certain things.");
-		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER,
-				"Craft Helper",
+		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER_SETTING,
+				"Enable craft helper",
 				"Shows the items required to craft something and your progress in the inventory.");
+		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER, "Craft Helper","Settings related to the craft helper");
 		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER_LOCATIONS,
 				"Craft Helper Location",
 				"Edits the location of the craft helper.");
@@ -329,6 +330,18 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_HELPERS_ANVIL_HELPER,
 				"Anvil Helper",
 				"Highlights the same book in your inventory when combining them in an anvil.");
+		translationBuilder.addConfig(CONFIG_HELPERS_CRAFT_HELPER_SOURCES, "Item Sources", "Allows you to modify the available item sources.");
+
+		translationBuilder.addConfig(ITEM_SOURCE_CHEST, "Chest", "Allows island chest items");
+		translationBuilder.addConfig(ITEM_SOURCE_INVENTORY, "Inventory", "Allows inventory items");
+		translationBuilder.addConfig(ITEM_SOURCE_ACCESSORY_BAG, "Accessory Bag", "Allows accessory bag items");
+		translationBuilder.addConfig(ITEM_SOURCE_FORGE, "Forge", "Allows forge items");
+		translationBuilder.addConfig(ITEM_SOURCE_VAULT, "Vault", "Allows vault items");
+		translationBuilder.addConfig(ITEM_SOURCE_SACK_OF_SACKS, "Sack of Sacks", "Allows sack of sacks items");
+		translationBuilder.addConfig(ITEM_SOURCE_POTION_BAG, "Potion Bag", "Allows potion bag items");
+		translationBuilder.addConfig(ITEM_SOURCE_SACK, "Sack", "Allows sack items");
+		translationBuilder.addConfig(ITEM_SOURCE_STORAGE, "Storage", "Allows storage items");
+
 		translationBuilder.addConfig(CONFIG_HELPERS_CHEST_TRACKER,
 				"Chest Tracker",
 				"Allows for tracking of chests on private island.");
@@ -393,7 +406,11 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Shows the creation dates of items.");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_ITEM_NPC_VALUE, "NPC Value", "Show the npc value of items.");
 		translationBuilder.add(CONFIG_MISC_CATEGORIES_RENDER, "Render");
-		translationBuilder.addConfig(CONFIG_MISC_HIDE_OTHER_ARMOR, "Hide armor", "Hides the armor from players.");
+		translationBuilder.addConfig(CONFIG_MISC_HIDE_OWN_ARMOR, "Hide own armor", "Hides your own armor.");
+		translationBuilder.addConfig(CONFIG_MISC_HIDE_OTHER_ARMOR, "Hide others armor", "Hides others armor.");
+		translationBuilder.addConfig(CONFIG_MISC_SHOW_DYE_ARMOR,
+				"Show armor if dyed",
+				"Shows the armor if a dye is applied to it.");
 		translationBuilder.addConfig(CONFIG_MISC_HIDE_FIRE_ON_ENTITIES, "Hide fire", "Hide fire from entities.");
 		translationBuilder.addConfig(CONFIG_MISC_HIDE_LIGHTNING_BOLT,
 				"Hide lightning",

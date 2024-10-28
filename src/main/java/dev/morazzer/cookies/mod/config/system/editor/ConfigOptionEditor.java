@@ -226,10 +226,11 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @param character The character that was typed.
      * @param modifiers The modifiers that apply to the character.
      */
-    public void charTyped(
+    public boolean charTyped(
         char character,
         int modifiers
     ) {
+		return false;
     }
 
     /**

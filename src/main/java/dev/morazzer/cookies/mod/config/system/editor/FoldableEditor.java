@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import net.minecraft.client.gui.DrawContext;
 
+import net.minecraft.client.gui.ScreenRect;
+import net.minecraft.client.gui.tooltip.WidgetTooltipPositioner;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -55,6 +57,16 @@ public class FoldableEditor extends ConfigOptionEditor<Object, FoldableOption> {
 				(this.getHeight(optionWidth) - 2) / 2 - this.getTextRenderer().fontHeight / 2,
 				0xFFFFFFFF);
 
+	}
+
+	@Override
+	public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
+		if (mouseX > 0 && mouseX < optionWidth
+				&& mouseY > 0 && mouseY < getHeight()) {
+			drawContext.drawTooltip(this.getTextRenderer(), this.option.getDescriptionOrdered(),
+					new WidgetTooltipPositioner(
+							ScreenRect.empty()), mouseX, mouseY);
+		}
 	}
 
 	@Override

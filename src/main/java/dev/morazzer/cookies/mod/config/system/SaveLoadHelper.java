@@ -19,6 +19,9 @@ public interface SaveLoadHelper {
      */
     default void load_(JsonElement jsonObject) {
         for (Field declaredField : this.getClass().getDeclaredFields()) {
+			if (!jsonObject.isJsonObject()) {
+				continue;
+			}
             if (Optional.ofNullable(declaredField.getType().getSuperclass()).map(Option.class::equals).orElse(false)) {
                 Option<?, ?> o = (Option<?, ?>) ExceptionHandler.removeThrows(() -> declaredField.get(this));
                 if (!o.canBeSerialized()) {

@@ -207,4 +207,9 @@ public class CookiesUtils {
 
 		return stringBuilder.toString().trim();
 	}
+
+	public static void sendCommand(String command) {
+		Optional.ofNullable(MinecraftClient.getInstance().player)
+				.ifPresent(player -> player.networkHandler.sendCommand(command));
+	}
 }

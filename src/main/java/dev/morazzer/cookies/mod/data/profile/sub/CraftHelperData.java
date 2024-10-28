@@ -1,0 +1,42 @@
+package dev.morazzer.cookies.mod.data.profile.sub;
+
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import com.mojang.serialization.Codec;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperInstance;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
+import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class CraftHelperData implements CodecJsonSerializable<CraftHelperInstance> {
+
+	public CraftHelperData() {
+		CraftHelperManager.remove();
+	}
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CraftHelperData.class);
+
+	@Override
+	public Codec<CraftHelperInstance> getCodec() {
+		return CraftHelperInstance.CODEC;
+	}
+
+	@Override
+	public void load(CraftHelperInstance value) {
+		CraftHelperManager.setActive(value);
+	}
+
+	@Override
+	public CraftHelperInstance getValue() {
+		return Optional.of(CraftHelperManager.getActive())
+				.filter(Predicate.not(CraftHelperInstance.EMPTY::equals))
+				.orElse(null);
+	}
+
+	@Override
+	public Logger getLogger() {
+		return LOGGER;
+	}
+}

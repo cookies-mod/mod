@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.repository.recipes.calculations;
 
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.recipes.Recipe;
+import dev.morazzer.cookies.mod.utils.Result;
 
 /**
  * Printer to display a {@linkplain RecipeCalculationResult}
@@ -15,7 +16,11 @@ public class RecipePrinter {
      * @return The printed form.
      */
     public static String printRecipe(Recipe recipe) {
-        return printRecipe(RecipeCalculator.calculate(recipe));
+		final Result<RecipeCalculationResult, String> calculate = RecipeCalculator.calculate(recipe);
+		if (calculate.isError()) {
+			return calculate.getError().orElse("An internal error occurred.");
+		}
+		return calculate.getResult().map(RecipePrinter::printRecipe).orElse("An internal error occurred.");
     }
 
     /**

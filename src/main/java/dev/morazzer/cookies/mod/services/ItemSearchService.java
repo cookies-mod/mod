@@ -22,7 +22,7 @@ import dev.morazzer.cookies.mod.data.profile.items.sources.CraftableItemSource;
 import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
 import dev.morazzer.cookies.mod.events.ItemStackEvents;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.render.types.Timed;
@@ -100,8 +100,7 @@ public class ItemSearchService {
 	 * @param command The command to execute.
 	 */
 	public static void sendCommand(String command) {
-		Optional.ofNullable(MinecraftClient.getInstance().player)
-				.ifPresent(player -> player.networkHandler.sendCommand(command));
+		CookiesUtils.sendCommand(command);
 	}
 
 	/**
@@ -453,7 +452,7 @@ public class ItemSearchService {
 		if (data.hasAllIngredients()) {
 			sendCommand("viewrecipe " + data.output().getId());
 		} else {
-			CraftHelper.setSelectedItem(data.output().getRepositoryItem());
+			CraftHelperManager.pushNewCraftHelperItem(data.output().getRepositoryItemNotNull(), 1);
 		}
 	}
 
