@@ -10,7 +10,6 @@ import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.accessors.InventoryScreenAccessor;
-import dev.morazzer.cookies.mod.utils.compatibility.CompatibilityService;
 import dev.morazzer.cookies.mod.utils.compatibility.legendarytooltips.LegendaryTooltips;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
 import java.text.NumberFormat;
@@ -85,14 +84,14 @@ public class PlotPriceBreakdown {
     private void draw(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
-		CompatibilityService.get(LegendaryTooltips.class).beforeTooltipRender(screen, drawContext);
+		LegendaryTooltips.getInstance().beforeTooltipRender(screen, drawContext);
         drawContext.drawTooltip(
             MinecraftClient.getInstance().textRenderer,
             this.lines,
             HoveredTooltipPositioner.INSTANCE,
             handledScreen.x - this.lineWidth - 32,
             handledScreen.y + 16);
-		CompatibilityService.get(LegendaryTooltips.class).afterTooltipRender(screen);
+		LegendaryTooltips.getInstance().afterTooltipRender(screen);
     }
 
     private void updateList(HandledScreen<?> handledScreen) {
