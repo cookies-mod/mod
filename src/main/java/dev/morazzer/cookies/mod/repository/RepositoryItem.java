@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -31,6 +32,7 @@ import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,6 +199,23 @@ public class RepositoryItem {
 				Optional.empty());
 	}
 
+	public static RepositoryItem createNotFound(String id) {
+		return create(id,
+				"minecraft:barrier",
+				Text.literal("Not found (%s)".formatted(id)).formatted(Formatting.RED),
+				Collections.emptyList(),
+				Optional.empty(),
+				0,
+				Tier.ADMIN,
+				SoulBoundType.SOULBOUND,
+				0D,
+				0D,
+				false,
+				false,
+				false,
+				Optional.empty());
+	}
+
 	private static RepositoryItem create(
 			String internalId,
 			String minecraftId,
@@ -227,6 +246,8 @@ public class RepositoryItem {
 		item.riftTransferrable = riftTransferrable;
 		item.sackable = sackable;
 		item.skin = skin.orElse(null);
+		item.recipes = Collections.emptySet();
+		item.usedInRecipeAsIngredient = Collections.emptySet();
 		return item;
 	}
 
@@ -293,7 +314,19 @@ public class RepositoryItem {
 		return itemStack;
 	}
 
-	/**
+	public static <T> Function<T, RepositoryItem> getMappedOrEmpty(Function<T, ItemStack> mapper) {
+		return t -> getOrEmpty(mapper.apply(t));
+	}
+
+	@NotNull
+    public static RepositoryItem getOrEmpty(ItemStack item) {
+		if (item.contains(CookiesDataComponentTypes.REPOSITORY_ITEM)) {
+			return Optional.ofNullable(item.get(CookiesDataComponentTypes.REPOSITORY_ITEM)).orElse(EMPTY);
+		}
+		return EMPTY;
+    }
+
+    /**
 	 * All tiers (rarities) available as default (so without rarity upgrades)
 	 */
 	@Getter

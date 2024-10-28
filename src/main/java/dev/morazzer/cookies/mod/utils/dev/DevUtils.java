@@ -119,9 +119,23 @@ public class DevUtils {
 	 * @return The identifier.
 	 */
 	public static Identifier createIdentifier(final String name) {
+		return createIdentifier(name, false);
+	}
+
+	/**
+	 * Creates a dev tool.
+	 *
+	 * @param name The name of the tool.
+	 * @param defaultEnabled Whether the tool should be enabled by default.
+	 * @return The identifier.
+	 */
+	public static Identifier createIdentifier(final String name, boolean defaultEnabled) {
 		final Identifier identifier = Identifier.of("cookiesmod", "dev/" + name);
 		availableTools.add(identifier);
 		disable(identifier);
+		if (defaultEnabled) {
+			enable(identifier);
+		}
 		return identifier;
 	}
 

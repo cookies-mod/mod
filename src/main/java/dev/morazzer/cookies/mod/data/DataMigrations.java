@@ -1,15 +1,15 @@
 package dev.morazzer.cookies.mod.data;
 
-import com.google.gson.JsonObject;
-import dev.morazzer.cookies.mod.data.profile.migrations.GlobalProfileDataMigration_0001;
-import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0001;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.gson.JsonObject;
+import dev.morazzer.cookies.mod.data.profile.migrations.GlobalProfileDataMigration_0001;
+import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0001;
+import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0002;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,11 @@ public class DataMigrations {
 	private static final Logger LOGGER = LoggerFactory.getLogger("cookies-mod/migrations");
 
 	static {
-		MIGRATIONS.addAll(Arrays.asList(new ProfileDataMigration_0001(), new GlobalProfileDataMigration_0001()));
+		MIGRATIONS.addAll(Arrays.asList(
+				new ProfileDataMigration_0001(),
+				new GlobalProfileDataMigration_0001(),
+				new ProfileDataMigration_0002()
+		));
 
 		MIGRATIONS.stream()
 				.collect(Collectors.groupingBy(Migration::getType))

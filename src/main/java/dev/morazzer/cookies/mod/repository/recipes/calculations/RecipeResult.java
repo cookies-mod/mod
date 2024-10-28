@@ -31,6 +31,8 @@ public interface RecipeResult<T extends RecipeResult<T>> {
      */
     RepositoryItem getRepositoryItem();
 
+	RepositoryItem getRepositoryItemNotNull();
+
     /**
      * Gets the id of the result.
      *

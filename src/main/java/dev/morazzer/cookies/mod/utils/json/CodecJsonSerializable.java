@@ -17,7 +17,11 @@ public interface CodecJsonSerializable<T> extends JsonSerializable {
 
 	@Override
 	default JsonElement write() {
-		final DataResult<JsonElement> result = this.getCodec().encodeStart(JsonOps.INSTANCE, this.getValue());
+		final T value = this.getValue();
+		if (value == null) {
+			return null;
+		}
+		final DataResult<JsonElement> result = this.getCodec().encodeStart(JsonOps.INSTANCE, value);
 		if (result.isError()) {
 			this.getLogger().warn("Failed to save data! {}", result.error().get().message());
 			return null;

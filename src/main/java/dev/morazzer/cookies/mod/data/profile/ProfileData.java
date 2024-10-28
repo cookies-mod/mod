@@ -4,13 +4,13 @@ import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
 import dev.morazzer.cookies.mod.data.profile.sub.AccessoryItemData;
+import dev.morazzer.cookies.mod.data.profile.sub.CraftHelperData;
 import dev.morazzer.cookies.mod.data.profile.sub.ForgeTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.HotmData;
 import dev.morazzer.cookies.mod.data.profile.sub.MiscItemData;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.json.Exclude;
 import dev.morazzer.cookies.mod.utils.json.Safe;
@@ -36,13 +36,13 @@ public class ProfileData {
     private UUID profileUuid;
     @Setter(AccessLevel.PRIVATE)
     private GameMode gameMode = GameMode.UNKNOWN;
-    @Setter(AccessLevel.PRIVATE)
+	private CraftHelperData craftHelperData = new CraftHelperData();
+	@Setter(AccessLevel.PRIVATE)
     @Safe
     private SackTracker sackTracker = new SackTracker();
-    private String selectedCraftHelperItem = "";
-    private RancherSpeeds rancherSpeeds = new RancherSpeeds(this);
-    private StorageData storageData = new StorageData();
-    @Exclude
+	private RancherSpeeds rancherSpeeds = new RancherSpeeds(this);
+	private StorageData storageData = new StorageData();
+	@Exclude
     private GlobalProfileData globalProfileData;
 	private ForgeTracker forgeTracker = new ForgeTracker();
 	private HotmData hotmData = new HotmData();
@@ -87,7 +87,6 @@ public class ProfileData {
      */
     public void load() {
         this.globalProfileData = GlobalProfileStorage.load(this.profileUuid);
-		CraftHelper.swap();
     }
 
     /**

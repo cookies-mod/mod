@@ -72,7 +72,7 @@ public class PlotPriceBreakdown {
         if (RepositoryConstants.plotPrice == null) {
             return;
         }
-        final CraftHelperLocation value = ConfigManager.getConfig().helpersConfig.craftHelperLocation.getValue();
+        final CraftHelperLocation value = ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.getValue();
         if (value == CraftHelperLocation.LEFT_INVENTORY || value == CraftHelperLocation.LEFT) {
             InventoryScreenAccessor.setDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER);
         }

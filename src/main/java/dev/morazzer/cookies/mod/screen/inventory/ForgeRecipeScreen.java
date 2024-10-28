@@ -2,8 +2,8 @@ package dev.morazzer.cookies.mod.screen.inventory;
 
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.ConfigManager;
-import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelper;
 import dev.morazzer.cookies.mod.features.misc.utils.ModifyRecipeScreen;
+import dev.morazzer.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.recipes.ForgeRecipe;
@@ -54,7 +54,7 @@ public class ForgeRecipeScreen extends ClientSideInventory {
                 TextUtils.literal("      Result item ", Formatting.YELLOW)
                     .append(TextUtils.literal(" -->", Formatting.WHITE))).build());
 
-        if (ConfigManager.getConfig().helpersConfig.craftHelper.getValue()) {
+        if (ConfigManager.getConfig().helpersConfig.craftHelper.craftHelper.getValue()) {
             final ItemStack craftHelperSelect = ModifyRecipeScreen.CRAFT_HELPER_SELECT.copy();
             craftHelperSelect.set(
                 CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE,
@@ -112,7 +112,7 @@ public class ForgeRecipeScreen extends ClientSideInventory {
     }
 
     private void setSelected() {
-        CraftHelper.setSelectedItem(this.recipe.getOutput().getRepositoryItem());
+        CraftHelperManager.pushNewCraftHelperItem(this.recipe.getOutput().getRepositoryItemNotNull(), 1);
     }
 
     private void openForgeRecipes() {

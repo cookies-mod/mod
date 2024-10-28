@@ -122,6 +122,15 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
 	}
 
 	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
+			this.close();
+			return true;
+		}
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
 	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
 		if (this.drawBackground) {
 			renderInGameBackground(context);

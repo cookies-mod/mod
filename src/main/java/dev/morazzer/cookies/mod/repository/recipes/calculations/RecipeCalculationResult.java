@@ -3,6 +3,8 @@ package dev.morazzer.cookies.mod.repository.recipes.calculations;
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,12 +16,12 @@ import lombok.Getter;
 public class RecipeCalculationResult implements RecipeResult<RecipeCalculationResult> {
 
     Ingredient ingredient;
-    List<RecipeResult> required;
+    List<RecipeResult<?>> required;
 
     @Override
     public RecipeCalculationResult multiply(int multiplier) {
         return new RecipeCalculationResult(ingredient.multiply(multiplier),
-            required.stream().map(recipeResult -> recipeResult.multiply(multiplier)).toList()
+            required.stream().map(recipeResult -> recipeResult.multiply(multiplier)).collect(Collectors.toList())
         );
     }
 
@@ -33,7 +35,12 @@ public class RecipeCalculationResult implements RecipeResult<RecipeCalculationRe
         return this.ingredient.getRepositoryItem();
     }
 
-    @Override
+	@Override
+	public RepositoryItem getRepositoryItemNotNull() {
+		return this.ingredient.getRepositoryItemNotNull();
+	}
+
+	@Override
     public String getId() {
         return this.ingredient.getId();
     }

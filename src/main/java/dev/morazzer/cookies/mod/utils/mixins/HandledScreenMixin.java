@@ -23,6 +23,7 @@ import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemTooltipComponent;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.ScrollableTooltipHandler;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

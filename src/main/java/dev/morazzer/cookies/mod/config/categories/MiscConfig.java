@@ -41,8 +41,14 @@ public class MiscConfig extends Category {
     @Parent
     public TextDisplayOption renderCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_RENDER);
 
-    @Expose
-    public BooleanOption hideOtherArmor = new BooleanOption(CONFIG_MISC_HIDE_OTHER_ARMOR, false);
+	@Expose
+	public BooleanOption hideOwnArmor = new BooleanOption(CONFIG_MISC_HIDE_OWN_ARMOR, false);
+
+	@Expose
+	public BooleanOption hideOtherArmor = new BooleanOption(CONFIG_MISC_HIDE_OTHER_ARMOR, false);
+
+	@Expose
+	public BooleanOption showDyeArmor = new BooleanOption(CONFIG_MISC_SHOW_DYE_ARMOR, false);
 
     @Expose
     public BooleanOption hideFireOnEntities = new BooleanOption(CONFIG_MISC_HIDE_FIRE_ON_ENTITIES, false);

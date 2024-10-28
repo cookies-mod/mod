@@ -1,8 +1,7 @@
 package dev.morazzer.cookies.mod.render.types;
 
-import java.util.Objects;
-
 import dev.morazzer.cookies.mod.render.Renderable;
+import org.joml.Vector3f;
 
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -20,7 +19,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
  * @param startColor The start color.
  * @param endColor   The end color
  */
-public record Line(Vec3d start, Vec3d end, int startColor, int endColor) implements Renderable {
+public record Line(Vector3f start, Vec3d end, int startColor, int endColor) implements Renderable {
+
+	public Line(Vec3d start, Vec3d end, int startColor, int endColor) {
+		this(start.toVector3f(), end.subtract(start), startColor, endColor);
+	}
+
+	public Line(Vec3d start, Vec3d end, int startColor) {
+		this(start.toVector3f(), end.subtract(start), startColor, startColor);
+	}
 
 	/**
 	 * Creates a line between the start and the end with the specified color.
@@ -29,7 +36,7 @@ public record Line(Vec3d start, Vec3d end, int startColor, int endColor) impleme
 	 * @param end   The end.
 	 * @param color The color of the line as argb.
 	 */
-	public Line(Vec3d start, Vec3d end, int color) {
+	public Line(Vector3f start, Vec3d end, int color) {
 		this(start, end, color, color);
 	}
 
@@ -39,9 +46,17 @@ public record Line(Vec3d start, Vec3d end, int startColor, int endColor) impleme
 		if (vertices == null) {
 			return;
 		}
-		final VertexConsumer buffer = vertices.getBuffer(RenderLayer.getDebugLineStrip(6.0));
-		final MatrixStack.Entry peek = Objects.requireNonNull(context.matrixStack()).peek();
-		buffer.vertex(peek, (float) this.start.x, (float) this.start.y, (float) this.start.z).color(this.startColor);
-		buffer.vertex(peek, (float) this.end.x, (float) this.end.y, (float) this.end.z).color(this.endColor);
+		final VertexConsumer vertexConsumers = vertices.getBuffer(RenderLayer.getDebugLineStrip(3));
+		MatrixStack.Entry entry = context.matrixStack().peek();
+		vertexConsumers.vertex(entry, start)
+				.color(startColor)
+				.normal(entry, (float) end.x, (float) end.y, (float) end.z);
+		vertexConsumers.vertex(
+						entry,
+						(float) ((double) start.x() + end.x),
+						(float) ((double) start.y() + end.y),
+						(float) ((double) start.z() + end.z))
+				.color(endColor)
+				.normal(entry, (float) end.x, (float) end.y, (float) end.z);
 	}
 }

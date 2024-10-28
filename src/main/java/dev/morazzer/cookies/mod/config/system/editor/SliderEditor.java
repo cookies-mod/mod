@@ -179,8 +179,8 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
     }
 
     @Override
-    public void charTyped(char character, int modifiers) {
-        this.textFieldWidget.charTyped(character, modifiers);
+    public boolean charTyped(char character, int modifiers) {
+        return this.textFieldWidget.charTyped(character, modifiers);
     }
 
     /**
