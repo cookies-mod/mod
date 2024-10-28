@@ -164,7 +164,7 @@ public class InspectItemScreen extends ClientSideInventory {
 			this.itemSearchScreen.render(context, 0, 0, delta);
 		}
 		this.renderInGameBackground(context);
-		super.applyBlur(delta);
+		super.applyBlur();
 		super.renderBackground(context, mouseX, mouseY, delta);
 	}
 }

@@ -289,9 +289,7 @@ public interface TranslationKeys {
 	String CONFIG_MISC_SHOW_ITEM_CREATION_DATE = CONFIG_MISC + ".show_item_creation_date";
 	String CONFIG_MISC_SHOW_ITEM_NPC_VALUE = CONFIG_MISC + ".show_item_npc_value";
 	String CONFIG_MISC_CATEGORIES_RENDER = CONFIG_MISC + CATEGORIES_PART + "render";
-	String CONFIG_MISC_HIDE_OWN_ARMOR = CONFIG_MISC + ".hide_own_armor";
 	String CONFIG_MISC_HIDE_OTHER_ARMOR = CONFIG_MISC + ".hide_other_armor";
-	String CONFIG_MISC_SHOW_DYE_ARMOR = CONFIG_MISC + ".show_dye_armor";
 	String CONFIG_MISC_HIDE_FIRE_ON_ENTITIES = CONFIG_MISC + ".hide_fire_on_entities";
 	String CONFIG_MISC_HIDE_LIGHTNING_BOLT = CONFIG_MISC + ".hide_lightning_bolt";
 	String CONFIG_MISC_CATEGORIES_RENDER_UI = CONFIG_MISC + CATEGORIES_PART + ".render_ui";

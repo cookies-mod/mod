@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.config.system.editor;
 import dev.morazzer.cookies.mod.config.system.options.SliderOption;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -86,12 +87,13 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
         int sliderX = optionWidth / 6 - fullWidth / 2;
         int sliderY = height - 7 - 14;
 
-        drawContext.drawTexture(SLIDER_CAP_ON, sliderX, sliderY, 0, 0, 4, 16, 4, 16);
-        drawContext.drawTexture(SLIDER_CAP_OFF, sliderX + sliderWidth - 4, sliderY, 0, 0, 4, 16, 4, 16);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, SLIDER_CAP_ON, sliderX, sliderY, 0, 0, 4, 16, 4, 16);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, SLIDER_CAP_OFF, sliderX + sliderWidth - 4, sliderY, 0, 0, 4, 16, 4, 16);
 
         if (sliderPosition > 5) {
             drawContext.drawTexture(
-                SLIDER_SEGMENT_ON,
+					RenderLayer::getGuiTextured,
+					SLIDER_SEGMENT_ON,
                 sliderX + 4,
                 sliderY,
                 0,
@@ -103,8 +105,8 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
             );
         }
         if (sliderPosition < sliderWidth - 5) {
-            drawContext.drawTexture(
-                SLIDER_SEGMENT_OFF,
+            drawContext.drawTexture(RenderLayer::getGuiTextured,
+					SLIDER_SEGMENT_OFF,
                 sliderX + sliderPosition,
                 sliderY,
                 0,
@@ -119,10 +121,10 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
         for (int i = 1; i < 4; i++) {
             int notchX = sliderX + sliderWidth * i / 4 - 1;
             Identifier identifier = (notchX > sliderX + sliderPosition) ? SLIDER_NOTCH_OFF : SLIDER_NOTCH_ON;
-            drawContext.drawTexture(identifier, notchX, sliderY + 6, 0, 0, 2, 4, 2, 4);
+            drawContext.drawTexture(RenderLayer::getGuiTextured, identifier, notchX, sliderY + 6, 0, 0, 2, 4, 2, 4);
         }
 
-        drawContext.drawTexture(SLIDER_BUTTON, sliderX + sliderPosition - 4, sliderY, 0, 0, 8, 16, 8, 16);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, SLIDER_BUTTON, sliderX + sliderPosition - 4, sliderY, 0, 0, 8, 16, 8, 16);
     }
 
     @Override

@@ -2,6 +2,7 @@ package dev.morazzer.cookies.mod.screen;
 
 import dev.morazzer.cookies.mod.utils.maths.MathUtils;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -87,7 +88,8 @@ public abstract class ScrollbarScreen extends CookiesScreen {
     protected void renderScrollbar(DrawContext drawContext) {
         int scrollBarX = this.scrollbarX;
         int scrollBarY = this.scrollbarY;
-        drawContext.drawGuiTexture(SCROLLER_TEXTURE,
+        drawContext.drawGuiTexture(
+				RenderLayer::getGuiTextured, SCROLLER_TEXTURE,
             scrollBarX,
             MathUtils.clamp(scrollBarY + (int) (this.scroll * this.scrollStep),
                 scrollBarY,

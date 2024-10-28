@@ -1,12 +1,10 @@
 accessWidener v2 named
-accessible method net/minecraft/client/render/Frustum isVisible (DDDDDD)Z
 accessible class net/minecraft/client/render/RenderLayer$MultiPhase
 accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
 accessible class net/minecraft/client/render/RenderPhase$Cull
 accessible class net/minecraft/client/render/RenderPhase$DepthTest
 accessible class net/minecraft/client/render/RenderPhase$Transparency
 accessible method net/minecraft/client/render/block/entity/BeaconBlockEntityRenderer renderBeam (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;FJIII)V
-accessible method net/minecraft/client/gui/DrawContext drawTexturedQuad (Lnet/minecraft/util/Identifier;IIIIIFFFF)V
 accessible method net/minecraft/client/render/WorldRenderer renderEntity (Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V
 accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
@@ -15,6 +13,8 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen background
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
 accessible class net/minecraft/client/texture/PlayerSkinProvider$Key
 accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen messages [Ljava/lang/String;
-accessible method net/minecraft/client/gui/DrawContext drawTooltip (Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V
 accessible method net/minecraft/text/MutableText <init> (Lnet/minecraft/text/TextContent;Ljava/util/List;Lnet/minecraft/text/Style;)V
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/screen/slot/Slot;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
+accessible method net/minecraft/client/gui/DrawContext drawTooltip (Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;Lnet/minecraft/util/Identifier;)V

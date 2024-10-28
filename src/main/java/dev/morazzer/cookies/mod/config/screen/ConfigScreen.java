@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -126,7 +127,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
             for (final ProcessedCategory allCategory : this.allCategories) {
                 final int tabX = this.x + this.getTabX(allCategory);
                 final int tabY = this.y + this.getTabY(allCategory);
-                if (this.isInBound(mouseX, mouseY, tabX, tabY, 26, 32)) {
+                if (isInBound(mouseX, mouseY, tabX, tabY, 26, 32)) {
                     if (this.selectedCategory == allCategory) {
                         drawContext.drawTooltip(this.textRenderer, allCategory.getDescription(), mouseX, mouseY);
                     } else {
@@ -190,7 +191,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
             this.renderTabIcon(drawContext, category);
         }
 
-        drawContext.drawTexture(BACKGROUND_TEXTURE, this.x, this.y, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, this.x, this.y, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 256, 256);
 
         if (this.selectedCategory != null) {
             this.renderTabIcon(drawContext, this.selectedCategory);
@@ -222,7 +223,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
 
     @Override
     public boolean mouseClicked(final double mouseX, final double mouseY, final int button) {
-        if (this.isInBound((int) mouseX,
+        if (isInBound((int) mouseX,
             (int) mouseY,
             this.searchField.getX() - 3,
             this.searchField.getY(),
@@ -240,7 +241,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
             for (final ProcessedCategory allCategory : this.allCategories) {
                 final int tabX = this.x + this.getTabX(allCategory);
                 final int tabY = this.y + this.getTabY(allCategory);
-                if (this.isInBound((int) mouseX, (int) mouseY, tabX, tabY, 26, 32) && button == 0) {
+                if (isInBound((int) mouseX, (int) mouseY, tabX, tabY, 26, 32) && button == 0) {
                     this.setSelectedCategory(allCategory);
                     return true;
                 }
@@ -385,7 +386,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
                 (active ? TAB_TOP_SELECTED_TEXTURES : TAB_TOP_UNSELECTED_TEXTURES);
 
 
-        drawContext.drawGuiTexture(identifiers[MathUtils.clamp(column, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
+        drawContext.drawGuiTexture(RenderLayer::getGuiTextured, identifiers[MathUtils.clamp(column, 0, identifiers.length - 1)], tabX, tabY, 26, 32);
 
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0, 0, 100);
@@ -397,7 +398,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
         final int itemY = tabY + 8 + offset;
 
         drawContext.drawItem(itemStack, itemX, itemY);
-        drawContext.drawItemInSlot(this.textRenderer, itemStack, itemX, itemY);
+        drawContext.drawStackOverlay(this.textRenderer, itemStack, itemX, itemY);
         drawContext.getMatrices().pop();
     }
 

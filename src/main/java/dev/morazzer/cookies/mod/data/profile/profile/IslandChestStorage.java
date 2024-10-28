@@ -91,7 +91,7 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 										.forGetter(ChestItem::blockPos),
 								BlockPos.CODEC.optionalFieldOf("second_chest").forGetter(ChestItem::secondChest),
 								ItemStack.CODEC.fieldOf("item").forGetter(ChestItem::itemStack),
-								Codecs.NONNEGATIVE_INT.fieldOf("slot").forGetter(ChestItem::slot))
+								Codecs.NON_NEGATIVE_INT.fieldOf("slot").forGetter(ChestItem::slot))
 						.apply(instance, ChestItem::new));
 		private static final Codec<List<ChestItem>> LIST_CODEC = CODEC.listOf();
 	}

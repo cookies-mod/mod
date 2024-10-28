@@ -25,7 +25,7 @@ public class CraftHelperPlacement extends ClientSideInventory {
 
 	private final PressableField[] fields = new PressableField[CraftHelperLocation.values().length];
 	private CraftHelperLocation selected;
-	private static final int UNSELECTED_COLOR = 0x44FFFFFF & Constants.SUCCESS_COLOR;
+	private static final int UNSELECTED_COLOR = Constants.SUCCESS_COLOR;
 	private List<OrderedText> craftHelperText = Collections.emptyList();
 	private int yOffset = 0;
 

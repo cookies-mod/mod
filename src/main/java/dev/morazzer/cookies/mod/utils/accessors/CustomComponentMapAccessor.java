@@ -1,6 +1,6 @@
 package dev.morazzer.cookies.mod.utils.accessors;
 
-import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.MergedComponentMap;
 
 /**
  * Accessor to get/set the extra tracking map for custom item data.
@@ -12,13 +12,13 @@ public interface CustomComponentMapAccessor {
      *
      * @param componentMap The component map.
      */
-    void cookies$setComponentMapImpl(ComponentMapImpl componentMap);
+    void cookies$setMergedComponentMap(MergedComponentMap componentMap);
 
     /**
      * Gets the custom component map.
      *
      * @return The component map.
      */
-    ComponentMapImpl cookies$getComponentMapImpl();
+	MergedComponentMap cookies$getMergedComponentMap();
 
 }

@@ -11,20 +11,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.MergedComponentMap;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 
 /**
  * Allows for addition of custom components without interfering with the real component map.
  */
-@Mixin(ComponentMapImpl.class)
-public class ComponentMapImplMixin implements CustomComponentMapAccessor {
+@Mixin(MergedComponentMap.class)
+public class MergedComponentMapMixin implements CustomComponentMapAccessor {
 	@Unique
-	private ComponentMapImpl cookies$componentMap;
+	private MergedComponentMap cookies$componentMap;
 
 	/**
-	 * Redirects all custom component types to the {@linkplain ComponentMapImplMixin#cookies$componentMap}.
+	 * Redirects all custom component types to the {@linkplain MergedComponentMapMixin#cookies$componentMap}.
 	 *
 	 * @param dataComponentType The component type.
 	 * @param object            The value of the component.
@@ -54,7 +54,7 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
 	}
 
 	/**
-	 * Redirects all custom component types to the {@linkplain ComponentMapImplMixin#cookies$componentMap}.
+	 * Redirects all custom component types to the {@linkplain MergedComponentMapMixin#cookies$componentMap}.
 	 *
 	 * @param dataComponentType The component type.
 	 * @param cir               The callback.
@@ -81,18 +81,18 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
 	 * @return The copy with the extra components attached.
 	 */
 	@ModifyReturnValue(method = "copy", at = @At("RETURN"))
-	public ComponentMapImpl copy(ComponentMapImpl original) {
+	public MergedComponentMap copy(MergedComponentMap original) {
 		if (this.cookies$componentMap != null) {
-			final ComponentMapImpl copy = new ComponentMapImpl(ComponentMap.EMPTY);
+			final MergedComponentMap copy = new MergedComponentMap(ComponentMap.EMPTY);
 			copy.setAll(this.cookies$componentMap);
-			((CustomComponentMapAccessor) (Object) original).cookies$setComponentMapImpl(copy);
+			((CustomComponentMapAccessor) (Object) original).cookies$setMergedComponentMap(copy);
 		}
 
 		return original;
 	}
 
 	/**
-	 * Redirects all custom component types to the {@linkplain ComponentMapImplMixin#cookies$componentMap}.
+	 * Redirects all custom component types to the {@linkplain MergedComponentMapMixin#cookies$componentMap}.
 	 *
 	 * @param dataComponentType The component type.
 	 * @param cir               The callback.
@@ -109,13 +109,13 @@ public class ComponentMapImplMixin implements CustomComponentMapAccessor {
 
 	@Override
 	@Unique
-	public void cookies$setComponentMapImpl(ComponentMapImpl componentMap) {
+	public void cookies$setMergedComponentMap(MergedComponentMap componentMap) {
 		cookies$componentMap = componentMap;
 	}
 
 	@Override
 	@Unique
-	public ComponentMapImpl cookies$getComponentMapImpl() {
+	public MergedComponentMap cookies$getMergedComponentMap() {
 		return cookies$componentMap;
 	}
 }

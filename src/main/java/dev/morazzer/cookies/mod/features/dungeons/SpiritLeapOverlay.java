@@ -170,7 +170,7 @@ public class SpiritLeapOverlay {
 						0,
 						size,
 						true,
-						true);
+						true, -1);
 				drawContext.getMatrices().pop();
 			}
 		}

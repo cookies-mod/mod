@@ -7,7 +7,7 @@ import dev.morazzer.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.types.ScrollableDataComponentTypes;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,13 +35,20 @@ public class ScrollableTooltipMixin implements FocusedSlotAccessor {
 
     @Shadow
     @Nullable
-    protected Slot focusedSlot;
+	public Slot focusedSlot;
 
-    @WrapOperation(method = "drawMouseoverTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V"))
-    private void drawTooltip(DrawContext instance, TextRenderer textRenderer, List<Text> text,
-                             Optional<TooltipData> data, int x, int y, Operation<Void> original) {
+    @WrapOperation(method = "drawMouseoverTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/util/Identifier;)V"))
+    private void drawTooltip(
+			DrawContext instance,
+			TextRenderer textRenderer,
+			List<Text> text,
+			Optional<TooltipData> data,
+			int x,
+			int y,
+			@Nullable Identifier texture,
+			Operation<Void> original) {
         if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
-            original.call(instance, textRenderer, text, data, x, y);
+            original.call(instance, textRenderer, text, data, x, y, texture);
             return;
         }
 
@@ -54,7 +61,7 @@ public class ScrollableTooltipMixin implements FocusedSlotAccessor {
             ItemUtils.getData(this.focusedSlot.getStack(), ScrollableDataComponentTypes.TOOLTIP_OFFSET_HORIZONTAL);
 
         if (first == null && last == null && vertical == null && horizontal == null) {
-            original.call(instance, textRenderer, text, data, x, y);
+            original.call(instance, textRenderer, text, data, x, y, texture);
             return;
         }
 
@@ -84,7 +91,7 @@ public class ScrollableTooltipMixin implements FocusedSlotAccessor {
             text,
             data,
             x + Objects.requireNonNullElse(horizontal, 0),
-            y + Objects.requireNonNullElse(vertical, 0));
+            y + Objects.requireNonNullElse(vertical, 0), texture);
     }
 
     @Override

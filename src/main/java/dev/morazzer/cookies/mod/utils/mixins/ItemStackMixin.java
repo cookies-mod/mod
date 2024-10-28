@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.MergedComponentMap;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -50,14 +50,14 @@ public abstract class ItemStackMixin {
 
     @Shadow
     @Final
-    ComponentMapImpl components;
+	MergedComponentMap components;
 
     @Inject(
-        method = "<init>(Lnet/minecraft/item/ItemConvertible;ILnet/minecraft/component/ComponentMapImpl;)V",
+        method = "<init>(Lnet/minecraft/item/ItemConvertible;ILnet/minecraft/component/MergedComponentMap;)V",
         at = @At(value = "RETURN")
     )
     public void initializeItemStackWithComponents(
-        ItemConvertible itemConvertible, int i, ComponentMapImpl componentMapImpl, CallbackInfo ci) {
+        ItemConvertible itemConvertible, int i, MergedComponentMap componentMapImpl, CallbackInfo ci) {
         this.cookies$setComponents();
         CookiesDataComponentTypes.getDataTypes().forEach(this::cookies$registerType);
 
@@ -113,8 +113,8 @@ public abstract class ItemStackMixin {
 
     @Unique
     private void cookies$setComponents() {
-        if (((CustomComponentMapAccessor) (Object) this.components).cookies$getComponentMapImpl() == null) {
-            ((CustomComponentMapAccessor) (Object) this.components).cookies$setComponentMapImpl(new ComponentMapImpl(
+        if (((CustomComponentMapAccessor) (Object) this.components).cookies$getMergedComponentMap() == null) {
+            ((CustomComponentMapAccessor) (Object) this.components).cookies$setMergedComponentMap(new MergedComponentMap(
                 ComponentMap.EMPTY));
         }
     }
@@ -135,7 +135,7 @@ public abstract class ItemStackMixin {
     public abstract <T> T set(ComponentType<? super T> dataComponentType, @Nullable T object);
 
     @Unique
-    private void cookies$setPetLevel(NbtCompound nbtCompound, ComponentMapImpl componentMapImpl) {
+    private void cookies$setPetLevel(NbtCompound nbtCompound, MergedComponentMap componentMapImpl) {
         if (nbtCompound == null) {
             return;
         }
