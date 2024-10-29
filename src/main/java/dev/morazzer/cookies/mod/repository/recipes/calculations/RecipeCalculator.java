@@ -39,6 +39,9 @@ public class RecipeCalculator {
 	 * @return The result.
 	 */
 	public static Result<RecipeCalculationResult, String> calculate(Recipe recipe) {
+		if (recipe == null) {
+			return Result.error("Recipe is null");
+		}
 		return Result.success(calculate(recipe, new CalculationContext(defaultBlacklist)));
 	}
 

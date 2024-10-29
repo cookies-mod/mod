@@ -20,6 +20,7 @@ import dev.morazzer.cookies.mod.repository.recipes.calculations.RecipeCalculator
 import dev.morazzer.cookies.mod.screen.CookiesScreen;
 import dev.morazzer.cookies.mod.utils.accessors.ClickEventAccessor;
 import dev.morazzer.cookies.mod.utils.accessors.HoverEventAccessor;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -67,11 +68,12 @@ public class CraftHelperInstance {
 	public void recalculate() {
 		componentList.clear();
 		final var calculate = RecipeCalculator.calculate(repositoryItem);
-		if (calculate.isError()) {
+		if (calculate.isError() || calculate.getResult().isEmpty()) {
+			CookiesUtils.sendFailedMessage("An error occurred while evaluating the recipe tree.");
 			CraftHelperManager.remove();
 			return;
 		}
-		final RecipeCalculationResult recipeCalculationResult = calculate.getResult().orElse(null).multiply(amount);
+		final RecipeCalculationResult recipeCalculationResult = calculate.getResult().get().multiply(amount);
 		if (recipeCalculationResult == null) {
 			CraftHelperManager.remove();
 			return;
