@@ -432,6 +432,11 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK,
 				"Show forge recipes",
 				"Shows forge recipes in the recipe book");
+
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR, "Fear Notifications", "Notifies you shortly before you can spawn a primal fear");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_ENABLED, "Enable", "Enables primal fear notifications");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_TYPE, "Notification type", "Changes the type of the notification");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_SOUND, "Enable sound", "Plays a sound when sending the notification");
 	}
 
 	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {

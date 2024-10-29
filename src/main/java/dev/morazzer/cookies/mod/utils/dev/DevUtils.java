@@ -55,6 +55,10 @@ public class DevUtils {
 		return enabledTools.contains(identifier);
 	}
 
+	public static boolean isDisabled(final Identifier identifier) {
+		return !isEnabled(identifier);
+	}
+
 	/**
 	 * Logs a specific value to the console.
 	 *

@@ -9,6 +9,7 @@ import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.text.ClickEvent;
@@ -28,7 +29,7 @@ public class PrintModStuffDebugCommand extends ClientCommand {
 				BlockPos.CODEC.listOf().encodeStart(JsonOps.INSTANCE, RepositoryConstants.modLocations);
 		if (elements.isError()) {
 			sendFailedMessage("Failed to serialize data: " +
-							  elements.error().map(DataResult.Error::message).orElse("<no message>"));
+					elements.error().map(DataResult.Error::message).orElse("<no message>"));
 			return;
 		}
 		CookiesUtils.sendMessage(CookiesUtils.createPrefix(Constants.SUCCESS_COLOR)
