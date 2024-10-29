@@ -308,6 +308,11 @@ public interface TranslationKeys {
 	String CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT = CONFIG_MISC + ".show_pet_rarity_in_level_text";
 	String CONFIG_MISC_SHOW_FORGE_RECIPE_STACK = CONFIG_MISC + ".show_forge_recipe_stack";
 
+	String CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR = CONFIG_MISC + ".notifications_primal_fear";
+	String CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_ENABLED = CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR + ".enabled";
+	String CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_TYPE = CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR + ".type";
+	String CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_SOUND = CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR + ".sound";
+
 	//</editor-fold>
 	//<editor-fold desc="Config/Dungeon">
 	String CONFIG_DUNGEON = CONFIG + ".dungeon";
