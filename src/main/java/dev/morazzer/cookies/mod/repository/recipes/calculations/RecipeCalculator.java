@@ -1,7 +1,9 @@
 package dev.morazzer.cookies.mod.repository.recipes.calculations;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import dev.morazzer.cookies.mod.repository.Ingredient;
 import dev.morazzer.cookies.mod.repository.RepositoryItem;
@@ -29,7 +31,9 @@ public class RecipeCalculator {
 			"coal_block",
 			"coal",
 			"iron_block",
-			"iron_ingot"
+			"iron_ingot",
+			"slime_ball",
+			"slime_block"
 	};
 
 	/**
@@ -39,10 +43,7 @@ public class RecipeCalculator {
 	 * @return The result.
 	 */
 	public static Result<RecipeCalculationResult, String> calculate(Recipe recipe) {
-		if (recipe == null) {
-			return Result.error("Recipe is null");
-		}
-		return Result.success(calculate(recipe, new CalculationContext(defaultBlacklist)));
+		return calculate(recipe, new CalculationContext(defaultBlacklist));
 	}
 
 	/**
@@ -52,7 +53,8 @@ public class RecipeCalculator {
 	 * @return The result.
 	 */
 	public static Result<RecipeCalculationResult, String> calculate(RepositoryItem repositoryItem) {
-		return calculate(getBestRecipe(repositoryItem, false));
+		return getBestRecipe(repositoryItem, false).map(RecipeCalculator::calculate)
+				.orElseGet(() -> Result.error("No recipe found :c"));
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class RecipeCalculator {
 	 * @param context The context.
 	 * @return The result.
 	 */
-	public static RecipeCalculationResult calculate(Recipe recipe, CalculationContext context) {
+	public static Result<RecipeCalculationResult, String> calculate(Recipe recipe, CalculationContext context) {
 		List<RecipeResult<?>> list = new ArrayList<>();
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
@@ -77,32 +79,34 @@ public class RecipeCalculator {
 				continue;
 			}
 
-			final Recipe recipe1 = getBestRecipe(repositoryItem, true);
 			if (context.hasBeenVisited(ingredient.getId())) {
 				continue;
 			}
+			final Optional<Recipe> bestRecipe = getBestRecipe(repositoryItem, true);
+			if (bestRecipe.isEmpty()) {
+				return Result.error("Passed recipe empty check but has no recipe (%s)".formatted(ingredient.getId()));
+			}
+			final Recipe subRecipe = bestRecipe.get();
 			context.push(ingredient.getId());
-			final RecipeCalculationResult calculate = calculate(recipe1, context);
+			final Result<RecipeCalculationResult, String> subCalculation = calculate(subRecipe, context);
+			if (subCalculation.isError()) {
+				return subCalculation;
+			}
+			final RecipeCalculationResult calculate = subCalculation.unbox();
+			if (calculate == null) {
+				return Result.error("Recipe calculation failed (%s)".formatted(ingredient.getId()));
+			}
 			context.pop();
 			list.add(
-					calculate.multiply((int) Math.ceil((double) ingredient.getAmount() / recipe1.getOutput()
+					calculate.multiply((int) Math.ceil((double) ingredient.getAmount() / subRecipe.getOutput()
 							.getAmount())));
 		}
 
-		return new RecipeCalculationResult(recipe.getOutput(), list);
+		return Result.success(new RecipeCalculationResult(recipe.getOutput(), list));
 	}
 
-	private static Recipe getBestRecipe(RepositoryItem repositoryItem, boolean flip) {
-		return repositoryItem.getRecipes().stream().min((o1, o2) -> {
-			int distanceOne = o1.getOutput().getAmount();
-			int distanceTwo = o2.getOutput().getAmount();
-
-			return (flip ? -1 : 1) * Integer.compare(distanceOne, distanceTwo);
-		}).orElse(null);
+	private static Optional<Recipe> getBestRecipe(RepositoryItem repositoryItem, boolean flip) {
+		return repositoryItem.getRecipes()
+				.stream().min(Comparator.comparingInt(recipe -> (flip ? -1 : 1) * recipe.getOutput().getAmount()));
 	}
-
-	private static int distance(Recipe recipe, int amount) {
-		return amount % recipe.getOutput().getAmount();
-	}
-
 }

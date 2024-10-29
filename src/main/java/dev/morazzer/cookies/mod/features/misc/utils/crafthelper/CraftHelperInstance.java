@@ -68,16 +68,14 @@ public class CraftHelperInstance {
 	public void recalculate() {
 		componentList.clear();
 		final var calculate = RecipeCalculator.calculate(repositoryItem);
-		if (calculate.isError() || calculate.getResult().isEmpty()) {
-			CookiesUtils.sendFailedMessage("An error occurred while evaluating the recipe tree.");
+		calculate.ifSuccess(this::finishRecalculation).ifError(errorMessage -> {
+			CookiesUtils.sendFailedMessage(Optional.ofNullable(errorMessage)
+					.orElse("An error occurred while evaluating the recipe tree."));
 			CraftHelperManager.remove();
-			return;
-		}
-		final RecipeCalculationResult recipeCalculationResult = calculate.getResult().get().multiply(amount);
-		if (recipeCalculationResult == null) {
-			CraftHelperManager.remove();
-			return;
-		}
+		});
+	}
+
+	private void finishRecalculation(RecipeCalculationResult recipeCalculationResult) {
 		componentList.clear();
 		headingPart = new HeadingPart(repositoryItem, this);
 		componentList.addAll(this.formatter.format(recipeCalculationResult, this));
