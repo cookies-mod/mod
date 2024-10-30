@@ -46,7 +46,7 @@ public class DataMigrations {
 	 * @param jsonObject The config object.
 	 * @param type       The type of migration to use.
 	 */
-	public static void migrate(final JsonObject jsonObject, Migration.Type type) {
+	public static boolean migrate(final JsonObject jsonObject, Migration.Type type) {
 		if (!jsonObject.has(KEY)) {
 			jsonObject.addProperty(KEY, -1);
 		}
@@ -60,9 +60,23 @@ public class DataMigrations {
 			}
 			if (migration.getNumber() > lastApplied) {
 				LOGGER.info("Applying migration {} for type {}", migration.getNumber(), type);
-				migration.apply(jsonObject);
+				try {
+					migration.apply(jsonObject);
+				} catch (Exception e) {
+					if (migration.mayFail()) {
+						LOGGER.error(
+								"Failed to apply migration {} for type {}! Continuing since it's marked as optional!",
+								migration.getNumber(),
+								type,
+								e);
+						continue;
+					}
+					LOGGER.error("Failed to apply mandatory migration {} for type {}", migration.getNumber(), type, e);
+					return false;
+				}
 			}
 		}
+		return true;
 	}
 
 	/**

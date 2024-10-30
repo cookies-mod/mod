@@ -15,6 +15,7 @@ import dev.morazzer.cookies.mod.data.player.PlayerStorage;
 import dev.morazzer.cookies.mod.events.profile.ProfileSwapEvent;
 import dev.morazzer.cookies.mod.events.profile.ServerSwapEvent;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
+import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
@@ -65,7 +66,8 @@ public class ProfileStorage {
 		final JsonObject jsonObject = JsonUtils.toJsonObject(profileData);
 		DataMigrations.writeLatest(jsonObject, Migration.Type.PROFILE);
 		profileData.save();
-		ExceptionHandler.removeThrows(() -> Files.writeString(profileFile,
+		ExceptionHandler.removeThrows(() -> Files.writeString(
+				profileFile,
 				JsonUtils.CLEAN_GSON.toJson(jsonObject),
 				StandardCharsets.UTF_8,
 				StandardOpenOption.TRUNCATE_EXISTING,
@@ -99,13 +101,22 @@ public class ProfileStorage {
 
 		DevUtils.log(LOGGING_KEY, "Loading profile data from %s", profileFile);
 		final JsonObject jsonObject =
-				JsonUtils.CLEAN_GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(profileFile,
-						StandardCharsets.UTF_8)), JsonObject.class);
-		DataMigrations.migrate(jsonObject, Migration.Type.PROFILE);
+				JsonUtils.CLEAN_GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
+						profileFile,
+						StandardCharsets.UTF_8), "{}"), JsonObject.class);
+		if (!DataMigrations.migrate(jsonObject, Migration.Type.PROFILE)) {
+			CookiesUtils.sendFailedMessage("Failed to apply a mandatory data migration, resetting local profile data!");
+			profileData = new ProfileData(
+					PlayerStorage.getCurrentPlayer().get(),
+					SkyblockUtils.getLastProfileId().get());
+			profileData.load();
+		} else {
+			profileData = JsonUtils.fromJson(new ProfileData(
+					PlayerStorage.getCurrentPlayer().get(),
+					SkyblockUtils.getLastProfileId().get()), jsonObject);
+			profileData.load();
+		}
 
-		profileData = JsonUtils.fromJson(new ProfileData(PlayerStorage.getCurrentPlayer().get(),
-				SkyblockUtils.getLastProfileId().get()), jsonObject);
-		profileData.load();
 		DevUtils.log(LOGGING_KEY, "Loaded profile in %sms", System.currentTimeMillis() - started);
 	}
 
