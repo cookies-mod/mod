@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookies.mod.data.profile.migrations.GlobalProfileDataMigration_0001;
 import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0001;
 import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0002;
+import dev.morazzer.cookies.mod.data.profile.migrations.ProfileDataMigration_0003;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,8 @@ public class DataMigrations {
 		MIGRATIONS.addAll(Arrays.asList(
 				new ProfileDataMigration_0001(),
 				new GlobalProfileDataMigration_0001(),
-				new ProfileDataMigration_0002()
+				new ProfileDataMigration_0002(),
+				new ProfileDataMigration_0003()
 		));
 
 		MIGRATIONS.stream()
