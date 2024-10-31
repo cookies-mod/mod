@@ -78,7 +78,7 @@ public class CraftHelperInstance {
 	private void finishRecalculation(RecipeCalculationResult recipeCalculationResult) {
 		componentList.clear();
 		headingPart = new HeadingPart(repositoryItem, this);
-		componentList.addAll(this.formatter.format(recipeCalculationResult, this));
+		componentList.addAll(this.formatter.format(recipeCalculationResult.multiply(getAmount()), this));
 		final ArrayList<CraftHelperComponent> list = new ArrayList<>(this.componentList);
 		list.addFirst(headingPart);
 		width = list.stream()
