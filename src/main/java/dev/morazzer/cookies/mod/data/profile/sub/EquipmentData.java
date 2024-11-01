@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.data.profile.sub;
 import com.mojang.serialization.Codec;
 import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
 
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 
 import org.slf4j.Logger;
@@ -22,10 +23,12 @@ public class EquipmentData implements CodecJsonSerializable<List<ItemStack>> {
 	}
 
 	public void add(ItemStack stack) {
-		if (stack.isEmpty()) {
+		final ItemStack copy = stack.copy();
+		if (copy.isEmpty()) {
 			return;
 		}
-		equipment.add(stack);
+		copy.remove(DataComponentTypes.ENCHANTMENTS);
+		equipment.add(copy);
 	}
 
 	@Override
