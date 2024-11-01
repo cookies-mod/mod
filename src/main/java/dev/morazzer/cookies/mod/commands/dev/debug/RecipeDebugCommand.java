@@ -25,7 +25,7 @@ public class RecipeDebugCommand extends ClientCommand {
         List<Identifier> identifiers = new ArrayList<>();
         RepositoryItem.getItemMap().keySet().forEach(
             item -> identifiers.add(
-                Identifier.of("skyblock", item.toLowerCase(Locale.ROOT).replace(":", "_").replace(";", "_").toLowerCase(Locale.ROOT))
+                Identifier.of("skyblock", item.replace(":", "/").replace("-", "/").replace(";", "/").toLowerCase(Locale.ROOT))
             )
         );
 

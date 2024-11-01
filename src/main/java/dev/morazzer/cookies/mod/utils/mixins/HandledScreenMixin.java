@@ -37,6 +37,7 @@ import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -169,10 +170,16 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			final String skyblockId = stack.get(CookiesDataComponentTypes.SKYBLOCK_ID);
 			list.add(new OrderedTextTooltipComponent(Text.empty().asOrderedText()));
 			if (skyblockId != null) {
-				list.add(new OrderedTextTooltipComponent(Text.literal("[E] ")
+				boolean foundRepositoryItem = stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM);
+				final MutableText formatted = Text.literal("[E] ")
 						.append(Text.literal(skyblockId).formatted(Formatting.GRAY))
-						.formatted(Formatting.GOLD)
-						.asOrderedText()));
+						.formatted(Formatting.GOLD);
+				if (foundRepositoryItem) {
+					formatted.append(Text.literal(" (Found)").formatted(Formatting.GREEN));
+				} else {
+					formatted.append(Text.literal(" (Not found)").formatted(Formatting.RED));
+				}
+				list.add(new OrderedTextTooltipComponent(formatted.asOrderedText()));
 			}
 			if (stack.isOf(Items.PLAYER_HEAD) && stack.get(DataComponentTypes.PROFILE) != null) {
 				list.add(new OrderedTextTooltipComponent(Text.literal("[S] ")

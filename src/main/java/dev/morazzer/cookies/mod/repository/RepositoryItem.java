@@ -55,15 +55,15 @@ import net.minecraft.util.StringIdentifiable;
 @Getter
 @SuppressWarnings("unused")
 public class RepositoryItem {
-
-
 	public static final RepositoryItem EMPTY = createEmpty();
 	public static final Codec<RepositoryItem> CODEC =
-			RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.fieldOf("internal_id")
+			RecordCodecBuilder.create(instance -> instance.group(
+							Codec.STRING.fieldOf("internal_id")
 									.forGetter(RepositoryItem::getInternalId),
 							Codec.STRING.optionalFieldOf("minecraft_id", "minecraft:barrier")
 									.forGetter(RepositoryItem::getMinecraftId),
-							TextCodecs.CODEC.optionalFieldOf("name",
+							TextCodecs.CODEC.optionalFieldOf(
+											"name",
 											Text.literal("<name not found>").formatted(Formatting.RED))
 									.forGetter(RepositoryItem::getName),
 							TextCodecs.CODEC.listOf()
@@ -84,7 +84,7 @@ public class RepositoryItem {
 							Codec.STRING.optionalFieldOf("skin")
 									.forGetter(FunctionUtils.wrapOptionalF(RepositoryItem::getSkin)))
 					.apply(instance, RepositoryItem::create));
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryItem.class);
 	private static final Logger log = LoggerFactory.getLogger(RepositoryItem.class);
 	@Getter
 	private static final Map<String, RepositoryItem> itemMap = new ConcurrentHashMap<>();
@@ -92,7 +92,8 @@ public class RepositoryItem {
 	 * Codec to serialize and deserialize an repository item.
 	 */
 	public static final Codec<RepositoryItem> ID_CODEC =
-			Codec.STRING.xmap(s -> Optional.ofNullable(RepositoryItem.of(s)).orElse(EMPTY),
+			Codec.STRING.xmap(
+					s -> Optional.ofNullable(RepositoryItem.of(s)).orElse(EMPTY),
 					RepositoryItem::getInternalId);
 
 	@Setter(AccessLevel.PACKAGE)
@@ -138,10 +139,13 @@ public class RepositoryItem {
 				repositoryItem.setRecipes(new HashSet<>());
 				repositoryItem.setUsedInRecipeAsIngredient(new HashSet<>());
 				repositoryItem.museumable = false;
-				itemMap.put(repositoryItem.internalId.toLowerCase(Locale.ROOT)
-						.replaceAll(":", "_")
-						.replaceAll(";", "_")
-						.replaceAll("-", "_"), repositoryItem);
+				final RepositoryItem put = itemMap.put(repositoryItem.internalId.toLowerCase(Locale.ROOT)
+						.replace(":", "/")
+						.replace("-", "/")
+						.replace(";", "/"), repositoryItem);
+				if (put != null) {
+					LOGGER.warn("Duplicate id detected {}", repositoryItem.internalId);
+				}
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -160,7 +164,7 @@ public class RepositoryItem {
 			return repositoryItem;
 		}
 
-		return itemMap.get(id.toLowerCase(Locale.ROOT).replaceAll(":", "_").replaceAll("-", "_").replaceAll(";", "_"));
+		return itemMap.get(id.toLowerCase(Locale.ROOT).replace(":", "/").replace("-", "/").replace(";", "/"));
 	}
 
 	/**
@@ -183,7 +187,8 @@ public class RepositoryItem {
 	}
 
 	private static RepositoryItem createEmpty() {
-		return create("empty_" + UUID.randomUUID(),
+		return create(
+				"empty_" + UUID.randomUUID(),
 				"minecraft:barrier",
 				Text.literal("Not found").formatted(Formatting.RED),
 				Collections.emptyList(),
@@ -200,7 +205,8 @@ public class RepositoryItem {
 	}
 
 	public static RepositoryItem createNotFound(String id) {
-		return create(id,
+		return create(
+				id,
 				"minecraft:barrier",
 				Text.literal("Not found (%s)".formatted(id)).formatted(Formatting.RED),
 				Collections.emptyList(),
@@ -230,7 +236,8 @@ public class RepositoryItem {
 			Boolean museumable,
 			Boolean riftTransferrable,
 			Boolean sackable,
-			Optional<String> skin) {
+			Optional<String> skin
+	) {
 		RepositoryItem item = new RepositoryItem();
 		item.internalId = internalId;
 		item.minecraftId = minecraftId;
@@ -251,6 +258,18 @@ public class RepositoryItem {
 		return item;
 	}
 
+	public static <T> Function<T, RepositoryItem> getMappedOrEmpty(Function<T, ItemStack> mapper) {
+		return t -> getOrEmpty(mapper.apply(t));
+	}
+
+	@NotNull
+	public static RepositoryItem getOrEmpty(ItemStack item) {
+		if (item.contains(CookiesDataComponentTypes.REPOSITORY_ITEM)) {
+			return Optional.ofNullable(item.get(CookiesDataComponentTypes.REPOSITORY_ITEM)).orElse(EMPTY);
+		}
+		return EMPTY;
+	}
+
 	public Optional<RepositoryItemMuseumData> getMuseumData() {
 		return Optional.ofNullable(museumData);
 	}
@@ -267,8 +286,8 @@ public class RepositoryItem {
 		return switch (obj) {
 			case null -> false;
 			case Identifier identifier -> (identifier.getNamespace().equalsIgnoreCase("cookies") ||
-										   identifier.getNamespace().equalsIgnoreCase("skyblock")) &&
-										  identifier.getPath().equals(this.internalId);
+					identifier.getNamespace().equalsIgnoreCase("skyblock")) &&
+					identifier.getPath().equals(this.internalId);
 			case Ingredient ingredient -> this.equals(ingredient.getRepositoryItem());
 			case RepositoryItem repositoryItem -> Objects.equals(this.internalId, repositoryItem.getInternalId());
 			default -> super.equals(obj);
@@ -314,19 +333,7 @@ public class RepositoryItem {
 		return itemStack;
 	}
 
-	public static <T> Function<T, RepositoryItem> getMappedOrEmpty(Function<T, ItemStack> mapper) {
-		return t -> getOrEmpty(mapper.apply(t));
-	}
-
-	@NotNull
-    public static RepositoryItem getOrEmpty(ItemStack item) {
-		if (item.contains(CookiesDataComponentTypes.REPOSITORY_ITEM)) {
-			return Optional.ofNullable(item.get(CookiesDataComponentTypes.REPOSITORY_ITEM)).orElse(EMPTY);
-		}
-		return EMPTY;
-    }
-
-    /**
+	/**
 	 * All tiers (rarities) available as default (so without rarity upgrades)
 	 */
 	@Getter
