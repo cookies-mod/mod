@@ -123,8 +123,7 @@ public class DungeonConfig extends Category {
 		public BooleanOption higherLower = new BooleanOption(CONFIG_DUNGEON_PUZZLE_HIGHER_LOWER_SOLVER, true);
 		public BooleanOption quiz = new BooleanOption(CONFIG_DUNGEON_PUZZLE_QUIZ_SOLVER, true);
 		public BooleanOption threeWeirdos = new BooleanOption(CONFIG_DUNGEON_PUZZLE_THREE_WEIRDOS_SOLVER, true);
-		public TextDisplayOption credit = new TextDisplayOption(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS,
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_LORE);
+		public TextDisplayOption credit = TextDisplayOption.description(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS);
 		public BooleanOption waterBoard = new BooleanOption(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER, true);
 
 		@Override

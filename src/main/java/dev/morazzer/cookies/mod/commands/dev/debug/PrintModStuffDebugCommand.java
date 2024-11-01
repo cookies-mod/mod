@@ -9,7 +9,6 @@ import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.json.JsonUtils;
-
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.text.ClickEvent;

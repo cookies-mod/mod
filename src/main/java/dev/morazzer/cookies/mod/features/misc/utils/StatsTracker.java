@@ -3,10 +3,13 @@ package dev.morazzer.cookies.mod.features.misc.utils;
 import java.util.List;
 import java.util.Locale;
 
+import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
+import dev.morazzer.cookies.mod.data.profile.sub.EquipmentData;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
+import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -39,6 +42,14 @@ public interface StatsTracker {
 	static void track(int i, ItemStack stack) {
 		if (stack.getName().getString().endsWith("Stats")) {
 			StatsTracker.handle(stack);
+		}
+		if (i == 0) {
+			ProfileStorage.getCurrentProfile().map(ProfileData::getEquipmentData).ifPresent(EquipmentData::reset);
+		}
+		if (stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM) && i < 40) {
+			ProfileStorage.getCurrentProfile()
+					.map(ProfileData::getEquipmentData)
+					.ifPresent(equipmentData -> equipmentData.add(stack));
 		}
 	}
 

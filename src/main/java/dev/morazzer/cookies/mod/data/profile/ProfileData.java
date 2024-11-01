@@ -5,9 +5,11 @@ import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.profile.GlobalProfileData;
 import dev.morazzer.cookies.mod.data.profile.sub.AccessoryItemData;
 import dev.morazzer.cookies.mod.data.profile.sub.CraftHelperData;
+import dev.morazzer.cookies.mod.data.profile.sub.EquipmentData;
 import dev.morazzer.cookies.mod.data.profile.sub.ForgeTracker;
 import dev.morazzer.cookies.mod.data.profile.sub.HotmData;
 import dev.morazzer.cookies.mod.data.profile.sub.MiscItemData;
+import dev.morazzer.cookies.mod.data.profile.sub.PlotData;
 import dev.morazzer.cookies.mod.data.profile.sub.ProfileStats;
 import dev.morazzer.cookies.mod.data.profile.sub.RancherSpeeds;
 import dev.morazzer.cookies.mod.data.profile.sub.SackTracker;
@@ -50,6 +52,8 @@ public class ProfileData {
 	private MiscItemData miscTracker = new MiscItemData();
 	private AccessoryItemData accessoryTracker = new AccessoryItemData();
 	private ProfileStats profileStats = new ProfileStats();
+	private EquipmentData equipmentData = new EquipmentData();
+	private PlotData plotData = new PlotData();
 
     /**
      * Create a profile.

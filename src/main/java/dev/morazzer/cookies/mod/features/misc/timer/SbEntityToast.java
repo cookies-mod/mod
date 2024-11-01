@@ -11,17 +11,16 @@ import net.minecraft.util.Identifier;
 
 public class SbEntityToast implements Toast {
 	private static final Identifier TEXTURE = Identifier.ofVanilla("toast/advancement");
-	private final Identifier identifier;
+	private final ImageData data;
 	private final Supplier<Text> messageSupplier;
 	private final int timeToStay;
 	private Visibility visibility = Visibility.SHOW;
 
-	public SbEntityToast(Identifier identifier, Supplier<Text> messageSupplier, int timeToStay) {
-		this.identifier = identifier;
+	public SbEntityToast(ImageData data, Supplier<Text> messageSupplier, int timeToStay) {
+		this.data = data;
 		this.messageSupplier = messageSupplier;
 		this.timeToStay = timeToStay;
 	}
-
 
 	@Override
 	public Visibility draw(DrawContext context, ToastManager manager, long startTime) {
@@ -29,7 +28,16 @@ public class SbEntityToast implements Toast {
 			this.visibility = Visibility.HIDE;
 		}
 		context.drawGuiTexture(TEXTURE, 0, 0, this.getWidth(), this.getHeight());
-		context.drawTexture(this.identifier, 10, 4, 0, 0, 12, 25, 12, 25);
+		context.drawTexture(
+				this.data.texture,
+				data.x,
+				data.y,
+				0,
+				0,
+				data.width,
+				data.height,
+				data.width,
+				data.height);
 		context.drawText(
 				MinecraftClient.getInstance().textRenderer,
 				this.messageSupplier.get(),
@@ -38,5 +46,8 @@ public class SbEntityToast implements Toast {
 				-1,
 				true);
 		return this.visibility;
+	}
+
+	public record ImageData(int width, int height, int x, int y, Identifier texture) {
 	}
 }

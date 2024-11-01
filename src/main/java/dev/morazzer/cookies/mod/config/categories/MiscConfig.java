@@ -11,6 +11,7 @@ import dev.morazzer.cookies.mod.config.system.options.EnumCycleOption;
 import dev.morazzer.cookies.mod.config.system.options.SliderOption;
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import dev.morazzer.cookies.mod.features.misc.timer.NotificationManager;
+import dev.morazzer.cookies.mod.utils.json.Exclude;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public class MiscConfig extends Category {
 	@Expose
 	public BooleanOption showMuseumArmorSets = new BooleanOption(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, true);
 
-	public NotificationFoldable notificationFoldable = new NotificationFoldable();
+	public NotificationFoldable.TimerFoldable notificationFoldable = new NotificationFoldable.TimerFoldable(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR);
 
 	@Parent
 	public TextDisplayOption itemSubCategory = new TextDisplayOption(CONFIG_MISC_CATEGORIES_ITEMS);
@@ -112,19 +113,55 @@ public class MiscConfig extends Category {
 
 	public static class NotificationFoldable extends Foldable {
 
-		public BooleanOption enablePrimalFearNotifications = new BooleanOption(
-				CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_ENABLED,
-				false);
-		public EnumCycleOption<NotificationManager.NotificationType> type = new EnumCycleOption<>(
-				CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_TYPE,
-				NotificationManager.NotificationType.TOAST).withSupplier(element -> Text.of(StringUtils.capitalize(
-				element.name().toLowerCase()))).onlyIf(enablePrimalFearNotifications);
-		public BooleanOption enableSound = new BooleanOption(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_SOUND, true).onlyIf(
-				enablePrimalFearNotifications);
+		public TimerFoldable primalFearTimer = new TimerFoldable(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR);
 
 		@Override
 		public String getName() {
-			return CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR;
+			throw new UnsupportedOperationException("Not in use yet.");
+		}
+
+		public interface TimerConfig {
+			boolean enabled();
+			NotificationManager.NotificationType notificationType();
+			boolean enableSound();
+		}
+
+		public static class TimerFoldable extends Foldable implements TimerConfig {
+			public BooleanOption enabled;
+			public EnumCycleOption<NotificationManager.NotificationType> type;
+			public BooleanOption enableSound;
+			@Exclude
+			private final String key;
+
+			public TimerFoldable(String key) {
+				this.enabled = new BooleanOption(CONFIG_MISC_NOTIFICATIONS_ENABLED, false);
+				this.type = new EnumCycleOption<>(
+						CONFIG_MISC_NOTIFICATIONS_TYPE,
+						NotificationManager.NotificationType.TOAST).withSupplier(element -> Text.of(StringUtils.capitalize(
+						element.name().toLowerCase()))).onlyIf(this.enabled);
+				this.enableSound = new BooleanOption(CONFIG_MISC_NOTIFICATION_SOUND, true).onlyIf(enabled);
+				this.key = key;
+			}
+
+			@Override
+			public String getName() {
+				return key;
+			}
+
+			@Override
+			public boolean enabled() {
+				return enabled.getValue();
+			}
+
+			@Override
+			public NotificationManager.NotificationType notificationType() {
+				return type.getValue();
+			}
+
+			@Override
+			public boolean enableSound() {
+				return enableSound.getValue();
+			}
 		}
 	}
 }

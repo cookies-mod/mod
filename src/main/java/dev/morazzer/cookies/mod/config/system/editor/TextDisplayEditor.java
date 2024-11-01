@@ -2,6 +2,9 @@ package dev.morazzer.cookies.mod.config.system.editor;
 
 import dev.morazzer.cookies.mod.config.system.options.TextDisplayOption;
 import dev.morazzer.cookies.mod.utils.RenderUtils;
+
+import net.minecraft.client.MinecraftClient;
+
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.gui.DrawContext;
@@ -46,7 +49,7 @@ public class TextDisplayEditor extends ConfigOptionEditor<Text, TextDisplayOptio
 		if (mouseX > 2 && mouseX < optionWidth + 2 && mouseY > 0 && mouseY < 16) {
 			drawContext.drawTooltip(
 					this.getTextRenderer(),
-					this.option.getDescriptionOrdered(),
+					MinecraftClient.getInstance().textRenderer.wrapLines(this.option.getDescription(), optionWidth * 2),
 					new WidgetTooltipPositioner(ScreenRect.empty()),
 					mouseX,
 					mouseY);
