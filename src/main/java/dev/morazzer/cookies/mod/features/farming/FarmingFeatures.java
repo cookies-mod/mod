@@ -17,5 +17,6 @@ public interface FarmingFeatures {
         Loader.load("RancherBootsOverlay", RancherBootsOverlay::new);
         Loader.load("GardenFeatures", GardenFeatures::load);
         Loader.load("YawPitchDisplay", YawPitchDisplay::register);
+		Loader.load("PlotSprayTracker", PlotSprayTracker::load);
     }
 }

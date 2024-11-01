@@ -313,6 +313,16 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS,
 				"Highlight unclaimed",
 				"Highlight unclaimed jacob contests in his inventory.");
+
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST, "Pest Warnings" ,"Warns you 10s before pests can spawn!");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST_ORDER, "Pest timer", """
+				Changes what pest time to use for the notifications,
+				depending on if a plot is sprayed it can have a 50%
+				reduction in cooldown.
+				
+				Current -> Current plot timer
+				First -> First time a pest can spawn on any plot
+				Last -> Time at which pests can spawn everywhere""");
 	}
 
 	private void addHelpersConfig(CookiesTranslationBuilder translationBuilder) {
@@ -434,9 +444,14 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Shows forge recipes in the recipe book");
 
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR, "Fear Notifications", "Notifies you shortly before you can spawn a primal fear");
-		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_ENABLED, "Enable", "Enables primal fear notifications");
-		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_TYPE, "Notification type", "Changes the type of the notification");
-		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR_SOUND, "Enable sound", "Plays a sound when sending the notification");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_ENABLED, "Enable", "Enables the notifications");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_TYPE, "Notification type", """
+				Changes how you get the notifications.
+				
+				Chat -> Simple chat message
+				Toast -> Popup in the top right of your screen
+				Both -> Chat message + popup""");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATION_SOUND, "Enable sound", "Plays a sound when sending the notification");
 	}
 
 	private void addDungeonConfig(CookiesTranslationBuilder translationBuilder) {
@@ -565,22 +580,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_SOLVER,
 				"Water Board",
 				"Enables the water board solver.");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS, "Credits to Desco1");
-		translationBuilder.add(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_1,
-				"The original oneflow solver was created by Desco1,");
-		translationBuilder.add(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_2,
-				"check out their Github at Desco1/WaterSolver");
-		translationBuilder.add(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_3, "");
-		translationBuilder.add(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_4,
-				"Furthermore thank you to drek1984, Jade and bonsai");
-		translationBuilder.add(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_5,
-				"which where helping Desco1 with the original ");
-		translationBuilder.add(
-				CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS_6,
-				"and aswell Skytils for parts of the original solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_WATER_BOARD_CREDITS, "Credits to Desco1",
+				"""
+						The original oneflow solver was created by Desco1
+						check out their Github at Desco1/WaterSolver
+						Furthermore thank you to drek1984, Jade and bonsai
+						which where helping Desco1 with the original
+						and as well skytils for parts of the original solver.""");
 	}
 }

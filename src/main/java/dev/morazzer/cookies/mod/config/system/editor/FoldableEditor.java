@@ -3,6 +3,7 @@ package dev.morazzer.cookies.mod.config.system.editor;
 import dev.morazzer.cookies.mod.config.system.options.FoldableOption;
 import lombok.Getter;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
 import net.minecraft.client.gui.ScreenRect;
@@ -63,7 +64,7 @@ public class FoldableEditor extends ConfigOptionEditor<Object, FoldableOption> {
 	public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
 		if (mouseX > 0 && mouseX < optionWidth
 				&& mouseY > 0 && mouseY < getHeight()) {
-			drawContext.drawTooltip(this.getTextRenderer(), this.option.getDescriptionOrdered(),
+			drawContext.drawTooltip(this.getTextRenderer(), MinecraftClient.getInstance().textRenderer.wrapLines(this.option.getDescription(), optionWidth * 2),
 					new WidgetTooltipPositioner(
 							ScreenRect.empty()), mouseX, mouseY);
 		}

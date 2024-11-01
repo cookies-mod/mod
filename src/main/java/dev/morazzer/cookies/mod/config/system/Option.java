@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.text.OrderedText;
+
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -27,8 +27,7 @@ import org.slf4j.Logger;
 public abstract class Option<T, O extends Option<T, O>> implements JsonSerializable {
 
     private final Text name;
-    private final List<OrderedText> descriptionOrdered;
-    private final Text[] description;
+    private final Text description;
     protected T value;
     protected boolean active = true;
     protected List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
@@ -56,26 +55,7 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      */
     protected Option(@NotNull Text name, Text description, T value) {
         this.name = name;
-		if (description != null) {
-			this.description = new Text[] { description };
-		} else {
-			this.description = new Text[0];
-		}
-        this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
-        this.value = value;
-    }
-
-    /**
-     * Creates a new option.
-     *
-     * @param name        The name.
-     * @param description The description.
-     * @param value       The initial value.
-     */
-    public Option(String name, T value, String[] description) {
-        this.name = Text.translatable(name);
-        this.description =  Arrays.stream(description).map(Text::translatable).toArray(Text[]::new);
-        this.descriptionOrdered = Arrays.stream(this.description).map(Text::asOrderedText).toList();
+		this.description = description;
         this.value = value;
     }
 

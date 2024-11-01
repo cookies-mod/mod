@@ -12,13 +12,13 @@ import net.minecraft.util.Identifier;
 
 public class SbEntityToast implements Toast {
 	private static final Identifier TEXTURE = Identifier.ofVanilla("toast/advancement");
-	private final Identifier identifier;
+	private final ImageData data;
 	private final Supplier<Text> messageSupplier;
 	private final int timeToStay;
 	private Visibility visibility = Visibility.SHOW;
 
-	public SbEntityToast(Identifier identifier, Supplier<Text> messageSupplier, int timeToStay) {
-		this.identifier = identifier;
+	public SbEntityToast(ImageData data, Supplier<Text> messageSupplier, int timeToStay) {
+		this.data = data;
 		this.messageSupplier = messageSupplier;
 		this.timeToStay = timeToStay;
 	}
@@ -35,10 +35,13 @@ public class SbEntityToast implements Toast {
 		}
 	}
 
+	public record ImageData(int width, int height, int x, int y, Identifier texture) {
+	}
+
 	@Override
 	public void draw(DrawContext context, TextRenderer textRenderer, long startTime) {
 		context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURE, 0, 0, this.getWidth(), this.getHeight());
-		context.drawTexture(RenderLayer::getGuiTextured, this.identifier, 10, 4, 0, 0, 12, 25, 12, 25);
+		context.drawTexture(RenderLayer::getGuiTextured, this.data.texture, data.x, data.y, 0, 0, data.width, data.height, data.width, data.height);
 		context.drawText(textRenderer, this.messageSupplier.get(),30, this.getHeight() / 2 - 4, -1, true);
 	}
 }

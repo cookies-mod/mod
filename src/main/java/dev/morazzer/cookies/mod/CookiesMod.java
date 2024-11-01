@@ -20,6 +20,7 @@ import dev.morazzer.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import dev.morazzer.cookies.mod.utils.skyblock.MayorUtils;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -65,6 +66,7 @@ public class CookiesMod implements ClientModInitializer {
         ProfileStorage.register();
         Repository.loadRepository();
 		HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
+		MayorUtils.load();
         EventLoader.load();
 		ApiManager.initialize();
         Features.load();
