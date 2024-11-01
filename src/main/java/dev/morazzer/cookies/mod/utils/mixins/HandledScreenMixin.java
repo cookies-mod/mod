@@ -23,7 +23,6 @@ import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.ItemTooltipComponent;
 import dev.morazzer.cookies.mod.utils.items.ItemUtils;
 import dev.morazzer.cookies.mod.utils.items.ScrollableTooltipHandler;
-
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,6 +49,7 @@ import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -91,7 +91,8 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 						DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
 				CookiesUtils.sendMessage(CookiesUtils.createPrefix()
 						.append("Saved inventory to file %s".formatted(path.getFileName()))
-						.styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
+						.styled(style -> style.withClickEvent(new ClickEvent(
+								ClickEvent.Action.COPY_TO_CLIPBOARD,
 								path.getFileName().toString().split("\\.")[0]))));
 				cir.setReturnValue(true);
 			} catch (IOException ioException) {
@@ -140,7 +141,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			method = "drawMouseoverTooltip", at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;" +
-					 "Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/util/Identifier;)V"
+					"Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/util/Identifier;)V"
 	)
 	)
 	public void drawTooltip(
@@ -151,7 +152,8 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			int x,
 			int y,
 			@Nullable Identifier texture,
-			Operation<Void> original) {
+			Operation<Void> original
+	) {
 		if (focusedSlot == null) {
 			return;
 		}
@@ -172,10 +174,16 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			final String skyblockId = stack.get(CookiesDataComponentTypes.SKYBLOCK_ID);
 			list.add(new OrderedTextTooltipComponent(Text.empty().asOrderedText()));
 			if (skyblockId != null) {
-				list.add(new OrderedTextTooltipComponent(Text.literal("[E] ")
+				boolean foundRepositoryItem = stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM);
+				final MutableText formatted = Text.literal("[E] ")
 						.append(Text.literal(skyblockId).formatted(Formatting.GRAY))
-						.formatted(Formatting.GOLD)
-						.asOrderedText()));
+						.formatted(Formatting.GOLD);
+				if (foundRepositoryItem) {
+					formatted.append(Text.literal(" (Found)").formatted(Formatting.GREEN));
+				} else {
+					formatted.append(Text.literal(" (Not found)").formatted(Formatting.RED));
+				}
+				list.add(new OrderedTextTooltipComponent(formatted.asOrderedText()));
 			}
 			if (stack.isOf(Items.PLAYER_HEAD) && stack.get(DataComponentTypes.PROFILE) != null) {
 				list.add(new OrderedTextTooltipComponent(Text.literal("[S] ")
@@ -202,14 +210,15 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 	public void onScroll(
 			CallbackInfoReturnable<Boolean> cir,
 			@Local(argsOnly = true, ordinal = 2) double horizontalAmount,
-			@Local(argsOnly = true, ordinal = 3) double verticalAmount) {
+			@Local(argsOnly = true, ordinal = 3) double verticalAmount
+	) {
 		if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
 			return;
 		}
 		if (((Object) this) instanceof HandledScreen<?> handledScreen) {
 			Slot focusedSlot = FocusedSlotAccessor.getFocusedSlot(handledScreen);
 			if (handledScreen.getScreenHandler().getCursorStack().isEmpty() && focusedSlot != null &&
-				focusedSlot.hasStack()) {
+					focusedSlot.hasStack()) {
 				final ItemStack stack = focusedSlot.getStack();
 				ScrollableTooltipHandler.scroll(stack, horizontalAmount, verticalAmount);
 				cir.setReturnValue(true);
@@ -248,7 +257,8 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			cancellable = true
 	)
 	private void cancelMouseClick(
-			double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir, @Local Slot slot) {
+			double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir, @Local Slot slot
+	) {
 		if (slot == null) {
 			return;
 		}
@@ -274,7 +284,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			method = "drawSlot", at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/gui/DrawContext;drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;" +
-					 "Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"
+					"Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"
 	)
 	)
 	private void drawItem$drawItemInSlot(Args args) {
