@@ -16,7 +16,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -36,17 +38,22 @@ public interface StatsTracker {
 		if (!genericContainerScreen.getTitle().getString().contains("Your Equipment and Stats")) {
 			return;
 		}
-		InventoryContentUpdateEvent.register(genericContainerScreen.getScreenHandler(), StatsTracker::track);
+		InventoryContentUpdateEvent.registerSlot(genericContainerScreen.getScreenHandler(), StatsTracker::track);
 	}
 
-	static void track(int i, ItemStack stack) {
+	static void track(Slot slot) {
+		final ItemStack stack = slot.getStack();
+		final int index = slot.getIndex();
+		if (slot.inventory instanceof PlayerInventory) {
+			return;
+		}
 		if (stack.getName().getString().endsWith("Stats")) {
 			StatsTracker.handle(stack);
 		}
-		if (i == 0) {
+		if (index == 0) {
 			ProfileStorage.getCurrentProfile().map(ProfileData::getEquipmentData).ifPresent(EquipmentData::reset);
 		}
-		if (stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM) && i < 40) {
+		if (stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM) && index < 40) {
 			ProfileStorage.getCurrentProfile()
 					.map(ProfileData::getEquipmentData)
 					.ifPresent(equipmentData -> equipmentData.add(stack));
