@@ -231,6 +231,11 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			this.searchField.setFocused(false);
 			return true;
 		}
+		if (keyCode == InputUtil.GLFW_KEY_ESCAPE && this.searchField.active) {
+			this.searchField.active = false;
+			this.searchField.setFocused(false);
+			return true;
+		}
 		if (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.isActive()) {
 			return true;
 		}
