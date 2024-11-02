@@ -1,7 +1,5 @@
 package dev.morazzer.cookies.mod.features.dungeons.solver.puzzle;
 
-import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import java.util.stream.Collectors;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import dev.morazzer.cookies.mod.config.categories.DungeonConfig;
 import dev.morazzer.cookies.mod.features.dungeons.DungeonInstance;
 import dev.morazzer.cookies.mod.features.dungeons.map.DungeonRoom;
 import dev.morazzer.cookies.mod.render.Renderable;
@@ -50,16 +49,16 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class WaterBoardPuzzleSolver extends PuzzleSolver {
-	private final DungeonInstance dungeon;
-	private Direction puzzleDirection = null;
-	private BlockPos chestPosition = null;
-	private static final Block[] ALLOWED_BLOCKS = new Block[] {Blocks.GOLD_BLOCK,
+	private static final Block[] ALLOWED_BLOCKS = new Block[]{Blocks.GOLD_BLOCK,
 			Blocks.TERRACOTTA,
 			Blocks.EMERALD_BLOCK,
 			Blocks.DIAMOND_BLOCK,
 			Blocks.QUARTZ_BLOCK,
 			Blocks.COAL_BLOCK};
+	private final DungeonInstance dungeon;
 	private final Map<LeverType, List<Double>> solution = new HashMap<>();
+	private Direction puzzleDirection = null;
+	private BlockPos chestPosition = null;
 	private long openedWater = -1;
 	private int totalClicks = 0;
 	private int lastTotalClicks = -1;
@@ -84,24 +83,32 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 		final BlockPos roomCenter = new BlockPos(vector2i.x, 56, vector2i.y);
 
+		if (this.puzzleDirection != null) {
+			return;
+		}
+
 		List<Direction> directions = List.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
+		Direction puzzleDirection = null;
+		BlockPos chestPosition = null;
 		for (Direction direction : directions) {
 			final BlockPos add = roomCenter.add(direction.getVector().multiply(7));
 			if (this.getWorld().map(world -> world.getBlockEntity(add)).orElse(null) == null) {
 				continue;
 			}
-			this.chestPosition = add;
-			this.puzzleDirection = direction;
+			chestPosition = add;
+			puzzleDirection = direction;
 			if (isDebugEnabled()) {
 				this.addDebugRenderable(new BlockHighlight(add, Constants.SUCCESS_COLOR));
 			}
 			break;
 		}
 
-		if (this.puzzleDirection == null) {
+		if (puzzleDirection == null) {
 			return;
 		}
+		this.puzzleDirection = puzzleDirection;
+		this.chestPosition = chestPosition;
 
 		final BlockPos boardCenterBottom =
 				this.chestPosition.add(this.puzzleDirection.getVector().multiply(4)).add(0, 4, 0);
@@ -112,7 +119,8 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 		Set<Block> blocks = new HashSet<>();
 
-		for (BlockPos blockPos : BlockPos.iterate(top.offset(first),
+		for (BlockPos blockPos : BlockPos.iterate(
+				top.offset(first),
 				top.offset(second).offset(this.puzzleDirection).offset(Direction.UP))) {
 			final Block block = this.getWorld().get().getBlockState(blockPos).getBlock();
 			if (ArrayUtils.contains(ALLOWED_BLOCKS, block)) {
@@ -136,12 +144,14 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		}
 
 		if (isDebugEnabled()) {
-			CookiesUtils.sendMessage("Closed Doors: [%s]".formatted(String.join(", ",
+			CookiesUtils.sendMessage("Closed Doors: [%s]".formatted(String.join(
+					", ",
 					closedDoors.stream().map(Enum::name).toList())));
 			CookiesUtils.sendMessage("Variants: " + variant);
 		}
 
-		final Optional<WaterEntry> optionalWaterEntry = DungeonConstants.getFor(variant,
+		final Optional<WaterEntry> optionalWaterEntry = DungeonConstants.getFor(
+				variant,
 				closedDoors.stream()
 						.sorted(Comparator.comparingInt(Enum::ordinal))
 						.map(Enum::ordinal)
@@ -190,7 +200,13 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		final Pair<LeverType, Double> first = list.getFirst();
 		final LeverType firstType = first.getFirst();
 
-		final BlockPos firstLeverBlockPos = firstType.getLeverPosition(this.chestPosition, this.puzzleDirection);
+		final Optional<BlockPos> firstLeverBlockPosOptional = firstType.getLeverPosition(
+				this.chestPosition,
+				this.puzzleDirection);
+		if (firstLeverBlockPosOptional.isEmpty()) {
+			return;
+		}
+		final BlockPos firstLeverBlockPos = firstLeverBlockPosOptional.get();
 
 		final Vec3d firstLeverPosition = firstLeverBlockPos.toCenterPos();
 		this.leverPos = firstLeverPosition;
@@ -198,11 +214,18 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 
 		if (list.size() > 1) {
 			final Pair<LeverType, Double> second = list.get(1);
-			final BlockPos secondLeverBlockPos =
-					second.getFirst().getLeverPosition(this.chestPosition, this.puzzleDirection);
+
+			final Optional<BlockPos> secondLeverBlockPosOptional = second.getFirst()
+					.getLeverPosition(this.chestPosition, this.puzzleDirection);
+			if (secondLeverBlockPosOptional.isEmpty()) {
+				return;
+			}
+			final BlockPos secondLeverBlockPos = secondLeverBlockPosOptional.get();
+
 			final Vec3d secondLeverPosition = secondLeverBlockPos.toCenterPos();
 			this.addRenderable(new BlockHighlight(secondLeverBlockPos, Constants.FAIL_COLOR));
-			this.addRenderable(new Line(secondLeverPosition,
+			this.addRenderable(new Line(
+					secondLeverPosition,
 					firstLeverPosition,
 					Constants.FAIL_COLOR,
 					Constants.SUCCESS_COLOR));
@@ -212,8 +235,11 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		for (Map.Entry<LeverType, List<Double>> entry : this.solution.entrySet()) {
 			int i = 0;
 			final LeverType leverType = entry.getKey();
-			final BlockPos leverBlockPos = leverType.getLeverPosition(this.chestPosition, this.puzzleDirection);
-			final Vec3d add = leverBlockPos.toCenterPos().add(0.0, 1, 0.0);
+			final Optional<BlockPos> leverBlockPosOptional = leverType.getLeverPosition(this.chestPosition, this.puzzleDirection);
+			if (leverBlockPosOptional.isEmpty()) {
+				continue;
+			}
+			final Vec3d add = leverBlockPosOptional.get().toCenterPos().add(0.0, 1, 0.0);
 			for (Double rawTime : entry.getValue()) {
 				if (rawTime == null) {
 					continue;
@@ -226,9 +252,10 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 					i++;
 					continue;
 				}
-				this.addRenderable(new WorldText(add.offset(
-						Direction.UP,
-						(i++ - leverType.get(this.dungeon).orElse(0)) * 0.4),
+				this.addRenderable(new WorldText(
+						add.offset(
+								Direction.UP,
+								(i++ - leverType.get(this.dungeon).orElse(0)) * 0.4),
 						display,
 						true,
 						0.04f,
@@ -239,7 +266,8 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		}
 
 		if (isDebugEnabled()) {
-			this.addDebugRenderable(new WorldText(this.chestPosition.toCenterPos().add(0, 4, 0),
+			this.addDebugRenderable(new WorldText(
+					this.chestPosition.toCenterPos().add(0, 4, 0),
 					Text.literal(String.valueOf(System.nanoTime() - totalTime))));
 		}
 
@@ -261,7 +289,8 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		final ClientPlayerEntity player = optionalPlayer.get();
 		if (this.leverPos != null) {
 			WorldRender.removeRenderable(this.line);
-			this.line = new Line(RenderUtils.getInterpolated(player, tickDelta),
+			this.line = new Line(
+					RenderUtils.getInterpolated(player, tickDelta),
 					this.leverPos,
 					Constants.MAIN_COLOR,
 					Constants.SUCCESS_COLOR);
@@ -271,19 +300,19 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			this.line = null;
 		}
 	}
-	
+
 	@Override
 	protected void onDisalbe() {
 		WorldRender.removeRenderable(this.line);
 	}
-	
+
 	@Override
 	protected void onEnable() {
 		if (this.line != null && this.isLoaded) {
 			WorldRender.addRenderable(this.line);
 		}
 	}
-	
+
 	private Supplier<String> getTextSupplier(double rawTime, LeverType leverType) {
 		return () -> {
 			final double time;
@@ -314,6 +343,9 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		if (blockHitResult.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
+		if (this.puzzleDirection == null || this.chestPosition == null) {
+			return;
+		}
 
 		final BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
 		final Block block = blockState.getBlock();
@@ -321,8 +353,8 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			return;
 		}
 		for (LeverType value : LeverType.values()) {
-			final BlockPos leverPosition = value.getLeverPosition(this.chestPosition, this.puzzleDirection);
-			if (leverPosition.equals(blockHitResult.getBlockPos())) {
+			final Optional<BlockPos> leverPositionOptional = value.getLeverPosition(this.chestPosition, this.puzzleDirection);
+			if (leverPositionOptional.isPresent() && leverPositionOptional.get().equals(blockHitResult.getBlockPos())) {
 				if (value.lastInteraction + 100 < System.currentTimeMillis()) {
 					value.increment(this.dungeon);
 					this.totalClicks++;
@@ -343,12 +375,11 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		FOURTH(Blocks.GOLD_BLOCK, Blocks.QUARTZ_BLOCK);
 
 		public static final Codec<Variant> CODEC = StringIdentifiable.createCodec(Variant::values);
+		private final Block[] blocks;
 
 		Variant(Block... blocks) {
 			this.blocks = blocks;
 		}
-
-		private final Block[] blocks;
 
 		public static Variant getVariant(Collection<Block> blocks) {
 			for (Variant value : values()) {
@@ -401,6 +432,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		WATER,
 		NONE;
 
+		public static final Codec<LeverType> CODEC = StringIdentifiable.createCodec(LeverType::values);
 		private final Map<DungeonInstance, Integer> instances = new HashMap<>();
 		private long lastInteraction = -1;
 
@@ -418,16 +450,19 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 			this.instances.put(dungeonInstance, this.get(dungeonInstance).map(i -> i + 1).orElse(1));
 		}
 
-		public static final Codec<LeverType> CODEC = StringIdentifiable.createCodec(LeverType::values);
-
-		public BlockPos getLeverPosition(BlockPos chestPosition, Direction puzzleDirection) {
+		public Optional<BlockPos> getLeverPosition(BlockPos chestPosition, Direction puzzleDirection) {
+			if (chestPosition == null || puzzleDirection == null) {
+				return Optional.empty();
+			}
 			if (this == WATER) {
-				return chestPosition.offset(puzzleDirection.getOpposite(), 17).up(4);
+				return Optional.ofNullable(chestPosition.offset(puzzleDirection.getOpposite(), 17).up(4));
 			} else {
 				int offset = this.ordinal() % 3 * 5;
 				boolean left = this.ordinal() < 3;
 				Direction site = left ? puzzleDirection.rotateYCounterclockwise() : puzzleDirection.rotateYClockwise();
-				return chestPosition.up(5).offset(puzzleDirection.getOpposite(), 2 + offset).offset(site, 5);
+				return Optional.ofNullable(chestPosition.up(5)
+						.offset(puzzleDirection.getOpposite(), 2 + offset)
+						.offset(site, 5));
 			}
 		}
 
