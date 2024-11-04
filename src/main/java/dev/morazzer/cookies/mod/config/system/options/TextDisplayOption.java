@@ -35,7 +35,7 @@ public class TextDisplayOption extends Option<Text, TextDisplayOption> {
 	public TextDisplayOption(@NotNull @TranslationKey String name, String description) {
 		super(
 				Text.translatable(name),
-				Optional.ofNullable(description).map(Text::translatable).orElse(null),
+				Optional.ofNullable(description).map(Text::translatable).orElseGet(Text::empty),
 				Text.empty());
 		this.setColor(0xFFFFFFFF);
 	}
