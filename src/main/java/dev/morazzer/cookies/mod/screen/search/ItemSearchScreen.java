@@ -2,12 +2,15 @@ package dev.morazzer.cookies.mod.screen.search;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import dev.morazzer.cookies.mod.CookiesMod;
@@ -35,9 +38,11 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
@@ -115,9 +120,9 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			}
 			return ((Comparator<ItemCompound>) (i1, i2) -> {
 				if (i1.type() == ItemCompound.CompoundType.CRAFTABLE &&
-					i2.type() == ItemCompound.CompoundType.CRAFTABLE) {
+						i2.type() == ItemCompound.CompoundType.CRAFTABLE) {
 					if (i1.data() instanceof CraftableItemSource.Data d1 &&
-						i2.data() instanceof CraftableItemSource.Data d2) {
+							i2.data() instanceof CraftableItemSource.Data d2) {
 						if (d1.hasAllIngredients() && d2.hasAllIngredients()) {
 							return 0;
 						} else {
@@ -217,6 +222,37 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		this.searchField.render(context, mouseX, mouseY, delta);
 		this.renderTopTabs(context, true, mouseX, mouseY);
 		this.renderBottomTabs(context, true, mouseX, mouseY);
+		context.drawText(
+				textRenderer,
+				"?",
+				this.searchField.getX() + this.searchField.getWidth() + 5,
+				this.searchField.getY(),
+				0xFF555555,
+				false);
+		if (isInBound(
+				mouseX,
+				mouseY,
+				this.searchField.getX() + this.searchField.getWidth() + 3,
+				this.searchField.getY() - 1,
+				10,
+				10)) {
+			context.drawTooltip(textRenderer, textRenderer.wrapLines(Text.literal("""
+					§7Search query syntax
+					§8§m      §r
+					§6$: §7Normal search with regex
+					A §6!§7 at the start negates the search
+					§8§m      §r
+					§6i§8/§6id§8: §7compares with the §6item id
+					§6n§8/§6name§8: §7compares with the §6item name
+					§6l§8/§6lore§8: §7compares with the §6item lore
+					§6a§8/§6attribute§8: §7checks the §6item §7attributes, you can also use §6(§8<number>§6)§7 at the end to specify attribute level
+					§6e§8/§6enchant§8: §7checks the §6item enchants§7, you can also use §6(§8<number>§6)§7 here
+					§8§m      §r
+					§7Individual search operations can have multiple tokens, separate them with a §6,
+					§7Search operations can be §6joined §7with a §6&
+					§8§m      §r
+					§7Example: a:mana(2) & glowstone"""), BACKGROUND_WIDTH), HoveredTooltipPositioner.INSTANCE, mouseX, mouseY);
+		}
 	}
 
 	@Override
@@ -250,7 +286,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			CookiesUtils.sendFailedMessage("No currently active profile");
 			return;
 		}
-		this.resize(MinecraftClient.getInstance(),
+		this.resize(
+				MinecraftClient.getInstance(),
 				MinecraftClient.getInstance().getWindow().getScaledWidth(),
 				MinecraftClient.getInstance().getWindow().getScaledHeight());
 		this.searchField.setVisible(true);
@@ -270,33 +307,199 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 	}
 
 	private Predicate<? super ItemCompound> matches(String s) {
-		return item -> this.matches(item, s);
+		boolean negate = s.startsWith("!");
+		if (negate) {
+			s = s.substring(1);
+		}
+		boolean isRegex = s.startsWith("$:");
+		if (isRegex) {
+			s = s.substring(2);
+		}
+		final String finalSearch = s;
+
+		return item -> {
+			if (finalSearch.isEmpty()) {
+				return true;
+			}
+			try {
+				boolean matches = this.matches(item, finalSearch, isRegex);
+				if (negate) {
+					return !matches;
+				}
+				return matches;
+			} catch (Exception e) {
+				return false;
+			}
+		};
 	}
 
-	private boolean matches(ItemCompound item, String search) {
-		String lowerSearch = search.toLowerCase(Locale.ROOT);
+	private boolean matches(ItemCompound item, String search, boolean isRegex) {
+		if (isRegex) {
+			Set<String> set = new HashSet<>();
+			set.add(item.itemStack().getName().getString().toLowerCase(Locale.ROOT));
 
-		if (item.itemStack().getName().getString().toLowerCase(Locale.ROOT).contains(lowerSearch)) {
-			return true;
-		}
-
-		final LoreComponent loreComponent = item.itemStack().get(DataComponentTypes.LORE);
-		if (loreComponent != null) {
-			for (Text line : loreComponent.lines()) {
-				if (CookiesUtils.stripColor(line.getString()).trim().toLowerCase(Locale.ROOT).contains(lowerSearch)) {
+			final LoreComponent loreComponent = item.itemStack().get(DataComponentTypes.LORE);
+			if (loreComponent != null) {
+				for (Text line : loreComponent.lines()) {
+					set.add(line.getString());
+				}
+			}
+			for (String s : set) {
+				if (s.matches(search)) {
 					return true;
 				}
 			}
+			return false;
 		}
 
-		if (lowerSearch.startsWith("$")) {
-			final String skyblockId = item.itemStack().get(CookiesDataComponentTypes.SKYBLOCK_ID);
-			return skyblockId != null && (lowerSearch.length() == 1 ||
-										  skyblockId.toLowerCase(Locale.ROOT).contains(lowerSearch.substring(1)));
+
+		String lowerSearch = search.toLowerCase(Locale.ROOT);
+
+		final String[] split = lowerSearch.split("&");
+		boolean matches = true;
+		for (String s : split) {
+			matches = matches && individualSearch(item, s.toLowerCase(Locale.ROOT).trim());
+		}
+
+		return matches;
+	}
+
+	private boolean individualSearch(ItemCompound itemCompound, String search) {
+		final int lastColon = search.indexOf(':');
+		if (lastColon != -1) {
+			String searchOperation = search.substring(0, lastColon);
+			final String actualSearch = search.substring(lastColon + 1).trim().toLowerCase(Locale.ROOT);
+			Optional<Boolean> result = switch (searchOperation) {
+				case "i", "id" -> Optional.of(idMatch(itemCompound, actualSearch));
+				case "n", "name" -> Optional.of(nameMatch(itemCompound, actualSearch));
+				case "l", "lore" -> Optional.of(loreMatch(itemCompound, actualSearch));
+				case "a", "attribute" -> Optional.of(searchAttributes(itemCompound, actualSearch));
+				case "e", "enchants" -> Optional.of(searchEnchants(itemCompound, actualSearch));
+				default -> Optional.empty();
+			};
+			if (result.isPresent()) {
+				return result.get();
+			}
+		}
+
+		if (nameMatch(itemCompound, search)) {
+			return true;
+		}
+		return loreMatch(itemCompound, search);
+	}
+
+	private boolean searchEnchants(ItemCompound itemCompound, String actualSearch) {
+		final var retrieve = retrieve(itemCompound, CookiesDataComponentTypes.ENCHANTMENTS);
+		return searchLevelMap(actualSearch, retrieve);
+	}
+
+	private boolean searchLevelMap(String actualSearch, Optional<Map<String, Integer>> retrieve) {
+		if (retrieve.isEmpty()) {
+			return false;
+		}
+		final Map<String, Integer> enchants = retrieve.get();
+		if (actualSearch.contains(",")) {
+			return Arrays.stream(actualSearch.split(","))
+					.map(String::trim)
+					.map(String::toLowerCase)
+					.anyMatch(s -> searchLevelMap(enchants, s));
+		}
+		return searchLevelMap(enchants, actualSearch);
+	}
+
+	private boolean searchAttributes(ItemCompound itemCompound, String actualSearch) {
+		final var retrieve = retrieve(itemCompound, CookiesDataComponentTypes.ATTRIBUTES);
+		return searchLevelMap(actualSearch, retrieve);
+	}
+
+	private boolean searchLevelMap(Map<String, Integer> attributes, String search) {
+		int level = -1;
+		String targetName;
+		if (search.endsWith(")")) {
+			try {
+				level = Integer.parseInt(search.substring(search.indexOf("(") + 1, search.lastIndexOf(")")));
+				targetName = search.substring(0, search.lastIndexOf("(")).trim();
+			} catch (NumberFormatException e) {
+				targetName = search;
+				level = -1;
+			}
+		} else {
+			targetName = search;
+		}
+		String sanitizedTargetName = targetName.toLowerCase(Locale.ROOT).replace("(", "").replace(")", "").trim();
+
+		for (String attributeName : attributes.keySet()) {
+			String sanitizedAttributeName = attributeName.toLowerCase(Locale.ROOT).replace("_", " ").trim();
+			if (sanitizedAttributeName.contains(sanitizedTargetName)) {
+				if (level != -1) {
+					return attributes.getOrDefault(attributeName, 0) == level;
+				}
+				return true;
+			}
 		}
 		return false;
 	}
 
+	private boolean loreMatch(ItemCompound itemCompound, String actualSearch) {
+		final Optional<List<Text>> retrieve = retrieve(itemCompound, DataComponentTypes.LORE)
+				.map(LoreComponent::styledLines);
+		if (retrieve.isEmpty()) {
+			return false;
+		}
+		final List<Text> texts = retrieve.get();
+		final List<String> list = texts.stream()
+				.map(Text::toString)
+				.map(String::toLowerCase)
+				.map(CookiesUtils::stripColor).toList();
+
+		if (actualSearch.contains(",")) {
+			return Arrays.stream(actualSearch.split(","))
+					.map(String::trim)
+					.map(String::toLowerCase)
+					.anyMatch(s -> searchLore(list, s));
+		}
+		return searchLore(list, actualSearch);
+	}
+
+	private boolean searchLore(List<String> list, String search) {
+		return list.stream().anyMatch(s -> s.contains(search));
+	}
+
+	private boolean nameMatch(ItemCompound itemCompound, String actualSearch) {
+		if (itemCompound == null || itemCompound.itemStack() == null) {
+			return false;
+		}
+		final String lowerName = itemCompound.itemStack().getName().getString().toLowerCase(Locale.ROOT);
+		if (actualSearch.contains(",")) {
+			return Arrays.stream(actualSearch.split(","))
+					.map(String::trim)
+					.map(String::toLowerCase)
+					.anyMatch(lowerName::contains);
+		}
+		return lowerName.contains(actualSearch);
+	}
+
+	private boolean idMatch(ItemCompound itemCompound, String substring) {
+		final Optional<String> retrieve = retrieve(itemCompound, CookiesDataComponentTypes.SKYBLOCK_ID);
+		if (retrieve.isEmpty()) {
+			return false;
+		}
+		final String lowerSkyblockId = retrieve.get().toLowerCase(Locale.ROOT);
+		if (substring.contains(",")) {
+			return Arrays.stream(substring.split(","))
+					.map(String::trim)
+					.anyMatch(lowerSkyblockId::contains);
+		}
+		return lowerSkyblockId.contains(substring);
+	}
+
+	private <T> Optional<T> retrieve(ItemCompound itemCompound, ComponentType<T> type) {
+		if (itemCompound == null || itemCompound.itemStack() == null) {
+			return Optional.empty();
+		}
+		final T value = itemCompound.itemStack().get(type);
+		return Optional.ofNullable(value);
+	}
 
 	@Override
 	public void resize(MinecraftClient client, int width, int height) {
@@ -310,7 +513,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if (isInBound((int) mouseX,
+		if (isInBound(
+				(int) mouseX,
 				(int) mouseY,
 				this.searchField.getX() - 3,
 				this.searchField.getY(),
@@ -400,7 +604,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 
 	private boolean mouseClickedBottom(double mouseX, double mouseY) {
 		for (int i = 0; i < ItemSourceCategories.VALUES.length; i++) {
-			if (isInBound((int) mouseX,
+			if (isInBound(
+					(int) mouseX,
 					(int) mouseY,
 					this.x + this.getTabX(i),
 					this.y + this.getTabY(false),
@@ -417,7 +622,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 
 	private boolean mouseClickedTop(double mouseX, double mouseY) {
 		for (int i = 0; i < ItemSearchCategories.VALUES.length; i++) {
-			if (isInBound((int) mouseX,
+			if (isInBound(
+					(int) mouseX,
 					(int) mouseY,
 					this.x + this.getTabX(i),
 					this.y + this.getTabY(true),
@@ -447,7 +653,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			context.getMatrices().translate(15, 15, 0);
 			final String format;
 			if (itemContext.type() == ItemCompound.CompoundType.CRAFTABLE &&
-				itemContext.data() instanceof CraftableItemSource.Data data) {
+					itemContext.data() instanceof CraftableItemSource.Data data) {
 				if (data.hasAllIngredients() && data.canSupercraft()) {
 					format = "+";
 				} else if (data.hasAllIngredients()) {
@@ -459,7 +665,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 				format = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT)
 						.format(itemContext.amount());
 			}
-			context.drawItemInSlot(MinecraftClient.getInstance().textRenderer,
+			context.drawItemInSlot(
+					MinecraftClient.getInstance().textRenderer,
 					itemContext.itemStack(),
 					(int) (slotX / 0.5f),
 					(int) (slotY / 0.5f),
@@ -471,7 +678,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 						Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemContext.itemStack());
 				this.appendTooltip(tooltipFromItem, itemContext);
 
-				context.drawTooltip(MinecraftClient.getInstance().textRenderer,
+				context.drawTooltip(
+						MinecraftClient.getInstance().textRenderer,
 						tooltipFromItem,
 						Optional.empty(),
 						mouseX,
@@ -579,7 +787,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			ItemStack itemStack,
 			Text name,
 			int mouseX,
-			int mouseY) {
+			int mouseY
+	) {
 		final Identifier[] identifiers = top ? (active ? TAB_TOP_SELECTED_TEXTURES : TAB_TOP_UNSELECTED_TEXTURES) :
 				(active ? TAB_BOTTOM_SELECTED_TEXTURES : TAB_BOTTOM_UNSELECTED_TEXTURES);
 		int tabX = this.x + this.getTabX(index);
