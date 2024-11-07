@@ -58,6 +58,8 @@ public final class BlockHighlight implements Renderable {
 	@Override
 	public void render(WorldRenderContext context) {
 		if (this.entity != null) {
+			((BlockEntityAccessor) this.entity).cookies$setHighlighted(true);
+			((BlockEntityAccessor) this.entity).cookies$setHighlightedColor(this.color);
 			return;
 		}
 		context.matrixStack().push();

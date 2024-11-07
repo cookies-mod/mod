@@ -1,19 +1,20 @@
 package dev.morazzer.cookies.mod.utils.cookies;
 
-import dev.morazzer.cookies.mod.utils.ColorUtils;
-
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Optional;
+import java.util.Random;
+
+import dev.morazzer.cookies.mod.utils.ColorUtils;
+import org.joml.Vector2i;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-
 import net.minecraft.util.math.Vec3d;
-
-import org.joml.Vector2i;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Various utils that are used a lot of times.
@@ -111,6 +112,26 @@ public class CookiesUtils {
 	 * @return The text.
 	 */
 	public static MutableText createPrefix(int endColor) {
+		final LocalDateTime now = LocalDateTime.now();
+		if (now.getMonth() == Month.JUNE) {
+			// shows a rainbow :3
+			// might add more pride flags eventually
+			return ColorUtils.literalWithGradient(
+					Constants.SECONDARY_PREFIX,
+					0xFF0000,
+					0xFFA500,
+					0xFFFF00,
+					0x008000,
+					0x0000FF,
+					0x4B0082,
+					0xEE82EE,
+					0xEE82EE).withColor(endColor);
+		} else if (now.getMonth() == Month.APRIL && now.getDayOfMonth() == 1) {
+			final Random random = new Random();
+			return ColorUtils.literalWithGradient(Constants.SECONDARY_PREFIX, random.nextInt(0xFFFFFF), random.nextInt(0xFFFFFF))
+					.withColor(endColor);
+		}
+
 		return ColorUtils.literalWithGradient(Constants.PREFIX, Constants.MAIN_COLOR, endColor);
 	}
 
@@ -185,7 +206,7 @@ public class CookiesUtils {
 		long seconds = secondsRemaining % 60;
 		long minutesRemaining = secondsRemaining / 60;
 		long minutes = minutesRemaining % 60;
-		long hoursRemaining = minutesRemaining/ 60;
+		long hoursRemaining = minutesRemaining / 60;
 		long hours = hoursRemaining % 24;
 		long daysRemaining = hoursRemaining / 24;
 

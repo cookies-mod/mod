@@ -371,6 +371,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_ITEM_SHOW_IN_MUSEUM,
 				"Show in museum",
 				"Shows the status of museum items.");
+		translationBuilder.addConfig(CONFIG_ITEM_HIGHLIGHT_COLOR, "Highlight Color", "The color to highlight chests in.");
+		translationBuilder.addConfig(CONFIG_ITEM_HIGHLIGHT_TIME, "Highlight Time", "The time to highlight the chests for.");
+		translationBuilder.addConfig(CONFIG_ITEM_PERSIST_SEARCH, "Persist Search", "Persists the search between item search screens.");
 	}
 
 	private void addMiningConfig(CookiesTranslationBuilder translationBuilder) {

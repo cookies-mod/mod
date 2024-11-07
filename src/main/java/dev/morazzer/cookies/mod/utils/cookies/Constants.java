@@ -8,6 +8,7 @@ public interface Constants {
      * The prefix that is appended before mod messages.
      */
     String PREFIX = "Cookies Mod ⋙ ";
+    String SECONDARY_PREFIX = "【Cookies Mod】";
     /**
      * The main color that is used.
      */

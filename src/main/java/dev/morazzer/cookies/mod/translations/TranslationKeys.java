@@ -269,6 +269,9 @@ public interface TranslationKeys {
 	String CONFIG_ITEM_NON_SEARCH_CRAFTABLE = CONFIG_ITEM_SEARCH + ".non_craftable";
 	String CONFIG_ITEM_SHOW_ONLY_MISSING = CONFIG_ITEM_SEARCH + ".show_missing";
 	String CONFIG_ITEM_SHOW_IN_MUSEUM = CONFIG_ITEM_SEARCH + ".show_museum";
+	String CONFIG_ITEM_HIGHLIGHT_COLOR = CONFIG_ITEM_SEARCH + ".highlight_color";
+	String CONFIG_ITEM_HIGHLIGHT_TIME = CONFIG_ITEM_SEARCH + ".highlight_time";
+	String CONFIG_ITEM_PERSIST_SEARCH = CONFIG_ITEM_SEARCH + ".persist_search";
 	//</editor-fold>
 	//<editor-fold desc="Config/Mining">
 	String CONFIG_MINING = CONFIG + ".mining";
