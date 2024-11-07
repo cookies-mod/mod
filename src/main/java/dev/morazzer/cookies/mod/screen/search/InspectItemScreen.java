@@ -10,7 +10,8 @@ import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemCompound;
 import dev.morazzer.cookies.mod.data.profile.items.sources.StorageItemSource;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
-import dev.morazzer.cookies.mod.services.ItemSearchService;
+import dev.morazzer.cookies.mod.services.item.ItemSearchService;
+import dev.morazzer.cookies.mod.services.item.ItemServices;
 import dev.morazzer.cookies.mod.utils.TextUtils;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -88,7 +89,7 @@ public class InspectItemScreen extends ClientSideInventory {
 		final Object data = item.data();
 
 		final ItemCompound.CompoundType compoundType = ItemCompound.CompoundType.of(item.source(), data);
-		ItemSearchService.appendMultiTooltip(compoundType, data, lore);
+		ItemServices.appendMultiTooltip(compoundType, data, lore);
 		lore.add(Text.translatable(SCREEN_ITEM_SEARCH_REMOVE_FROM_CACHE).formatted(Formatting.RED));
 		copy.set(CookiesDataComponentTypes.CUSTOM_LORE, lore);
 

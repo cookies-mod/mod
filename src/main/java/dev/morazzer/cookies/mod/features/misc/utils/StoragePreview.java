@@ -5,7 +5,7 @@ import dev.morazzer.cookies.mod.data.profile.ProfileData;
 import dev.morazzer.cookies.mod.data.profile.ProfileStorage;
 import dev.morazzer.cookies.mod.data.profile.sub.StorageData;
 import dev.morazzer.cookies.mod.events.api.InventoryContentUpdateEvent;
-import dev.morazzer.cookies.mod.services.ItemSearchService;
+import dev.morazzer.cookies.mod.services.item.ItemHighlightService;
 import dev.morazzer.cookies.mod.utils.SkyblockUtils;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -76,8 +76,8 @@ public class StoragePreview {
 				}
 				itemStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, copy.get(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR));
 				itemStack.set(MiscDataComponentTypes.ITEM_SEARCH_SERVICE_MODIFIED, 0);
-				ItemSearchService.add(itemStack);
-				ItemSearchService.add(copy);
+				ItemHighlightService.add(itemStack);
+				ItemHighlightService.add(copy);
 			}
         }
         itemStack.set(CookiesDataComponentTypes.LORE_ITEMS, new ItemTooltipComponent(map));

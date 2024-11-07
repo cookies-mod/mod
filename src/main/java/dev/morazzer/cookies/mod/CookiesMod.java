@@ -40,8 +40,9 @@ import org.lwjgl.glfw.GLFW;
  * Main class of the mod, mainly initialization and loading of further components/features.
  */
 public class CookiesMod implements ClientModInitializer {
+	public static KeyBinding chestSearch;
 
-    @Getter
+	@Getter
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
     /**
@@ -77,7 +78,7 @@ public class CookiesMod implements ClientModInitializer {
     }
 
     private void registerKeyBindings() {
-        final KeyBinding chestSearch = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.search",
+		chestSearch = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.search",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_O,
                 "cookies.mod.keybinds"));

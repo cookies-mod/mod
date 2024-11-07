@@ -1,5 +1,7 @@
 package dev.morazzer.cookies.mod.features.search;
 
+import dev.morazzer.cookies.mod.services.item.ItemSearchService;
+import dev.morazzer.cookies.mod.services.item.ItemServices;
 import dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ import dev.morazzer.cookies.mod.repository.RepositoryItem;
 import dev.morazzer.cookies.mod.repository.constants.MuseumData;
 import dev.morazzer.cookies.mod.repository.constants.RepositoryConstants;
 import dev.morazzer.cookies.mod.screen.search.InspectItemScreen;
-import dev.morazzer.cookies.mod.services.ItemSearchService;
 import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.Either;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
@@ -168,7 +169,7 @@ public class MuseumHelper {
 					itemStack.set(CookiesDataComponentTypes.OVERRIDE_RENDER_ITEM, Items.ORANGE_DYE.getDefaultStack());
 				}
 
-				ItemSearchService.addCraftableTooltip(texts, data);
+				ItemServices.addCraftableTooltip(texts, data);
 
 				if (data.showSupercraftWarning()) {
 					texts.add(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH_OVERVIEW)
@@ -182,7 +183,7 @@ public class MuseumHelper {
 
 		texts.add(Text.empty());
 		texts.add(Text.literal("This item was found somewhere on your profile!").formatted(Formatting.GREEN));
-		ItemSearchService.appendMultiTooltip(ItemCompound.CompoundType.of(source.source(), source.data()),
+		ItemServices.appendMultiTooltip(ItemCompound.CompoundType.of(source.source(), source.data()),
 				source.data(),
 				texts);
 		itemStack.set(CookiesDataComponentTypes.ITEM_CLICK_CONSUMER, this.performAction(source));
