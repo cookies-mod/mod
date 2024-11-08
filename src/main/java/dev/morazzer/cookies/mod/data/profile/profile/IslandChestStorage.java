@@ -30,7 +30,8 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 	private final List<ChestItem> items = new ArrayList<>();
 
 	public void save(BlockPos blockPos, BlockPos secondChest, ItemStack stack, int slot) {
-		this.items.add(ChestItem.create(blockPos, secondChest, stack, slot));
+		Optional.ofNullable(ChestItem.create(blockPos, secondChest, stack, slot))
+				.ifPresent(items::add);
 	}
 
 	public void removeBlockSlot(BlockPos blockPos, int slot) {
@@ -42,6 +43,7 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 	}
 
 	public void removeBlock(BlockPos blockPos) {
+		this.items.removeIf(item -> item.blockPos == null);
 		this.items.removeIf(item -> item.blockPos.equals(blockPos));
 		final Iterator<ChestItem> iterator = this.items.iterator();
 		List<ChestItem> toAdd = new ArrayList<>();
@@ -49,7 +51,8 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 			final ChestItem chestItem = iterator.next();
 			if (chestItem.secondChest != null && chestItem.secondChest.isPresent() && chestItem.secondChest.get().equals(blockPos)) {
 				iterator.remove();
-				toAdd.add(ChestItem.create(chestItem.blockPos, null, chestItem.itemStack, chestItem.slot));
+				Optional.ofNullable(ChestItem.create(chestItem.blockPos, null, chestItem.itemStack, chestItem.slot))
+								.ifPresent(toAdd::add);
 			}
 		}
 		this.items.addAll(toAdd);
@@ -81,6 +84,9 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 
 	public record ChestItem(BlockPos blockPos, Optional<BlockPos> secondChest, ItemStack itemStack, int slot) {
 		public static ChestItem create(BlockPos pos, BlockPos secondChest, ItemStack itemStack, int slot) {
+			if (pos == null) {
+				return null;
+			}
 			itemStack.remove(DataComponentTypes.ENCHANTMENTS);
 			itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE);
 			return new ChestItem(pos, Optional.ofNullable(secondChest), itemStack, slot);
