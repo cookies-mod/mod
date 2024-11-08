@@ -190,6 +190,12 @@ public class ChestTracker {
 
 			this.saveItem(islandStorage, slot, this.getBlockPos(slot.id));
 		}
+		this.postUpdates(islandStorage);
+	}
+
+	private void postUpdates(IslandChestStorage islandStorage) {
+		islandStorage.sendEvent(this.first, this.second);
+		islandStorage.sendEvent(this.second, this.first);
 	}
 
 	private void saveItem(IslandChestStorage islandStorage, Slot slot, @NotNull BlockPos blockPos) {

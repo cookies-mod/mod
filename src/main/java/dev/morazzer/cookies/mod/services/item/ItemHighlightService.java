@@ -7,18 +7,20 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Predicates;
 import dev.morazzer.cookies.mod.CookiesMod;
 import dev.morazzer.cookies.mod.config.categories.ItemSearchConfig;
 import dev.morazzer.cookies.mod.data.profile.items.Item;
 import dev.morazzer.cookies.mod.data.profile.items.ItemSources;
 import dev.morazzer.cookies.mod.data.profile.profile.IslandChestStorage;
+import dev.morazzer.cookies.mod.events.ChestSaveEvent;
 import dev.morazzer.cookies.mod.events.ItemStackEvents;
+import dev.morazzer.cookies.mod.render.Renderable;
 import dev.morazzer.cookies.mod.render.WorldRender;
 import dev.morazzer.cookies.mod.render.types.BlockHighlight;
 import dev.morazzer.cookies.mod.render.types.CallbackRemovable;
 import dev.morazzer.cookies.mod.services.IsSameResult;
 import dev.morazzer.cookies.mod.services.item.search.ItemSearchFilter;
-import dev.morazzer.cookies.mod.utils.dev.DevUtils;
 import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.items.types.MiscDataComponentTypes;
 import dev.morazzer.cookies.mod.utils.skyblock.LocationUtils;
@@ -33,7 +35,36 @@ public class ItemHighlightService {
 	private static ItemHighlight itemHighlight;
 
 	static {
+		ChestSaveEvent.EVENT.register(ItemHighlightService::checkChest);
 		ItemStackEvents.EVENT.register(ItemHighlightService::modify);
+	}
+
+	private static void checkChest(
+			BlockPos blockPos,
+			BlockPos second,
+			List<IslandChestStorage.ChestItem> chestItems
+	) {
+		getHighlight().ifPresent(highlight -> {
+			final boolean doesHaveHighlight = chestItems.stream()
+					.map(IslandChestStorage.ChestItem::itemStack).map(highlight.filter::doesMatch)
+					.anyMatch(Predicates.not(IsSameResult.NO::equals));
+			if (highlight.hasHighlight(blockPos)) {
+				if (doesHaveHighlight) {
+					return;
+				}
+
+				highlight.getHighlight(blockPos).ifPresent(chestHighlight -> {
+					WorldRender.removeRenderable(chestHighlight.renderable);
+					highlight.chestHighlights.remove(chestHighlight);
+				});
+			} else {
+				if (!doesHaveHighlight) {
+					return;
+				}
+
+				highlightChest(blockPos, highlight.filter.getColor());
+			}
+		});
 	}
 
 	private static Optional<ItemHighlight> getHighlight() {
@@ -89,7 +120,7 @@ public class ItemHighlightService {
 	 */
 	public static void setActive(ItemSearchFilter filter) {
 		getHighlight().ifPresent(ItemHighlightService::removeHighlight);
-		ItemHighlight itemHighlight = new ItemHighlight(new ArrayList<>(), new CompletableFuture<>(), filter);
+		ItemHighlight itemHighlight = ItemHighlight.createNew(filter);
 		ItemHighlightService.itemHighlight = itemHighlight;
 		CookiesMod.getExecutorService().schedule(
 				() -> ItemHighlightService.removeHighlight(itemHighlight),
@@ -139,9 +170,16 @@ public class ItemHighlightService {
 		if (blockPos == null) {
 			return;
 		}
+		getHighlight().ifPresent(itemHighlight -> {
+			if (itemHighlight.hasHighlight(blockPos)) {
+				return;
+			}
 
-		getFuture().ifPresent(future -> {
-			WorldRender.addRenderable(new CallbackRemovable(new BlockHighlight(blockPos, color), future));
+			final ChestHighlight chestHighlight = new ChestHighlight(
+					blockPos,
+					new CallbackRemovable(new BlockHighlight(blockPos, color), itemHighlight.remove));
+			itemHighlight.chestHighlights.add(chestHighlight);
+			WorldRender.addRenderable(chestHighlight.renderable);
 		});
 	}
 
@@ -165,7 +203,25 @@ public class ItemHighlightService {
 		getModifiedItems().add(itemStack);
 	}
 
+	private record ChestHighlight(BlockPos blockPos, Renderable renderable) {
+	}
+
 	private record ItemHighlight(List<ItemStack> modified, CompletableFuture<Boolean> remove,
-								 ItemSearchFilter filter) {
+								 ItemSearchFilter filter, List<ChestHighlight> chestHighlights) {
+
+		public static ItemHighlight createNew(ItemSearchFilter filter) {
+			return new ItemHighlight(new ArrayList<>(), new CompletableFuture<>(), filter, new ArrayList<>());
+		}
+
+		public boolean hasHighlight(BlockPos blockPos) {
+			return chestHighlights.stream().map(ChestHighlight::blockPos)
+					.anyMatch(blockPos::equals);
+		}
+
+		public Optional<ChestHighlight> getHighlight(BlockPos blockPos) {
+			return this.chestHighlights.stream()
+					.filter(highlight -> blockPos.equals(highlight.blockPos))
+					.findFirst();
+		}
 	}
 }
