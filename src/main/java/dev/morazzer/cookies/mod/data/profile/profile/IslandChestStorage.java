@@ -1,24 +1,22 @@
 package dev.morazzer.cookies.mod.data.profile.profile;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import java.util.Optional;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.morazzer.cookies.mod.events.ChestSaveEvent;
+import dev.morazzer.cookies.mod.utils.json.CodecJsonSerializable;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The data for the island chests.
@@ -34,8 +32,13 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 				.ifPresent(items::add);
 	}
 
+	private List<ChestItem> getItems(BlockPos pos) {
+		return this.items.stream().filter(chestItem -> pos.equals(chestItem.blockPos))
+				.toList();
+	}
+
 	public void removeBlockSlot(BlockPos blockPos, int slot) {
-		this.items.removeIf(item -> item.blockPos.equals(blockPos) && item.slot == slot);
+		this.items.removeIf(item -> blockPos.equals(item.blockPos) && item.slot == slot);
 	}
 
 	public void remove(ChestItem chestItem) {
@@ -43,16 +46,16 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 	}
 
 	public void removeBlock(BlockPos blockPos) {
-		this.items.removeIf(item -> item.blockPos == null);
-		this.items.removeIf(item -> item.blockPos.equals(blockPos));
+		this.items.removeIf(item -> blockPos.equals(item.blockPos));
 		final Iterator<ChestItem> iterator = this.items.iterator();
 		List<ChestItem> toAdd = new ArrayList<>();
 		while (iterator.hasNext()) {
 			final ChestItem chestItem = iterator.next();
-			if (chestItem.secondChest != null && chestItem.secondChest.isPresent() && chestItem.secondChest.get().equals(blockPos)) {
+			if (chestItem.secondChest != null && chestItem.secondChest.isPresent() && chestItem.secondChest.get()
+					.equals(blockPos)) {
 				iterator.remove();
 				Optional.ofNullable(ChestItem.create(chestItem.blockPos, null, chestItem.itemStack, chestItem.slot))
-								.ifPresent(toAdd::add);
+						.ifPresent(toAdd::add);
 			}
 		}
 		this.items.addAll(toAdd);
@@ -82,7 +85,30 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 		return LOGGER;
 	}
 
+	public void sendEvent(BlockPos blockPos, BlockPos second) {
+		if (blockPos != null && second != null) {
+			final ArrayList<ChestItem> bothItems = new ArrayList<>();
+			bothItems.addAll(this.getItems(blockPos));
+			bothItems.addAll(this.getItems(second));
+			ChestSaveEvent.EVENT.invoker().onSave(blockPos, second, bothItems);
+			return;
+		}
+		if (blockPos != null) {
+			ChestSaveEvent.EVENT.invoker().onSave(blockPos, second,this.getItems(blockPos));
+		}
+	}
+
 	public record ChestItem(BlockPos blockPos, Optional<BlockPos> secondChest, ItemStack itemStack, int slot) {
+		public static Codec<ChestItem> CODEC =
+				RecordCodecBuilder.create(instance -> instance.group(
+								BlockPos.CODEC.fieldOf("block_pos")
+										.forGetter(ChestItem::blockPos),
+								BlockPos.CODEC.optionalFieldOf("second_chest").forGetter(ChestItem::secondChest),
+								ItemStack.CODEC.fieldOf("item").forGetter(ChestItem::itemStack),
+								Codecs.NONNEGATIVE_INT.fieldOf("slot").forGetter(ChestItem::slot))
+						.apply(instance, ChestItem::new));
+		private static final Codec<List<ChestItem>> LIST_CODEC = CODEC.listOf();
+
 		public static ChestItem create(BlockPos pos, BlockPos secondChest, ItemStack itemStack, int slot) {
 			if (pos == null) {
 				return null;
@@ -91,14 +117,5 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 			itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE);
 			return new ChestItem(pos, Optional.ofNullable(secondChest), itemStack, slot);
 		}
-
-		public static Codec<ChestItem> CODEC =
-				RecordCodecBuilder.create(instance -> instance.group(BlockPos.CODEC.fieldOf("block_pos")
-										.forGetter(ChestItem::blockPos),
-								BlockPos.CODEC.optionalFieldOf("second_chest").forGetter(ChestItem::secondChest),
-								ItemStack.CODEC.fieldOf("item").forGetter(ChestItem::itemStack),
-								Codecs.NONNEGATIVE_INT.fieldOf("slot").forGetter(ChestItem::slot))
-						.apply(instance, ChestItem::new));
-		private static final Codec<List<ChestItem>> LIST_CODEC = CODEC.listOf();
 	}
 }
