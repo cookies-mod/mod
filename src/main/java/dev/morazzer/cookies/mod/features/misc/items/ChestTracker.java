@@ -37,6 +37,8 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Tracker to save the contents of chests on the private island.
  */
@@ -190,7 +192,7 @@ public class ChestTracker {
 		}
 	}
 
-	private void saveItem(IslandChestStorage islandStorage, Slot slot, BlockPos blockPos) {
+	private void saveItem(IslandChestStorage islandStorage, Slot slot, @NotNull BlockPos blockPos) {
 		islandStorage.save(blockPos, this.getOtherPos(slot.id), slot.getStack(), this.getSlotForChest(slot.id));
 	}
 
