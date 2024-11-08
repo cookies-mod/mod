@@ -6,9 +6,12 @@ import dev.morazzer.cookies.mod.translations.TranslationKeys;
 import dev.morazzer.cookies.mod.utils.cookies.Constants;
 import dev.morazzer.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.mods.cookies.generated.BuildInfo;
+import lombok.extern.slf4j.Slf4j;
+
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.loader.api.SemanticVersion;
+import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -20,6 +23,7 @@ import net.minecraft.util.Formatting;
 /**
  * Used to check if the mod is up-to-date, if not send a message that notifies the user of the new release.
  */
+@Slf4j
 public class UpdateChecker {
     private static boolean isUpToDate = false;
     private static String latestVersion = "";
@@ -67,8 +71,9 @@ public class UpdateChecker {
                 version = latestModInfo.get("version_beta");
             }
             try {
-                final SemanticVersion parse = SemanticVersion.parse(version.getAsString());
-                isUpToDate = BuildInfo.version.equals(parse);
+				final SemanticVersion parse = SemanticVersion.parse(version.getAsString());
+				final int i = parse.compareTo((Version) BuildInfo.version);
+				isUpToDate = i <= 0;
                 latestVersion = version.getAsString();
             } catch (VersionParsingException e) {
                 isUpToDate = true;
