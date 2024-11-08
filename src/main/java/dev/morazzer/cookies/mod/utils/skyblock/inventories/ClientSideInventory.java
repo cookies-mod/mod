@@ -209,16 +209,26 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
 			int slotX = (int) Math.floor(localX / 18);
 			int slotY = (int) Math.floor(localY / 18);
 
-			final Slot slot = this.slots[slotX + slotY * 9];
+			int index = slotX + slotY * 9;
+			if (index < 0 || index >= this.slots.length) {
+				return super.mouseClicked(mouseX, mouseY, button);
+			}
+
+			final Slot slot = this.slots[index];
 			if (slot != null) {
 				this.executeClick(slot, button);
 			}
 		} else if (localX > this.playerInventorySlots[9].x && localX < this.playerInventorySlots[8].x + 18 &&
 				   localY > this.playerInventorySlots[9].y && localY < this.playerInventorySlots[0].y + 18) {
 			int slotX = (int) Math.floor(localX / 18);
-			int slotY = (int) Math.floor(localY / 18);
+			int slotY = (int) Math.floor((localY - playerInventorySlots[9].y) / 18);
 
-			final Slot slot = this.playerInventorySlots[slotX + slotY * 9];
+			int index = slotX + slotY * 9;
+			if (index < 0 || index >= this.playerInventorySlots.length) {
+				return super.mouseClicked(mouseX, mouseY, button);
+			}
+
+			final Slot slot = this.playerInventorySlots[index];
 			if (slot != null) {
 				this.executeClick(slot, button);
 			}
