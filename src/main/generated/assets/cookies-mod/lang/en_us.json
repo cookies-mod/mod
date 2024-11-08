@@ -363,6 +363,8 @@
   "cookies.item_stats.value.obtained": "Obtained",
   "cookies.keybind": "Cookies Mod",
   "cookies.left_click_to_view": "Left-click to view",
+  "cookies.mod.keybinds": "Cookies Mod",
+  "cookies.mod.search": "Item Search",
   "cookies.not_found": "Not Found",
   "cookies.page": "Page",
   "cookies.page.next": "Next Page",
