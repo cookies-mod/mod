@@ -188,6 +188,9 @@ public class SearchQueryMatcher implements ItemSearchFilter {
 	}
 
 	private boolean checkAttributes(Map<String, Integer> stringIntegerMap) {
+		if (stringIntegerMap.containsKey("mending")) {
+			stringIntegerMap.put("vitality", stringIntegerMap.get("mending"));
+		}
 		return this.checkLevelProperty(stringIntegerMap, this.attributes);
 	}
 
