@@ -47,6 +47,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_STORAGE, "Storage");
 		translationBuilder.add(ITEM_SOURCE_ENDERCHEST, "Enderchest");
 		translationBuilder.add(ITEM_SOURCE_BACKPACK, "Backpack");
+		translationBuilder.add("cookies.mod.keybinds", "Cookies Mod");
+		translationBuilder.add("cookies.mod.search", "Item Search");
 
 		this.addItemStats(translationBuilder);
 		this.addMisc(translationBuilder);

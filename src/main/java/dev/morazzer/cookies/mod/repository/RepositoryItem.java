@@ -32,6 +32,11 @@ import dev.morazzer.cookies.mod.utils.items.CookiesDataComponentTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
+import net.minecraft.component.type.NbtComponent;
+
+import net.minecraft.nbt.NbtCompound;
+
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -330,7 +335,14 @@ public class RepositoryItem {
 		itemStack.set(CookiesDataComponentTypes.SKYBLOCK_ID, this.internalId);
 		itemStack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(color, false));
 		itemStack.remove(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+		itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(this.createNbt()));
 		return itemStack;
+	}
+
+	private NbtCompound createNbt() {
+		final NbtCompound nbtCompound = new NbtCompound();
+		nbtCompound.putString("id", this.internalId);
+		return nbtCompound;
 	}
 
 	/**
