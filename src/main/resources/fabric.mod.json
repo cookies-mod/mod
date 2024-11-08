@@ -10,10 +10,10 @@
   ],
   "entrypoints": {
     "client": [
-      "dev.morazzer.cookies.mod.CookiesMod"
+      "codes.cookies.mod.CookiesMod"
     ],
     "fabric-datagen": [
-      "dev.morazzer.cookies.mod.datagen.CookiesModDataGen"
+      "codes.cookies.mod.datagen.CookiesModDataGen"
     ]
   },
   "accessWidener": "cookies.accesswidener",

@@ -32,13 +32,13 @@ public abstract class CreateBuildInfo extends DefaultTask {
 
     @TaskAction
     public void createBuildInfo() {
-        CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
+        CompilationUnit compilationUnit = new CompilationUnit("codes.cookies.mod.generated")
             .setStorage(
 					this.getOutputDir().get().getAsFile().toPath()
-                    .resolve("dev/morazzer/mods/cookies/generated/BuildInfo.java")
+                    .resolve("codes/cookies/mod/generated/BuildInfo.java")
             );
         compilationUnit.addImport("net.fabricmc.loader.api.SemanticVersion");
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler");
+        compilationUnit.addImport("codes.cookies.mod.utils.exceptions.ExceptionHandler");
 
         final ClassOrInterfaceDeclaration buildInfoClass = compilationUnit.addClass("BuildInfo");
 

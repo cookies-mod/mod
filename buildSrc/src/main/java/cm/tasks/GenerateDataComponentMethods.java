@@ -47,9 +47,9 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
     @TaskAction
     private void generateDataComponent() throws IOException {
         final CompilationUnit compilationUnit =
-            new CompilationUnit("dev.morazzer.cookies.mod.generated.utils").setStorage(
+            new CompilationUnit("codes.cookies.mod.generated.utils").setStorage(
                 this.getOutputDir().get().getAsFile().toPath()
-                    .resolve("dev/morazzer/cookies/mod/generated/utils/ItemAccessor.java")
+                    .resolve("codes/cookies/mod/generated/utils/ItemAccessor.java")
             );
 
         final ClassOrInterfaceDeclaration classOrInterfaceDeclaration = compilationUnit.addInterface("ItemAccessor");
@@ -59,11 +59,11 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
         source.findAll(ImportDeclaration.class).forEach(importDeclaration -> {
             compilationUnit.addImport(importDeclaration.getNameAsString());
         });
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.*");
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.items.*");
+        compilationUnit.addImport("codes.cookies.mod.utils.*");
+        compilationUnit.addImport("codes.cookies.mod.utils.items.*");
         compilationUnit.addImport("net.minecraft.item.ItemStack");
         compilationUnit.addImport("java.util.*");
-        compilationUnit.addImport("dev.morazzer.cookies.mod.repository.RepositoryItem");
+        compilationUnit.addImport("codes.cookies.mod.repository.RepositoryItem");
         compilationUnit.addImport("java.time.Instant");
 
         source.getFields().forEach(fieldDeclaration -> {
@@ -90,7 +90,7 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
     private ClassOrInterfaceDeclaration readSource() throws IOException {
         final ParseResult<CompilationUnit> parse = new JavaParser().parse(
             this.getProject().getLayout().getProjectDirectory().getAsFile().toPath()
-                .resolve("src/main/java/dev/morazzer/cookies/mod/utils/items/CookiesDataComponentTypes.java")
+                .resolve("src/main/java/codes/cookies/mod/utils/items/CookiesDataComponentTypes.java")
         );
 
         final CompilationUnit compilationUnit = parse.getResult().orElseThrow();

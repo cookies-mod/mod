@@ -4,7 +4,7 @@
   "schemaVersion": 1,
   "entrypoints": {
     "fabric-datagen": [
-      "dev.morazzer.cookies.mod.datagen.CookiesModDataGen"
+      "codes.cookies.mod.datagen.CookiesModDataGen"
     ]
   },
   "depends": {

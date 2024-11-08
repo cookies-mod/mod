@@ -35,12 +35,12 @@ public abstract class CreateRegions extends DefaultTask {
 
     @TaskAction
     public void createBuildInfo() {
-        CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
+        CompilationUnit compilationUnit = new CompilationUnit("codes.cookies.mod.generated")
             .setStorage(
                 this.getOutputDir().get().getAsFile().toPath()
-                              .resolve("dev/morazzer/mods/cookies/generated/Regions.java")
+                              .resolve("codes/cookies/mod/generated/Regions.java")
                        );
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.skyblock.LocationUtils");
+        compilationUnit.addImport("codes.cookies.mod.utils.skyblock.LocationUtils");
         final EnumDeclaration regions = compilationUnit.addEnum("Regions");
 
         JsonArray jsonArray;
