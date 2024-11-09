@@ -14,12 +14,7 @@ repositories {
 	mavenCentral()
 	maven("https://api.modrinth.com/maven")
 	maven("https://repo.hypixel.net/repository/Hypixel/")
-	maven("https://maven.pkg.github.com/cookies-mod/entities") {
-		credentials {
-			username = project.findProperty("gpr.usr") as String? ?: System.getenv("USER")
-			password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-		}
-	}
+	maven("https://repo.cookies.codes/releases")
 }
 
 fabricApi {
