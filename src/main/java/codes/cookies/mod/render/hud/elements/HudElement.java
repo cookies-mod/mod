@@ -1,5 +1,7 @@
 package codes.cookies.mod.render.hud.elements;
 
+import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.system.Option;
 import codes.cookies.mod.render.hud.internal.BoundingBox;
 import codes.cookies.mod.render.hud.internal.HudEditAction;
 import codes.cookies.mod.render.hud.internal.HudPosition;
@@ -16,6 +18,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 @Getter
 public abstract class HudElement {
@@ -58,6 +62,9 @@ public abstract class HudElement {
 		builder.prependSetting(new ValueSetting(Text.literal("Y: " + this.getY())));
 		builder.prependSetting(new ValueSetting(Text.literal("X: " + this.getX())));
 		builder.prependSetting(new LiteralSetting(getName(), HudElementSettingType.METADATA));
+
+		final List<Option<?, ?>> hudSettings = ConfigManager.getConfigReader().getHudSettings(this);
+		hudSettings.forEach(builder::addOption);
 	}
 
 	public int getX() {

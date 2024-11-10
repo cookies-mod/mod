@@ -1,6 +1,8 @@
 package codes.cookies.mod.config.categories;
 
+import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
+import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.render.hud.HudEditScreen;
 import codes.cookies.mod.utils.cookies.Constants;
 
@@ -8,7 +10,6 @@ import java.awt.Color;
 
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.data.HudElementPosition;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.Row;
@@ -49,18 +50,28 @@ public class DungeonConfig extends Category {
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
 			this::reposition,
 			CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT);
-	public HudElementPosition hudElementPosition = new HudElementPosition(0, 0, 1);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption renderMap = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showPlayerSkulls = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showPlayerNames = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_NAMES, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption renderOverRoomText = new BooleanOption(CONFIG_DUNGEON_RENDER_OVER_TEXT, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption keepWitherDoor = new BooleanOption(CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showSecrets = new BooleanOption(CONFIG_DUNGEON_RENDER_SHOW_SECRETS, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showPuzzleName = new BooleanOption(CONFIG_DUNGEON_RENDER_SHOW_PUZZLE_NAME, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showRoomStatusAsTextColor =
 			new BooleanOption(CONFIG_DUNGEON_RENDER_ROOM_STATUS_AS_COLOR, true);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showTrapAsCleared = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP_SHOW_TRAP_AS_CLEARED, false);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showMapBackground = new BooleanOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND, true);
+	@HudSetting(DungeonMapHud.class)
 	public ColorOption mapBackgroundColor =
 			new ColorOption(CONFIG_DUNGEON_RENDER_MAP_BACKGROUND_COLOR, Color.DARK_GRAY).withAlpha()
 					.onlyIf(this.showMapBackground);

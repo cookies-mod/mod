@@ -9,8 +9,6 @@ import codes.cookies.mod.features.dungeons.DungeonPlayer;
 import codes.cookies.mod.features.dungeons.SpiritLeapOverlay;
 import codes.cookies.mod.render.hud.elements.HudElement;
 import codes.cookies.mod.render.hud.internal.HudEditAction;
-import codes.cookies.mod.render.hud.settings.BooleanSetting;
-import codes.cookies.mod.render.hud.settings.ColorSetting;
 import codes.cookies.mod.render.hud.settings.HudElementSettingBuilder;
 import lombok.Getter;
 import org.joml.Vector2i;
@@ -90,18 +88,6 @@ public class DungeonMapHud extends HudElement {
 	@Override
 	public void buildSettings(HudElementSettingBuilder builder) {
 		super.buildSettings(builder);
-		DungeonConfig dungeonConfig = DungeonConfig.getInstance();
-		builder.addSetting(new BooleanSetting(dungeonConfig.renderMap));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showPlayerSkulls));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showPlayerNames));
-		builder.addSetting(new BooleanSetting(dungeonConfig.renderOverRoomText));
-		builder.addSetting(new BooleanSetting(dungeonConfig.keepWitherDoor));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showSecrets));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showPuzzleName));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showRoomStatusAsTextColor));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showTrapAsCleared));
-		builder.addSetting(new BooleanSetting(dungeonConfig.showMapBackground));
-		builder.addSetting(new ColorSetting(dungeonConfig.mapBackgroundColor));
 	}
 
 	public DungeonInstance getMockInstance() {

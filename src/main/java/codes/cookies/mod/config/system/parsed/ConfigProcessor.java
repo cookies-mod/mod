@@ -4,6 +4,7 @@ import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Config;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.Hidden;
+import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Option;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
@@ -79,8 +80,14 @@ public class ConfigProcessor {
                     continue;
                 }
 
-                configReader.processOption(fieldValue, fieldName);
-                continue;
+				final ProcessedOption<?, ?> processedOption = configReader.processOption(fieldValue, fieldName);
+				if (field.isAnnotationPresent(HudSetting.class)) {
+					HudSetting[] hudSetting = field.getAnnotationsByType(HudSetting.class);
+					for (HudSetting setting : hudSetting) {
+						configReader.addHudSetting(setting.value(), processedOption);
+					}
+				}
+				continue;
             }
 
             log.warn("Couldn't process field {} in {}", field, object.getClass().getName());
