@@ -1,5 +1,5 @@
 {
-  "package": "dev.morazzer.cookies.mod.render.mixins",
+  "package": "codes.cookies.mod.render.mixins",
   "client": [
     "DebugHudMixin",
     "WorldRenderMixin",

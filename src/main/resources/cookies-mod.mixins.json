@@ -1,5 +1,5 @@
 {
-  "package": "dev.morazzer.cookies.mod.mixins",
+  "package": "codes.cookies.mod.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
     "render.ArmorFeatureRenderMixin",

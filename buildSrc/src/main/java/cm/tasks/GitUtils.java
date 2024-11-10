@@ -9,24 +9,24 @@ import org.gradle.api.Project;
 
 public class GitUtils {
 
-    static Git git;
+	static Git git;
 
-    public static Git findGit(Project project) {
-        if (git == null) {
-            git = Git.wrap(findGit(project.getRootProject().getRootDir()));
-        }
-        return git;
-    }
+	public static Git findGit(Project project) {
+		if (git == null) {
+			git = Git.wrap(findGit(project.getRootProject().getRootDir()));
+		}
+		return git;
+	}
 
-    public static Repository findGit(File path) {
-        try {
-            return new RepositoryBuilder()
-                // --git-dir if supplied, no-op if null
-                .readEnvironment() // scan environment GIT_* variables
-                .findGitDir() // scan up the file system tree
-                .setWorkTree(path).build();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	public static Repository findGit(File path) {
+		try {
+			return new RepositoryBuilder()
+					// --git-dir if supplied, no-op if null
+					.readEnvironment() // scan environment GIT_* variables
+					.findGitDir() // scan up the file system tree
+					.setWorkTree(path).build();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -1,6 +1,6 @@
 package dev.morazzer.cookies.mod.datagen;
 
-import dev.morazzer.cookies.mod.translations.TranslationKeys;
+import codes.cookies.mod.translations.TranslationKeys;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;

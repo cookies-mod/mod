@@ -23,75 +23,75 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 public abstract class CreateBuildInfo extends DefaultTask {
-    @Inject
-    public CreateBuildInfo() {
-        this.setGroup("generation");
-        this.getOutputs().upToDateWhen(upToDateSpec -> false);
-        this.getProject().getTasks().getByName("build").dependsOn(this);
-    }
+	@Inject
+	public CreateBuildInfo() {
+		this.setGroup("generation");
+		this.getOutputs().upToDateWhen(upToDateSpec -> false);
+		this.getProject().getTasks().getByName("build").dependsOn(this);
+	}
 
-    @TaskAction
-    public void createBuildInfo() {
-        CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
-            .setStorage(
-					this.getOutputDir().get().getAsFile().toPath()
-                    .resolve("dev/morazzer/mods/cookies/generated/BuildInfo.java")
-            );
-        compilationUnit.addImport("net.fabricmc.loader.api.SemanticVersion");
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.exceptions.ExceptionHandler");
+	@TaskAction
+	public void createBuildInfo() {
+		CompilationUnit compilationUnit = new CompilationUnit("codes.cookies.mod.generated")
+				.setStorage(
+						this.getOutputDir().get().getAsFile().toPath()
+								.resolve("codes/cookies/mod/generated/BuildInfo.java")
+				);
+		compilationUnit.addImport("net.fabricmc.loader.api.SemanticVersion");
+		compilationUnit.addImport("codes.cookies.mod.utils.exceptions.ExceptionHandler");
 
-        final ClassOrInterfaceDeclaration buildInfoClass = compilationUnit.addClass("BuildInfo");
+		final ClassOrInterfaceDeclaration buildInfoClass = compilationUnit.addClass("BuildInfo");
 
-        final BlockStmt blockStmt = new BlockStmt();
-        blockStmt.addStatement(new ReturnStmt(new MethodCallExpr("SemanticVersion.parse",
-            new StringLiteralExpr(this.getProject().getVersion().toString()))));
+		final BlockStmt blockStmt = new BlockStmt();
+		blockStmt.addStatement(new ReturnStmt(new MethodCallExpr("SemanticVersion.parse",
+				new StringLiteralExpr(this.getProject().getVersion().toString()))));
 
-        buildInfoClass.addFieldWithInitializer(
-            "SemanticVersion",
-            "version",
-            new MethodCallExpr("ExceptionHandler.removeThrows", new LambdaExpr(NodeList.nodeList(), blockStmt)),
-            Modifier.Keyword.FINAL,
-            Modifier.Keyword.PUBLIC,
-            Modifier.Keyword.STATIC
-        );
+		buildInfoClass.addFieldWithInitializer(
+				"SemanticVersion",
+				"version",
+				new MethodCallExpr("ExceptionHandler.removeThrows", new LambdaExpr(NodeList.nodeList(), blockStmt)),
+				Modifier.Keyword.FINAL,
+				Modifier.Keyword.PUBLIC,
+				Modifier.Keyword.STATIC
+		);
 
-        buildInfoClass.addFieldWithInitializer(
-            new PrimitiveType(PrimitiveType.Primitive.LONG),
-            "buildTime",
-            new LongLiteralExpr("%sL".formatted(System.currentTimeMillis())),
-            Modifier.Keyword.FINAL,
-            Modifier.Keyword.PUBLIC,
-            Modifier.Keyword.STATIC
-        );
+		buildInfoClass.addFieldWithInitializer(
+				new PrimitiveType(PrimitiveType.Primitive.LONG),
+				"buildTime",
+				new LongLiteralExpr("%sL".formatted(System.currentTimeMillis())),
+				Modifier.Keyword.FINAL,
+				Modifier.Keyword.PUBLIC,
+				Modifier.Keyword.STATIC
+		);
 
-        try (Git git = GitUtils.findGit(this.getProject())) {
-            buildInfoClass.addFieldWithInitializer(
-                "String",
-                "branch",
-                new StringLiteralExpr(git.getRepository().getBranch()),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
+		try (Git git = GitUtils.findGit(this.getProject())) {
+			buildInfoClass.addFieldWithInitializer(
+					"String",
+					"branch",
+					new StringLiteralExpr(git.getRepository().getBranch()),
+					Modifier.Keyword.FINAL,
+					Modifier.Keyword.PUBLIC,
+					Modifier.Keyword.STATIC
+			);
 
-            buildInfoClass.addFieldWithInitializer(
-                new PrimitiveType(PrimitiveType.Primitive.BOOLEAN),
-                "isStable",
-                new BooleanLiteralExpr(!this.getProject().getVersion().toString().contains("-")),
-                Modifier.Keyword.FINAL,
-                Modifier.Keyword.PUBLIC,
-                Modifier.Keyword.STATIC
-            );
+			buildInfoClass.addFieldWithInitializer(
+					new PrimitiveType(PrimitiveType.Primitive.BOOLEAN),
+					"isStable",
+					new BooleanLiteralExpr(!this.getProject().getVersion().toString().contains("-")),
+					Modifier.Keyword.FINAL,
+					Modifier.Keyword.PUBLIC,
+					Modifier.Keyword.STATIC
+			);
 
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-        compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
-    }
+		compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
+	}
 
-    @OutputDirectory
-    public abstract DirectoryProperty getOutputDir();
+	@OutputDirectory
+	public abstract DirectoryProperty getOutputDir();
 
 }

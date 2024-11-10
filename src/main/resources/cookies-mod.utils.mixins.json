@@ -1,5 +1,5 @@
 {
-  "package": "dev.morazzer.cookies.mod.utils.mixins",
+  "package": "codes.cookies.mod.utils.mixins",
   "client": [
     "ComponentMapImplMixin",
     "ItemStackMixin",

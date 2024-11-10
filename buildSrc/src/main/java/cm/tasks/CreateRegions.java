@@ -26,115 +26,115 @@ import org.gradle.api.tasks.TaskAction;
 
 public abstract class CreateRegions extends DefaultTask {
 
-    @Inject
-    public CreateRegions() {
-        this.setGroup("generation");
-        this.getOutputs().upToDateWhen(upToDateSpec -> false);
-        this.getProject().getTasks().getByName("build").dependsOn(this);
-    }
+	@Inject
+	public CreateRegions() {
+		this.setGroup("generation");
+		this.getOutputs().upToDateWhen(upToDateSpec -> false);
+		this.getProject().getTasks().getByName("build").dependsOn(this);
+	}
 
-    @TaskAction
-    public void createBuildInfo() {
-        CompilationUnit compilationUnit = new CompilationUnit("dev.morazzer.mods.cookies.generated")
-            .setStorage(
-                this.getOutputDir().get().getAsFile().toPath()
-                              .resolve("dev/morazzer/mods/cookies/generated/Regions.java")
-                       );
-        compilationUnit.addImport("dev.morazzer.cookies.mod.utils.skyblock.LocationUtils");
-        final EnumDeclaration regions = compilationUnit.addEnum("Regions");
+	@TaskAction
+	public void createBuildInfo() {
+		CompilationUnit compilationUnit = new CompilationUnit("codes.cookies.mod.generated")
+				.setStorage(
+						this.getOutputDir().get().getAsFile().toPath()
+								.resolve("codes/cookies/mod/generated/Regions.java")
+				);
+		compilationUnit.addImport("codes.cookies.mod.utils.skyblock.LocationUtils");
+		final EnumDeclaration regions = compilationUnit.addEnum("Regions");
 
-        JsonArray jsonArray;
-        try (final InputStream resourceAsStream = CreateRegions.class.getClassLoader().getResourceAsStream("regions.json")) {
+		JsonArray jsonArray;
+		try (final InputStream resourceAsStream = CreateRegions.class.getClassLoader().getResourceAsStream("regions.json")) {
 			if (resourceAsStream == null) {
 				return;
 			}
-            jsonArray = JsonParser.parseString(new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+			jsonArray = JsonParser.parseString(new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonArray();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-        Set<String> set = new HashSet<>();
-        jsonArray.forEach(jsonElement -> {
-            final JsonObject jsonObject = jsonElement.getAsJsonObject();
-            final String name = this.getName(jsonObject);
-            if (set.contains(name)) {
-                System.err.println("Duplicate region name: " + name);
-            }
-            set.add(name);
+		Set<String> set = new HashSet<>();
+		jsonArray.forEach(jsonElement -> {
+			final JsonObject jsonObject = jsonElement.getAsJsonObject();
+			final String name = this.getName(jsonObject);
+			if (set.contains(name)) {
+				System.err.println("Duplicate region name: " + name);
+			}
+			set.add(name);
 
-            final EnumConstantDeclaration declaration = regions.addEnumConstant(name.toUpperCase(Locale.GERMAN)
-                                                                                    .replace(' ', '_')
-                                                                                    .replace("'", ""));
+			final EnumConstantDeclaration declaration = regions.addEnumConstant(name.toUpperCase(Locale.GERMAN)
+					.replace(' ', '_')
+					.replace("'", ""));
 
-            declaration.addArgument("LocationUtils.Island." + this.getIsland(jsonObject));
-            declaration.addArgument(new StringLiteralExpr(this.getScoreboard(jsonObject)));
-            declaration.addArgument(new BooleanLiteralExpr(
-                jsonObject.has("regex") && jsonObject.get("regex").getAsJsonPrimitive().isBoolean()));
-            if (this.hasIcon(jsonObject)) {
-                declaration.addArgument(new StringLiteralExpr(this.getIcon(jsonObject)));
-            }
+			declaration.addArgument("LocationUtils.Island." + this.getIsland(jsonObject));
+			declaration.addArgument(new StringLiteralExpr(this.getScoreboard(jsonObject)));
+			declaration.addArgument(new BooleanLiteralExpr(
+					jsonObject.has("regex") && jsonObject.get("regex").getAsJsonPrimitive().isBoolean()));
+			if (this.hasIcon(jsonObject)) {
+				declaration.addArgument(new StringLiteralExpr(this.getIcon(jsonObject)));
+			}
 
-        });
+		});
 
-        regions.addField("LocationUtils.Island", "island", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
-        regions.addField("String", "icon", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
-        regions.addField("String", "scoreboard", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
-        regions.addField("boolean", "regex", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
+		regions.addField("LocationUtils.Island", "island", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
+		regions.addField("String", "icon", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
+		regions.addField("String", "scoreboard", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
+		regions.addField("boolean", "regex", Modifier.Keyword.FINAL, Modifier.Keyword.PUBLIC);
 
-        this.addDefaultConstructor(regions);
-        this.addAlternativeConstructor(regions);
+		this.addDefaultConstructor(regions);
+		this.addAlternativeConstructor(regions);
 
-        compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
-    }
+		compilationUnit.getStorage().ifPresent(storage -> storage.save(unit -> new DefaultPrettyPrinter().print(unit)));
+	}
 
-    @OutputDirectory
-    public abstract DirectoryProperty getOutputDir();
+	@OutputDirectory
+	public abstract DirectoryProperty getOutputDir();
 
-    private String getName(JsonObject jsonObject) {
-        if (jsonObject.has("iname")) {
-            return jsonObject.get("iname").getAsString();
-        }
-        return jsonObject.get("name").getAsString();
-    }
+	private String getName(JsonObject jsonObject) {
+		if (jsonObject.has("iname")) {
+			return jsonObject.get("iname").getAsString();
+		}
+		return jsonObject.get("name").getAsString();
+	}
 
-    private String getIsland(JsonObject jsonObject) {
-        if (jsonObject.has("island")) {
-            return jsonObject.get("island").getAsString();
-        }
-        throw new RuntimeException("No island set for %s".formatted(this.getName(jsonObject)));
-    }
+	private String getIsland(JsonObject jsonObject) {
+		if (jsonObject.has("island")) {
+			return jsonObject.get("island").getAsString();
+		}
+		throw new RuntimeException("No island set for %s".formatted(this.getName(jsonObject)));
+	}
 
-    private String getScoreboard(JsonObject jsonObject) {
-        return jsonObject.get("name").getAsString();
-    }
+	private String getScoreboard(JsonObject jsonObject) {
+		return jsonObject.get("name").getAsString();
+	}
 
-    private boolean hasIcon(JsonObject jsonObject) {
-        return jsonObject.has("icon");
-    }
+	private boolean hasIcon(JsonObject jsonObject) {
+		return jsonObject.has("icon");
+	}
 
-    private String getIcon(JsonObject jsonObject) {
-        return jsonObject.get("icon").getAsString();
-    }
+	private String getIcon(JsonObject jsonObject) {
+		return jsonObject.get("icon").getAsString();
+	}
 
-    private void addDefaultConstructor(EnumDeclaration regions) {
-        final ConstructorDeclaration constructor = regions.addConstructor();
-        constructor.addParameter("LocationUtils.Island", "island");
-        constructor.addParameter("String", "scoreboard");
-        constructor.addParameter("boolean", "regex");
-        constructor.addParameter("String", "icon");
-        final BlockStmt body = constructor.createBody();
-        body.addStatement("this.island = island;");
-        body.addStatement("this.scoreboard = scoreboard;");
-        body.addStatement("this.regex = regex;");
-        body.addStatement("this.icon = icon;");
-    }
+	private void addDefaultConstructor(EnumDeclaration regions) {
+		final ConstructorDeclaration constructor = regions.addConstructor();
+		constructor.addParameter("LocationUtils.Island", "island");
+		constructor.addParameter("String", "scoreboard");
+		constructor.addParameter("boolean", "regex");
+		constructor.addParameter("String", "icon");
+		final BlockStmt body = constructor.createBody();
+		body.addStatement("this.island = island;");
+		body.addStatement("this.scoreboard = scoreboard;");
+		body.addStatement("this.regex = regex;");
+		body.addStatement("this.icon = icon;");
+	}
 
-    private void addAlternativeConstructor(EnumDeclaration regions) {
-        final ConstructorDeclaration constructor = regions.addConstructor();
-        constructor.addParameter("LocationUtils.Island", "island");
-        constructor.addParameter("String", "scoreboard");
-        constructor.addParameter("boolean", "regex");
-        final BlockStmt body = constructor.createBody();
-        body.addStatement("this(island, scoreboard, regex, null);");
-    }
+	private void addAlternativeConstructor(EnumDeclaration regions) {
+		final ConstructorDeclaration constructor = regions.addConstructor();
+		constructor.addParameter("LocationUtils.Island", "island");
+		constructor.addParameter("String", "scoreboard");
+		constructor.addParameter("boolean", "regex");
+		final BlockStmt body = constructor.createBody();
+		body.addStatement("this(island, scoreboard, regex, null);");
+	}
 }

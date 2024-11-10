@@ -7,24 +7,24 @@ import org.gradle.api.Project;
 import org.gradle.jvm.tasks.Jar;
 
 public class ModifyJarName implements Plugin<Project> {
-    @Override
-    public void apply(Project target) {
-        target.getTasks().withType(Jar.class).forEach(this::configure);
-    }
+	@Override
+	public void apply(Project target) {
+		target.getTasks().withType(Jar.class).forEach(this::configure);
+	}
 
-    private void configure(Jar jar) {
-        final Git git = GitUtils.findGit(jar.getProject());
+	private void configure(Jar jar) {
+		final Git git = GitUtils.findGit(jar.getProject());
 
-        try {
-            final String branchResult = git.getRepository().getBranch();
-            if (branchResult == null) return;
-            final String branch = branchResult.replaceAll("/", "-");
-            if (branch.equalsIgnoreCase("master")) {
-                return;
-            }
-            jar.getArchiveBaseName().set(jar.getArchiveBaseName().get() + "(" + branch +")");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		try {
+			final String branchResult = git.getRepository().getBranch();
+			if (branchResult == null) return;
+			final String branch = branchResult.replaceAll("/", "-");
+			if (branch.equalsIgnoreCase("master")) {
+				return;
+			}
+			jar.getArchiveBaseName().set(jar.getArchiveBaseName().get() + "(" + branch +")");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
