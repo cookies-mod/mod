@@ -44,7 +44,7 @@ public class HudEditScreen extends Screen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		applyBlur();
+		applyBlur(delta);
 		if (action == Action.NONE) {
 			HudElement element = this.currentlyHovered;
 			this.currentlyHovered = getElementUnder(mouseX, mouseY).orElse(null);
@@ -88,11 +88,11 @@ public class HudEditScreen extends Screen {
 		});
 
 		if (this.currentlyHovered != null && this.action == Action.NONE) {
-			context.drawTooltip(getTextRenderer(), this.currentlyHovered.getName(), mouseX, mouseY);
+			context.drawTooltip(textRenderer, this.currentlyHovered.getName(), mouseX, mouseY);
 		}
 
 		if (action == Action.EDIT && this.currentlyHovered != null) {
-			applyBlur();
+			applyBlur(delta);
 			context.drawCenteredTextWithShadow(
 					this.textRenderer,
 					Text.literal("Editing ")
@@ -103,9 +103,9 @@ public class HudEditScreen extends Screen {
 					(context.getScaledWindowHeight() / 2),
 					0xFFAAAAAA);
 			if (this.isOnLeft) {
-				RenderUtils.renderBackgroundBox(context, 0, 0, sidebarSize, height, -1);
+				RenderUtils.renderBackgroundBox(context, 0, 0, sidebarSize, height);
 			} else {
-				RenderUtils.renderBackgroundBox(context, width - sidebarSize, 0, sidebarSize, height, -1);
+				RenderUtils.renderBackgroundBox(context, width - sidebarSize, 0, sidebarSize, height);
 			}
 			for (Drawable drawable : this.drawables) {
 				drawable.render(context, mouseX, mouseY, delta);
@@ -138,7 +138,7 @@ public class HudEditScreen extends Screen {
 			}
 			hudElement.renderChecks(
 					context,
-					getTextRenderer(),
+					textRenderer,
 					delta);
 		});
 	}
@@ -224,6 +224,7 @@ public class HudEditScreen extends Screen {
 			if (hasControlDown()) {
 				action = Action.EDIT;
 				this.afterMoveAction = Action.NONE;
+				this.resetSettings();
 				this.buildSettings();
 				return true;
 			}
