@@ -2,7 +2,9 @@ package codes.cookies.mod.config.categories;
 
 import codes.cookies.mod.api.ApiManager;
 import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.data.HudData;
 import codes.cookies.mod.config.system.Category;
+import codes.cookies.mod.config.system.Hidden;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
@@ -38,6 +40,9 @@ public class DevConfig extends Category {
 	public final ButtonOption reconnectApiButton = new ButtonOption(CONFIG_DEV_BACKEND_RECONNECT, ApiManager::reconnect, CONFIG_DEV_BACKEND_RECONNECT_VALUE);
 
 	public final BooleanOption useVersionSuffix = new BooleanOption(CONFIG_DEV_BACKEND_VERSION_SUFFIX, true);
+
+	@Hidden
+	public final HudData hudData = new HudData();
 
     @SuppressWarnings("MissingJavadoc")
     public DevConfig() {

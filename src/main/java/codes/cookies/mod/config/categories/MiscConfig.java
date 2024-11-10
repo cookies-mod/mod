@@ -1,5 +1,7 @@
 package codes.cookies.mod.config.categories;
 
+import codes.cookies.mod.CookiesMod;
+import codes.cookies.mod.config.system.options.ButtonOption;
 import com.google.gson.annotations.Expose;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
@@ -23,6 +25,9 @@ import net.minecraft.text.Text;
  */
 @SuppressWarnings({"MissingJavadoc", "unused"})
 public class MiscConfig extends Category {
+	public ButtonOption editHud = new ButtonOption(CONFIG_MISC_EDIT_HUD,
+			CookiesMod::openHudScreen,
+			CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT);
 
 	@Expose
 	public BooleanOption enableScrollableTooltips = new BooleanOption(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, true);

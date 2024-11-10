@@ -1,5 +1,7 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
+import codes.cookies.mod.render.hud.HudManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
@@ -71,6 +73,7 @@ public class DungeonFeatures {
 		new CorrectAllThePanesTerminalSolver();
 		new ChangeAllToSameColorTerminalSolver();
 		SpiritLeapOverlay.init(this);
+		HudManager.register(DungeonMapHud.getInstance());
 	}
 
 	/**

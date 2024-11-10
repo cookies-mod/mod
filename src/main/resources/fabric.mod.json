@@ -23,5 +23,10 @@
     "java": ">=21",
     "fabric-api": "*",
     "hypixel-mod-api": ">=1.0.1"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/client/gui/DrawContext": ["codes/cookies/mod/utils/injections/DrawContextInjections"]
+    }
   }
 }

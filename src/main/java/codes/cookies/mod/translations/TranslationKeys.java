@@ -288,6 +288,7 @@ public interface TranslationKeys {
 	//<editor-fold desc="Config/Misc">
 	String CONFIG_MISC = CONFIG + ".misc";
 
+	String CONFIG_MISC_EDIT_HUD = CONFIG_MISC + ".edit_hud";
 	String CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS = CONFIG_MISC + ".show_museum_armor_sets";
 	String CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS = CONFIG_MISC + ".scroll_tooltips";
 	String CONFIG_MISC_STORAGE_PREVIEW = CONFIG_MISC + ".storage_preview";
