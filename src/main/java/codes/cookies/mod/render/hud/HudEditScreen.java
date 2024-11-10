@@ -224,7 +224,6 @@ public class HudEditScreen extends Screen {
 			if (hasControlDown()) {
 				action = Action.EDIT;
 				this.afterMoveAction = Action.NONE;
-				this.resetSettings();
 				this.buildSettings();
 				return true;
 			}
