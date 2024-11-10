@@ -253,6 +253,7 @@ public class HudEditScreen extends Screen {
 	}
 
 	private void buildSettings() {
+		this.resetSettings();
 		if (this.currentlyHovered == null) {
 			return;
 		}
