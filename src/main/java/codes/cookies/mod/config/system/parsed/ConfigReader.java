@@ -5,10 +5,17 @@ import codes.cookies.mod.config.system.Config;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.Option;
 import codes.cookies.mod.config.system.options.FoldableOption;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import codes.cookies.mod.render.hud.elements.HudElement;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +34,7 @@ public class ConfigReader {
     private Config<?> config;
     private ProcessedCategory currentCategory;
     private ProcessedOption<?, ?> parent;
+	private final Map<Class<? extends HudElement>, List<Option<?,?>>> hudSettings = new HashMap<>();
 
     /**
      * Begins a category.
@@ -132,4 +140,13 @@ public class ConfigReader {
         return processedOption;
     }
 
+	public <T, O extends Option<T, O>> void addHudSetting(Class<? extends HudElement> value, ProcessedOption<T, O> processedOption) {
+		final List<Option<?, ?>> orDefault = hudSettings.getOrDefault(value, new ArrayList<>());
+		hudSettings.putIfAbsent(value, orDefault);
+		orDefault.add(processedOption.getOption());
+	}
+
+	public List<Option<?, ?>> getHudSettings(HudElement hudElement) {
+		return hudSettings.getOrDefault(hudElement.getClass(), Collections.emptyList());
+	}
 }
