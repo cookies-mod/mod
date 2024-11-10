@@ -1,6 +1,7 @@
 package codes.cookies.mod.config.categories;
 
 import codes.cookies.mod.config.system.Parent;
+import codes.cookies.mod.render.hud.HudEditScreen;
 import codes.cookies.mod.utils.cookies.Constants;
 
 import java.awt.Color;
@@ -15,7 +16,6 @@ import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.ColorOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
-import codes.cookies.mod.screen.DungeonMapRepositionScreen;
 import codes.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 
 import net.minecraft.item.Items;
@@ -67,7 +67,7 @@ public class DungeonConfig extends Category {
 
 
 	private void reposition() {
-		CookiesMod.openScreen(new DungeonMapRepositionScreen());
+		CookiesMod.openScreen(new HudEditScreen());
 	}
 
 	@Override

@@ -103,8 +103,4 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 					stack.get(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED));
 		}
 	}
-
-	public void test() {
-
-	}
 }

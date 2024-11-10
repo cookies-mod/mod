@@ -9,13 +9,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import com.google.common.base.Predicates;
 import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import codes.cookies.mod.screen.CookiesScreen;
-import codes.cookies.mod.screen.DungeonMapRepositionScreen;
 import codes.cookies.mod.utils.Result;
 import codes.cookies.mod.utils.TextUtils;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
@@ -181,7 +181,7 @@ public class SpiritLeapOverlay {
 		@Nullable final DungeonMapRenderer mapRenderer;
 		if (features.getCurrentInstance().isEmpty()) {
 			if (DevUtils.isEnabled(DEBUG)) {
-				mapRenderer = new DungeonMapRepositionScreen().renderer;
+				mapRenderer = DungeonMapHud.getInstance().getMockInstance().getMapRenderer();
 			} else {
 				return;
 			}

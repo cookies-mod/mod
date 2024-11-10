@@ -5,23 +5,17 @@ import java.util.Optional;
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
-import codes.cookies.mod.config.categories.DungeonConfig;
-import codes.cookies.mod.config.data.HudElementPosition;
 import codes.cookies.mod.events.ChatMessageEvents;
 import codes.cookies.mod.events.IslandChangeEvent;
 import codes.cookies.mod.events.WebsocketEvent;
-import codes.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import codes.cookies.mod.features.dungeons.map.DungeonPhase;
 import codes.cookies.mod.features.dungeons.map.DungeonRoom;
 import codes.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolver;
-import codes.cookies.mod.screen.DungeonMapRepositionScreen;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.FunctionUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -30,7 +24,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -48,7 +41,6 @@ public class DungeonListeners {
 	 */
 	public static void initialize() {
 		ClientTickEvents.END_CLIENT_TICK.register(DungeonListeners::clientTick);
-		HudRenderCallback.EVENT.register(DungeonListeners::hudRenderCallback);
 		IslandChangeEvent.EVENT.register(DungeonListeners::onIslandChange);
 		Packet.onReceive(DungeonSyncPlayerLocation.class, DungeonListeners::syncPlayerLocation);
 		Packet.onReceive(DungeonUpdateRoomSecrets.class, DungeonListeners::updateRoomSecrets);
@@ -75,30 +67,6 @@ public class DungeonListeners {
 			}
 
 			instance.getPuzzleSolverInstance().getCurrent().ifPresent(PuzzleSolver::tick);
-		});
-	}
-
-	private static void hudRenderCallback(DrawContext drawContext, RenderTickCounter renderTickCounter) {
-		getInstance().ifPresent(instance -> {
-			instance.updatePlayersFromWorld();
-			final DungeonMapRenderer mapRenderer = instance.getMapRenderer();
-			if (mapRenderer == null) {
-				return;
-			}
-			if (MinecraftClient.getInstance().currentScreen instanceof DungeonMapRepositionScreen ||
-                SpiritLeapOverlay.isOpen) {
-				return;
-			}
-			final HudElementPosition position = DungeonConfig.getInstance().hudElementPosition;
-			final int size = 6 * DungeonMapRenderer.TOTAL_SIZE - DungeonMapRenderer.HALLWAY_SIZE;
-			drawContext.getMatrices().push();
-			drawContext.getMatrices().translate(
-					position.clampX(size) * MinecraftClient.getInstance().getWindow().getScaledWidth(),
-					position.clampY(size) * MinecraftClient.getInstance().getWindow().getScaledHeight(),
-					1000);
-			drawContext.getMatrices().scale(position.scale, position.scale, 1);
-			mapRenderer.render(drawContext);
-			drawContext.getMatrices().pop();
 		});
 	}
 

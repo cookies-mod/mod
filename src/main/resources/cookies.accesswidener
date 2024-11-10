@@ -19,3 +19,4 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHL
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
 accessible method net/minecraft/client/gui/DrawContext drawTooltip (Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;Lnet/minecraft/util/Identifier;)V
 accessible field net/minecraft/client/gui/hud/PlayerListHud footer Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;

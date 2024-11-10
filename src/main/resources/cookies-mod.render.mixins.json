@@ -5,6 +5,7 @@
     "WorldRenderMixin",
     "AllowOutlinesWithoutEntities",
     "BlockEntityMixin",
-    "BlockEntityRenderDispatcherMixin"
+    "BlockEntityRenderDispatcherMixin",
+    "DrawContextMixin"
   ]
 }

@@ -12,6 +12,8 @@ import codes.cookies.mod.config.screen.ConfigScreen;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
 import codes.cookies.mod.features.Features;
+import codes.cookies.mod.render.hud.HudEditScreen;
+import codes.cookies.mod.render.hud.HudManager;
 import codes.cookies.mod.repository.Repository;
 import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.screen.search.ItemSearchScreen;
@@ -74,6 +76,7 @@ public class CookiesMod implements ClientModInitializer {
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
         CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));
         UpdateChecker.init();
+		HudManager.load();
         this.registerKeyBindings();
     }
 
@@ -89,4 +92,8 @@ public class CookiesMod implements ClientModInitializer {
             }
         });
     }
+
+	public static void openHudScreen() {
+		openScreen(new HudEditScreen());
+	}
 }

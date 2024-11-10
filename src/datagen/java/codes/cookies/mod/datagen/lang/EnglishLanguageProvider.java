@@ -405,6 +405,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MISC, "Misc Config", "Miscellaneous settings");
+		translationBuilder.addConfig(CONFIG_MISC_EDIT_HUD, "To edit hud", "Opens a screen where you can edit the hud elements!");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, "Show museum armor sets", "Shows the components of an armor set in the description.");
 		translationBuilder.addConfig(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, "Scrollable Tooltips", """
 				Allows you to scroll through tooltips
@@ -475,8 +476,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"To reposition",
 				"Allows you to scale and move the dungeon map.");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPOSITION_TEXT, "Click Here!");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Use W and S to change size!");
-		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Click to move!");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_1, "Click element to move around");
+		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2, "Use + and - to change size of selected element");
 		translationBuilder.add(CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3, "Scale: %s");
 		translationBuilder.add(CONFIG_DUNGEON_SPIRIT_LEAP_CUSTOM, "Spirit Leap - Custom");
 		translationBuilder.add(CONFIG_DUNGEON_SPIRIT_LEAP_VANILLA, "Spirit Leap - Vanilla");

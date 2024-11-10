@@ -1,5 +1,6 @@
 package codes.cookies.mod.commands.dev;
 
+import codes.cookies.mod.commands.dev.debug.HudEditScreenDebugCommand;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import codes.cookies.mod.commands.dev.debug.ApiDebug;
 import codes.cookies.mod.commands.dev.debug.GetRegionDebugCommand;
@@ -45,7 +46,8 @@ public class DebugSubCommand extends ClientCommand {
 				new ApiDebug(),
 				new IsUsingMod(),
 				new GetRepoItemDebugCommand(),
-				new PrintModStuffDebugCommand()
+				new PrintModStuffDebugCommand(),
+				new HudEditScreenDebugCommand()
 		};
 
 		for (ClientCommand clientCommand : clientCommands) {

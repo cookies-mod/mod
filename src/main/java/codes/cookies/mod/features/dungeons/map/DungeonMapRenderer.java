@@ -46,6 +46,13 @@ public class DungeonMapRenderer {
 			this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
 			return;
 		}
+		if (dungeonInstance.isDebugInstance()) {
+			for (DungeonPlayer player : dungeonInstance.getPlayers()) {
+				if (player != null) {
+					player.tick();
+				}
+			}
+		}
 		if (!DungeonConfig.getInstance().renderMap.getValue()) {
 			return;
 		}
