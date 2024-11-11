@@ -64,6 +64,7 @@ public class CookiesDataComponentTypes {
 	public static final ComponentType<String> DYE;
 	@GenerateAccessor
 	public static final ComponentType<Map<String, Integer>> ATTRIBUTES;
+	public static final ComponentType<PetInfo> PET_INFO;
 	public static final ComponentType<String> ENCHANTMENT_ID;
 
 	public static final ComponentType<String> CUSTOM_SLOT_TEXT;
@@ -175,6 +176,11 @@ public class CookiesDataComponentTypes {
 					}
 					return map;
 				});
+		PET_INFO = register(builder -> builder.codec(new CookiesDataComponent.FakeCodec<>()),
+				"petInfo",
+				DataComponentTypes.CUSTOM_DATA,
+				defaultTest(),
+				(nbtComponent, s) -> PetInfo.create(nbtComponent.getNbt().getString(s)));
 		UPGRADE_LEVEL = register(
 				builder -> builder.codec(Codec.INT),
 				"upgrade_level",
