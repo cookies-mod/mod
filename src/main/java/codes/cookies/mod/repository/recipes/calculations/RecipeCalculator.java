@@ -106,6 +106,9 @@ public class RecipeCalculator {
 	}
 
 	private static Optional<Recipe> getBestRecipe(RepositoryItem repositoryItem, boolean flip) {
+		if (repositoryItem == null) {
+			return Optional.empty();
+		}
 		return repositoryItem.getRecipes()
 				.stream().min(Comparator.comparingInt(recipe -> (flip ? -1 : 1) * recipe.getOutput().getAmount()));
 	}
