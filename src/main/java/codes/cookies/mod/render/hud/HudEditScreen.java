@@ -141,6 +141,8 @@ public class HudEditScreen extends Screen {
 					textRenderer,
 					delta);
 		});
+		context.fill(0,0,0,0,0);
+		// hacky solution but for some reason it fixes the text rendering over the applied blur from the hud edit screen???
 	}
 
 	@Override

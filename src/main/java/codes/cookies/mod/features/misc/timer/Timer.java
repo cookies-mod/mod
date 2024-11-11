@@ -64,6 +64,9 @@ public abstract class Timer {
 		if (!showNotification()) {
 			return;
 		}
+		if (this.getNotificationType() == NotificationManager.NotificationType.NONE) {
+			return;
+		}
 		if (playSound()) {
 			SoundUtils.playSound(SoundEvents.BLOCK_BELL_USE, 1, 2);
 		}

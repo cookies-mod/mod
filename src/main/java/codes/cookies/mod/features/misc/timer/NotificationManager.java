@@ -74,7 +74,7 @@ public class NotificationManager {
 	}
 
 	public enum NotificationType {
-		CHAT, TOAST, BOTH
+		CHAT, TOAST, BOTH, NONE
 	}
 
 }

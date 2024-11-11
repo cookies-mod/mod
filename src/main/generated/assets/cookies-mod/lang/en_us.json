@@ -278,6 +278,8 @@
   "cookies.config.misc.name": "Misc Config",
   "cookies.config.misc.notifications.enabled.name": "Enable",
   "cookies.config.misc.notifications.enabled.tooltip": "Enables the notifications",
+  "cookies.config.misc.notifications.enabled_hud.name": "Enable Hud",
+  "cookies.config.misc.notifications.enabled_hud.tooltip": "Enables the hud for the pests timer.",
   "cookies.config.misc.notifications.pests.name": "Pest Warnings",
   "cookies.config.misc.notifications.pests.order.name": "Pest timer",
   "cookies.config.misc.notifications.pests.order.tooltip": "Changes what pest time to use for the notifications,\ndepending on if a plot is sprayed it can have a 50%\nreduction in cooldown.\n\nCurrent -> Current plot timer\nFirst -> First time a pest can spawn on any plot\nLast -> Time at which pests can spawn everywhere",

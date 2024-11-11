@@ -5,12 +5,14 @@ import javax.swing.*;
 import codes.cookies.mod.config.data.RancherSpeedConfig;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
+import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
+import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;
 
 import net.minecraft.item.ItemStack;
@@ -84,7 +86,11 @@ public class FarmingConfig extends Category {
 				.withSupplier(value -> Text.literal(StringUtils.capitalize(value.name().toLowerCase())));
 
 		public BooleanOption enabled = new BooleanOption(CONFIG_MISC_NOTIFICATIONS_ENABLED, true);
+		@HudSetting(PestTimerHud.class)
+		public BooleanOption enableHud = new BooleanOption(CONFIG_MISC_NOTIFICATIONS_ENABLED_HUD, false);
+		@HudSetting(PestTimerHud.class)
 		public EnumCycleOption<NotificationManager.NotificationType> type = new EnumCycleOption<>(CONFIG_MISC_NOTIFICATIONS_TYPE, NotificationManager.NotificationType.TOAST);
+		@HudSetting(PestTimerHud.class)
 		public BooleanOption enableSound = new BooleanOption(CONFIG_MISC_NOTIFICATION_SOUND, true);
 
 		@Override
