@@ -451,6 +451,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PRIMAL_FEAR, "Fear Notifications", "Notifies you shortly before you can spawn a primal fear");
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_ENABLED, "Enable", "Enables the notifications");
+		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_ENABLED_HUD, "Enable Hud", "Enables the hud for the pests timer.");
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_TYPE, "Notification type", """
 				Changes how you get the notifications.
 				

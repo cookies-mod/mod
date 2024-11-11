@@ -7,11 +7,15 @@ import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.data.profile.sub.EquipmentData;
 import codes.cookies.mod.data.profile.sub.PlotData;
+import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.farming.garden.Plot;
+import codes.cookies.mod.render.hud.HudManager;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
+
+import lombok.Getter;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,10 +30,12 @@ public class PestTimer extends Timer {
 			5,
 			7,
 			Identifier.of("cookies-mod", "textures/mobs/beetle.png"));
+	@Getter
 	long lastPestSpawnedTime = -1;
 
 	public PestTimer() {
 		super(ConfigManager.getConfig().farmingConfig.pestFoldable, "pest");
+		HudManager.register(new PestTimerHud(this));
 	}
 
 	@Override
@@ -128,7 +134,7 @@ public class PestTimer extends Timer {
 	}
 
 	@Override
-	int getTime() {
+	public int getTime() {
 		int timeDelta = (int) ((System.currentTimeMillis() - lastPestSpawnedTime) / 1000);
 		return getTimeBetweenPests() - timeDelta;
 	}
