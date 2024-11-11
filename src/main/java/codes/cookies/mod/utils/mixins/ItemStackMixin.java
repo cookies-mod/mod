@@ -1,5 +1,6 @@
 package codes.cookies.mod.utils.mixins;
 
+import codes.cookies.mod.utils.items.PetInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
@@ -46,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(ItemStack.class)
 @SuppressWarnings("MissingJavadoc")
-public abstract class ItemStackMixin {
+public abstract class ItemStackMixin implements ComponentHolder {
 
     @Shadow
     @Final
@@ -76,7 +78,16 @@ public abstract class ItemStackMixin {
             }
         }
 
-        set(CookiesDataComponentTypes.SELF, (ItemStack) (Object) this);
+		final PetInfo petInfo = get(CookiesDataComponentTypes.PET_INFO);
+		if (petInfo != null) {
+			final RepositoryItem repositoryItem = RepositoryItem.of(petInfo.type() + "/" + petInfo.tier().ordinal());
+			if (repositoryItem != null) {
+				set(CookiesDataComponentTypes.REPOSITORY_ITEM, repositoryItem);
+				set(CookiesDataComponentTypes.SKYBLOCK_ID, repositoryItem.getInternalId());
+			}
+		}
+
+		set(CookiesDataComponentTypes.SELF, (ItemStack) (Object) this);
 
         ItemStackEvents.EVENT.invoker().create((ItemStack) (Object) this);
 
@@ -181,7 +192,10 @@ public abstract class ItemStackMixin {
     @Shadow
     public abstract ComponentChanges getComponentChanges();
 
-    @WrapOperation(
+	@Shadow
+	public abstract Text getName();
+
+	@WrapOperation(
         method = "getTooltip", at = @At(
         value = "INVOKE",
         target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;" +
