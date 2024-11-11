@@ -46,6 +46,9 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 	}
 
 	public void removeBlock(BlockPos blockPos) {
+		if (blockPos == null) {
+			return;
+		}
 		this.items.removeIf(item -> blockPos.equals(item.blockPos));
 		final Iterator<ChestItem> iterator = this.items.iterator();
 		List<ChestItem> toAdd = new ArrayList<>();
