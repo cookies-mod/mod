@@ -15,6 +15,7 @@ import codes.cookies.mod.utils.items.ItemUtils;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.component.ComponentChanges;
@@ -80,7 +81,12 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
 		final PetInfo petInfo = get(CookiesDataComponentTypes.PET_INFO);
 		if (petInfo != null) {
-			final RepositoryItem repositoryItem = RepositoryItem.of(petInfo.type() + "/" + petInfo.tier().ordinal());
+			final String s = petInfo.type() + "/";
+			final int ordinal = petInfo.tier().ordinal();
+			final RepositoryItem repositoryItem = Optional.ofNullable(RepositoryItem.of(s + ordinal))
+					.or(() -> Optional.ofNullable(RepositoryItem.of(s + (ordinal + 1))))
+					.or(() -> Optional.ofNullable(RepositoryItem.of(s + (ordinal - 1))))
+					.orElse(null);
 			if (repositoryItem != null) {
 				set(CookiesDataComponentTypes.REPOSITORY_ITEM, repositoryItem);
 				set(CookiesDataComponentTypes.SKYBLOCK_ID, repositoryItem.getInternalId());
