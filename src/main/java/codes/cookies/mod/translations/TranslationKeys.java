@@ -284,6 +284,14 @@ public interface TranslationKeys {
 	String CONFIG_MINING_HIGHLIGHT_DISABLED_HOTM_PERKS = CONFIG_MINING + ".highlight_disabled_hotm_perks";
 	String CONFIG_MINING_SHOW_NEXT_10_COST = CONFIG_MINING + ".show_next_10_cost";
 	String CONFIG_MINING_SHOW_TOTAL_COST = CONFIG_MINING + ".show_total_cost";
+
+	String CONFIG_MINING_SHAFT = CONFIG_MINING + ".shaft";
+	String CONFIG_MINING_SHAFT_ENABLE = CONFIG_MINING_SHAFT + ".enable";
+	String CONFIG_MINING_SHAFT_TEXT = CONFIG_MINING_SHAFT + ".text";
+	String CONFIG_MINING_SHAFT_BEAM = CONFIG_MINING_SHAFT + ".beam";
+	String CONFIG_MINING_SHAFT_BOX = CONFIG_MINING_SHAFT + ".box";
+	String CONFIG_MINING_SHAFT_COLOR = CONFIG_MINING_SHAFT + ".color";
+
 	//</editor-fold>
 	//<editor-fold desc="Config/Misc">
 	String CONFIG_MISC = CONFIG + ".misc";

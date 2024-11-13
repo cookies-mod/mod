@@ -1,4 +1,4 @@
-package codes.cookies.mod.repository.constants;
+package codes.cookies.mod.repository.constants.mining;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;

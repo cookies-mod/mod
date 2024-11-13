@@ -4,7 +4,7 @@ import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
-import codes.cookies.mod.repository.constants.Hotm;
+import codes.cookies.mod.repository.constants.mining.Hotm;
 import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.translations.TranslationKeys;
 import codes.cookies.mod.utils.SkyblockUtils;

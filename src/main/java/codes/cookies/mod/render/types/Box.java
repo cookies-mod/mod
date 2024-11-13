@@ -3,6 +3,8 @@ package codes.cookies.mod.render.types;
 import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.utils.CookiesRenderLayers;
 
+import codes.cookies.mod.render.utils.RenderHelper;
+
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
@@ -60,10 +62,10 @@ public record Box(
 	public Box(Vec3d start, Vec3d end, int color, boolean throughWalls) {
 		this(start,
 				end,
-				(color & 0xFF) / 255f,
-				((color >> 8) & 0xFF) / 255f,
-				((color >> 16) & 0xFF) / 255f,
-				((color >> 24) & 0xFF) / 255f,
+				RenderHelper.getRed(color) / 255f,
+				RenderHelper.getGreen(color) / 255f,
+				RenderHelper.getBlue(color) / 255f,
+				RenderHelper.getAlpha(color) / 255f,
 				throughWalls);
 	}
 
@@ -88,9 +90,9 @@ public record Box(
 				box.maxX,
 				box.maxY,
 				box.maxZ,
+				red,
 				green,
 				blue,
-				alpha,
 				alpha);
 	}
 

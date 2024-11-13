@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import codes.cookies.mod.repository.constants.mining.Hotm;
+import codes.cookies.mod.repository.constants.mining.ShaftCorpseLocations;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
@@ -38,6 +40,8 @@ public class RepositoryConstants {
 		museumData = MuseumData.load(RepositoryConstantsHelper.resolve(path.resolve("museum_data.json"),
 				JsonObject.class));
 		DungeonConstants.load(path.resolve("dungeons"));
+		ShaftCorpseLocations.load(RepositoryConstantsHelper.resolve(path.resolve("mining/shaft_corpses.json"),
+				JsonArray.class));
 	}
 
 	private static List<BlockPos> loadModLocations(JsonArray json) {

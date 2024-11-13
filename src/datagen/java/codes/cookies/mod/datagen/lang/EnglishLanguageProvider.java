@@ -401,6 +401,13 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Cost for next 10",
 				"Shows the cost for the next 10 levels");
 		translationBuilder.addConfig(CONFIG_MINING_SHOW_TOTAL_COST, "Total cost", "Shows the total cost.");
+
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT, "Mineshaft Helper", "Configs related to the corpse location helper");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_ENABLE, "Enable Helper", "Enables the corpse location helper!");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_TEXT, "Enable text", "Renders a text at every possible corpse's location!");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_BOX, "Enable box", "Renders a box under the corpse's location!");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_BEAM, "Enable beacon beam", "Renders a beacon beam at the corpse's location!");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_COLOR, "Highlight color", "Allows you to change the highlight color that is used for the helper.\n\n§eOnly works for new shafts!");
 	}
 
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
