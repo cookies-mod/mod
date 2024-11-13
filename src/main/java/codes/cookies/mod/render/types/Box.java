@@ -4,6 +4,8 @@ import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.utils.CookiesRenderLayers;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
+import codes.cookies.mod.render.utils.RenderHelper;
+
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
@@ -52,23 +54,21 @@ public record Box(Vec3d start, Vec3d end, float red, float green, float blue, fl
         );
     }
 
-    /**
-     * @param start        The start position.
-     * @param end          The end position.
-     * @param color        The color of the box.
-     * @param throughWalls Whether the box should be visible through walls or not.
-     */
-    public Box(Vec3d start, Vec3d end, int color, boolean throughWalls) {
-        this(
-            start,
-            end,
-            (color & 0xFF) / 255f,
-            ((color >> 8) & 0xFF) / 255f,
-            ((color >> 16) & 0xFF) / 255f,
-            ((color >> 24) & 0xFF) / 255f,
-            throughWalls
-        );
-    }
+	/**
+	 * @param start        The start position.
+	 * @param end          The end position.
+	 * @param color        The color of the box.
+	 * @param throughWalls Whether the box should be visible through walls or not.
+	 */
+	public Box(Vec3d start, Vec3d end, int color, boolean throughWalls) {
+		this(start,
+				end,
+				RenderHelper.getRed(color) / 255f,
+				RenderHelper.getGreen(color) / 255f,
+				RenderHelper.getBlue(color) / 255f,
+				RenderHelper.getAlpha(color) / 255f,
+				throughWalls);
+	}
 
 	public Box(BlockPos origin, int color, boolean throughWalls) {
 		this(

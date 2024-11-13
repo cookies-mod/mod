@@ -39,6 +39,14 @@ public class LocationUtils {
 		return serverName;
 	}
 
+	public static Optional<String> getServerDisplayName() {
+		if (serverName == null) {
+			return Optional.empty();
+		}
+		return Optional.of(serverName.replace("mini", "m")
+				.replace("mega", "M"));
+	}
+
 	/**
 	 * Registers the packet listener to stay informed about the player location.
 	 */
