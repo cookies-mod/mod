@@ -87,9 +87,6 @@ public class CorpseWaypoints {
 		}
 		final String[] split = line.split(server);
 		if (split.length != 2) {
-			for (int i = 0; i < split.length; i++) {
-				CookiesUtils.sendFailedMessage(i + ": " + split[i]);
-			}
 			return;
 		}
 		final String shaftType = split[1].trim();
