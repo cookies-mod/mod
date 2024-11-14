@@ -1,6 +1,8 @@
 package codes.cookies.mod.features.misc.timer;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.data.profile.ProfileData;
@@ -14,15 +16,16 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
-
 import lombok.Getter;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+@Getter
 public class PestTimer extends Timer {
 	public static final SbEntityToast.ImageData DATA = new SbEntityToast.ImageData(
 			20,
@@ -30,8 +33,8 @@ public class PestTimer extends Timer {
 			5,
 			7,
 			Identifier.of("cookies-mod", "textures/mobs/beetle.png"));
-	@Getter
 	long lastPestSpawnedTime = -1;
+	private String debug;
 
 	public PestTimer() {
 		super(ConfigManager.getConfig().farmingConfig.pestFoldable, "pest");
@@ -41,6 +44,13 @@ public class PestTimer extends Timer {
 	@Override
 	boolean showNotification() {
 		return LocationUtils.Island.GARDEN.isActive();
+	}
+
+	public Optional<String> getDebug() {
+		if (!isDebug()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(debug);
 	}
 
 	@Override
@@ -73,16 +83,53 @@ public class PestTimer extends Timer {
 	}
 
 	int getTimeBetweenPests() {
+		StringBuilder stringBuilder;
+		if (isDebug()) {
+			stringBuilder = new StringBuilder();
+		} else {
+			stringBuilder = null;
+		}
 		double baseTime = getBaseTime();
-		if (ProfileStorage.getCurrentProfile()
+		final List<ItemStack> itemStacks = ProfileStorage.getCurrentProfile()
 				.map(ProfileData::getEquipmentData)
 				.map(EquipmentData::getValue)
-				.orElseGet(Collections::emptyList)
-				.stream()
-				.anyMatch(stack -> "PEST_VEST".equalsIgnoreCase(stack.get(CookiesDataComponentTypes.SKYBLOCK_ID)))) {
-			baseTime *= 0.8;
+				.orElseGet(Collections::emptyList);
+		if (stringBuilder != null) {
+			stringBuilder.append("§m          §r\n");
+		}
+		for (ItemStack itemStack : itemStacks) {
+			boolean foundAny = false;
+			if ("PEST_VEST".equalsIgnoreCase(itemStack.get(CookiesDataComponentTypes.SKYBLOCK_ID))) {
+				baseTime *= 0.8;
+				if (stringBuilder != null) {
+					stringBuilder.append("Found pest vest! (20%)\n");
+				}
+				foundAny = true;
+			} else if ("PESTHUNTERS_GLOVES".equalsIgnoreCase(itemStack.get(CookiesDataComponentTypes.SKYBLOCK_ID))) {
+				baseTime *= 0.99;
+				if (stringBuilder != null) {
+					stringBuilder.append("Found pest hunter gloves! (1%)\n");
+				}
+				foundAny = true;
+			}
+			if ("squeaky".equalsIgnoreCase(itemStack.get(CookiesDataComponentTypes.MODIFIER))) {
+				baseTime *= 0.99;
+				if (stringBuilder != null) {
+					stringBuilder.append("Found squeaky modifier! (1%)\n");
+				}
+				foundAny = true;
+			}
+
+			if (foundAny) {
+				if (stringBuilder != null) {
+					stringBuilder.append("§m          §r\n");
+				}
+			}
 		}
 		if (MayorUtils.isPerkActive("pest_eradicator")) {
+			if (stringBuilder != null) {
+				stringBuilder.append("Finnegan perk (50%)");
+			}
 			baseTime *= 0.5;
 		}
 		final var value = ConfigManager.getConfig().farmingConfig.pestFoldable.timerType.getValue();
@@ -93,6 +140,9 @@ public class PestTimer extends Timer {
 						.map(PlotData::isAnySprayed)
 						.orElse(false);
 				if (apply) {
+					if (stringBuilder != null) {
+						stringBuilder.append("One plot sprayed (50%)\n");
+					}
 					baseTime *= 0.5;
 				}
 			}
@@ -106,10 +156,17 @@ public class PestTimer extends Timer {
 							.map(plotData -> plotData.isPlotSprayed(currentPlot))
 							.orElse(false);
 					if (applyCooldown) {
+						if (stringBuilder != null) {
+							stringBuilder.append("Current plot sprayed (50%)\n");
+						}
 						baseTime *= 0.5;
 					}
 				}
 			}
+		}
+		if (stringBuilder != null) {
+			stringBuilder.append("§m          §r\n");
+			this.debug = stringBuilder.toString();
 		}
 		return (int) baseTime;
 	}

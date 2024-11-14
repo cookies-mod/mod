@@ -53,7 +53,7 @@ public interface StatsTracker {
 		if (index == 0) {
 			ProfileStorage.getCurrentProfile().map(ProfileData::getEquipmentData).ifPresent(EquipmentData::reset);
 		}
-		if (stack.contains(CookiesDataComponentTypes.REPOSITORY_ITEM) && index < 40) {
+		if (stack.contains(CookiesDataComponentTypes.SKYBLOCK_ID) && index < 40 && index > 9) {
 			ProfileStorage.getCurrentProfile()
 					.map(ProfileData::getEquipmentData)
 					.ifPresent(equipmentData -> equipmentData.add(stack));
