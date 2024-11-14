@@ -9,6 +9,7 @@ import codes.cookies.mod.utils.dev.DevUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -37,13 +38,20 @@ public class NotificationManager {
 		int y = 0;
 		for (Timer timer : timers) {
 			if (timer.getDebug().isPresent()) {
-				drawContext.drawText(
-						MinecraftClient.getInstance().textRenderer,
-						timer.getDebug().get(),
-						3,
-						20 + (y++ * 10),
-						-1,
-						true);
+				final String s = timer.getDebug().get();
+
+				final List<OrderedText> orderedTexts = MinecraftClient.getInstance().textRenderer.wrapLines(
+						Text.literal(s), 200);
+				for (OrderedText orderedText : orderedTexts) {
+					drawContext.drawText(
+							MinecraftClient.getInstance().textRenderer,
+							orderedText,
+							3,
+							20 + (y++ * 10),
+							-1,
+							true);
+				}
+
 			}
 		}
 	}

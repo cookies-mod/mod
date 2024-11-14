@@ -46,8 +46,12 @@ public abstract class Timer {
 
 	abstract void onChatMessage(String message);
 
+	boolean isDebug() {
+		return DevUtils.isEnabled(debug);
+	}
+
 	Optional<String> getDebug() {
-		if (DevUtils.isDisabled(debug)) {
+		if (!isDebug()) {
 			return Optional.empty();
 		}
 		return Optional.of("Timer: " + getTime());
