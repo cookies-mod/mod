@@ -2,7 +2,9 @@ package codes.cookies.mod.config.categories;
 
 import javax.swing.*;
 
+import codes.cookies.mod.config.data.CodecData;
 import codes.cookies.mod.config.data.RancherSpeedConfig;
+import codes.cookies.mod.config.data.SqueakyMousematOption;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.HudSetting;
@@ -43,6 +45,14 @@ public class FarmingConfig extends Category {
 	public RancherSpeedConfig rancherSpeed = new RancherSpeedConfig();
 
 	@Parent
+	public TextDisplayOption mousemat = new TextDisplayOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT);
+
+	public BooleanOption showSqueakyMousematOverlay = new BooleanOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY, false);
+
+	public CodecData<SqueakyMousematOption> squeakyMousematOption = new CodecData<>(SqueakyMousematOption.createDefault(),
+			SqueakyMousematOption.CODEC);
+
+	@Parent
 	public TextDisplayOption compostText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_COMPOST);
 
 	public BooleanOption showCompostPriceBreakdown =
@@ -56,10 +66,6 @@ public class FarmingConfig extends Category {
 		case DESCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING;
 	})).onlyIf(showCompostPriceBreakdown);
 
-	//@Parent
-	//public TextDisplayOption visitorText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITOR);
-
-	//public BooleanOption visitorMaterialHelper = new BooleanOption(CONFIG_FARMING_VISITOR_MATERIAL_HELPER, false);
 
 	@Parent
 	public TextDisplayOption jacobsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_JACOBS);

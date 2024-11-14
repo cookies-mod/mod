@@ -113,8 +113,9 @@ public class ConfigManager {
                     configFile.resolveSibling("config.backup.json"),
                     StandardCopyOption.REPLACE_EXISTING
                 );
-            } catch (IOException e) {
-                ExceptionHandler.handleException(e);
+            } catch (IOException exception) {
+				// we just log a failed config backup and move on!
+				log.error("Failed to save config", exception);
             }
         }
 

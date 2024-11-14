@@ -296,6 +296,13 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_FARMING_SHOW_RANCHER_OPTIMAL_SPEED,
 				"Show rancher overlay",
 				"Show optimal speeds in the rancher's boots.");
+
+		translationBuilder.add(CONFIG_FARMING_SQUEAKY_MOUSEMAT, "Squeaky Mousemat");
+		translationBuilder.addConfig(
+				CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY,
+				"Enabled overlay",
+				"Enables an overlay for the squeaky mousemat where you can save yaw/pitch for every crop.");
+
 		translationBuilder.add(CONFIG_FARMING_CATEGORIES_COMPOST, "Composter");
 		translationBuilder.addConfig(CONFIG_FARMING_SHOW_COMPOST_PRICE_BREAKDOWN,
 				"Compost upgrade price",
