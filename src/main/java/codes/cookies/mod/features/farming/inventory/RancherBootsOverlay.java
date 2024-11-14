@@ -5,7 +5,7 @@ import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.data.ListData;
 import codes.cookies.mod.config.data.RancherSpeedConfig;
-import codes.cookies.mod.data.RancherSpeeds;
+import codes.cookies.mod.data.farming.RancherSpeeds;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.api.ScreenKeyEvents;

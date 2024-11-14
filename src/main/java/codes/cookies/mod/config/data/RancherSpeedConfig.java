@@ -3,7 +3,7 @@ package codes.cookies.mod.config.data;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import codes.cookies.mod.config.system.SaveLoadHelper;
-import codes.cookies.mod.data.RancherSpeeds;
+import codes.cookies.mod.data.farming.RancherSpeeds;
 import codes.cookies.mod.utils.IntReference;
 import codes.cookies.mod.utils.json.JsonSerializable;
 import java.util.ArrayList;

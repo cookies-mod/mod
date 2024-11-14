@@ -30,8 +30,8 @@ public class RancherSpeeds implements JsonSerializable {
         this.profileData = profileData;
     }
 
-    public codes.cookies.mod.data.RancherSpeeds asData() {
-        return new codes.cookies.mod.data.RancherSpeeds(
+    public codes.cookies.mod.data.farming.RancherSpeeds asData() {
+        return new codes.cookies.mod.data.farming.RancherSpeeds(
             new IntReference(() -> wheat, newSpeed -> wheat = newSpeed),
             new IntReference(() -> carrot, newSpeed -> carrot = newSpeed),
             new IntReference(() -> potato, newSpeed -> potato = newSpeed),

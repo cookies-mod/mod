@@ -1,4 +1,4 @@
-package codes.cookies.mod.data;
+package codes.cookies.mod.data.farming;
 
 import codes.cookies.mod.utils.IntReference;
 

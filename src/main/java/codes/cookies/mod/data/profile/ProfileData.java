@@ -1,5 +1,6 @@
 package codes.cookies.mod.data.profile;
 
+import codes.cookies.mod.data.farming.squeakymousemat.SqueakyMousematData;
 import codes.cookies.mod.data.player.PlayerStorage;
 import codes.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import codes.cookies.mod.data.profile.profile.GlobalProfileData;
@@ -54,6 +55,7 @@ public class ProfileData {
 	private ProfileStats profileStats = new ProfileStats();
 	private EquipmentData equipmentData = new EquipmentData();
 	private PlotData plotData = new PlotData();
+	private SqueakyMousematData squeakyMousematData = SqueakyMousematData.getDefault();
 
     /**
      * Create a profile.
