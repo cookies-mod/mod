@@ -166,8 +166,8 @@ public class HotmUtils {
 				int amount = perk.calculateNextN(10, perkLevel);
 				lines.add(index++,
 						Text.literal("%s ".formatted(numberFormat.format(amount)))
-								.append(perk.powderTypes().getName())
-								.formatted(perk.powderTypes().getFormatting()));
+								.append(perk.powderType().getName())
+								.formatted(perk.powderType().getFormatting()));
 			}
 
 			if (ConfigManager.getConfig().miningConfig.showTotalCost.getValue()) {
@@ -181,8 +181,8 @@ public class HotmUtils {
 				int amount = perk.calculateTotal(perkLevel);
 				lines.add(index,
 						Text.literal("%s ".formatted(numberFormat.format(amount)))
-								.append(perk.powderTypes().getName())
-								.formatted(perk.powderTypes().getFormatting()));
+								.append(perk.powderType().getName())
+								.formatted(perk.powderType().getFormatting()));
 			}
 			break;
 		}

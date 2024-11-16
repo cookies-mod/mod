@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.hollows;
 
-import codes.cookies.mod.config.categories.MiningConfig;
+import codes.cookies.mod.config.categories.mining.MiningConfig;
 import codes.cookies.mod.events.profile.ServerSwapEvent;
 import codes.cookies.mod.generated.Regions;
 import codes.cookies.mod.render.Renderable;

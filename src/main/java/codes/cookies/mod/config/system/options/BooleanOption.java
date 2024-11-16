@@ -27,6 +27,12 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
         super(translationKey, value);
     }
 
+	@Override
+	public void setActive(boolean active) {
+		super.active = active;
+		updateCallbacks(this.value);
+	}
+
     @Override
     public void read(@NotNull JsonElement jsonElement) {
         if (jsonElement instanceof JsonObject jsonObject) {

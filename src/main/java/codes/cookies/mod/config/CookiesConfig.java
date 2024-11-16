@@ -7,7 +7,7 @@ import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.config.categories.FarmingConfig;
 import codes.cookies.mod.config.categories.HelpersConfig;
 import codes.cookies.mod.config.categories.ItemSearchConfig;
-import codes.cookies.mod.config.categories.MiningConfig;
+import codes.cookies.mod.config.categories.mining.MiningConfig;
 import codes.cookies.mod.config.categories.MiscConfig;
 import codes.cookies.mod.config.system.Config;
 import codes.cookies.mod.config.system.SearchCategory;

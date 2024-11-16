@@ -1,13 +1,12 @@
 package codes.cookies.mod.repository.constants.mining;
 
+import codes.cookies.mod.data.mining.PowderType;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import codes.cookies.mod.utils.json.JsonUtils;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,32 +51,13 @@ public class Hotm {
     }
 
 
-    @Getter
-    @SuppressWarnings("MissingJavadoc")
-    public enum PowderTypes {
-        MITHRIL("Mithril Powder", Formatting.DARK_GREEN),
-        GEMSTONE("Gemstone Powder", Formatting.LIGHT_PURPLE),
-        GLACITE("Glacite Powder", Formatting.AQUA);
-
-        private final String name;
-        private final Formatting formatting;
-        private final Text text;
-
-        PowderTypes(String name, Formatting formatting) {
-            this.name = name;
-            this.formatting = formatting;
-            this.text = Text.literal(name).formatted(formatting);
-        }
-
-    }
-
-    /**
+	/**
      * Describes a perk in the hotm tree.
      *
-     * @param powderTypes The different types of powder.
+     * @param powderType The different types of powder.
      * @param levels      The cost for every level starting at level 2.
      */
-    public record Perk(@SerializedName("type") PowderTypes powderTypes, int[] levels) {
+    public record Perk(@SerializedName("type") PowderType powderType, int[] levels) {
         /**
          * Calculates the cost for the next n levels, where n is amount - 1.
          *

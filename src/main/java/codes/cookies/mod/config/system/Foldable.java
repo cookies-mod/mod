@@ -1,11 +1,12 @@
 package codes.cookies.mod.config.system;
 
+import codes.cookies.mod.translations.TranslationKeys;
 import com.google.gson.JsonElement;
 
 /**
  * A foldable that will be displayed as such in the config.
  */
-public abstract class Foldable implements SaveLoadHelper {
+public abstract class Foldable implements SaveLoadHelper, TranslationKeys {
 
     /**
      * Gets the display name of the foldable.

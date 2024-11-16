@@ -196,6 +196,10 @@ public class CookiesUtils {
 	}
 
 	public static String stripColor(String input) {
+		if (input == null) {
+			return null;
+		}
+
 		return input.replaceAll("§[0-9a-fklmnor]", "");
 	}
 
