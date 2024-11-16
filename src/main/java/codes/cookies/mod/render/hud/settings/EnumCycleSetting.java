@@ -89,7 +89,6 @@ public class EnumCycleSetting<T extends Enum<T>> extends HudElementSetting {
 
 	@Override
 	public int getWidth() {
-		System.out.println(getTextRenderer().getWidth(this.name) + 26 + this.maxButtonWidth);
 		return getTextRenderer().getWidth(this.name) + 26 + this.maxButtonWidth;
 	}
 

@@ -1,5 +1,6 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.utils.cookies.CookiesUtils;
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonJoinPacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonLeavePacket;
@@ -343,8 +344,10 @@ public final class DungeonInstance {
 	 * Called every 5 ingame ticks, this should be used to perform various performance intensive methods.
 	 */
 	public void periodicalTicks5() {
+		CookiesUtils.sendMessage(Text.literal("" + (-200+(32 * dungeonMap.getRoomsInX()))), true);
+
 		if (this.getPhase() == DungeonPhase.BLOOD &&
-			(this.getPlayerPosition().x > 0 || this.getPlayerPosition().z > 0)) {
+			(this.getPlayerPosition().x > -200+(32 * dungeonMap.getRoomsInX()) || this.getPlayerPosition().z > -200+(32 * dungeonMap.getRoomsInY()))) {
 			this.setPhase(DungeonPhase.BOSS);
 			return;
 		}
