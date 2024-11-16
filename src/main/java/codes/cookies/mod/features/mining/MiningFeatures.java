@@ -4,6 +4,7 @@ import codes.cookies.mod.features.Loader;
 import codes.cookies.mod.features.mining.commissions.CommissionCompletionHighlighter;
 import codes.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
 import codes.cookies.mod.features.mining.shafts.CorpseWaypoints;
+import codes.cookies.mod.features.mining.shafts.ShaftFeatures;
 import codes.cookies.mod.features.mining.utils.HotmUtils;
 
 /**
@@ -19,6 +20,9 @@ public interface MiningFeatures {
 		Loader.load("ForgeFeatures", ForgeFeatures::init);
 		Loader.load("MinesOfDivanHelper", MinesOfDivanHelper::init);
 		Loader.load("CorpseWaypoints", CorpseWaypoints::register);
+		Loader.load("PowderTracker", PowderTracker::load);
+		Loader.load("PowderHud", PowderHud::new);
+		Loader.load("ShaftFeatures", ShaftFeatures::load);
     }
 
 }

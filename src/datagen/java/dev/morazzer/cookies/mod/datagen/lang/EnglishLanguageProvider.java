@@ -415,6 +415,34 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_BOX, "Enable box", "Renders a box under the corpse's location!");
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_BEAM, "Enable beacon beam", "Renders a beacon beam at the corpse's location!");
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_COLOR, "Highlight color", "Allows you to change the highlight color that is used for the helper.\n\n§eOnly works for new shafts!");
+
+		translationBuilder.addConfig(CONFIG_MINING_POWDER_TRACKER, "Powder Tracker", "Settings related to powder tracker hud");
+		translationBuilder.addConfig(CONFIG_MINING_POWDER_TRACKER_ENABLED, "Enable", "Enables the powder tracker!");
+		translationBuilder.addConfig(CONFIG_MINING_POWDER_TRACKER_SHOW_MS, "Show ms", "Adds milliseconds to the timer");
+		translationBuilder.addConfig(
+				CONFIG_MINING_POWDER_TRACKER_PAUSE,
+				"Pause Timer",
+				"Pauses the timer after a set period of time");
+		translationBuilder.addConfig(
+				CONFIG_MINING_POWDER_TRACKER_PAUSE_VALUE,
+				"Pause Delay",
+				"The delay to pause after!");
+		translationBuilder.addConfig(
+				CONFIG_MINING_POWDER_TRACKER_EXTRA_DATA, "Show extra data", """
+						Shows extra data for specific powder types.
+						
+						Gemstone: chests/min
+						Glacite: shafts/min""");
+		translationBuilder.addConfig(
+				CONFIG_MINING_POWDER_TRACKER_SHAFT_TRACKING, "Shaft tracking", """
+						Changes how to track mineshafts.
+						
+						Enter -> Whenever you enter a mineshafts (counts all)
+						Find -> Counts mineshafts found, even not entered ones""");
+		translationBuilder.addConfig(
+				CONFIG_MINING_POWDER_TRACKER_TIMEOUT,
+				"Timeout time",
+				"Changes the time the tracker can be inactive for, before resetting!");
 	}
 
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {

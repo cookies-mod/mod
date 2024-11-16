@@ -158,8 +158,8 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      * @return The option.
      */
     public O onlyIf(BooleanOption booleanOption) {
-        this.active = booleanOption.active;
-        booleanOption.withCallback((oldValue, newValue) -> this.active = newValue);
+		setActive(booleanOption.active);
+        booleanOption.withCallback((oldValue, newValue) -> setActive(newValue));
         return this.asOption();
     }
 
@@ -194,10 +194,14 @@ public abstract class Option<T, O extends Option<T, O>> implements JsonSerializa
      * @return The option.
      */
     public O onlyIfNot(BooleanOption booleanOption) {
-        this.active = !booleanOption.active;
-        booleanOption.withCallback((oldValue, newValue) -> this.active = !newValue);
+        setActive(!booleanOption.active);
+        booleanOption.withCallback((oldValue, newValue) -> setActive(!newValue));
         return this.asOption();
     }
+
+	protected void setActive(boolean active) {
+		this.active = active;
+	}
 
     protected boolean expectPrimitiveNumber(@NotNull JsonElement jsonElement, Logger log) {
         if (!jsonElement.isJsonPrimitive()) {

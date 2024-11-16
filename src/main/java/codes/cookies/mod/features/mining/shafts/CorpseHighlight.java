@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.shafts;
 
-import codes.cookies.mod.config.categories.MiningConfig;
+import codes.cookies.mod.config.categories.mining.MiningConfig;
 import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.types.BeaconBeam;
 import codes.cookies.mod.render.types.Box;

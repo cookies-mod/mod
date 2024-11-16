@@ -27,7 +27,7 @@ public abstract class HudElement {
 	private final Identifier identifier;
 	private final HudPosition position = new HudPosition();
 	@Setter
-	protected HudEditAction hudEditAction = HudEditAction.DEFAULT;
+	protected HudEditAction hudEditAction = HudEditAction.NONE;
 
 	public HudElement(Identifier identifier) {
 		this.identifier = identifier;

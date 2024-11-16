@@ -267,6 +267,7 @@ public class HudEditScreen extends Screen {
 		this.currentlyHovered.buildSettings(hudElementSettingBuilder);
 		final List<HudElementSetting> build = hudElementSettingBuilder.build();
 
+		build.forEach(HudElementSetting::init);
 		sidebarSize = Math.max(build.stream().mapToInt(HudElementSetting::getWidth)
 				.max().orElse(0), 100) + 10;
 		final int xStart;
@@ -289,7 +290,6 @@ public class HudEditScreen extends Screen {
 			hudElementSetting.setX(xStart);
 			hudElementSetting.setY(y);
 			y += heightPer;
-			hudElementSetting.init();
 		}
 
 		this.currentSettings = build;
