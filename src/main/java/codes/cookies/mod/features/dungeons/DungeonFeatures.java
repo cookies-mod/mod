@@ -39,6 +39,7 @@ public class DungeonFeatures {
 			.expireAfterWrite(45, TimeUnit.MINUTES)
 			.removalListener(this::removeInstance)
 			.build();
+	private long dungeonInstanceCreatorTime = -1;
 	private CompletableFuture<String> dungeonInstanceCreator;
 
 	/**
@@ -109,6 +110,7 @@ public class DungeonFeatures {
 	private void awaitDungeonCreation(DungeonType dungeonType, int floorLevel) {
 		sendDebugMessage("Awaiting dungeon creation " + dungeonType.name().toLowerCase() + " " + floorLevel);
 		this.dungeonInstanceCreator = new CompletableFuture<>();
+		this.dungeonInstanceCreatorTime = System.currentTimeMillis();
 		PartyUtils.request();
 		this.dungeonInstanceCreator.whenComplete(this.createDungeon(dungeonType, floorLevel));
 	}
@@ -151,13 +153,16 @@ public class DungeonFeatures {
 	 */
 	public void startDungeon(String serverId) {
 		this.exitDungeon();
-		this.setInstance(this.cache.getIfPresent(serverId));
+		if (this.dungeonInstanceCreatorTime + 1000 * 20 < System.currentTimeMillis()) {
+			this.setInstance(this.cache.getIfPresent(serverId));
+		}
 		if (this.currentInstance != null) {
 			sendDebugMessage("Restored dungeon session " + this.currentInstance.serverId());
 		}
 		if (this.currentInstance == null && this.dungeonInstanceCreator != null) {
 			this.dungeonInstanceCreator.complete(serverId);
 			this.dungeonInstanceCreator = null;
+			this.dungeonInstanceCreatorTime = -1;
 		}
 	}
 
