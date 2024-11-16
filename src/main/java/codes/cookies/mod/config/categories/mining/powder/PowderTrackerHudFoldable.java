@@ -15,6 +15,7 @@ public class PowderTrackerHudFoldable extends Foldable {
 
 	@HudSetting(PowderHud.class)
 	public BooleanOption enableHud = new BooleanOption(CONFIG_MINING_POWDER_TRACKER_ENABLED, true);
+	@HudSetting(PowderHud.class)
 	public BooleanOption showMs = new BooleanOption(CONFIG_MINING_POWDER_TRACKER_SHOW_MS, false);
 	@HudSetting(PowderHud.class)
 	public BooleanOption pauseTimer = new BooleanOption(CONFIG_MINING_POWDER_TRACKER_PAUSE, true);
