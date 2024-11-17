@@ -8,7 +8,6 @@ public class CookiesModDataGen implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         final FabricDataGenerator.Pack pack = generator.createPack();
-
         pack.addProvider(EnglishLanguageProvider::new);
     }
 }

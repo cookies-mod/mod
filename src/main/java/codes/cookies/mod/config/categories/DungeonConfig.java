@@ -55,6 +55,8 @@ public class DungeonConfig extends Category {
 	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showPlayerSkulls = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS, true);
 	@HudSetting(DungeonMapHud.class)
+	public BooleanOption rotatePlayerHeads = new BooleanOption(CONFIG_DUNGEON_ROTATE_PLAYER_SKULLS, true).onlyIf(this.showPlayerSkulls);
+	@HudSetting(DungeonMapHud.class)
 	public BooleanOption showPlayerNames = new BooleanOption(CONFIG_DUNGEON_SHOW_PLAYER_NAMES, true);
 	@HudSetting(DungeonMapHud.class)
 	public BooleanOption renderOverRoomText = new BooleanOption(CONFIG_DUNGEON_RENDER_OVER_TEXT, true);

@@ -123,6 +123,8 @@
   "cookies.config.dungeon.render.over_text.tooltip": "Renders the player name over the dungeon room text.",
   "cookies.config.dungeon.render.room_status_as_color.name": "Show status color",
   "cookies.config.dungeon.render.room_status_as_color.tooltip": "Shows the current room status as color.",
+  "cookies.config.dungeon.render.rotate_player_skulls.name": "Rotate player skulls",
+  "cookies.config.dungeon.render.rotate_player_skulls.tooltip": "Rotate the player skulls to the direction they are looking, else draw an arrow showing it instead.",
   "cookies.config.dungeon.render.show_player_names.name": "Show player names",
   "cookies.config.dungeon.render.show_player_names.tooltip": "Shows the names of the players on the map.",
   "cookies.config.dungeon.render.show_player_skulls.name": "Show player skulls",

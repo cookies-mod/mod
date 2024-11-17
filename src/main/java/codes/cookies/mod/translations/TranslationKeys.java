@@ -108,7 +108,7 @@ public interface TranslationKeys {
 	String SCREEN_FORGE_RECIPE_OVERVIEW_VIEW_ALL = SCREEN_FORGE_RECIPE_OVERVIEW + ".view_all";
 	String SCREEN_FORGE_RECIPE_OVERVIEW_RECIPE = SCREEN_FORGE_RECIPE_OVERVIEW + ".recipe";
 	String SCREEN_FORGE_RECIPE_OVERVIEW_BACK_TO_FORGE_RECIPES = SCREEN_FORGE_RECIPE_OVERVIEW +
-                                                                ".back_to_forge_recipes";
+			".back_to_forge_recipes";
 	//</editor-fold>
 
 	//<editor-fold desc="Item Search (Screen)">
@@ -348,6 +348,7 @@ public interface TranslationKeys {
 	String CONFIG_DUNGEON_USE_FEATURES = CONFIG_DUNGEON + ".use_features";
 	String CONFIG_DUNGEON_USE_BACKEND = CONFIG_DUNGEON + ".use_backend";
 
+
 	String CONFIG_DUNGEON_RENDER = CONFIG_DUNGEON + ".render";
 	String CONFIG_DUNGEON_RENDER_MAP = CONFIG_DUNGEON_RENDER + ".map";
 	String CONFIG_DUNGEON_RENDER_MAP_REPOSITION = CONFIG_DUNGEON_RENDER_MAP + ".reposition";
@@ -356,6 +357,7 @@ public interface TranslationKeys {
 	String CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_2 = CONFIG_DUNGEON_RENDER_MAP_REPOSITION + ".2";
 	String CONFIG_DUNGEON_RENDER_MAP_REPLACEMENT_LINE_3 = CONFIG_DUNGEON_RENDER_MAP_REPOSITION + ".3";
 	String CONFIG_DUNGEON_SHOW_PLAYER_SKULLS = CONFIG_DUNGEON_RENDER + ".show_player_skulls";
+	String CONFIG_DUNGEON_ROTATE_PLAYER_SKULLS = CONFIG_DUNGEON_RENDER + ".rotate_player_skulls";
 	String CONFIG_DUNGEON_SHOW_PLAYER_NAMES = CONFIG_DUNGEON_RENDER + ".show_player_names";
 	String CONFIG_DUNGEON_RENDER_OVER_TEXT = CONFIG_DUNGEON_RENDER + ".over_text";
 	String CONFIG_DUNGEON_RENDER_KEEP_WITHER_DOOR = CONFIG_DUNGEON_RENDER + ".keep_wither_door";
