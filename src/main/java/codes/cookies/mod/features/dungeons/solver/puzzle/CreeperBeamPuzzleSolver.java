@@ -21,6 +21,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Solver for the creeper beam puzzle.
+ */
 public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 	private static final Block[] BLOCKS = {Blocks.PRISMARINE, Blocks.SEA_LANTERN};
 	private static final int[] COLORS = {Constants.SUCCESS_COLOR, 0xFFBED2FE, 0xFFFDFD96, 0xFF6EB5FF};

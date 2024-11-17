@@ -7,6 +7,9 @@ import codes.cookies.mod.utils.compatibility.system.Requires;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 
+/**
+ * Compatibility interface for legendary tooltips.
+ */
 @Requires("legendarytooltips")
 public interface LegendaryTooltips {
 

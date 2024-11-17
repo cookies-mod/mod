@@ -21,6 +21,9 @@ import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * Solver for the three weirdos puzzle.
+ */
 public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 	private static final Pattern PATTERN = Pattern.compile("\\[NPC] (\\w+): (.+)");
 	private static final List<String> CORRECT_MESSAGES = Arrays.asList("The reward is not in my chest!",

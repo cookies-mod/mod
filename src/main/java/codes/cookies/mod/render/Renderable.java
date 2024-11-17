@@ -42,5 +42,8 @@ public interface Renderable {
 		return false;
 	}
 
+	/**
+	 * Called when registering the renderable with the world renderer.
+	 */
     default void load() {}
 }

@@ -16,6 +16,9 @@ import net.minecraft.util.math.BlockPos;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
+/**
+ * Renderable to highlight a corpse in the glacite mineshafts.
+ */
 public record CorpseHighlight(BlockPos blockPos, BeaconBeam beam, Box box, int color) implements Renderable {
 
 	public CorpseHighlight(BlockPos blockPos, int color) {

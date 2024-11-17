@@ -6,6 +6,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
 
+/**
+ * Language provider to generate language files.
+ */
 public abstract class CookiesLanguageProvider extends FabricLanguageProvider implements TranslationKeys {
     protected CookiesLanguageProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
         super(dataOutput, registryLookup);
@@ -21,6 +24,9 @@ public abstract class CookiesLanguageProvider extends FabricLanguageProvider imp
         RegistryWrapper.WrapperLookup registryLookup,
         CookiesTranslationBuilder translationBuilder);
 
+	/**
+	 * Expanded translation builder to allow for easy config value addition.
+	 */
     public interface CookiesTranslationBuilder extends FabricLanguageProvider.TranslationBuilder {
 
         default void addConfig(String key, String name, String tooltip) {

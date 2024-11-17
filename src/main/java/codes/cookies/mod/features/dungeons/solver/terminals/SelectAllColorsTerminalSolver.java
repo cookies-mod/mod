@@ -14,6 +14,9 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Unit;
 
+/**
+ * Solver for the select all colors terminal.
+ */
 public class SelectAllColorsTerminalSolver extends TerminalSolver {
 
 	public SelectAllColorsTerminalSolver() {

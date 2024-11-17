@@ -17,6 +17,9 @@ import net.minecraft.util.math.MathHelper;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+/**
+ * Solver for the change all to same color terminal in floor seven.
+ */
 public class ChangeAllToSameColorTerminalSolver extends TerminalSolver {
 	private static final Item[] ITEMS = {Items.ORANGE_STAINED_GLASS_PANE,
 			Items.YELLOW_STAINED_GLASS_PANE,

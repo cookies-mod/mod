@@ -10,6 +10,9 @@ import codes.cookies.mod.features.misc.utils.crafthelper.tooltips.NormalComponen
 import codes.cookies.mod.repository.recipes.calculations.RecipeCalculationResult;
 import codes.cookies.mod.repository.recipes.calculations.RecipeResult;
 
+/**
+ * Formatter for the craft helper.
+ */
 public class CraftHelperFormatter {
 
 	public CraftHelperInstance instance;
@@ -18,6 +21,12 @@ public class CraftHelperFormatter {
 		this.instance = instance;
 	}
 
+	/**
+	 * Formats the recipe calculation result in a list of craft helper elements.
+	 * @param result The recipe result.
+	 * @param instance The instance this belongs to.
+	 * @return The formatted list.
+	 */
 	public List<CraftHelperComponent> format(RecipeCalculationResult result, CraftHelperInstance instance) {
 		final CraftHelperContext craftHelperContext = CraftHelperContext.create(
 				result,

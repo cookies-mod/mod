@@ -104,6 +104,10 @@ public class ColorUtils {
 		return gradient;
 	}
 
+	/**
+	 *
+	 * Returns a text with a gradient that is going through all the provided colors.
+	 */
 	public static MutableText literalWithGradient(String prefix, int... values) {
 		int amountPerValue = (int) Math.ceil(prefix.length() / ((float)values.length));
 

@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import codes.cookies.mod.events.ChestSaveEvent;
 import codes.cookies.mod.utils.json.CodecJsonSerializable;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,24 +27,34 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 	private static final Logger LOGGER = LoggerFactory.getLogger(IslandChestStorage.class);
 	private final List<ChestItem> items = new ArrayList<>();
 
+	/**
+	 * Saves a stack for the chest in the provided slot.
+	 */
 	public void save(BlockPos blockPos, BlockPos secondChest, ItemStack stack, int slot) {
 		Optional.ofNullable(ChestItem.create(blockPos, secondChest, stack, slot))
 				.ifPresent(items::add);
 	}
 
+	/**
+	 * @return All items that are present within the block.
+	 */
 	private List<ChestItem> getItems(BlockPos pos) {
 		return this.items.stream().filter(chestItem -> pos.equals(chestItem.blockPos))
 				.toList();
 	}
 
-	public void removeBlockSlot(BlockPos blockPos, int slot) {
-		this.items.removeIf(item -> blockPos.equals(item.blockPos) && item.slot == slot);
-	}
-
+	/**
+	 * @param chestItem The item to remove.
+	 */
 	public void remove(ChestItem chestItem) {
 		this.items.remove(chestItem);
 	}
 
+	/**
+	 * Removes all items related to the chest position.
+	 *
+	 * @param blockPos The position to remove.
+	 */
 	public void removeBlock(BlockPos blockPos) {
 		if (blockPos == null) {
 			return;
@@ -88,6 +98,9 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 		return LOGGER;
 	}
 
+	/**
+	 * Sends a chest save event for the provided blocks
+	 */
 	public void sendEvent(BlockPos blockPos, BlockPos second) {
 		if (blockPos != null && second != null) {
 			final ArrayList<ChestItem> bothItems = new ArrayList<>();
@@ -97,7 +110,7 @@ public class IslandChestStorage implements CodecJsonSerializable<List<IslandChes
 			return;
 		}
 		if (blockPos != null) {
-			ChestSaveEvent.EVENT.invoker().onSave(blockPos, second,this.getItems(blockPos));
+			ChestSaveEvent.EVENT.invoker().onSave(blockPos, second, this.getItems(blockPos));
 		}
 	}
 

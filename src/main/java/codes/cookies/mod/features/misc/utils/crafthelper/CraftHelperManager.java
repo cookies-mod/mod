@@ -23,6 +23,9 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 
+/**
+ * Manager for all craft helper instances.
+ */
 public class CraftHelperManager {
 
 	@Setter
@@ -57,6 +60,9 @@ public class CraftHelperManager {
 		});
 	}
 
+	/**
+	 * Pushes a new craft helper instance.
+	 */
 	public static void pushNewCraftHelperItem(RepositoryItem repositoryItem, int amount) {
 		active = new CraftHelperInstance(repositoryItem, amount, new ArrayList<>());
 		active.recalculate();

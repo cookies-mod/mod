@@ -8,6 +8,9 @@ import net.minecraft.registry.RegistryWrapper;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
+/**
+ * Language provider for english.
+ */
 public class EnglishLanguageProvider extends CookiesLanguageProvider {
 	public EnglishLanguageProvider(
 			FabricDataOutput fabricDataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookupFuture) {

@@ -30,6 +30,9 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * Shows all present sources for a provided item compound.
+ */
 public class InspectItemScreen extends ClientSideInventory {
 
 	private static final Position LEFT_ARROW = new Position(5, 0);

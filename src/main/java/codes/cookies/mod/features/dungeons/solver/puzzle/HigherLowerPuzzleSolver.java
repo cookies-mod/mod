@@ -30,6 +30,9 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Solver for the higher lower puzzle.
+ */
 public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private static final Pattern PATTERN = Pattern.compile("\\[Lv15] Blaze [\\d,]+/([\\d,]+)❤");
 	private Direction direction = null;

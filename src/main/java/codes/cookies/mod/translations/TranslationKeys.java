@@ -2,6 +2,9 @@ package codes.cookies.mod.translations;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A list of all translation keys used in the mod.
+ */
 public interface TranslationKeys {
 
 	String MOD = "cookies";

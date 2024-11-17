@@ -8,6 +8,9 @@ import net.fabricmc.fabric.api.event.Event;
 
 import java.util.function.Consumer;
 
+/**
+ * Events related to mineshafts.
+ */
 public interface MineshaftEvents {
 
 	Event<Consumer<ShaftCorpseLocations.ShaftLocations>> JOIN_SHAFT = CookiesEventUtils.consumer();

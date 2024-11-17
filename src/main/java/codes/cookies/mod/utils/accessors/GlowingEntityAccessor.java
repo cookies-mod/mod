@@ -2,6 +2,9 @@ package codes.cookies.mod.utils.accessors;
 
 import net.minecraft.entity.Entity;
 
+/**
+ * Allows for custom glowing colors and custom glow.
+ */
 public interface GlowingEntityAccessor {
 
 	static GlowingEntityAccessor toAccessor(Entity entity) {

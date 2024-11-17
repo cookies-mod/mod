@@ -2,6 +2,9 @@ package codes.cookies.mod.utils.accessors;
 
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 
+/**
+ * Allows to access the custom data for the player render state
+ */
 public interface PlayerEntityRenderStateAccessor {
 
 	static PlayerEntityRenderStateAccessor get(PlayerEntityRenderState state) {

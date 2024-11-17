@@ -3,6 +3,9 @@ package codes.cookies.mod.services.powder;
 import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
 import codes.cookies.mod.utils.cookies.PauseableTime;
 
+/**
+ * Entry of the powder tracker.
+ */
 public final class PowderEntry {
 	private long powderGained;
 	private PauseableTime pauseableTime;

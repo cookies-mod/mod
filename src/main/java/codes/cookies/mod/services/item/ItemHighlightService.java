@@ -29,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * Service to handle highlighting.
+ */
 public class ItemHighlightService {
 
 	@Nullable

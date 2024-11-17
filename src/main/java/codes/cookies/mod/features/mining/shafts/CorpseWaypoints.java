@@ -22,6 +22,9 @@ import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 
+/**
+ * Adds waypoints in the glacite mineshafts for possible corpse locations.
+ */
 public class CorpseWaypoints {
 	private static final Map<BlockPos, Renderable> renderables = new HashMap<>();
 

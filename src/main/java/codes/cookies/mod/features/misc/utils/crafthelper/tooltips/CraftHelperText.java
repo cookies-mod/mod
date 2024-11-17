@@ -7,6 +7,9 @@ import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
+/**
+ * Text that is used in a craft helper component.
+ */
 @Setter
 public final class CraftHelperText implements CraftHelperComponentPart {
 	private final Text text;

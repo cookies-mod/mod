@@ -4,6 +4,10 @@ import codes.cookies.mod.utils.json.CodecJsonSerializable;
 import com.mojang.serialization.Codec;
 import org.slf4j.Logger;
 
+/**
+ * Misc data that has a codec representation.
+ * @param <T>
+ */
 public class CodecData<T> implements CodecJsonSerializable<T> {
 	public CodecData(T defaultValue, Codec<T> codec) {
 		this.value = defaultValue;

@@ -65,6 +65,9 @@ public class SackTracker implements JsonSerializable {
         items.compute(item, (key, oldValue) -> Math.max(oldValue == null ? value : oldValue + value, 0));
     }
 
+	/**
+	 * Clears all sack data.
+	 */
     public void clear() {
         this.items.clear();
     }

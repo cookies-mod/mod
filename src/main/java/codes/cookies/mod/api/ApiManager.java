@@ -48,6 +48,9 @@ import org.apache.http.message.BasicHeader;
 @Slf4j
 public class ApiManager {
 
+	/**
+	 * User agent to use for the mod.
+	 */
 	public static String USER_AGENT;
 	static CloseableHttpClient CLIENT;
 	private static boolean isAuthenticated;

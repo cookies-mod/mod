@@ -9,6 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.item.ItemStack;
 
+/**
+ * Tries to match two items.
+ * @param itemStack The item to match.
+ */
 public record IsSameMatch(@NotNull ItemStack itemStack) implements ItemSearchFilter {
 
 	@Override
@@ -23,7 +27,7 @@ public record IsSameMatch(@NotNull ItemStack itemStack) implements ItemSearchFil
 		return getResult(stack).map(IsSameResult::wrapBoolean).orElse(IsSameResult.NO);
 	}
 
-	Optional<Boolean> getResult(ItemStack stack) {
+	private Optional<Boolean> getResult(ItemStack stack) {
 		return Optional.ofNullable(stack).map(check -> ItemServices.isSame(check, itemStack));
 	}
 }

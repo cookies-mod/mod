@@ -10,6 +10,9 @@ import codes.cookies.mod.utils.json.CodecJsonSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Profile data for the craft helper to serialize the current item and settings.
+ */
 public class CraftHelperData implements CodecJsonSerializable<CraftHelperInstance> {
 
 	public CraftHelperData() {

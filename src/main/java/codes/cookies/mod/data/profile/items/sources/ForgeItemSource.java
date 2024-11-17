@@ -69,7 +69,7 @@ public class ForgeItemSource implements ItemSource<ForgeItemSource.Context> {
 
 		ProfileStorage.getCurrentProfile()
 				.map(ProfileData::getForgeTracker)
-				.map(FunctionUtils.function(ForgeTracker::remove))
+				.map(FunctionUtils.function(ForgeTracker::removeItem))
 				.orElseGet(FunctionUtils::noOp)
 				.accept(data.slot());
 	}

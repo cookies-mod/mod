@@ -8,6 +8,9 @@ public interface Constants {
      * The prefix that is appended before mod messages.
      */
     String PREFIX = "Cookies Mod ⋙ ";
+	/**
+	 * Secondary prefix, will mostly be used during april fools.
+	 */
     String SECONDARY_PREFIX = "【Cookies Mod】";
     /**
      * The main color that is used.
@@ -66,6 +69,9 @@ public interface Constants {
          * Emoji to indicate a repetition.
          */
         String REPEAT_ARROW = "\uD83D\uDD01";
+		/**
+		 * Emoji to indicate a move action.
+		 */
 		String MOVE =  "✥";
 	}
 

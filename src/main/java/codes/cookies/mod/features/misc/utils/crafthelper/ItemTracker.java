@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.util.Pair;
 
+/**
+ * Tracks availability of repository items across a crafting tree.
+ */
 public class ItemTracker {
 
 	private final Map<RepositoryItem, TrackedItem> trackedItems = new HashMap<>();
@@ -39,6 +42,11 @@ public class ItemTracker {
 				trackedItem.copy()));
 	}
 
+	/**
+	 * Gets the amount of items available for the item.
+	 * @param repositoryItem The item.
+	 * @return The amount available.
+	 */
 	public int getAmount(RepositoryItem repositoryItem) {
 		if (trackedItems.containsKey(repositoryItem)) {
 			return trackedItems.get(repositoryItem).amount;
@@ -46,6 +54,12 @@ public class ItemTracker {
 		return 0;
 	}
 
+	/**
+	 * Takes the amount of the item if possible.
+	 * @param repositoryItem The item.
+	 * @param amount The amount to take.
+	 * @return The amount that was available.
+	 */
 	public int take(RepositoryItem repositoryItem, int amount) {
 		if (trackedItems.containsKey(repositoryItem)) {
 			return trackedItems.get(repositoryItem).take(amount);
@@ -53,14 +67,26 @@ public class ItemTracker {
 		return 0;
 	}
 
+	/**
+	 * Creates a copy of the item tracker.
+	 * @return The copy.
+	 */
 	public ItemTracker copy() {
 		return new ItemTracker(this);
 	}
 
+	/**
+	 * Gets the tracked item representation of the repository item.
+	 * @param repositoryItem The item.
+	 * @return The tracked item.
+	 */
 	public TrackedItem get(RepositoryItem repositoryItem) {
 		return trackedItems.getOrDefault(repositoryItem, TrackedItem.EMPTY);
 	}
 
+	/**
+	 * Used to store availability and other stats about an item.
+	 */
 	public static class TrackedItem {
 		public static TrackedItem EMPTY = new TrackedItem(RepositoryItem.EMPTY);
 
@@ -76,7 +102,6 @@ public class ItemTracker {
 		public TrackedItem(@NotNull RepositoryItem repositoryItem) {
 			this.repositoryItem = repositoryItem;
 		}
-
 
 		public TrackedItem(@NotNull RepositoryItem repositoryItem, List<Item<?>> items) {
 			this.repositoryItem = repositoryItem;
@@ -100,6 +125,11 @@ public class ItemTracker {
 			this.sourceAmounts.putAll(trackedItem.sourceAmounts);
 		}
 
+		/**
+		 * Tries to take the provided amount.
+		 * @param max The amount to take.
+		 * @return The amount that was available.
+		 */
 		public int take(int max) {
 			int remaining = amount - consumed;
 			if (remaining > max) {

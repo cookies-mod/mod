@@ -18,6 +18,9 @@ import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 
+/**
+ * Tracks the time plots got sprayed at.
+ */
 public class PlotSprayTracker {
 	private static final String DEBUG = "SprayTracker";
 	private static int lastPlotId;

@@ -7,6 +7,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * A generic multiline text hud.
+ */
 public abstract class MultiLineTextHudElement extends HudElement {
 	protected int lastWidth;
 	public MultiLineTextHudElement(Identifier identifier) {

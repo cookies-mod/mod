@@ -5,6 +5,9 @@ import codes.cookies.mod.data.mining.PowderType;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
+/**
+ * Event to inform about powder changes, negative delta can be ignored most of the time.
+ */
 public interface PowderUpdateEvent {
 
 	Event<PowderUpdateEvent> EVENT = EventFactory.createArrayBacked(

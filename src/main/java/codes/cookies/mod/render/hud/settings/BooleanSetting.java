@@ -16,6 +16,9 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
+/**
+ * A boolean setting for a hud element.
+ */
 public class BooleanSetting extends HudElementSetting {
 	private static final ItemStack ACTIVATED = new ItemStack(Items.GREEN_WOOL);
 	private static final ItemStack DEACTIVATED = new ItemStack(Items.RED_WOOL);

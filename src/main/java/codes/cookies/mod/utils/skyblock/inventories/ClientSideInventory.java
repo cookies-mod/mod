@@ -73,6 +73,9 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
 		this.inventoryContents = new InventoryContents(this.rows, this);
 	}
 
+	/**
+	 * Initializes pagination with the provided values.
+	 */
 	public void initPagination(List<ItemStack> items, Position from, Position to, List<ItemStack> first) {
 		this.pagination = new Pagination(items, from, to, first);
 	}
@@ -258,6 +261,9 @@ public class ClientSideInventory extends Screen implements InventoryScreenAccess
 		}
 	}
 
+	/**
+	 * Sets the slot to the provided item.
+	 */
 	public void setSlot(int row, int column, ItemStack itemStack) {
 		this.slots[row * 9 + column].itemStack = Objects.requireNonNullElse(itemStack, ItemStack.EMPTY);
 	}

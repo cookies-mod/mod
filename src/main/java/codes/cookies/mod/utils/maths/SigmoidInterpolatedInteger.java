@@ -1,5 +1,8 @@
 package codes.cookies.mod.utils.maths;
 
+/**
+ * Interpolated integer that follows a sigmoid function.
+ */
 public final class SigmoidInterpolatedInteger extends InterpolatedInteger {
 
 	/**

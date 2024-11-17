@@ -6,8 +6,12 @@ import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A result that can either be completed successfully or fail.
+ * @param <T> The successful type.
+ * @param <E> The error type.
+ */
 public interface Result<T, E> {
-
 
 	static <T, E> Result<T, E> success(@NotNull T value) {
 		return new Success<>(value);

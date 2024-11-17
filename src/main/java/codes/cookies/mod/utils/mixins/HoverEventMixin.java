@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
+/**
+ * Implements the custom hover event list.
+ */
 @Mixin(HoverEvent.class)
 public class HoverEventMixin implements HoverEventAccessor {
 

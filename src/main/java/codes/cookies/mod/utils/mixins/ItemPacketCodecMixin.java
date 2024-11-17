@@ -7,6 +7,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import net.minecraft.item.ItemStack;
 
+/**
+ * Prevents replacement items to slip through to hypixel.
+ */
 @Mixin(targets = "net.minecraft.item.ItemStack$1")
 public class ItemPacketCodecMixin {
 

@@ -8,6 +8,9 @@ import org.joml.Vector2ic;
  * TooltipPositioner without any restrictions on width and height.
  */
 public class AbsoluteTooltipPositioner implements TooltipPositioner {
+	/**
+	 * Static instance of the tooltip positioner.
+	 */
     public static final AbsoluteTooltipPositioner INSTANCE = new AbsoluteTooltipPositioner();
     @Override
     public Vector2ic getPosition(int screenWidth, int screenHeight, int x, int y, int width, int height) {

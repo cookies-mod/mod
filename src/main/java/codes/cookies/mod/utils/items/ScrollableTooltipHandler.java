@@ -9,6 +9,9 @@ import org.spongepowered.asm.mixin.Unique;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Handles the tooltip displacement.
+ */
 public interface ScrollableTooltipHandler {
 
 	static void scroll(ItemStack stack, double horizontalAmount, double verticalAmount) {

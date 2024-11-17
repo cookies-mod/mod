@@ -7,6 +7,9 @@ import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+/**
+ * Implements the custom data for the player entity render state.
+ */
 @Mixin(PlayerEntityRenderState.class)
 public class PlayerEntityRenderStateMixin implements PlayerEntityRenderStateAccessor {
 

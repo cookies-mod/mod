@@ -99,6 +99,7 @@ public class DevInventoryUtils {
      * @param handledScreen The inventory to save.
      * @param <T>           The type of the inventory.
      * @return The path it was saved to.
+	 * @throws IOException May be caused by saving.
      */
     public static <T extends ScreenHandler> Path saveInventory(HandledScreen<T> handledScreen) throws IOException {
         if (!Files.exists(saved)) {

@@ -37,6 +37,9 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 
+/**
+ * Helper for the mines of divan loot chests.
+ */
 public class MinesOfDivanHelper {
 
 	static Identifier DEBUG = DevUtils.createIdentifier("ch/mod_debug");

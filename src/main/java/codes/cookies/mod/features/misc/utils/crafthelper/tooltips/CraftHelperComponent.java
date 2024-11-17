@@ -10,6 +10,9 @@ import lombok.Setter;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.util.Identifier;
 
+/**
+ * Standard component used in the craft helper.
+ */
 @Setter
 public abstract class CraftHelperComponent implements TooltipComponent {
 	protected static final Identifier DEBUG = DevUtils.createIdentifier("craft_helper/debug_messages");
@@ -18,20 +21,34 @@ public abstract class CraftHelperComponent implements TooltipComponent {
 	@Getter
 	boolean collapsed = false;
 
-
+	/**
+	 * @return The parent of the component.
+	 */
 	public Optional<CraftHelperComponent> getParent() {
 		return Optional.ofNullable(parent);
 	}
 
+	/**
+	 * @return Whether the component is hidden or collapsed.
+	 */
 	public boolean isHiddenOrCollapsed() {
 		return isHidden() || isCollapsed();
 	}
 
+	/**
+	 * @return Whether the component is hidden.
+	 */
 	public boolean isHidden() {
 		return getParent().map(CraftHelperComponent::isHiddenOrCollapsed).orElse(false);
 	}
 
+	/**
+	 * Initializes the component.
+	 */
 	public void init() {}
 
+	/**
+	 * @return The parts used by the component.
+	 */
 	public abstract List<CraftHelperComponentPart> getTextParts();
 }

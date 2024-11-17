@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entry for the squeaky mousemat overlay.
+ */
 @AllArgsConstructor
 @Getter
 @Setter

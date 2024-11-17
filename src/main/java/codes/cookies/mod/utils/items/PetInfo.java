@@ -7,6 +7,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Builder;
 
+/**
+ * Info about a pet.
+ * @param type The type of the pet.
+ * @param active Whether it is active.
+ * @param exp The exp on the pet.
+ * @param tier The tier of the pet.
+ * @param hideInfo Whether the pet is hidden.
+ * @param candyUsed How many candies have been used on the pet.
+ * @param hideRightClick Whether right click should be hidden.
+ * @param noMove Whether the pet is marked as no move.
+ */
 @Builder
 public record PetInfo(String type, boolean active, double exp, RepositoryItem.Tier tier, boolean hideInfo,
 					  int candyUsed, boolean hideRightClick, boolean noMove) {

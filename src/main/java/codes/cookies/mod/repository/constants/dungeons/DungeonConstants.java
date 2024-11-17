@@ -14,6 +14,9 @@ import com.mojang.serialization.JsonOps;
 import codes.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import codes.cookies.mod.repository.constants.RepositoryConstantsHelper;
 
+/**
+ * Constants used in dungeon features.
+ */
 public class DungeonConstants {
 
 	public static List<WaterEntry> waterEntries;

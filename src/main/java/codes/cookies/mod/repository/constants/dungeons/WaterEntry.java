@@ -14,6 +14,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import codes.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Entry in the water board solver list.
+ * @param variant The variant of the room.
+ * @param closed The closed doors.
+ * @param times The times to flick levers at.
+ */
 public record WaterEntry(
 		WaterBoardPuzzleSolver.Variant variant, String closed,
     Map<WaterBoardPuzzleSolver.LeverType, List<Double>> times

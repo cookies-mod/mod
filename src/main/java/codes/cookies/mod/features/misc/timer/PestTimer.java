@@ -25,6 +25,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Timer to keep track of pest spawning cooldowns.
+ */
 @Getter
 public class PestTimer extends Timer {
 	public static final SbEntityToast.ImageData DATA = new SbEntityToast.ImageData(

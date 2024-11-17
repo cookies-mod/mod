@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a field in the craft helper component.
+ */
 @Setter
 public final class TooltipFieldPart implements CraftHelperComponentPart {
 	private int x;

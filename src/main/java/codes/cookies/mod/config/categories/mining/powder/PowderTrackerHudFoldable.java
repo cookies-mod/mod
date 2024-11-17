@@ -7,6 +7,9 @@ import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.features.mining.PowderHud;
 
+/**
+ * Config for the powder hud element.
+ */
 public class PowderTrackerHudFoldable extends Foldable {
 
 	public static PowderTrackerHudFoldable getConfig() {

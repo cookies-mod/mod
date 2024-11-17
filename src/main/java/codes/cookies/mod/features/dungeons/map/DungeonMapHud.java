@@ -20,6 +20,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Hud element for the dungeon map.
+ */
 public class DungeonMapHud extends HudElement {
 	@Getter
 	private static final DungeonMapHud instance = new DungeonMapHud();

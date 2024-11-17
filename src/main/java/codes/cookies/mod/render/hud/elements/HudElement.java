@@ -21,6 +21,9 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 
+/**
+ * A generic hud element.
+ */
 @Getter
 public abstract class HudElement {
 
@@ -33,10 +36,19 @@ public abstract class HudElement {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * Renders the hud element.
+	 */
 	public abstract void render(DrawContext drawContext, TextRenderer textRenderer, float ticks);
 
+	/**
+	 * @return Whether the element should be rendered.
+	 */
 	public abstract boolean shouldRender();
 
+	/**
+	 * Renders the element with all checks.
+	 */
 	public final void renderChecks(DrawContext drawContext, TextRenderer textRenderer, float partialTicks) {
 		if (!shouldRender()) {
 			return;
@@ -44,12 +56,25 @@ public abstract class HudElement {
 		render(drawContext, textRenderer, partialTicks);
 	}
 
+	/**
+	 * @return The width of the element.
+	 */
 	public abstract int getWidth();
 
+	/**
+	 * @return The height of the element.
+	 */
 	public abstract int getHeight();
 
+	/**
+	 * @return The name of the element.
+	 */
 	public abstract Text getName();
 
+	/**
+	 * Adds all settings that are used by the element.
+	 * @param builder The settings builder.
+	 */
 	@MustBeInvokedByOverriders
 	public void buildSettings(HudElementSettingBuilder builder) {
 		builder.prependSetting(new EnumCycleSetting<>(

@@ -23,6 +23,9 @@ import net.minecraft.text.Text;
 
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 
+/**
+ * Tracks the players stats and saves them.
+ */
 public interface StatsTracker {
 	static void init() {
 		ScreenEvents.AFTER_INIT.register(StatsTracker::afterInitScreen);

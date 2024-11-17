@@ -48,6 +48,13 @@ public class MathUtils {
 		return Math.max(min, Math.min(max, value));
 	}
 
+	/**
+	 * Calculates the distance between a point and a line.
+	 * @param point The point.
+	 * @param from The starting position of the line.
+	 * @param to The end position of the line.
+	 * @return The closest distance.
+	 */
 	public static double distance(Vec3d point, Vec3d from, Vec3d to) {
 		return Intersectiond.distancePointLine(point.x, point.y, point.z, from.x, from.y, from.z, to.x, to.y, to.z);
 	}

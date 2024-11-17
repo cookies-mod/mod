@@ -15,8 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Data saved for the heart of the mountain.
+ */
 public class HotmData implements CodecJsonSerializable<List<HotmData.Entry>> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ForgeTracker.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotmData.class);
 
 	private final CopyOnWriteArrayList<Entry> list = new CopyOnWriteArrayList<>();
 
@@ -70,7 +73,9 @@ public class HotmData implements CodecJsonSerializable<List<HotmData.Entry>> {
 		public static Codec<List<Entry>> LIST_CODEC = CODEC.listOf();
 	}
 
-
+	/**
+	 * Gets the current quick forge multiplier.
+	 */
 	public double getQuickForgeMultiplier() {
 		final IntBooleanPair quickForge = this.getStatus("quick_forge");
 		if (quickForge == null || !quickForge.secondBoolean()) {

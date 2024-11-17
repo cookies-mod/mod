@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.minecraft.text.Text;
 
+/**
+ * Manager to handle powder updates and keep track.
+ */
 @Slf4j
 public class PowderTracker {
 

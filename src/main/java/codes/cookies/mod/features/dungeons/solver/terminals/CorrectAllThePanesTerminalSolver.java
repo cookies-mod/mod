@@ -11,6 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Unit;
 
+/**
+ * Solver for the correct all panes terminal in floor seven.
+ */
 public class CorrectAllThePanesTerminalSolver extends TerminalSolver {
 
 	public CorrectAllThePanesTerminalSolver() {

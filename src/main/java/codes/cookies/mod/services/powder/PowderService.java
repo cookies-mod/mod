@@ -17,6 +17,9 @@ import codes.cookies.mod.utils.skyblock.LocationUtils;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
+/**
+ * Service to keep track of powder.
+ */
 public class PowderService {
 
 	private static final Map<PowderType, Map<Long, Integer>> powderTimeouts = new HashMap<>();

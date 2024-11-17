@@ -191,10 +191,20 @@ public class CookiesUtils {
 		};
 	}
 
+	/**
+	 * Maps from 3d space to the 2d xz space.
+	 * @param vec3d The initial vector.
+	 * @return The vectors (x, z) components.
+	 */
 	public static Vector2i mapToXZ(Vec3d vec3d) {
 		return new Vector2i((int) vec3d.x, (int) vec3d.z);
 	}
 
+	/**
+	 * Strips the color from the input.
+	 * @param input The input.
+	 * @return The input without color codes, or null if the input is null.
+	 */
 	public static String stripColor(String input) {
 		if (input == null) {
 			return null;
@@ -203,10 +213,15 @@ public class CookiesUtils {
 		return input.replaceAll("§[0-9a-fklmnor]", "");
 	}
 
-	public static String formattedMs(long time) {
+	/**
+	 * Formats time in days, hours, minutes, seconds and milliseconds.
+	 * @param timerInMilliseconds The time to format.
+	 * @return The formatted time.
+	 */
+	public static String formattedMs(long timerInMilliseconds) {
 		StringBuilder stringBuilder = new StringBuilder();
-		long milliSeconds = time % 1000;
-		long secondsRemaining = time / 1000;
+		long milliSeconds = timerInMilliseconds % 1000;
+		long secondsRemaining = timerInMilliseconds / 1000;
 		long seconds = secondsRemaining % 60;
 		long minutesRemaining = secondsRemaining / 60;
 		long minutes = minutesRemaining % 60;
@@ -233,6 +248,9 @@ public class CookiesUtils {
 		return stringBuilder.toString().trim();
 	}
 
+	/**
+	 * Sends a command as the player.
+	 */
 	public static void sendCommand(String command) {
 		Optional.ofNullable(MinecraftClient.getInstance().player)
 				.ifPresent(player -> player.networkHandler.sendCommand(command));

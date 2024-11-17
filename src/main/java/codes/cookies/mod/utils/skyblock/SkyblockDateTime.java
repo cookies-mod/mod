@@ -5,23 +5,34 @@ import lombok.Getter;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Utility class to work with skyblock time.
+ */
 @Getter
 public class SkyblockDateTime {
+	/**
+	 * Creates the skyblock time of a real world instant.
+	 * @param instant The instant.
+	 */
 	public SkyblockDateTime(Instant instant) {
 		this.instant = instant;
 		this.skyblockInstant = this.instant.minus(Duration.ofSeconds(SKYBLOCK_EPOCH.getEpochSecond()));
 	}
 
+	/**
+	 * Creates the skyblock time based on a skyblock instant.
+	 * @param instant The skyblock isntant.
+	 * @return The skyblock time.
+	 */
 	public static SkyblockDateTime ofSkyblockInstant(Instant instant) {
 		return new SkyblockDateTime(instant.plus(Duration.ofSeconds(SKYBLOCK_EPOCH.getEpochSecond())));
 	}
 
+	/**
+	 * @return The current skyblock time.
+	 */
 	public static SkyblockDateTime now() {
 		return new SkyblockDateTime(Instant.now());
-	}
-
-	public static SkyblockDateTime ofEpochSecond(long second) {
-		return new SkyblockDateTime(Instant.ofEpochSecond(second));
 	}
 
 	private final static Instant SKYBLOCK_EPOCH = Instant.ofEpochMilli(1_560_275_700_000L);
@@ -152,6 +163,11 @@ public class SkyblockDateTime {
 		return SkyblockDateTime.ofSkyblockInstant(Instant.ofEpochMilli((long) ((minute * 0.83 + hour * SB_HOUR + day * SB_DAY + month * SB_MONTH + year * SB_YEAR) * 1000)));
 	}
 
+	/**
+	 * Checks whether a provided even is currently active.
+	 * @param events The event to check.
+	 * @return Whether it is active.
+	 */
 	public boolean isActive(SkyblockEvents events) {
 		return switch (events) {
 			case FARMING_CONTEST -> (getElapsedSkyblockDays() % 3) == 1;
@@ -173,6 +189,11 @@ public class SkyblockDateTime {
 		};
 	}
 
+	/**
+	 * Gets the next skyblock time the provided event starts at.
+	 * @param skyblockEvents The event.
+	 * @return The time it happens at.
+	 */
 	public SkyblockDateTime getNext(SkyblockEvents skyblockEvents) {
 		return switch (skyblockEvents) {
 			case FARMING_CONTEST -> this.with(
@@ -262,6 +283,9 @@ public class SkyblockDateTime {
 		};
 	}
 
+	/**
+	 * A list of all (supported) skyblock events.
+	 */
 	public enum SkyblockEvents {
 		FARMING_CONTEST,
 		TRAVELING_ZOO,
@@ -275,6 +299,6 @@ public class SkyblockDateTime {
 		WINTER_ISLAND,
 		DARK_AUCTION,
 		NEW_YEAR,
-		STAR_CULT;
+		STAR_CULT
 	}
 }

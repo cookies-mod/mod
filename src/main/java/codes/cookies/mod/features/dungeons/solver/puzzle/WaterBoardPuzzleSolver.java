@@ -48,6 +48,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+/**
+ * Solver for the water board puzzle.
+ */
 public class WaterBoardPuzzleSolver extends PuzzleSolver {
 	private static final Block[] ALLOWED_BLOCKS = new Block[]{Blocks.GOLD_BLOCK,
 			Blocks.TERRACOTTA,
@@ -449,6 +452,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 		public void increment(DungeonInstance dungeonInstance) {
 			this.instances.put(dungeonInstance, this.get(dungeonInstance).map(i -> i + 1).orElse(1));
 		}
+
 
 		public Optional<BlockPos> getLeverPosition(BlockPos chestPosition, Direction puzzleDirection) {
 			if (chestPosition == null || puzzleDirection == null) {

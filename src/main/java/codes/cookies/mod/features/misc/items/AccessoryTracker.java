@@ -24,6 +24,9 @@ public class AccessoryTracker {
 
 	private static String name;
 
+	/**
+	 * Registers the accessory bag tracker.
+	 */
 	public static void register() {
 		InventoryEvents.beforeInit("cookies-regex:Accessory Bag .*", Predicates.alwaysTrue(), AccessoryTracker::open);
 	}
