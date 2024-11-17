@@ -45,6 +45,7 @@ public class DungeonConfig extends Category {
 	public SpiritLeapFoldable spiritLeapFoldable = new SpiritLeapFoldable();
 	public PuzzleFoldable puzzleFoldable = new PuzzleFoldable();
 	public ClassColorFoldable classColorFoldable = new ClassColorFoldable();
+	public BooleanOption glowClassColor = new BooleanOption(CONFIG_DUNGEON_GLOW_CLASS_COLOR, true);
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,

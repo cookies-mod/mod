@@ -90,6 +90,8 @@
   "cookies.config.dev.show_plot_price_breakdown.tooltip": "Shows a breakdown of how much compost you need to unlock all plots.",
   "cookies.config.dev.tooltip": "Development related config entries.",
   "cookies.config.dungeon.name": "Dungeon Config",
+  "cookies.config.dungeon.player_glow_by_class_color.name": "Glow teammates by class colors",
+  "cookies.config.dungeon.player_glow_by_class_color.tooltip": "Overrides the default hypixel glowing by rank to glow by class color.",
   "cookies.config.dungeon.puzzle.creeper_beams.name": "Creeper Beams",
   "cookies.config.dungeon.puzzle.creeper_beams.tooltip": "Enables the creeper beams puzzle solver.",
   "cookies.config.dungeon.puzzle.higher_or_lower.name": "Higher/Lower",

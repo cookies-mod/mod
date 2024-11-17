@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.utils.Result;
+import codes.cookies.mod.utils.accessors.GlowingEntityAccessor;
 import codes.cookies.mod.utils.cookies.CookiesBackendUtils;
 import codes.cookies.mod.utils.maths.InterpolatedInteger;
 import codes.cookies.mod.utils.maths.LinearInterpolatedInteger;
@@ -60,6 +61,7 @@ public class DungeonPlayer {
 		this.dungeonClass = clazz;
 		this.setClassLevel(clazzLevel);
 		this.position = new DungeonPosition(0, 0, dungeonInstance);
+		this.updateGlowColor();
 	}
 
 	/**
@@ -78,6 +80,13 @@ public class DungeonPlayer {
 				this.player = player;
 				return;
 			}
+		}
+	}
+
+	private void updateGlowColor() {
+		if (player != null && DungeonConfig.getInstance().glowClassColor.getValue() && this.getColor().isPresent()) {
+			GlowingEntityAccessor.setGlowing(this.player, true);
+			GlowingEntityAccessor.setGlowColor(this.player, this.getColor().getAsInt());
 		}
 	}
 
@@ -315,6 +324,7 @@ public class DungeonPlayer {
 				this.skip = false;
 				this.dungeonClass = clazz;
 				this.setClassLevel(clazzLevel);
+				this.updateGlowColor();
 			}
 		}
 	}
