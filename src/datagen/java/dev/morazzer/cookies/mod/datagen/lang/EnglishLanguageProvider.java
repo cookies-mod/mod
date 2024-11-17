@@ -527,6 +527,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_SKULLS,
 				"Show player skulls",
 				"Shows the player skull instead of the map marker.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_ROTATE_PLAYER_SKULLS,
+				"Rotate player skulls",
+				"Rotate the player skulls to the direction they are looking, else draw an arrow showing it instead.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_SHOW_PLAYER_NAMES,
 				"Show player names",
 				"Shows the names of the players on the map.");
