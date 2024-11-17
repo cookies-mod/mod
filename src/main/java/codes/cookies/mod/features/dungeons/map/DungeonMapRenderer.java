@@ -231,13 +231,7 @@ public class DungeonMapRenderer {
 				drawContext.getMatrices().translate(4, 4, 0);
 				drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
 
-				Identifier texture;
-				if (player.getPlayer() instanceof ClientPlayerEntity) {
-					texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
-				} else {
-					texture = Identifier.ofVanilla("textures/map/decorations/player.png");
-				}
-				drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0,0, 8,8, 8, 8, 8, 8);
+				DrawPlayerArrow(drawContext, player);
 				drawContext.getMatrices().pop();
 			}
 		} else {
@@ -255,6 +249,16 @@ public class DungeonMapRenderer {
 					player.isUsingMod() ? Constants.SUCCESS_COLOR : Constants.FAIL_COLOR);
 		}
 		drawContext.getMatrices().pop();
+	}
+
+	private void DrawPlayerArrow(DrawContext drawContext, DungeonPlayer player) {
+		Identifier texture;
+		if (player.getPlayer() instanceof ClientPlayerEntity) {
+			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
+		} else {
+			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
+		}
+		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0,0, 8,8, 8, 8, 8, 8);
 	}
 
 	/**
@@ -367,13 +371,7 @@ public class DungeonMapRenderer {
 	 * @param player      The player the arrow belongs to.
 	 */
 	private void drawPlayerAsArrow(DrawContext drawContext, DungeonPlayer player) {
-		Identifier texture;
-		if (player.getPlayer() instanceof ClientPlayerEntity) {
-			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
-		} else {
-			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
-		}
-		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0,0, 8,8, 8, 8, 8, 8);
+		DrawPlayerArrow(drawContext, player);
 	}
 
 	private void renderSecretString(DrawContext drawContext, String secretString, int x, int y, int color) {
