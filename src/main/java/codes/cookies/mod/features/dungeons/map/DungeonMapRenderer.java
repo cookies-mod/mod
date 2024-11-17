@@ -43,7 +43,7 @@ public class DungeonMapRenderer {
 	 */
 	public void render(DrawContext drawContext) {
 		if (!this.dungeonInstance.isDebugInstance() &&
-			this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
+				this.dungeonInstance != DungeonFeatures.getInstance().getCurrentInstance().orElse(null)) {
 			return;
 		}
 		if (dungeonInstance.isDebugInstance()) {
@@ -60,7 +60,7 @@ public class DungeonMapRenderer {
 			return;
 		}
 		if (this.dungeonInstance.getPhase() == DungeonPhase.BOSS ||
-			this.dungeonInstance.getPhase() == DungeonPhase.AFTER) {
+				this.dungeonInstance.getPhase() == DungeonPhase.AFTER) {
 			return;
 		}
 		if (DungeonConfig.getInstance().showMapBackground.getValue()) {
@@ -215,9 +215,31 @@ public class DungeonMapRenderer {
 		}
 		drawContext.getMatrices().push();
 		if (DungeonConfig.getInstance().showPlayerSkulls.getValue() && player.getPlayer() != null) {
-			drawContext.getMatrices()
-					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
+			if(DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+				drawContext.getMatrices()
+						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
+			}
+			else {
+				drawContext.getMatrices()
+						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
+			}
+
 			this.drawPlayerHead(drawContext, player);
+
+			if(!DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+				drawContext.getMatrices().push();
+				drawContext.getMatrices().translate(4, 4, 0);
+				drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
+
+				Identifier texture;
+				if (player.getPlayer() instanceof ClientPlayerEntity) {
+					texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
+				} else {
+					texture = Identifier.ofVanilla("textures/map/decorations/player.png");
+				}
+				drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0,0, 8,8, 8, 8, 8, 8);
+				drawContext.getMatrices().pop();
+			}
 		} else {
 			drawContext.getMatrices()
 					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue()) - 180));
@@ -351,7 +373,7 @@ public class DungeonMapRenderer {
 		} else {
 			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
 		}
-		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 8, 8, 0, 0, 8, 8, 8, 8);
+		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0,0, 8,8, 8, 8, 8, 8);
 	}
 
 	private void renderSecretString(DrawContext drawContext, String secretString, int x, int y, int color) {
