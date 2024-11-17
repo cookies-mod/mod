@@ -61,7 +61,7 @@ public class DungeonPlayer {
 		this.dungeonClass = clazz;
 		this.setClassLevel(clazzLevel);
 		this.position = new DungeonPosition(0, 0, dungeonInstance);
-		updateGlowColor();
+		this.updateGlowColor();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class DungeonPlayer {
 	}
 
 	private void updateGlowColor() {
-		if (DungeonConfig.getInstance().glowClassColor.getValue() && this.getColor().isPresent()) {
+		if (player != null && DungeonConfig.getInstance().glowClassColor.getValue() && this.getColor().isPresent()) {
 			GlowingEntityAccessor.setGlowing(this.player, true);
 			GlowingEntityAccessor.setGlowColor(this.player, this.getColor().getAsInt());
 		}
@@ -324,7 +324,7 @@ public class DungeonPlayer {
 				this.skip = false;
 				this.dungeonClass = clazz;
 				this.setClassLevel(clazzLevel);
-				updateGlowColor();
+				this.updateGlowColor();
 			}
 		}
 	}
