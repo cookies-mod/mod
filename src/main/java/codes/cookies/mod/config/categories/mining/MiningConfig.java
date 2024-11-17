@@ -2,6 +2,7 @@ package codes.cookies.mod.config.categories.mining;
 
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
+import codes.cookies.mod.config.categories.mining.shaft.ShaftConfig;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;

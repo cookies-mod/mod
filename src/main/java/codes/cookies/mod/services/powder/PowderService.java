@@ -46,9 +46,11 @@ public class PowderService {
 
 		if ("You uncovered a treasure chest!".equalsIgnoreCase(literalText)) {
 			powderEntries.get(PowderType.GEMSTONE).updateOther(1);
-		} else if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.FIND && "WOW! You found a Glacite Mineshaft portal!".equalsIgnoreCase(
-				literalText)) {
-			powderEntries.get(PowderType.GLACITE).updateOther(1);
+		} else if ("WOW! You found a Glacite Mineshaft portal!".equalsIgnoreCase(literalText)) {
+			if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.FIND) {
+				powderEntries.get(PowderType.GLACITE).updateOther(1);
+			}
+			MineshaftEvents.FIND.invoker().run();
 		}
 	}
 
@@ -84,7 +86,9 @@ public class PowderService {
 	}
 
 	public static void invalidateOutdated(Map<Long, Integer> list) {
-		list.keySet().removeIf(timeAdded -> timeAdded + PowderTrackerHudFoldable.getConfig().getTimeoutTime() < System.currentTimeMillis());
+		list.keySet()
+				.removeIf(timeAdded -> timeAdded + PowderTrackerHudFoldable.getConfig()
+						.getTimeoutTime() < System.currentTimeMillis());
 	}
 
 }
