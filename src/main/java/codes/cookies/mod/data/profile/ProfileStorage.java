@@ -4,9 +4,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import codes.cookies.mod.api.ApiManager;
 import com.google.gson.JsonObject;
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.data.DataMigrations;
@@ -19,6 +21,15 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.json.JsonUtils;
+
+import com.mojang.logging.LogUtils;
+
+import net.hypixel.modapi.HypixelModAPI;
+import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
+import net.hypixel.data.region.Environment;
+
+import net.minecraft.client.MinecraftClient;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,7 +39,9 @@ public class ProfileStorage {
 	private static final String LOGGING_KEY = "profileStorage";
 
 	private static final Path PROFILE_DATA_FOLDER = Path.of("config/cookiesmod/profiles");
-	private static ProfileData profileData;
+	private static  ProfileData profileData;
+
+	private static boolean isOnHypixelAlpha = false;
 
 	/**
 	 * Registers the listeners for automatic profile swapping.
@@ -43,7 +56,18 @@ public class ProfileStorage {
 
 		CookiesMod.getExecutorService().scheduleAtFixedRate(ProfileStorage::saveCurrentProfile, 5, 5,
 				TimeUnit.MINUTES);
+		HypixelModAPI.getInstance().createHandler(ClientboundHelloPacket.class, ProfileStorage::onJoinHypixel);
 	}
+
+	private static void onJoinHypixel(ClientboundHelloPacket clientboundHelloPacket) {
+		if(clientboundHelloPacket.getEnvironment() ==  Environment.BETA) {
+			isOnHypixelAlpha = true;
+			CookiesUtils.sendFailedMessage("You are on Hypixel Alpha, profile data will not be saved!");
+		} else {
+			isOnHypixelAlpha = false;
+		}
+	}
+
 
 	/**
 	 * Save the current profile data instance to the file.
@@ -53,7 +77,7 @@ public class ProfileStorage {
 			return;
 		}
 
-		if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty()) {
+		if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty() || isOnHypixelAlpha) {
 			return;
 		}
 

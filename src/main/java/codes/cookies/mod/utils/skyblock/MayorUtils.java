@@ -75,7 +75,10 @@ public class MayorUtils {
 		for (Perk perk : mayor.perks) {
 			addPerk(perk.name);
 		}
-		addPerk(mayor.minister.name);
+
+		if(mayor.minister != null) {
+			addPerk(mayor.minister.perk.name);
+		}
 	}
 
 	private static void addPerk(String name) {
