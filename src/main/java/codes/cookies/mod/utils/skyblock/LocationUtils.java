@@ -1,5 +1,6 @@
 package codes.cookies.mod.utils.skyblock;
 
+import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.IslandChangeEvent;
 import codes.cookies.mod.events.profile.ServerSwapEvent;
 import codes.cookies.mod.generated.Regions;
@@ -13,10 +14,12 @@ import java.util.Optional;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.hypixel.data.region.Environment;
 import net.hypixel.data.type.GameType;
 import net.hypixel.data.type.ServerType;
 import net.hypixel.modapi.HypixelModAPI;
 
+import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
 
 import net.minecraft.util.Identifier;
@@ -31,6 +34,7 @@ public class LocationUtils {
 	private static boolean isInSkyblock;
 	private static String serverName;
 	private static final Identifier SEND_ISLAND_DEBUG = DevUtils.createIdentifier("island_debug");
+	private static boolean isOnHypixelAlpha = false;
 
 	/**
 	 * @return The current server name.
@@ -53,7 +57,26 @@ public class LocationUtils {
 	public static void register() {
 		HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class,
             LocationUtils::handleLocationUpdate);
+		HypixelModAPI.getInstance().createHandler(ClientboundHelloPacket.class, LocationUtils::onJoinHypixel);
+
 	}
+
+	private static void onJoinHypixel(ClientboundHelloPacket clientboundHelloPacket) {
+		if(clientboundHelloPacket.getEnvironment() ==  Environment.BETA) {
+			isOnHypixelAlpha = true;
+			CookiesUtils.sendFailedMessage("You are on Hypixel Alpha, profile data will not be saved!");
+		} else {
+			isOnHypixelAlpha = false;
+		}
+	}
+
+	/**
+	 * @return Whether the player is on hypixel alpha network or not.
+	 */
+	public static boolean isOnHypixelAlpha() {
+		return isOnHypixelAlpha;
+	}
+
 
 	/**
 	 * @return Whether the player is in skyblock or not.
