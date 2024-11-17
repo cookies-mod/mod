@@ -409,7 +409,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Shows the cost for the next 10 levels");
 		translationBuilder.addConfig(CONFIG_MINING_SHOW_TOTAL_COST, "Total cost", "Shows the total cost.");
 
-		translationBuilder.addConfig(CONFIG_MINING_SHAFT, "Mineshaft Helper", "Configs related to the corpse location helper");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT, "Mineshaft", "Configs related to mineshafts.");
+		translationBuilder.addConfig(CONFIG_MINING_SHAFT_ANNOUNCE, "Announce Shaft", "Announces the shaft and it's contents to either you or all of your party!\n\nExample: Mineshaft Entered | AMBE1 | 3L 1U");
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_ENABLE, "Enable Helper", "Enables the corpse location helper!");
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_TEXT, "Enable text", "Renders a text at every possible corpse's location!");
 		translationBuilder.addConfig(CONFIG_MINING_SHAFT_BOX, "Enable box", "Renders a box under the corpse's location!");
