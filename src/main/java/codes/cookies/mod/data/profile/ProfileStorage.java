@@ -4,9 +4,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import codes.cookies.mod.api.ApiManager;
+import codes.cookies.mod.utils.skyblock.LocationUtils;
 import com.google.gson.JsonObject;
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.data.DataMigrations;
@@ -19,6 +22,7 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.json.JsonUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,6 +49,7 @@ public class ProfileStorage {
 				TimeUnit.MINUTES);
 	}
 
+
 	/**
 	 * Save the current profile data instance to the file.
 	 */
@@ -53,7 +58,7 @@ public class ProfileStorage {
 			return;
 		}
 
-		if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty()) {
+		if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty() || LocationUtils.isOnHypixelAlpha()) {
 			return;
 		}
 
