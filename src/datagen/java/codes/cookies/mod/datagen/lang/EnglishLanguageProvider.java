@@ -511,6 +511,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_USE_BACKEND,
 				"Relay to backend",
 				"Whether information should be exchanged with the backend or not");
+
 		translationBuilder.add(CONFIG_DUNGEON_RENDER, "Render");
 		translationBuilder.addConfig(CONFIG_DUNGEON_RENDER_MAP,
 				"Enable map",
@@ -581,6 +582,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR,
 				"Use class colors",
 				"Uses the class colors instead of the default color.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_GLOW_CLASS_COLOR,
+				"Glow teammates by class colors",
+				"Overrides the default hypixel glowing by rank to glow by class color.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR,
 				"Class colors",
 				"The colors used for every class");
