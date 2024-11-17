@@ -57,7 +57,7 @@ public class SearchQueryMatcher implements ItemSearchFilter {
 				builder.negate();
 			}
 
-			if (stringBuffer.peek() == '$' && stringBuffer.peek(1) == ':') {
+			if (stringBuffer.canRead(2) && stringBuffer.peek() == '$' && stringBuffer.peek(1) == ':') {
 				stringBuffer.skip();
 				stringBuffer.skip();
 				builder.regex();
