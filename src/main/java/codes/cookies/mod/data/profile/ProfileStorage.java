@@ -39,7 +39,7 @@ public class ProfileStorage {
 	private static final String LOGGING_KEY = "profileStorage";
 
 	private static final Path PROFILE_DATA_FOLDER = Path.of("config/cookiesmod/profiles");
-	private static  ProfileData profileData;
+	private static ProfileData profileData;
 
 	private static boolean isOnHypixelAlpha = false;
 
