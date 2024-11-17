@@ -16,7 +16,7 @@ import codes.cookies.mod.features.dungeons.map.PuzzleType;
 import codes.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolverInstance;
 import codes.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import codes.cookies.mod.utils.skyblock.PartyUtils;
-import codes.cookies.mod.utils.skyblock.TabUtils;
+import codes.cookies.mod.utils.skyblock.tab.PlayerListUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -264,9 +264,9 @@ public final class DungeonInstance {
 		}
 		final Collection<PlayerListEntry> listedPlayerListEntries = player.networkHandler.getListedPlayerListEntries();
 		final List<PlayerListEntry> list = listedPlayerListEntries.stream()
-				.filter(TabUtils.isInColumn(2))
-				.sorted(Comparator.comparingInt(TabUtils::getRow))
-				.filter(entry -> TabUtils.getRow(entry) >= 7 && TabUtils.getRow(entry) <= 12)
+				.filter(PlayerListUtils.isInColumn(2))
+				.sorted(Comparator.comparingInt(PlayerListUtils::getRow))
+				.filter(entry -> PlayerListUtils.getRow(entry) >= 7 && PlayerListUtils.getRow(entry) <= 12)
 				.toList();
 
 		list.forEach(this::handlePuzzleEntry);
@@ -304,7 +304,7 @@ public final class DungeonInstance {
 			return;
 		}
 
-		this.handlePuzzleEntry(displayName, TabUtils.getRow(playerListEntry));
+		this.handlePuzzleEntry(displayName, PlayerListUtils.getRow(playerListEntry));
 	}
 
 	private void handlePuzzleEntry(Text text, int row) {
@@ -418,8 +418,8 @@ public final class DungeonInstance {
 		}
 		final Collection<PlayerListEntry> listedPlayerListEntries = player.networkHandler.getListedPlayerListEntries();
 		final List<PlayerListEntry> list = listedPlayerListEntries.stream()
-				.filter(TabUtils.isInColumn(0))
-				.sorted(Comparator.comparingInt(TabUtils::getRow))
+				.filter(PlayerListUtils.isInColumn(0))
+				.sorted(Comparator.comparingInt(PlayerListUtils::getRow))
 				.toList();
 
 		if (list.isEmpty()) {

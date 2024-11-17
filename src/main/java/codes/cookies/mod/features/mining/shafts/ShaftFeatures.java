@@ -7,11 +7,14 @@ import codes.cookies.mod.events.mining.MineshaftEvents;
 import codes.cookies.mod.repository.constants.mining.ShaftCorpseLocations;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
+import lombok.Getter;
 
 import java.util.Optional;
 
 public class ShaftFeatures {
 	private static boolean isInShaft = false;
+	@Getter
+	public static long lastShaftFoundAt = -1;
 	private static ShaftCorpseLocations.ShaftLocations locations;
 
 	public static Optional<ShaftCorpseLocations.ShaftLocations> getCurrentMineshaftLocations() {
@@ -21,7 +24,6 @@ public class ShaftFeatures {
 	public static void load() {
 		IslandChangeEvent.EVENT.register(ShaftFeatures::swapIsland);
 		ScoreboardUpdateEvent.EVENT.register(ShaftFeatures::updateLine);
-		MineshaftEvents.JOIN_SHAFT.register(shaft -> MineshaftEvents.JOIN.invoker().run());
 	}
 
 	private static void swapIsland(LocationUtils.Island previous, LocationUtils.Island current) {
@@ -34,6 +36,7 @@ public class ShaftFeatures {
 
 		if (current == LocationUtils.Island.MINESHAFT) {
 			isInShaft = true;
+			MineshaftEvents.JOIN.invoker().run();
 		}
 	}
 

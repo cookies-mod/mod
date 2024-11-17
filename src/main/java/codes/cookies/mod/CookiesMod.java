@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import codes.cookies.mod.utils.skyblock.MayorUtils;
+import codes.cookies.mod.utils.skyblock.tab.PlayerListUtils;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -76,6 +77,7 @@ public class CookiesMod implements ClientModInitializer {
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
         CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));
         UpdateChecker.init();
+		PlayerListUtils.init();
 		HudManager.load();
         this.registerKeyBindings();
     }

@@ -5,6 +5,7 @@
     "ItemBackgroundRenderMixin",
     "ScreenMixin",
     "AbstractSignEditScreenMixin",
-    "TeamMixin"
+    "TeamMixin",
+    "PlayerListMixin"
   ]
 }

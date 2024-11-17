@@ -13,5 +13,6 @@ public interface MineshaftEvents {
 	Event<Consumer<ShaftCorpseLocations.ShaftLocations>> JOIN_SHAFT = CookiesEventUtils.consumer();
 	Event<Runnable> JOIN = CookiesEventUtils.runnable();
 	Event<Runnable> LEAVE = CookiesEventUtils.runnable();
+	Event<Runnable> FIND = CookiesEventUtils.runnable();
 
 }
