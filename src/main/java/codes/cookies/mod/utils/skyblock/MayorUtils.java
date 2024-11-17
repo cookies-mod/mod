@@ -76,7 +76,7 @@ public class MayorUtils {
 			addPerk(perk.name);
 		}
 
-		if(mayor.minister != null) {
+		if (mayor.minister != null) {
 			addPerk(mayor.minister.perk.name);
 		}
 	}
