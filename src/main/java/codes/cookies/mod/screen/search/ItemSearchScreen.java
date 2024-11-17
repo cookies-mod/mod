@@ -410,6 +410,9 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 		return super.charTyped(chr, modifiers);
 	}
 
+	/**
+	 * Updates the item search screen.
+	 */
 	public void updateInventory() {
 		this.buildItemIndex();
 		this.updateSearch(lastSearch);

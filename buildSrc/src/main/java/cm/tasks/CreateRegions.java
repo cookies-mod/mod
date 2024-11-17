@@ -24,6 +24,9 @@ import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
+/**
+ * Creates the regions.
+ */
 public abstract class CreateRegions extends DefaultTask {
 
     @Inject

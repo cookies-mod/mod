@@ -37,6 +37,10 @@ public final class ItemCompound {
 		this.handleAny(items.iterator().next());
 	}
 
+	/**
+	 * Adds an item of unknown type.
+	 * @param item The item to handle.
+	 */
 	public void handleAny(Item<?> item) {
 		if (this.type == CompoundType.MULTIPLE) {
 			return;
@@ -98,6 +102,10 @@ public final class ItemCompound {
 		this.data = Unit.INSTANCE;
 	}
 
+	/**
+	 * Adds an item to the compound.
+	 * @param item The item to add.
+	 */
 	public void add(Item<?> item) {
 		if (item.source() == ItemSources.CRAFTABLE) {
 			return;
@@ -123,6 +131,10 @@ public final class ItemCompound {
 		return this.items;
 	}
 
+	/**
+	 * Get all items used by craft helper or in total if craft helper is irrelevant.
+	 * @return The items.
+	 */
 	public Set<Item<?>> getUsedItems() {
 		if (this.type == CompoundType.CRAFTABLE && this.data instanceof CraftableItemSource.Data craftData) {
 			return craftData.amounts()
@@ -167,6 +179,9 @@ public final class ItemCompound {
 			   this.items + ']';
 	}
 
+	/**
+	 * The type of the compound.
+	 */
 	public enum CompoundType {
 		CHEST_POS,
 		CHEST,
@@ -214,6 +229,4 @@ public final class ItemCompound {
 			};
 		}
 	}
-
-
 }

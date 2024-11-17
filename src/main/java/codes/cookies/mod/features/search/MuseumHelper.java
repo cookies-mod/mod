@@ -48,6 +48,9 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * Helper for the museum, shows what items are present on the profile.
+ */
 public class MuseumHelper {
 
 	Map<RepositoryItem, List<Item<?>>> items;

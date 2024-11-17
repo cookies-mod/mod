@@ -41,18 +41,34 @@ public class AccessoryItemData implements CodecJsonSerializable<List<AccessoryIt
 		return LOGGER;
 	}
 
+	/**
+	 * Clears all data that is saved on the provided page.
+	 * @param page The page number to clear.
+	 */
 	public void clearPage(int page) {
 		this.items.removeIf(item -> item.page == page);
 	}
 
+	/**
+	 * Save an item with the provided data.
+	 * @param itemStack The item to save.
+	 * @param slot The slot the item is in.
+	 * @param page The page the item is on.
+	 */
 	public void save(ItemStack itemStack, int slot, int page) {
 		this.items.add(AccessoryData.create(itemStack, slot, page));
 	}
 
+	/**
+	 * Removes the item on the provided page in the provided slot.
+	 */
 	public void remove(int page, int slot) {
 		this.items.removeIf(items -> items.page == page && items.slot == slot);
 	}
 
+	/**
+	 * Data for the accessory bag.
+	 */
 	public record AccessoryData(ItemStack itemStack, int slot, int page) {
 		public static AccessoryData create(ItemStack itemStack, int slot, int page) {
 			itemStack.remove(DataComponentTypes.JUKEBOX_PLAYABLE);

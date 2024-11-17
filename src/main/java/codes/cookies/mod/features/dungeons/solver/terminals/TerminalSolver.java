@@ -25,6 +25,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Generic terminal solver.
+ */
 public abstract class TerminalSolver {
 	public static Identifier DEBUG = DevUtils.createIdentifier("terminals/disable_click_all_check");
 	protected boolean localToggle = true;

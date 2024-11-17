@@ -10,6 +10,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.util.Uuids;
 
+/**
+ * Data that is stored in the config for the squeaky mousemat overlay.
+ * @param useProfileData A list of uuids where the profile data is used.
+ * @param data The squeaky mousemat data.
+ */
 public record SqueakyMousematOption(List<UUID> useProfileData, SqueakyMousematData data) {
 
 	public static final Codec<SqueakyMousematOption> CODEC = RecordCodecBuilder.create(instance -> instance.group(

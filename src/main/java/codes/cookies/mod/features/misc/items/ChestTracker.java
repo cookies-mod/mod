@@ -80,7 +80,7 @@ public class ChestTracker {
 
 		this.first = blockHitResult.getBlockPos();
 		final ChestType chestType = blockState.get(Properties.CHEST_TYPE);
-		final DoubleBlockProperties.Type doubleBlockType = getDoubleBlockType(blockState);
+		final DoubleBlockProperties.Type doubleBlockType = this.getDoubleBlockType(blockState);
 		if (chestType != ChestType.SINGLE) {
 			BlockPos diff = switch (blockState.get(Properties.HORIZONTAL_FACING)) {
 				case EAST -> new BlockPos(0, 0, 1);
@@ -105,7 +105,7 @@ public class ChestTracker {
 		return ActionResult.PASS;
 	}
 
-	public static DoubleBlockProperties.Type getDoubleBlockType(BlockState state) {
+	private DoubleBlockProperties.Type getDoubleBlockType(BlockState state) {
 		ChestType chestType = state.get(Properties.CHEST_TYPE);
 		if (chestType == ChestType.SINGLE) {
 			return DoubleBlockProperties.Type.SINGLE;
@@ -202,21 +202,21 @@ public class ChestTracker {
 		islandStorage.save(blockPos, this.getOtherPos(slot.id), slot.getStack(), this.getSlotForChest(slot.id));
 	}
 
-	public int getSlotForChest(int slot) {
+	private int getSlotForChest(int slot) {
 		if (slot >= SLOTS_IN_ONE_CHEST) {
 			return slot - SLOTS_IN_ONE_CHEST;
 		}
 		return slot;
 	}
 
-	public BlockPos getBlockPos(int slot) {
+	private BlockPos getBlockPos(int slot) {
 		if (slot >= SLOTS_IN_ONE_CHEST) {
 			return this.second;
 		}
 		return this.first;
 	}
 
-	public BlockPos getOtherPos(int slot) {
+	private BlockPos getOtherPos(int slot) {
 		if (slot >= SLOTS_IN_ONE_CHEST) {
 			return this.first;
 		}

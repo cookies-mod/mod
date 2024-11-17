@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Craft helper tooltip context to cache data.
+ */
 @RequiredArgsConstructor
 @Getter
 public class ToolTipContext {

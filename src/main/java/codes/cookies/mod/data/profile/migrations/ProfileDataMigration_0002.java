@@ -5,6 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import codes.cookies.mod.data.Migration;
 
+/**
+ * Moves the current craft helper item to the new version.
+ */
 public class ProfileDataMigration_0002 implements Migration<JsonObject> {
 	@Override
 	public int getNumber() {

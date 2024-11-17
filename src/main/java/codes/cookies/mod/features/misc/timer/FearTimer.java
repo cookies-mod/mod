@@ -8,6 +8,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Timer for the primal fear cooldown.
+ */
 public class FearTimer extends Timer {
 	private static final SbEntityToast.ImageData DATA = new SbEntityToast.ImageData(
 			12,

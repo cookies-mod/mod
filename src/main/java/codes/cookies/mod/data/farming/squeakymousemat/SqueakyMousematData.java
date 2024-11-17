@@ -3,6 +3,9 @@ package codes.cookies.mod.data.farming.squeakymousemat;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+/**
+ * Data for the squeaky mousemat overlay.
+ */
 public record SqueakyMousematData(SqueakyMousematEntry wheat, SqueakyMousematEntry carrot, SqueakyMousematEntry potato,
 								  SqueakyMousematEntry netherWart, SqueakyMousematEntry pumpkin,
 								  SqueakyMousematEntry melon, SqueakyMousematEntry cocoaBeans,

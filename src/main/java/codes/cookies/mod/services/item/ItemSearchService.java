@@ -17,9 +17,15 @@ import codes.cookies.mod.utils.skyblock.LocationUtils;
 
 import net.minecraft.text.Text;
 
+/**
+ * Service to handle various item search things.
+ */
 public class ItemSearchService {
 
-
+	/**
+	 * Opens the recipe of a craftable item.
+	 * @param data
+	 */
 	public static void handleCraftable(CraftableItemSource.Data data) {
 		if (data.hasAllIngredients()) {
 			sendCommand("viewrecipe " + data.output().getId());

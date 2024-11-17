@@ -93,6 +93,9 @@ public class CookiesMod implements ClientModInitializer {
         });
     }
 
+	/**
+	 * Opens the hud edit screen.
+	 */
 	public static void openHudScreen() {
 		openScreen(new HudEditScreen());
 	}

@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Saved data about plot spray time.
+ */
 public class PlotData implements CodecJsonSerializable<Map<String, Long>> {
 	Logger LOGGER = LoggerFactory.getLogger(PlotData.class);
 	static Codec<Map<String, Long>> CODEC = Codec.unboundedMap(Codec.STRING, Codec.LONG);

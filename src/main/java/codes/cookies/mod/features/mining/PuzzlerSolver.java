@@ -21,6 +21,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Solver for the puzzler in the dwarven mines.
+ */
 public class PuzzlerSolver {
     private static final Identifier DEBUG = DevUtils.createIdentifier("puzzler_debug");
     private static final BlockPos location = new BlockPos(181, 195, 135);

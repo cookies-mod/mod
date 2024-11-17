@@ -55,6 +55,12 @@ public class DevUtils {
 		return enabledTools.contains(identifier);
 	}
 
+	/**
+	 * Whether a dev tool is disabled.
+	 *
+	 * @param identifier The tool to check.
+	 * @return Whether it is disabled.
+	 */
 	public static boolean isDisabled(final Identifier identifier) {
 		return !isEnabled(identifier);
 	}

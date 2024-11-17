@@ -21,6 +21,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Used to invoke inventory content events.
+ */
 @Mixin(ScreenHandler.class)
 public abstract class InventoryContentUpdateMixin implements ScreenHandlerUpdateEventAccessor {
 

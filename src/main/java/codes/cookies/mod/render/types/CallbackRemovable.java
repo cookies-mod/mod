@@ -9,6 +9,9 @@ import codes.cookies.mod.utils.dev.DevUtils;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
+/**
+ * Renderable that can be removed with either an atomic boolean or a completable future.
+ */
 public record CallbackRemovable(Renderable renderable, AtomicBoolean reference) implements Renderable {
 
 	public CallbackRemovable(Renderable renderable, CompletableFuture<Boolean> completableFuture) {

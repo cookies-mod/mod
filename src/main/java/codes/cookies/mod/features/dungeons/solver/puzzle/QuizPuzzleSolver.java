@@ -24,6 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 
+/**
+ * Solver for the quiz puzzle.
+ */
 public class QuizPuzzleSolver extends PuzzleSolver {
 
 	boolean hasStarted;

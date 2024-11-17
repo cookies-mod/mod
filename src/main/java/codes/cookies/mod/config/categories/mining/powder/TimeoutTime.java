@@ -1,5 +1,8 @@
 package codes.cookies.mod.config.categories.mining.powder;
 
+/**
+ * Time to wait after last powder gain till removal and reset of the powder tracker.
+ */
 public enum TimeoutTime {
 
 	ONE_MIN(1), TWO_MINE(2), FIVE_MIN(5), TEN_MIN(10), TWENTY_MIN(20);

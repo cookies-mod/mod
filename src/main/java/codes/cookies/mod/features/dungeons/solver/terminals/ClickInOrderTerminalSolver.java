@@ -13,6 +13,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Solver for the click in order terminal in floor seven.
+ */
 public class ClickInOrderTerminalSolver extends TerminalSolver {
 	private final ItemStack todo = this.doneItem.copy().withItem(Items.RED_STAINED_GLASS_PANE);
 	private final ItemStack thirdItem = this.doneItem.copy().withItem(Items.ORANGE_STAINED_GLASS_PANE);

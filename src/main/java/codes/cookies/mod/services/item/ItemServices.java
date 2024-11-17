@@ -34,6 +34,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * Service for item related methods,
+ */
 public class ItemServices {
 	/**
 	 * Whether the two items are the same.
@@ -251,6 +254,11 @@ public class ItemServices {
 		return 0xFF << 24 | color & 0xFFFFFF;
 	}
 
+	/**
+	 * Extracts the chest positions for the item compound.
+	 * @param itemCompound The compound.
+	 * @return The chest positions that are present in the compound.
+	 */
 	public static Set<BlockPos> extractChestPositions(ItemCompound itemCompound) {
 		Set<BlockPos> positions = new HashSet<>();
 		for (Item<?> item : itemCompound.items()) {
@@ -266,6 +274,11 @@ public class ItemServices {
 		return positions;
 	}
 
+	/**
+	 * Gets the repository item of the item stack.
+	 * @param itemStack The stack.
+	 * @return The repository item associated with the stack.
+	 */
 	public static Optional<RepositoryItem> getRepositoryItem(@NotNull ItemStack itemStack) {
 		return Optional.ofNullable(itemStack.get(CookiesDataComponentTypes.REPOSITORY_ITEM));
 	}

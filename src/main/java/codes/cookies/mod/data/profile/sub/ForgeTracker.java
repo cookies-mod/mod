@@ -22,11 +22,20 @@ public class ForgeTracker implements CodecJsonSerializable<List<ForgeTracker.Dat
 
 	private final List<Data> data = new ArrayList<>();
 
+	/**
+	 * Saves an item for the provided forge slot.
+	 * @param item The item to save.
+	 * @param slot The slot that was used.
+	 * @param timeStartedSeconds The start time in seconds.
+	 */
 	public void saveItem(RepositoryItem item, int slot, long timeStartedSeconds) {
 		this.removeItem(slot);
 		this.data.add(new Data(item, timeStartedSeconds + 1, slot));
 	}
 
+	/**
+	 * Removes the item that is saved in the slot.
+	 */
 	public void removeItem(int slot) {
 		this.data.removeIf(data -> data.slot == slot);
 	}
@@ -49,10 +58,6 @@ public class ForgeTracker implements CodecJsonSerializable<List<ForgeTracker.Dat
 	@Override
 	public Logger getLogger() {
 		return LOGGER;
-	}
-
-	public void remove(int slot) {
-		this.data.removeIf(data -> data.slot == slot);
 	}
 
 	public record Data(RepositoryItem repositoryItem, long startedSeconds, int slot) {

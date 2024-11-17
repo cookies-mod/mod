@@ -26,6 +26,9 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Heading element of the craft helper.
+ */
 public final class HeadingPart extends CraftHelperComponent {
 
 	private static final Identifier SLOT = Identifier.of("cookies-mod", "textures/gui/slot.png");

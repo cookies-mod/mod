@@ -20,5 +20,9 @@ public interface ItemSource<T> {
      */
     ItemSources getType();
 
+	/**
+	 * Removes the item from the item source.
+	 * @param item The item to remove.
+	 */
 	void remove(Item<?> item);
 }

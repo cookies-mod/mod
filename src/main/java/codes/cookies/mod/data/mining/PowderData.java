@@ -8,6 +8,9 @@ import codes.cookies.mod.utils.json.CodecJsonSerializable;
 import com.mojang.serialization.Codec;
 import org.slf4j.Logger;
 
+/**
+ * The data that is saved about the players powder.
+ */
 public class PowderData implements CodecJsonSerializable<Map<PowderType, Integer>> {
 
 	public static final Codec<Map<PowderType, Integer>> CODEC = Codec.unboundedMap(PowderType.CODEC, Codec.INT);

@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Equipment data that is saved to the profile.
+ */
 public class EquipmentData implements CodecJsonSerializable<List<ItemStack>> {
 	private final Logger LOGGER = LoggerFactory.getLogger(EquipmentData.class);
 

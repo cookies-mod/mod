@@ -11,6 +11,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * helper for save loading of repository data.
+ */
 public interface RepositoryConstantsHelper {
 	Logger LOGGER = LoggerFactory.getLogger("repository/constants");
 

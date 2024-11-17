@@ -4,11 +4,17 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.util.StringIdentifiable;
 
+/**
+ * Where the alignment point of the hud element is.
+ */
 public enum Alignment implements StringIdentifiable {
 	LEFT, MIDDLE, RIGHT;
 
 	public static Codec<Alignment> CODEC = StringIdentifiable.createBasicCodec(Alignment::values);
 
+	/**
+	 * Calculates the x position of the hud element, based on the alignment.
+	 */
 	public int getX(int x, int width) {
 		return switch (this) {
 			case LEFT -> x;

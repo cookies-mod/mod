@@ -6,6 +6,9 @@ import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
+/**
+ * Tooltip positioner for craft helper instances.
+ */
 public class CraftHelperTooltipPositioner implements TooltipPositioner {
 
     public static CraftHelperTooltipPositioner INSTANCE = new CraftHelperTooltipPositioner();

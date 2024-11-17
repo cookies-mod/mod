@@ -33,6 +33,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import net.minecraft.util.dynamic.Codecs;
 
+/**
+ * Instance of the craft helper.
+ */
 @Getter
 @Setter
 public class CraftHelperInstance {
@@ -65,6 +68,9 @@ public class CraftHelperInstance {
 		this.formatter = new CraftHelperFormatter(this);
 	}
 
+	/**
+	 * Recalculates the selected recipe.
+	 */
 	public void recalculate() {
 		componentList.clear();
 		final var calculate = RecipeCalculator.calculate(repositoryItem);
@@ -107,6 +113,9 @@ public class CraftHelperInstance {
 		return 0;
 	}
 
+	/**
+	 * @return A list of visible components.
+	 */
 	public List<CraftHelperComponent> getVisibleComponentList() {
 		this.maxScroll = (int) Math.max(componentList.stream()
 				.filter(Predicate.not(CraftHelperComponent::isHidden))
@@ -121,6 +130,9 @@ public class CraftHelperInstance {
 		return list;
 	}
 
+	/**
+	 * Renders the instance.
+	 */
 	public void render(DrawContext drawContext, int x, int y, int mouseX, int mouseY, float tickDelta) {
 		if (!hasCalculated) {
 			return;
@@ -179,6 +191,9 @@ public class CraftHelperInstance {
 		}
 	}
 
+	/**
+	 * @return The text under the mouse cursor.
+	 */
 	public Optional<Pair<CraftHelperComponentPart, Integer>> getTextUnder(
 			double mouseX,
 			double rawMouseY,
@@ -237,6 +252,9 @@ public class CraftHelperInstance {
 		return false;
 	}
 
+	/**
+	 * Gets the clicked component part and the x location where it was clicked.
+	 */
 	private Optional<Pair<CraftHelperComponentPart, Integer>> clicked(
 			double mouseX,
 			double mouseY,

@@ -19,6 +19,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Utils to get current mayor data.
+ */
 public class MayorUtils {
 	private static final Set<String> activePerks = new HashSet<>();
 	static Logger LOGGER = LoggerFactory.getLogger(MayorUtils.class);
@@ -39,6 +42,9 @@ public class MayorUtils {
 		CookiesMod.getExecutorService().schedule(MayorUtils::update, delay, TimeUnit.SECONDS);
 	}
 
+	/**
+	 * Updates the cached data.
+	 */
 	private static void update() {
 		activePerks.clear();
 		mayor = null;
@@ -71,6 +77,9 @@ public class MayorUtils {
 		}
 	}
 
+	/**
+	 * Builds the perk list.
+	 */
 	private static void buildPerks() {
 		for (Perk perk : mayor.perks) {
 			addPerk(perk.name);
@@ -78,29 +87,75 @@ public class MayorUtils {
 		addPerk(mayor.minister.name);
 	}
 
+	/**
+	 * Adds a perk to the active list.
+	 * @param name The perk to add.
+	 */
 	private static void addPerk(String name) {
 		activePerks.add(name.replaceAll(" ", "_").replaceAll("[^\\w_]", ""));
 	}
 
+	/**
+	 * Checks if a mayor perk (id) is active.
+	 * @param perkId The perk to check.
+	 * @return Whether the perk is active.
+	 */
 	public static boolean isPerkActive(String perkId) {
 		return activePerks.contains(perkId);
 	}
 
+	/**
+	 * Model that represents the api response.
+	 * @param success Whether the request had success.
+	 * @param lastUpdated Last time the data was updates.
+	 * @param mayor The current mayor.
+	 * @param current The current election.
+	 */
 	public record Response(boolean success, long lastUpdated, Mayor mayor, Current current) {
 	}
 
+	/**
+	 * Mayor model that is returned by the api.
+	 * @param key The mayor id.
+	 * @param name The name of the mayor.
+	 * @param perks The active perks.
+	 * @param minister The minister of the last election.
+ 	 */
 	public record Mayor(String key, String name, Perk[] perks, Minister minister) {
 	}
 
+	/**
+	 * Current election model that is returned by the api.
+	 * @param year The year the election is for.
+	 * @param candidates The candidates present in the election.
+	 */
 	public record Current(int year, Candidate[] candidates) {
 	}
 
+	/**
+	 * Minister model that is returned by the api.
+	 * @param key The id of the minister.
+	 * @param name The name of the minister.
+	 * @param perk Their minister perk.
+	 */
 	public record Minister(String key, String name, Perk perk) {
 	}
 
+	/**
+	 * Candidate model that is returned by the api.
+	 * @param key The id of the candidate.
+	 * @param name The name of the candidate.
+	 * @param perks Their perks.
+	 */
 	public record Candidate(String key, String name, Perk[] perks) {
 	}
 
+	/**
+	 * Perk model that is returned by the api.
+	 * @param name The name of the perk.
+	 * @param description The description of the perk.
+	 * @param minister Whether it would be the minister perk.
+	 */
 	public record Perk(String name, String description, boolean minister) {
 	}
 }

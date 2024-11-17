@@ -9,6 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
+/**
+ * Event to listen on chest updates on the private island.
+ */
 public interface ChestSaveEvent {
 
 	Event<ChestSaveEvent> EVENT = EventFactory.createArrayBacked(

@@ -29,6 +29,9 @@ import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
+/**
+ * Item search filter for string queries.
+ */
 @RequiredArgsConstructor
 public class SearchQueryMatcher implements ItemSearchFilter {
 

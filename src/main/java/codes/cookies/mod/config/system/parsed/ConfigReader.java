@@ -140,12 +140,18 @@ public class ConfigReader {
         return processedOption;
     }
 
+	/**
+	 * Adds a hud setting with the processed option.
+	 */
 	public <T, O extends Option<T, O>> void addHudSetting(Class<? extends HudElement> value, ProcessedOption<T, O> processedOption) {
 		final List<Option<?, ?>> orDefault = hudSettings.getOrDefault(value, new ArrayList<>());
 		hudSettings.putIfAbsent(value, orDefault);
 		orDefault.add(processedOption.getOption());
 	}
 
+	/**
+	 * Gets all hud settings attached to the element.
+	 */
 	public List<Option<?, ?>> getHudSettings(HudElement hudElement) {
 		return hudSettings.getOrDefault(hudElement.getClass(), Collections.emptyList());
 	}

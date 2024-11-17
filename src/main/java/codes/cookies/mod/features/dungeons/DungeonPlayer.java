@@ -114,6 +114,11 @@ public class DungeonPlayer {
 		return getItem(true);
 	}
 
+	/**
+	 * Gets the item representation of the player.
+	 * @param useSkullsIfPossible Whether to use a skull if possible.
+	 * @return The item.
+	 */
 	public Result<ItemBuilder, String> getItem(boolean useSkullsIfPossible) {
 		if (player != null && useSkullsIfPossible) {
 			if (isSelf()) {

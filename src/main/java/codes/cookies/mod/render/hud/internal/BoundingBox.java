@@ -4,6 +4,9 @@ import codes.cookies.mod.screen.CookiesScreen;
 
 import net.minecraft.client.gui.DrawContext;
 
+/**
+ * A bounding box for the hud system, only really used as utility class.
+ */
 public record BoundingBox(float x, float y, float width, float height) {
 
 	public BoundingBox scale(float scaleFactor) {

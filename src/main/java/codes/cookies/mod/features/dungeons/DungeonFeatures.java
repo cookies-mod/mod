@@ -191,6 +191,10 @@ public class DungeonFeatures {
 		return Optional.ofNullable(this.currentInstance);
 	}
 
+	/**
+	 * Sends a debug message if debug is enabled, else just ignore it.
+	 * @param message The message to send.
+	 */
 	public static void sendDebugMessage(String message) {
 		if (!DevUtils.isEnabled(SEND_DEBUG_MESSAGES)) {
 			return;

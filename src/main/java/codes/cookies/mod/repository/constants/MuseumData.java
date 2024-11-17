@@ -22,6 +22,15 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Repository data for the museum.
+ * @param weapons All weapons that can be put in the museum.
+ * @param armor All armor items that can be put in the museum.
+ * @param rarity All items that fall under the rarity category.
+ * @param special All items that fall under the special category.
+ * @param museumItems All museum items.
+ * @param exceptions All naming exceptions.
+ */
 @Slf4j
 public record MuseumData(
 		List<MuseumItem> weapons, List<ArmorItem> armor, List<MuseumItem> rarity, List<RepositoryItem> special,

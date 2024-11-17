@@ -1,5 +1,8 @@
 package codes.cookies.mod.config.categories.mining.powder;
 
+/**
+ * Time to wait till the powder tracker pauses.
+ */
 public enum PauseTime {
 
 	TEN_SEC(10), THIRTY_SEC(30), ONE_MIN(60), TWO_MIN(120), FIVE_MIN(300), TEN_MIN(600);

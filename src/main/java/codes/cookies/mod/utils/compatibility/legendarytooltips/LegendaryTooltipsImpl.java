@@ -13,6 +13,9 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 
+/**
+ * Implementation of the compatibility methods for legendary tooltips.
+ */
 public class LegendaryTooltipsImpl implements LegendaryTooltips {
 
 	Slot focused = null;

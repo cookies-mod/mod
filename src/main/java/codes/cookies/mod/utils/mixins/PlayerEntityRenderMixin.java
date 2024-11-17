@@ -14,6 +14,9 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 
+/**
+ * Adds a self reference to the player entity render state.
+ */
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRenderMixin {
 

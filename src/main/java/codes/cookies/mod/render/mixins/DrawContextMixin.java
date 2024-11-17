@@ -16,6 +16,9 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Consumer;
 
+/**
+ * Some utility for the draw context.
+ */
 @Mixin(DrawContext.class)
 public abstract class DrawContextMixin implements DrawContextInjections {
 	@Shadow

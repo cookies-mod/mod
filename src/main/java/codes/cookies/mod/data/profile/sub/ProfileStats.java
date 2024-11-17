@@ -11,6 +11,9 @@ import codes.cookies.mod.utils.json.CodecJsonSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Stats that are saved about the players profile.
+ */
 public class ProfileStats implements CodecJsonSerializable<Map<String, Double>> {
 	private static final String LOG_KEY = "profile-stats";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProfileStats.class);

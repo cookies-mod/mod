@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 
 import net.minecraft.util.Identifier;
 
+/**
+ * Parent element that contains all hud data.
+ */
 public class HudData implements CodecJsonSerializable<Map<Identifier, HudPosition>> {
 
 	private static final Codec<Map<Identifier, HudPosition>> CODEC = Codec.unboundedMap(Identifier.CODEC, HudPosition.CODEC);

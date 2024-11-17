@@ -5,6 +5,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 
+/**
+ * Literal text as hud element setting.
+ */
 public class LiteralSetting extends HudElementSetting {
 
 	private final Text literal;

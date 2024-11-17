@@ -16,6 +16,10 @@ import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
+/**
+ * Hud setting for enum cycles.
+ * @param <T> The enum type.
+ */
 public class EnumCycleSetting<T extends Enum<T>> extends HudElementSetting {
 
 	private final Text name;

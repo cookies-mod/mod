@@ -19,6 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Unit;
 
+/**
+ * Solver for the starts with terminal solver for floor seven
+ */
 public class StartsWithTerminalSolver extends TerminalSolver {
 
 	String lastOpened;

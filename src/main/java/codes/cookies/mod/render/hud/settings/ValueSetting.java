@@ -5,6 +5,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 
+/**
+ * A "value" setting for a hud element, used to display location and scale.
+ */
 public class ValueSetting extends HudElementSetting {
 
 	private final Text literal;

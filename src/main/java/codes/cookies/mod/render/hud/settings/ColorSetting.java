@@ -14,6 +14,9 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.text.Text;
 
+/**
+ * Hud setting for color.
+ */
 public class ColorSetting extends HudElementSetting {
 
 	final ColorInputWidget inputWidget;

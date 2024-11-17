@@ -36,7 +36,7 @@ public interface Migration<T> {
     Type getType();
 
 	/**
-	 * Whether this migration may fail without causing a data reset.
+	 * @return Whether this migration may fail without causing a data reset.
 	 */
 	default boolean mayFail() {
 		return false;

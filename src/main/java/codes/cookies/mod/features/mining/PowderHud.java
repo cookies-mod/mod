@@ -20,6 +20,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Hud implementation of the powder tracker.
+ */
 public class PowderHud extends MultiLineTextHudElement {
 
 	InterpolatedInteger powderAmount = new LinearInterpolatedInteger(1000, 0);

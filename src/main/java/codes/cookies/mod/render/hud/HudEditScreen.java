@@ -26,6 +26,9 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * Implementation of the hud edit screen.
+ */
 public class HudEditScreen extends Screen {
 	private HudElement currentlyHovered;
 	private Action action = Action.NONE;
@@ -306,13 +309,13 @@ public class HudEditScreen extends Screen {
 		return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 	}
 
-	public Optional<HudElement> getElementUnder(int x, int y) {
+	private Optional<HudElement> getElementUnder(int x, int y) {
 		return getVisibleElements().stream()
 				.filter(hudElement -> expandBox(hudElement.getScaledBoundingBox(), 0).isPointInsideBox(x, y))
 				.findFirst();
 	}
 
-	public BoundingBox expandBox(BoundingBox box, float amount) {
+	private BoundingBox expandBox(BoundingBox box, float amount) {
 		return box.expand(amount);
 	}
 

@@ -10,6 +10,9 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 
+/**
+ * Generic setting for a hud element.
+ */
 public abstract class HudElementSetting implements Drawable, Selectable, Element {
 
 	private final HudElementSettingType type;

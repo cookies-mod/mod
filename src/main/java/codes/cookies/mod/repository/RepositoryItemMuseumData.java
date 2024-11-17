@@ -10,6 +10,9 @@ import java.util.Optional;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Museum data instance that is stored in the repository.
+ */
 public class RepositoryItemMuseumData {
 
 	private List<MuseumData.ArmorItem> armorItems;

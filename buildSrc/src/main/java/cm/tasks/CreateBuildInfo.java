@@ -22,6 +22,9 @@ import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
+/**
+ * Creates the build info.
+ */
 public abstract class CreateBuildInfo extends DefaultTask {
     @Inject
     public CreateBuildInfo() {

@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Matches an item as good as possible.
+ * @param itemStack The item to match.
+ */
 public record ExactItemMatch(ItemStack itemStack) implements ItemSearchFilter {
 	@Override
 	public int getColor() {

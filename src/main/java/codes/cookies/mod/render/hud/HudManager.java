@@ -18,6 +18,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.util.Identifier;
 
+/**
+ * Manager for the hud, handles registration, rendering and persisting.
+ */
 public class HudManager {
 
 	static final List<HudElement> elements = new ArrayList<>();

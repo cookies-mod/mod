@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import net.minecraft.client.MinecraftClient;
 
+/**
+ * Element position in the hud.
+ */
 public class HudPosition {
 	public static Codec<HudPosition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.FLOAT.fieldOf("x").forGetter(HudPosition::getRelativeX),

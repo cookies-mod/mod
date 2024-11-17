@@ -7,6 +7,9 @@ import net.minecraft.client.gui.DrawContext;
 
 import java.util.List;
 
+/**
+ * Debug craft helper component.
+ */
 public class DebugComponent extends CraftHelperComponent {
 
 	private final CraftHelperText debug;

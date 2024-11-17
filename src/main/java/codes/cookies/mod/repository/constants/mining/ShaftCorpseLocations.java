@@ -13,6 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.minecraft.util.math.BlockPos;
 
+
+/**
+ * Repository data of all shaft corpse locations.
+ */
 @Slf4j
 public class ShaftCorpseLocations {
 

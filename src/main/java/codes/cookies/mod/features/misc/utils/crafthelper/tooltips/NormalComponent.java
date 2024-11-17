@@ -37,6 +37,9 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
 
+/**
+ * A "normal" craft helper component, used for all except the debug and header components.
+ */
 public class NormalComponent extends CraftHelperComponent {
 
 	private final ToolTipContext toolTipContext;

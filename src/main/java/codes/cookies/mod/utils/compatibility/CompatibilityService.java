@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.fabricmc.loader.api.FabricLoader;
 
+/**
+ * Service to allow for workarounds and compatibility with certain mods.
+ */
 @Slf4j
 public class CompatibilityService {
 

@@ -13,6 +13,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+/**
+ * Hud for the {@link PestTimer}
+ */
 public class PestTimerHud extends TextHudElement {
 	private final Text defaultText = Text.literal("Pests in ").formatted(Formatting.DARK_GREEN);
 	private final Text canSpawnText = Text.literal("Pests can spawn!").formatted(Formatting.DARK_GREEN);

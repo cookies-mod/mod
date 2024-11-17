@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+/**
+ * Extends the draw context with some custom functionality.
+ */
 @Mixin(DrawContext.class)
 public class DrawContextMixin {
 

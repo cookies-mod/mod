@@ -8,6 +8,9 @@ import codes.cookies.mod.utils.cookies.Constants;
 
 import java.awt.*;
 
+/**
+ * Config for the mine shaft corpse highlight.
+ */
 public class ShaftConfig extends Foldable {
 
 	public BooleanOption enable = new BooleanOption(TranslationKeys.CONFIG_MINING_SHAFT_ENABLE, true);

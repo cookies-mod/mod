@@ -15,6 +15,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
+/**
+ * Widget to allow for easy color input.
+ */
 public class ColorInputWidget extends TextFieldWidget {
 	private final boolean canHaveAlpha = false;
 	private Color color;

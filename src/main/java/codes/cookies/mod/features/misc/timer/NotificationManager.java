@@ -17,6 +17,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
+/**
+ * Manager for all notifications/times in the mod.
+ */
 public class NotificationManager {
 	private static final Identifier DEBUG = DevUtils.createIdentifier("timer/enable_debug");
 	static List<Timer> timers = new ArrayList<>();

@@ -13,6 +13,9 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * A generic timer that can notify the user.
+ */
 public abstract class Timer {
 	private final MiscConfig.NotificationFoldable.TimerConfig timerFoldable;
 	private final Identifier debug;

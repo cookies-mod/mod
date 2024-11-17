@@ -41,6 +41,15 @@ public sealed interface RenderUtils permits RenderUtils.Sealed {
         drawContext.fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xFF8B8B8B);
     }
 
+	/**
+	 * Draws a minecraft like background texture.
+	 * @param drawContext The context to use.
+	 * @param x The x location.
+	 * @param y The y location.
+	 * @param width The width of the box.
+	 * @param height The height of the box.
+	 * @param color The color to use for the box.
+	 */
     static void renderBackgroundBox(final DrawContext drawContext, int x, int y, int width, int height, int color) {
         drawContext.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, x, y, 0, 0, 4, 4, 4, 4, 12, 12, color);
         drawContext.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, x + 4, y, 4, 0, width - 8, 4, 4, 4, 12, 12, color);
@@ -222,20 +231,40 @@ public sealed interface RenderUtils permits RenderUtils.Sealed {
         matrixStack.pop();
     }
 
-
+	/**
+	 * Draws the slot background if highlighted.
+	 * @param context The context.
+	 * @param slotX The x coordinate of the slot.
+	 * @param slotY The y coordinate of the slot.
+	 */
 	static void drawSlotHighlightBack(DrawContext context, int slotX, int slotY) {
 		context.drawGuiTexture(RenderLayer::getGuiTextured, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slotX - 4, slotY - 4, 24, 24);
 	}
 
+	/**
+	 * Draws the slot foreground if highlighted.
+	 * @param context The context.
+	 * @param slotX The x coordinate of the slot.
+	 * @param slotY The y coordinate of the slot.
+	 */
 	static void drawSlotHighlightFront(DrawContext context, int slotX, int slotY) {
 		context.drawGuiTexture(RenderLayer::getGuiTexturedOverlay, HandledScreen.SLOT_HIGHLIGHT_FRONT_TEXTURE, slotX - 4, slotY - 4, 24, 24);
 	}
 
+	/**
+	 * Gets the interpolated position of the entity.
+	 * @param entity The entity.
+	 * @param tickDelta The delta.
+	 * @return The interpolated position.
+	 */
 	static Vec3d getInterpolated(Entity entity, double tickDelta) {
 		return new Vec3d(MathHelper.lerp(tickDelta, entity.lastRenderX, entity.getX()),
 		MathHelper.lerp(tickDelta, entity.lastRenderY, entity.getY()),
 		MathHelper.lerp(tickDelta, entity.lastRenderZ, entity.getZ()));
 	}
 
+	/**
+	 * Seals the render utils.
+	 */
     final class Sealed implements RenderUtils {}
 }

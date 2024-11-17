@@ -9,6 +9,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Saves the last received ping.
+ */
 @Mixin(PingMeasurer.class)
 public class PingMeasurerMixin {
 

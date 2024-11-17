@@ -13,6 +13,9 @@ import codes.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 
+/**
+ * Placement screen for the craft helper.
+ */
 public class CraftHelperPlacement extends ClientSideInventory {
 
 	private static final int UNSELECTED_COLOR = Constants.SUCCESS_COLOR;

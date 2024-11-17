@@ -8,6 +8,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * Single line text hud element.
+ */
 public abstract class TextHudElement extends HudElement {
 
 	public TextHudElement(Identifier identifier) {

@@ -10,6 +10,9 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * Toast that renders an image and a text.
+ */
 public class SbEntityToast implements Toast {
 	private static final Identifier TEXTURE = Identifier.ofVanilla("toast/advancement");
 	private final ImageData data;

@@ -22,7 +22,9 @@ import net.minecraft.screen.slot.Slot;
  */
 public class AnvilHelper {
 
-    @SuppressWarnings("MissingJavadocs")
+	/**
+	 * Initializes the anvil helper.
+	 */
     public AnvilHelper() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof GenericContainerScreen genericContainerScreen) {

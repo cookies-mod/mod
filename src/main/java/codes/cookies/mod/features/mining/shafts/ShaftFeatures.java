@@ -10,6 +10,9 @@ import codes.cookies.mod.utils.skyblock.LocationUtils;
 
 import java.util.Optional;
 
+/**
+ * Keeps track of current mineshaft states.
+ */
 public class ShaftFeatures {
 	private static boolean isInShaft = false;
 	private static ShaftCorpseLocations.ShaftLocations locations;

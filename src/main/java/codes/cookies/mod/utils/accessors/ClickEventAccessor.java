@@ -4,6 +4,9 @@ import net.minecraft.text.ClickEvent;
 
 import java.util.Optional;
 
+/**
+ * Allows to put runnables onto click events.
+ */
 public interface ClickEventAccessor {
 
 	static ClickEventAccessor get(ClickEvent clickEvent) {

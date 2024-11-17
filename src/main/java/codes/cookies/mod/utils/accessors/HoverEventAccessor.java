@@ -6,6 +6,9 @@ import java.util.Optional;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 
+/**
+ * Allows for custom text lists as hover event.
+ */
 public interface HoverEventAccessor {
 
 	static HoverEventAccessor get(HoverEvent clickEvent) {
