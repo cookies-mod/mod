@@ -237,7 +237,7 @@ public class DungeonMapRenderer {
 		} else {
 			drawContext.getMatrices()
 					.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue()) - 180));
-			this.drawPlayerAsArrow(drawContext, player);
+			DrawPlayerArrow(drawContext, player);
 		}
 		drawContext.getMatrices().pop();
 		if (DungeonConfig.getInstance().showPlayerNames.getValue()) {
@@ -251,7 +251,13 @@ public class DungeonMapRenderer {
 		drawContext.getMatrices().pop();
 	}
 
-	private void DrawPlayerArrow(DrawContext drawContext, DungeonPlayer player) {
+	/**
+	 * Draws an arrow.
+	 *
+	 * @param drawContext The draw context.
+	 * @param player      The player the arrow belongs to.
+	 */
+	private static void DrawPlayerArrow(DrawContext drawContext, DungeonPlayer player) {
 		Identifier texture;
 		if (player.getPlayer() instanceof ClientPlayerEntity) {
 			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
@@ -362,16 +368,6 @@ public class DungeonMapRenderer {
 	private void drawPlayerHead(DrawContext drawContext, DungeonPlayer player) {
 		drawContext.getMatrices().translate(-4, -4, 0);
 		PlayerSkinDrawer.draw(drawContext, player.getPlayer().getSkinTextures().texture(), 0, 0, 8, true, true, -1);
-	}
-
-	/**
-	 * Draws an arrow.
-	 *
-	 * @param drawContext The draw context.
-	 * @param player      The player the arrow belongs to.
-	 */
-	private void drawPlayerAsArrow(DrawContext drawContext, DungeonPlayer player) {
-		DrawPlayerArrow(drawContext, player);
 	}
 
 	private void renderSecretString(DrawContext drawContext, String secretString, int x, int y, int color) {
