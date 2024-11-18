@@ -11,7 +11,9 @@ import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
+import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
+import codes.cookies.mod.config.system.options.KeybindingOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
@@ -72,6 +74,13 @@ public class FarmingConfig extends Category {
 
 	public BooleanOption highlightUnclaimedJacobContests =
 			new BooleanOption(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS, false);
+
+	@Parent
+	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
+
+	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> {
+
+	}, "Garden Keybinds");
 
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);

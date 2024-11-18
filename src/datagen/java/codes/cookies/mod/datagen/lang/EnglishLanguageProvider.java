@@ -323,6 +323,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Highlight unclaimed",
 				"Highlight unclaimed jacob contests in his inventory.");
 
+		translationBuilder.add(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS, "Garden Keybinds");
+		translationBuilder.addConfig(CONFIG_FARMING_OPEN_KEYBIND_MENU, "Open Keybind Menu", "Opens the garden keybind menu.");
+
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST, "Pest Warnings" ,"Warns you 10s before pests can spawn!");
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST_ORDER, "Pest timer", """
 				Changes what pest time to use for the notifications,
