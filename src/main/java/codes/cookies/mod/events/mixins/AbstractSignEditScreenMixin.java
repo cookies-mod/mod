@@ -35,10 +35,8 @@ public abstract class AbstractSignEditScreenMixin extends Screen {
     }
 
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir)
-	{
-		if (ConfigManager.getConfig().miscConfig.signEditEnterSubmits.getValue() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && !Screen.hasShiftDown())
-		{
+	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+		if (ConfigManager.getConfig().miscConfig.signEditEnterSubmits.getValue() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && !Screen.hasShiftDown()) {
 			this.finishEditing();
 			cir.setReturnValue(true);
 		}
