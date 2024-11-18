@@ -345,6 +345,8 @@
   "cookies.config.misc.show_pet_rarity_in_level_text.tooltip": "Shows the pet level in the color of the rarity",
   "cookies.config.misc.show_ping.name": "Show Ping",
   "cookies.config.misc.show_ping.tooltip": "Shows the ping in the action bar",
+  "cookies.config.misc.sign_edit_enter_submits.name": "Sign editing enter submits",
+  "cookies.config.misc.sign_edit_enter_submits.tooltip": "Enables hitting enter while editing a sign to submit it\nshift + enter for current enter behavior.",
   "cookies.config.misc.storage_preview.name": "Storage Preview",
   "cookies.config.misc.storage_preview.tooltip": "Shows a preview of the content in the storage.",
   "cookies.config.misc.tooltip": "Miscellaneous settings",
