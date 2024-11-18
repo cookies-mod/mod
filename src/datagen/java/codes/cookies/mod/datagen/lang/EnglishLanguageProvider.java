@@ -455,6 +455,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				
 				CTRL + Scroll -> move horizontal
 				SHIFT + Scroll -> chop tooltips""");
+		translationBuilder.addConfig(CONFIG_MISC_SIGN_EDIT_ENTER_SUBMITS,
+				"Sign editing enter submits",
+				"Enables hitting enter while editing a sign to submit it\n" +
+						"shift + enter for current enter behavior.");
 		translationBuilder.addConfig(CONFIG_MISC_STORAGE_PREVIEW,
 				"Storage Preview",
 				"Shows a preview of the content in the storage.");

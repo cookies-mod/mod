@@ -33,6 +33,9 @@ public class MiscConfig extends Category {
 	public BooleanOption enableScrollableTooltips = new BooleanOption(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, true);
 
 	@Expose
+	public BooleanOption signEditEnterSubmits = new BooleanOption(CONFIG_MISC_SIGN_EDIT_ENTER_SUBMITS, true);
+
+	@Expose
 	public BooleanOption enableStoragePreview = new BooleanOption(CONFIG_MISC_STORAGE_PREVIEW, false);
 
 	@Expose

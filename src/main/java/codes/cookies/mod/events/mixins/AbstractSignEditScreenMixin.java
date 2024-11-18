@@ -1,10 +1,18 @@
 package codes.cookies.mod.events.mixins;
 
+import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscConfig;
 import codes.cookies.mod.events.api.ScreenKeyEvents;
+import com.mojang.logging.LogUtils;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.text.Text;
+
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -15,7 +23,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractSignEditScreen.class)
 public abstract class AbstractSignEditScreenMixin extends Screen {
 
-    protected AbstractSignEditScreenMixin(Text title) {
+	@Shadow
+	protected abstract void finishEditing();
+
+	protected AbstractSignEditScreenMixin(Text title) {
         super(title);
     }
 
@@ -26,4 +37,13 @@ public abstract class AbstractSignEditScreenMixin extends Screen {
         }
     }
 
+	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir)
+	{
+		if (ConfigManager.getConfig().miscConfig.signEditEnterSubmits.getValue() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && !Screen.hasShiftDown())
+		{
+			this.finishEditing();
+			cir.setReturnValue(true);
+		}
+	}
 }
