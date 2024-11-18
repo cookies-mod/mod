@@ -34,7 +34,7 @@ val includeInJar: Configuration = configurations.create("includeInJar") {
 configurations.implementation.get().extendsFrom(includeInJar)
 
 dependencies {
-	annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.34")!!)
+	annotationProcessor(compileOnly("org.projectlombok:lombok:1.18.36")!!)
 	compileOnly("org.jetbrains:annotations:26.0.1")
 
 	includeInJar("dev.morazzer.cookies:entities:0.2.0")
