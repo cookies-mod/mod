@@ -2,6 +2,7 @@ package codes.cookies.mod.data.profile;
 
 import codes.cookies.mod.data.farming.squeakymousemat.SqueakyMousematData;
 import codes.cookies.mod.data.mining.PowderData;
+import codes.cookies.mod.data.mining.crystal.CrystalStatusData;
 import codes.cookies.mod.data.player.PlayerStorage;
 import codes.cookies.mod.data.profile.profile.GlobalProfileStorage;
 import codes.cookies.mod.data.profile.profile.GlobalProfileData;
@@ -58,6 +59,7 @@ public class ProfileData {
 	private PlotData plotData = new PlotData();
 	private SqueakyMousematData squeakyMousematData = SqueakyMousematData.getDefault();
 	private PowderData powderData = new PowderData();
+	private CrystalStatusData crystalStatus = new CrystalStatusData();
 
     /**
      * Create a profile.

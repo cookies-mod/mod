@@ -16,7 +16,7 @@ import codes.cookies.mod.features.dungeons.map.PuzzleType;
 import codes.cookies.mod.features.dungeons.solver.puzzle.PuzzleSolverInstance;
 import codes.cookies.mod.features.dungeons.solver.puzzle.WaterBoardPuzzleSolver;
 import codes.cookies.mod.utils.skyblock.PartyUtils;
-import codes.cookies.mod.utils.skyblock.tab.PlayerListUtils;
+import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

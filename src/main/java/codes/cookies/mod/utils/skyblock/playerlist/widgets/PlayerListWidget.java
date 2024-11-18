@@ -1,7 +1,7 @@
-package codes.cookies.mod.utils.skyblock.tab.widgets;
+package codes.cookies.mod.utils.skyblock.playerlist.widgets;
 
 import codes.cookies.mod.events.PlayerListWidgetEvent;
-import codes.cookies.mod.utils.skyblock.tab.PlayerListReader;
+import codes.cookies.mod.utils.skyblock.playerlist.PlayerListReader;
 
 /**
  * A generic player list widget.

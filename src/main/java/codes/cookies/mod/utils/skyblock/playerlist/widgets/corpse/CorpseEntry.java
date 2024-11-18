@@ -1,4 +1,4 @@
-package codes.cookies.mod.utils.skyblock.tab.widgets.corpse;
+package codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse;
 
 /**
  * Player list corpse entry.

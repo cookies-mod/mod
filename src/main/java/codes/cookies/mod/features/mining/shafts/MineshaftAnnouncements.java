@@ -6,10 +6,10 @@ import codes.cookies.mod.events.mining.MineshaftEvents;
 import codes.cookies.mod.repository.constants.mining.ShaftCorpseLocations;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.skyblock.PartyUtils;
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidgets;
-import codes.cookies.mod.utils.skyblock.tab.widgets.corpse.CorpseEntry;
-import codes.cookies.mod.utils.skyblock.tab.widgets.corpse.CorpseType;
-import codes.cookies.mod.utils.skyblock.tab.widgets.corpse.FrozenCorpseWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidgets;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse.CorpseEntry;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse.CorpseType;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse.FrozenCorpseWidget;
 
 import java.util.Comparator;
 import java.util.List;

@@ -2,9 +2,9 @@ package codes.cookies.mod.events;
 
 import codes.cookies.mod.utils.cookies.CookiesEventUtils;
 
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidget;
 
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidgets;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidgets;
 
 import net.fabricmc.fabric.api.event.Event;
 
