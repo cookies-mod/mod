@@ -1,16 +1,13 @@
 package codes.cookies.mod.events.mixins;
 
 import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.categories.MiscConfig;
 import codes.cookies.mod.events.api.ScreenKeyEvents;
-import com.mojang.logging.LogUtils;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.text.Text;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
