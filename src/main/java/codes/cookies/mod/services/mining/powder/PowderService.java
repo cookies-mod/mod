@@ -1,4 +1,4 @@
-package codes.cookies.mod.services.powder;
+package codes.cookies.mod.services.mining.powder;
 
 import java.util.Arrays;
 import java.util.Comparator;

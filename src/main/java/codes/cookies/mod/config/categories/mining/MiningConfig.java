@@ -4,10 +4,12 @@ import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
 import codes.cookies.mod.config.categories.mining.shaft.ShaftConfig;
 import codes.cookies.mod.config.system.Category;
+import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
+import codes.cookies.mod.features.mining.hollows.CrystalRunHud;
 import codes.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
 
 import java.util.function.Predicate;
@@ -30,6 +32,8 @@ public class MiningConfig extends Category {
 
 	public ShaftConfig shaftConfig = new ShaftConfig();
 	public PowderTrackerHudFoldable powderTrackerHud = new PowderTrackerHudFoldable();
+	@HudSetting(CrystalRunHud.class)
+	public BooleanOption crystalHud = new BooleanOption(CONFIG_MINING_MOD_CRYSTAL_HUD, true);
 
     @Parent
     public TextDisplayOption hotmParentDisplay = new TextDisplayOption(CONFIG_MINING_CATEGORIES_HOTM);

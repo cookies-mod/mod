@@ -282,6 +282,7 @@ public interface TranslationKeys {
 	String CONFIG_MINING_MODIFY_COMMISSIONS = CONFIG_MINING + ".modify_commissions";
 	String CONFIG_MINING_PUZZLER_SOLVER = CONFIG_MINING + ".puzzler_solver";
 	String CONFIG_MINING_MOD_HELPER = CONFIG_MINING + ".mod_helper";
+	String CONFIG_MINING_MOD_CRYSTAL_HUD = CONFIG_MINING + ".crystal_hud";
 	String CONFIG_MINING_CATEGORIES_HOTM = CONFIG_MINING + CATEGORIES_PART + ".hotm";
 	String CONFIG_MINING_SHOW_HOTM_PERK_LEVEL_AS_STACK_SIZE = CONFIG_MINING + ".show_hotm_perk_level_as_stack_size";
 	String CONFIG_MINING_HIGHLIGHT_DISABLED_HOTM_PERKS = CONFIG_MINING + ".highlight_disabled_hotm_perks";

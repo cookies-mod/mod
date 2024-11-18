@@ -1,10 +1,10 @@
-package codes.cookies.mod.utils.skyblock.tab.widgets.corpse;
+package codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import codes.cookies.mod.utils.skyblock.tab.PlayerListReader;
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.PlayerListReader;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidget;
 import lombok.Getter;
 
 /**

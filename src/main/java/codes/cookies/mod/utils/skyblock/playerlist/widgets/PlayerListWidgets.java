@@ -1,4 +1,4 @@
-package codes.cookies.mod.utils.skyblock.tab.widgets;
+package codes.cookies.mod.utils.skyblock.playerlist.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import codes.cookies.mod.utils.skyblock.tab.PlayerListReader;
-import codes.cookies.mod.utils.skyblock.tab.widgets.corpse.FrozenCorpseWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.PlayerListReader;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse.FrozenCorpseWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.crystal.CrystalWidget;
 
 public class PlayerListWidgets {
 
@@ -17,6 +18,11 @@ public class PlayerListWidgets {
 			FrozenCorpseWidget::doesMatch,
 			FrozenCorpseWidget::new,
 			FrozenCorpseWidget.class);
+	public static Entry<CrystalWidget> CRYSTAL = register(
+			CrystalWidget::doesMatch,
+			CrystalWidget::new,
+			CrystalWidget.class
+	);
 
 	private static <T extends PlayerListWidget> Entry<T> register(
 			Predicate<String> predicate,
