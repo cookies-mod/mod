@@ -1,4 +1,4 @@
-package codes.cookies.mod.utils.skyblock.tab;
+package codes.cookies.mod.utils.skyblock.playerlist;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -11,8 +11,8 @@ import codes.cookies.mod.events.PlayerListEvent;
 import codes.cookies.mod.utils.SkyblockUtils;
 
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidget;
-import codes.cookies.mod.utils.skyblock.tab.widgets.PlayerListWidgets;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.PlayerListWidgets;
 
 import net.minecraft.client.network.PlayerListEntry;
 

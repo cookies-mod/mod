@@ -394,6 +394,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MINING_MOD_HELPER,
 				"Mod Helper",
 				"Enables the mines of divan chest helper.");
+		translationBuilder.addConfig(
+				CONFIG_MINING_MOD_CRYSTAL_HUD,
+				"Crystal Hud",
+				"Enables the crystal hud, shows information about current crystal status, parts available and tools available.\n\n§cRequires the crystal player list widget to be active!");
 		translationBuilder.addConfig(CONFIG_MINING_PUZZLER_SOLVER,
 				"Puzzler solver",
 				"Highlight the correct block for the puzzler.");
@@ -588,7 +592,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Use class colors",
 				"Uses the class colors instead of the default color.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_GLOW_CLASS_COLOR,
-				"Glow teammates by class colors",
+				"Class based glow color",//"Glow teammates by class colors",
 				"Overrides the default hypixel glowing by rank to glow by class color.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR,
 				"Class colors",

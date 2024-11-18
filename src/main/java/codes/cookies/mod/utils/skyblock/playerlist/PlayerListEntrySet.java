@@ -1,4 +1,4 @@
-package codes.cookies.mod.utils.skyblock.tab;
+package codes.cookies.mod.utils.skyblock.playerlist;
 
 import java.util.ArrayList;
 import java.util.List;

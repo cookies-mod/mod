@@ -173,6 +173,15 @@ public class RepositoryItem {
 	}
 
 	/**
+	 * Gets the item or creates an "empty" item.
+	 * @param id The item id to get.
+	 * @return The item, or a non-null empty item.
+	 */
+	public static RepositoryItem ofOrEmpty(String id) {
+		return Optional.ofNullable(itemMap.get(id.toLowerCase(Locale.ROOT))).orElseGet(() -> createNotFound(id));
+	}
+
+	/**
 	 * Tries to fine an item by its name.
 	 *
 	 * @param name The name of the item.

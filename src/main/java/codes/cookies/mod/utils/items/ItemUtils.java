@@ -1,5 +1,7 @@
 package codes.cookies.mod.utils.items;
 
+import codes.cookies.mod.data.profile.items.Item;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
@@ -72,4 +74,11 @@ public class ItemUtils {
     public static <T> T getData(ItemStack itemStack, ComponentType<T> type) {
         return itemStack.getComponents().get(type);
     }
+
+	public static String getId(Item<?> item) {
+		if (item == null) {
+			return null;
+		}
+		return item.itemStack().get(CookiesDataComponentTypes.SKYBLOCK_ID);
+	}
 }
