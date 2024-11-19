@@ -1,6 +1,7 @@
 package codes.cookies.mod.features.farming.garden;
 
 import codes.cookies.mod.features.Loader;
+import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybinds;
 
 /**
  * Utility class to load all garden features.

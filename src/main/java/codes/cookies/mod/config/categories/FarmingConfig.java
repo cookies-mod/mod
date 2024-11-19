@@ -2,9 +2,11 @@ package codes.cookies.mod.config.categories;
 
 import javax.swing.*;
 
+import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.data.CodecData;
 import codes.cookies.mod.config.data.RancherSpeedConfig;
 import codes.cookies.mod.config.data.SqueakyMousematOption;
+import codes.cookies.mod.config.screen.ConfigScreen;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.HudSetting;
@@ -13,12 +15,13 @@ import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
-import codes.cookies.mod.config.system.options.KeybindingOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
+import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindsScreen;
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -78,9 +81,8 @@ public class FarmingConfig extends Category {
 	@Parent
 	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
 
-	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> {
-
-	}, "Garden Keybinds");
+	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU,
+			() -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader()), )), CONFIG_FARMING_OPEN_KEYBIND_MENU);
 
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
