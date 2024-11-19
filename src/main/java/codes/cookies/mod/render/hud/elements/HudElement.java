@@ -4,7 +4,9 @@ import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.system.Option;
 import codes.cookies.mod.render.hud.internal.BoundingBox;
 import codes.cookies.mod.render.hud.internal.HudEditAction;
-import codes.cookies.mod.render.hud.internal.HudPosition;
+import codes.cookies.mod.render.hud.internal.HudElementSettings;
+import codes.cookies.mod.render.hud.settings.BooleanSetting;
+import codes.cookies.mod.render.hud.settings.ColorSetting;
 import codes.cookies.mod.render.hud.settings.EnumCycleSetting;
 import codes.cookies.mod.render.hud.settings.HudElementSettingBuilder;
 import codes.cookies.mod.render.hud.settings.HudElementSettingType;
@@ -25,7 +27,7 @@ import java.util.List;
 public abstract class HudElement {
 
 	private final Identifier identifier;
-	private final HudPosition position = new HudPosition();
+	private final HudElementSettings position = new HudElementSettings();
 	@Setter
 	protected HudEditAction hudEditAction = HudEditAction.NONE;
 
@@ -34,6 +36,12 @@ public abstract class HudElement {
 	}
 
 	public abstract void render(DrawContext drawContext, TextRenderer textRenderer, float ticks);
+
+	public void renderBackground(DrawContext drawContext) {
+		if (this.position.isBackground()) {
+			this.getBoundingBox().fill(drawContext, this.position.getBackgroundColor());
+		}
+	}
 
 	public abstract boolean shouldRender();
 
@@ -63,6 +71,9 @@ public abstract class HudElement {
 		builder.prependSetting(new ValueSetting(Text.literal("X: " + this.getX())));
 		builder.prependSetting(new LiteralSetting(getName(), HudElementSettingType.METADATA));
 
+		builder.addSetting(new BooleanSetting(Text.literal("test"), Text.literal("Test"), this.position::isBackground, this.position::setBackground));
+		builder.addSetting(new ColorSetting(Text.literal("test2"), Text.literal("Test3"), this.position::getColorValue, this.position::setColorValue, true));
+
 		final List<Option<?, ?>> hudSettings = ConfigManager.getConfigReader().getHudSettings(this);
 		hudSettings.forEach(builder::addOption);
 	}
@@ -75,11 +86,13 @@ public abstract class HudElement {
 		return this.position.clampY(getHeight());
 	}
 
-	public void load(HudPosition value) {
+	public void load(HudElementSettings value) {
 		this.position.setScale(value.getScale());
 		this.position.setX(value.getRelativeX());
 		this.position.setY(value.getRelativeY());
 		this.position.setAlignment(value.getAlignment());
+		this.position.setBackground(value.isBackground());
+		this.position.setBackgroundColor(value.getBackgroundColor());
 	}
 
 	public float getScale() {

@@ -7,13 +7,17 @@ import lombok.Setter;
 
 import net.minecraft.client.MinecraftClient;
 
-public class HudPosition {
-	public static Codec<HudPosition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.FLOAT.fieldOf("x").forGetter(HudPosition::getRelativeX),
-			Codec.FLOAT.fieldOf("y").forGetter(HudPosition::getRelativeY),
-			Codec.FLOAT.fieldOf("scale").forGetter(HudPosition::getScale),
-			Alignment.CODEC.fieldOf("alignment").forGetter(HudPosition::getAlignment)
-	).apply(instance, HudPosition::new));
+import java.awt.*;
+
+public class HudElementSettings {
+	public static Codec<HudElementSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.FLOAT.fieldOf("x").forGetter(HudElementSettings::getRelativeX),
+			Codec.FLOAT.fieldOf("y").forGetter(HudElementSettings::getRelativeY),
+			Codec.FLOAT.fieldOf("scale").forGetter(HudElementSettings::getScale),
+			Alignment.CODEC.fieldOf("alignment").forGetter(HudElementSettings::getAlignment),
+			Codec.BOOL.fieldOf("background").forGetter(HudElementSettings::isBackground),
+			Codec.INT.fieldOf("background_color").forGetter(HudElementSettings::getBackgroundColor)
+	).apply(instance, HudElementSettings::new));
 
 	@Setter
 	private float x;
@@ -24,14 +28,22 @@ public class HudPosition {
 	@Getter
 	@Setter
 	private Alignment alignment = Alignment.LEFT;
+	@Getter
+	@Setter
+	private boolean background = false;
+	@Getter
+	@Setter
+	private int backgroundColor = 0xFFFFFFFF;
 
-	public HudPosition() {}
+	public HudElementSettings() {}
 
-	public HudPosition(float x, float y, float scale, Alignment alignment) {
+	public HudElementSettings(float x, float y, float scale, Alignment alignment, boolean background, int backgroundColor) {
 		this.x = x;
 		this.y = y;
 		this.scale = scale;
 		this.alignment = alignment;
+		this.background = background;
+		this.backgroundColor = backgroundColor;
 	}
 
 	public float getRelativeX() {
@@ -77,5 +89,13 @@ public class HudPosition {
 
 	private int getScreenHeight() {
 		return MinecraftClient.getInstance().getWindow().getScaledHeight();
+	}
+
+	public Color getColorValue() {
+		return new Color(getBackgroundColor(), true);
+	}
+
+	public void setColorValue(Color color) {
+		this.backgroundColor = color.getRGB();
 	}
 }

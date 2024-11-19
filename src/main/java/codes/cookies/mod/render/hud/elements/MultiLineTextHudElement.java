@@ -15,6 +15,7 @@ public abstract class MultiLineTextHudElement extends HudElement {
 
 	@Override
 	public void render(DrawContext drawContext, TextRenderer textRenderer, float ticks) {
+		this.renderBackground(drawContext);
 		int yOffset = 0;
 		lastWidth = 0;
 		for (Text text : getText()) {
