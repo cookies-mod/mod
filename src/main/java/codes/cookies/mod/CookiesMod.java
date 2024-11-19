@@ -9,6 +9,7 @@ import codes.cookies.mod.commands.dev.DevCommand;
 import codes.cookies.mod.commands.system.CommandManager;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.screen.ConfigScreen;
+import codes.cookies.mod.data.moddata.ModDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
 import codes.cookies.mod.features.Features;
@@ -67,6 +68,7 @@ public class CookiesMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         CommandManager.initialize();
+		ModDataManager.load();
         ProfileStorage.register();
         Repository.loadRepository();
 		HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);

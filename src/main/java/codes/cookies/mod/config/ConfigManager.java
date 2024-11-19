@@ -97,7 +97,7 @@ public class ConfigManager {
      * @param createBackup Whether there should be a backup of the old config.
      * @param reason       The reason why the save was called.
      */
-    public static void saveConfig(boolean createBackup, String reason) {
+    public static void 	saveConfig(boolean createBackup, String reason) {
         if (!Files.exists(configFolder)) {
             try {
                 Files.createDirectories(configFolder);

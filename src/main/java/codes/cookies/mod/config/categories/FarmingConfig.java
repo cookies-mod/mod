@@ -17,6 +17,8 @@ import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
+import codes.cookies.mod.data.moddata.ModDataManager;
+import codes.cookies.mod.features.farming.garden.keybinds.GardenGameOptions;
 import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindsScreen;
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;
@@ -82,7 +84,7 @@ public class FarmingConfig extends Category {
 	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
 
 	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU,
-			() -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader()), )), CONFIG_FARMING_OPEN_KEYBIND_MENU);
+			() -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader()), new GardenGameOptions(MinecraftClient.getInstance(), ModDataManager.MOD_DATA_FOLDER.resolve("gardenGameOptions.json").toFile()))), CONFIG_FARMING_OPEN_KEYBIND_MENU);
 
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
