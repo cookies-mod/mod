@@ -1,7 +1,7 @@
 package codes.cookies.mod.features.farming.garden.keybinds;
 
-import codes.cookies.mod.data.cookiesdata.CookieDataManager;
 import codes.cookies.mod.data.cookiesdata.CookiesDataInstances;
+import codes.cookies.mod.data.farming.GardenKeybindsData;
 import com.google.common.collect.ImmutableList;
 
 import net.fabricmc.api.EnvType;
@@ -16,16 +16,12 @@ import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
@@ -36,7 +32,6 @@ import codes.cookies.mod.translations.TranslationKeys;
 
 import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +53,6 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	@Nullable
 	public KeyBinding selectedKeyBinding;
-	public long lastKeyCodeUpdateTime;
 	private ControlsListWidget controlsList;
 	private ButtonWidget resetAllButton;
 
@@ -68,10 +62,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	protected void initFooter() {
 		this.resetAllButton = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
-			for (KeyBinding keyBinding : this.client.options.allKeys) {
-				keyBinding.setBoundKey(keyBinding.getDefaultKey());
-			}
-
+			CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.clear();
 			this.controlsList.update();
 		}).build();
 		DirectionalLayoutWidget directionalLayoutWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
@@ -105,10 +96,9 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 				this.selectedKeyBinding.setBoundKey(InputUtil.fromKeyCode(keyCode, scanCode));
 			}
 
-			CookiesDataInstances.gardenKeybindsData.allKeyBinds.put(this.selectedKeyBinding.getTranslationKey(), new KeyBinding(this.selectedKeyBinding.getTranslationKey(), this.selectedKeyBinding.boundKey.getCode(), this.selectedKeyBinding.getCategory()));
+			CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.add(new GardenKeybindsData.GardenKeyBindOverride(this.selectedKeyBinding));
 
 			this.selectedKeyBinding = null;
-			this.lastKeyCodeUpdateTime = Util.getMeasuringTimeMs();
 			this.controlsList.update();
 			return true;
 		} else {
@@ -122,7 +112,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		boolean bl = false;
 
 		for (KeyBinding keyBinding : this.client.options.allKeys) {
-			if (!keyBinding.isDefault()) {
+			if (CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.stream().anyMatch(gardenKeyBindOverride -> gardenKeyBindOverride.getKeyBinding().equals(keyBinding))) {
 				bl = true;
 				break;
 			}
@@ -171,7 +161,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		public ControlsListWidget(GardenKeybindsScreen parent, MinecraftClient client) {
 			super(client, parent.width, parent.layout.getContentHeight(), parent.layout.getHeaderHeight(), 20);
 			this.parent = parent;
-			KeyBinding[] keyBindings = ArrayUtils.clone((KeyBinding[])client.options.allKeys);
+			KeyBinding[] keyBindings = ArrayUtils.clone(client.options.allKeys);
 			Arrays.sort(keyBindings);
 			String string = null;
 
@@ -324,7 +314,6 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 			@Override
 			protected void update() {
 				this.editButton.setMessage(this.binding.getBoundKeyLocalizedText());
-				this.resetButton.active = !this.binding.isDefault();
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
 				if (!this.binding.isUnbound()) {

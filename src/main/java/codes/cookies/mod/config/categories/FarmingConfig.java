@@ -82,17 +82,7 @@ public class FarmingConfig extends Category {
 	@Parent
 	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
 
-	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU,
-			() -> {
-		var file = CookieDataManager.MOD_DATA_FOLDER.resolve("gardenGameOptions/").toFile();
-		if (!file.exists()) {
-			if(!file.mkdirs()) {
-				return;
-			}
-		}
-
-				MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader())));
-			}, CONFIG_FARMING_OPEN_KEYBIND_TEXT);
+	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(MinecraftClient.getInstance().currentScreen)), CONFIG_FARMING_OPEN_KEYBIND_TEXT);
 
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
