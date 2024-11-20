@@ -255,6 +255,7 @@ public interface TranslationKeys {
 	String CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS = CONFIG_FARMING + CATEGORIES_PART + ".garden_keybinds";
 
 	String CONFIG_FARMING_OPEN_KEYBIND_MENU = CONFIG_FARMING + ".open_keybind_menu";
+	String CONFIG_FARMING_OPEN_KEYBIND_TEXT = CONFIG_FARMING_OPEN_KEYBIND_MENU + ".text";
 	String CONFIG_FARMING_KEYBIND_MENU_TITLE = CONFIG_FARMING + ".keybind_menu_title";
 
 	//</editor-fold>

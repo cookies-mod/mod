@@ -326,6 +326,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS, "Garden Keybinds");
 		translationBuilder.addConfig(CONFIG_FARMING_OPEN_KEYBIND_MENU, "Open Keybind Menu", "Opens the garden keybind menu.");
 
+		translationBuilder.add(CONFIG_FARMING_OPEN_KEYBIND_TEXT, "Click Here!");
+
+		translationBuilder.add(CONFIG_FARMING_KEYBIND_MENU_TITLE, "Garden Keybinds");
+
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST, "Pest Warnings" ,"Warns you 10s before pests can spawn!");
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST_ORDER, "Pest timer", """
 				Changes what pest time to use for the notifications,
