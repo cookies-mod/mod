@@ -15,7 +15,11 @@ import org.jetbrains.annotations.NotNull;
  * Represents a keybinding in the config.
  */
 @Slf4j
-public class KeybindingOption extends Option<InputUtil.Key, KeybindingOption> {
+public class
+
+
+
+KeybindingOption extends Option<InputUtil.Key, KeybindingOption> {
 
 	InputUtil.Key defaultKey;
 

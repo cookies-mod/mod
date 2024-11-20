@@ -1,8 +1,9 @@
-package codes.cookies.mod.data.moddata;
+package codes.cookies.mod.data.cookiesdata;
 
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -11,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class ModDataManager {
+public class CookieDataManager {
 	private static final String LOGGING_KEY = "modData";
 
 	public static final Path MOD_DATA_FOLDER = Path.of("config/cookiesmod/data");
@@ -21,9 +22,19 @@ public class ModDataManager {
 			ExceptionHandler.tryCatch(() -> Files.createDirectories(MOD_DATA_FOLDER));
 		}
 
-		for (Field declaredField : ModData.class.getDeclaredFields()) {
+		for (Field declaredField : CookiesDataInstances.class.getDeclaredFields()) {
 			ExceptionHandler.tryCatch(() -> load(declaredField));
 		}
+	}
+
+	public static void save(CookiesModData modData) throws IOException {
+		final Path dataLocation = MOD_DATA_FOLDER.resolve(modData.getFileLocation());
+		final JsonElement jsonElement = modData.write();
+		final byte[] content = jsonElement.toString().getBytes(StandardCharsets.UTF_8);
+
+		ExceptionHandler.tryCatch(() -> {
+			saveFile(dataLocation, content);
+		});
 	}
 
 	private static void load(Field declaredField) {
@@ -61,7 +72,8 @@ public class ModDataManager {
 		return Files.readAllBytes(filePath);
 	}
 
-	private static void saveFile(Path filePath, byte[] content) throws IOException {
+	@SneakyThrows
+	private static void saveFile(Path filePath, byte[] content) {
 		Files.write(filePath, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 }

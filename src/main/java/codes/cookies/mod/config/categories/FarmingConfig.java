@@ -17,16 +17,12 @@ import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
-import codes.cookies.mod.data.moddata.ModDataManager;
-import codes.cookies.mod.features.farming.garden.keybinds.GardenGameOptions;
+import codes.cookies.mod.data.cookiesdata.CookieDataManager;
 import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindsScreen;
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;
 
-import com.mojang.logging.LogUtils;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -88,15 +84,14 @@ public class FarmingConfig extends Category {
 
 	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU,
 			() -> {
-		var file = ModDataManager.MOD_DATA_FOLDER.resolve("gardenGameOptions/").toFile();
+		var file = CookieDataManager.MOD_DATA_FOLDER.resolve("gardenGameOptions/").toFile();
 		if (!file.exists()) {
 			if(!file.mkdirs()) {
 				return;
 			}
 		}
 
-				LogUtils.getLogger().error("Opening keybind menu: {}", MinecraftClient.getInstance().options instanceof GardenGameOptions);
-				MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader()), new GardenGameOptions(MinecraftClient.getInstance(), file)));
+				MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(new ConfigScreen(ConfigManager.getConfigReader())));
 			}, CONFIG_FARMING_OPEN_KEYBIND_TEXT);
 
 	public FarmingConfig() {
