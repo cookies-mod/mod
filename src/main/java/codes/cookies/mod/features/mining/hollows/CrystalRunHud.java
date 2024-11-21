@@ -21,6 +21,7 @@ import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.services.mining.CrystalStatusService;
 import codes.cookies.mod.utils.items.ItemUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
+
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.text.MutableText;
@@ -158,7 +159,11 @@ public class CrystalRunHud extends MultiLineTextHudElement {
 
 	@Override
 	public int getWidth() {
-		return 170;
+		if (this.hudEditAction != HudEditAction.NONE) {
+			return 170;
+		}
+
+		return super.lastWidth;
 	}
 
 	@Override
