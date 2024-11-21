@@ -287,7 +287,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 						.build();
 				this.resetButton = ButtonWidget.builder(RESET_TEXT, button -> {
 					CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(binding.getTranslationKey(), null);
-					update();
+					ControlsListWidget.this.update();
 				}).dimensions(0, 0, 50, 20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", bindingName)).build();
 				this.update();
 			}
@@ -320,6 +320,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 			@Override
 			protected void update() {
+				KeyBinding.updateKeysByCode();
 				Text message;
 				if (CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null) {
 					message = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()).key().getLocalizedText();
@@ -327,36 +328,41 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 					message = this.binding.getBoundKeyLocalizedText();
 				}
 				this.editButton.setMessage(message);
+
 				this.resetButton.active = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null;
 
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
-				if (!this.binding.isUnbound()) {
-					for (KeyBinding keyBinding : client.options.allKeys) {
-						var keybindOverride = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey());
-						if(keyBinding == this.binding || keybindOverride == null) {
-							continue;
+
+				var thisOverride = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey());
+				if(thisOverride == null)
+				{
+					thisOverride = new GardenKeybindsData.GardenKeyBindOverride(this.binding.boundKey);
+				}
+
+				for (var otherKeyOverride : CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.entrySet()) {
+					if(otherKeyOverride.getKey().equals(this.binding.getTranslationKey())) {
+						continue;
+					}
+
+					var otherKey = otherKeyOverride.getValue();
+					if(otherKey == null) {
+						otherKey = new GardenKeybindsData.GardenKeyBindOverride(KeyBinding.KEYS_BY_ID.get(otherKeyOverride.getKey()).boundKey);
+					}
+
+					if(otherKey.key().equals(thisOverride.key()) && !thisOverride.key().equals(InputUtil.UNKNOWN_KEY)) {
+						if (this.duplicate) {
+							mutableText.append(", ");
 						}
-						var overridingKey = keybindOverride.key();
 
-						LogUtils.getLogger().error("non-Duplicate keybinds: " + Text.translatable(keyBinding.getTranslationKey()).getString() + " and " + Text.translatable(this.binding.getTranslationKey()).getString());
-						LogUtils.getLogger().error("non-Duplicate keybinds2: " + Text.translatable(keyBinding.boundKey.getTranslationKey()).getString() + " and " + Text.translatable(overridingKey.getTranslationKey()).getString());
-
-						if(keyBinding.boundKey.getTranslationKey().equals(overridingKey.getTranslationKey())) {
-							LogUtils.getLogger().error("Duplicate keybinds: " + keyBinding.getTranslationKey() + " and " + this.binding.getTranslationKey());
-							if (this.duplicate) {
-								mutableText.append(", ");
-							}
-
-							this.duplicate = true;
-							mutableText.append(Text.translatable(keyBinding.getTranslationKey()));
-						}
+						this.duplicate = true;
+						mutableText.append(Text.translatable(KeyBinding.KEYS_BY_ID.get(otherKeyOverride.getKey()).getTranslationKey()));
 					}
 				}
 
+
 				if (this.duplicate) {
-					this.editButton
-							.setMessage(Text.literal("[ ").append(this.editButton.getMessage().copy().formatted(Formatting.WHITE)).append(" ]").formatted(Formatting.RED));
+					this.editButton.setMessage(Text.literal("[ ").append(this.editButton.getMessage().copy().formatted(Formatting.WHITE)).append(" ]").formatted(Formatting.RED));
 					this.editButton.setTooltip(Tooltip.of(Text.translatable("controls.keybinds.duplicateKeybinds", mutableText)));
 				} else {
 					this.editButton.setTooltip(null);

@@ -46,8 +46,6 @@ public class GardenKeybindsData implements CookiesModData
 
 	@Override
 	public JsonElement write() {
-		JsonObject jsonObject = new JsonObject();
-
 		return JsonUtils.CLEAN_GSON.toJsonTree(this.gardenKeyBindOverrides);
 	}
 
