@@ -16,7 +16,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
 public class ColorInputWidget extends TextFieldWidget {
-	private final boolean canHaveAlpha = false;
+	private final boolean canHaveAlpha;
 	private Color color;
 	@Setter
 	private Consumer<Color> callback = Consumers.nop();
@@ -29,6 +29,7 @@ public class ColorInputWidget extends TextFieldWidget {
 	) {
 		super(textRenderer, 10, height, Text.literal(toText(text, canHaveAlpha)));
 		this.update();
+		this.canHaveAlpha = canHaveAlpha;
 	}
 	private int getBackgroundColor() {
 		return 0xFF << 24 | ~this.color.getRGB() & 0xFFFFFF;

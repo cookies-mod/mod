@@ -35,7 +35,7 @@ public class PowderHud extends MultiLineTextHudElement {
 			return this.hudEditAction == HudEditAction.SHOW_ALL;
 		}
 
-		if (this.hudEditAction == HudEditAction.ALL_ENABLED) {
+		if (this.hudEditAction == HudEditAction.ALL_ENABLED || this.hudEditAction == HudEditAction.SHOW_ALL) {
 			return true;
 		}
 

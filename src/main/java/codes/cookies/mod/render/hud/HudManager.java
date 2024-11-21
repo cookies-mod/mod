@@ -7,7 +7,7 @@ import java.util.Map;
 
 import codes.cookies.mod.render.hud.elements.HudElement;
 
-import codes.cookies.mod.render.hud.internal.HudPosition;
+import codes.cookies.mod.render.hud.internal.HudElementSettings;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -21,16 +21,16 @@ import net.minecraft.util.Identifier;
 public class HudManager {
 
 	static final List<HudElement> elements = new ArrayList<>();
-	private static final Map<Identifier, HudPosition> value = new HashMap<>();
+	private static final Map<Identifier, HudElementSettings> value = new HashMap<>();
 
 	public static void load() {
 		HudRenderCallback.EVENT.register(HudManager::render);
 		for (HudElement element : elements) {
-			final HudPosition hudPosition = value.get(element.getIdentifier());
-			if (hudPosition == null) {
+			final HudElementSettings hudElementSettings = value.get(element.getIdentifier());
+			if (hudElementSettings == null) {
 				continue;
 			}
-			element.load(hudPosition);
+			element.load(hudElementSettings);
 		}
 	}
 
@@ -67,12 +67,12 @@ public class HudManager {
 		return MinecraftClient.getInstance().textRenderer;
 	}
 
-	public static void applyAll(Map<Identifier, HudPosition> value) {
+	public static void applyAll(Map<Identifier, HudElementSettings> value) {
 		HudManager.value.putAll(value);
 	}
 
-	public static Map<Identifier, HudPosition> getSettings() {
-		Map<Identifier, HudPosition> value = new HashMap<>();
+	public static Map<Identifier, HudElementSettings> getSettings() {
+		Map<Identifier, HudElementSettings> value = new HashMap<>();
 		for (HudElement element : elements) {
 			value.put(element.getIdentifier(), element.getPosition());
 		}
