@@ -14,7 +14,6 @@ import codes.cookies.mod.render.hud.settings.LiteralSetting;
 import codes.cookies.mod.render.hud.settings.ValueSetting;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -39,7 +38,7 @@ public abstract class HudElement {
 
 	public void renderBackground(DrawContext drawContext) {
 		if (this.position.isBackground()) {
-			this.getBoundingBox().fill(drawContext, this.position.getBackgroundColor());
+			this.getNormalizedBoundingBox().fill(drawContext, this.position.getBackgroundColor());
 		}
 	}
 
@@ -58,8 +57,7 @@ public abstract class HudElement {
 
 	public abstract Text getName();
 
-	@MustBeInvokedByOverriders
-	public void buildSettings(HudElementSettingBuilder builder) {
+	protected void addBasicSetting(HudElementSettingBuilder builder) {
 		builder.prependSetting(new EnumCycleSetting<>(
 				Text.literal("Alignment"),
 				Text.literal(""),
@@ -70,12 +68,34 @@ public abstract class HudElement {
 		builder.prependSetting(new ValueSetting(Text.literal("Y: " + this.getY())));
 		builder.prependSetting(new ValueSetting(Text.literal("X: " + this.getX())));
 		builder.prependSetting(new LiteralSetting(getName(), HudElementSettingType.METADATA));
+	}
 
-		builder.addSetting(new BooleanSetting(Text.literal("test"), Text.literal("Test"), this.position::isBackground, this.position::setBackground));
-		builder.addSetting(new ColorSetting(Text.literal("test2"), Text.literal("Test3"), this.position::getColorValue, this.position::setColorValue, true));
-
+	protected void addConfigSetting(HudElementSettingBuilder builder) {
 		final List<Option<?, ?>> hudSettings = ConfigManager.getConfigReader().getHudSettings(this);
 		hudSettings.forEach(builder::addOption);
+	}
+
+	protected void addBackgroundSetting(HudElementSettingBuilder builder) {
+		builder.addSetting(new BooleanSetting(
+				Text.literal("Enable Background"),
+				Text.literal("Enables a background for the hud element"),
+				this.position::isBackground, this.position::setBackground)
+		);
+		builder.addSetting(
+				new ColorSetting(
+						Text.literal("Background Color"),
+						Text.literal("The background color for the hud element"),
+						this.position::getColorValue,
+						this.position::setColorValue,
+						true
+				)
+		);
+	}
+
+	public void buildSettings(HudElementSettingBuilder builder) {
+		addBasicSetting(builder);
+		addBackgroundSetting(builder);
+		addConfigSetting(builder);
 	}
 
 	public int getX() {

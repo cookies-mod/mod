@@ -131,10 +131,12 @@ public class HudEditScreen extends Screen {
 		context.cm$withMatrix(stack -> {
 			stack.translate(elementX, elementY, 0);
 			stack.scale(hudElement.getScale(), hudElement.getScale(), 0);
-			if (currentlyHovered == hudElement) {
-				hudElement.getNormalizedBoundingBox().fill(context, 0xFFABABAB);
-			} else {
-				hudElement.getNormalizedBoundingBox().fill(context, 0xAB000000);
+			if (!hudElement.getPosition().isBackground()) {
+				if (currentlyHovered == hudElement) {
+					hudElement.getNormalizedBoundingBox().fill(context, 0xFFABABAB);
+				} else {
+					hudElement.getNormalizedBoundingBox().fill(context, 0xAB000000);
+				}
 			}
 			hudElement.renderChecks(
 					context,

@@ -15,8 +15,8 @@ public class HudElementSettings {
 			Codec.FLOAT.fieldOf("y").forGetter(HudElementSettings::getRelativeY),
 			Codec.FLOAT.fieldOf("scale").forGetter(HudElementSettings::getScale),
 			Alignment.CODEC.fieldOf("alignment").forGetter(HudElementSettings::getAlignment),
-			Codec.BOOL.fieldOf("background").forGetter(HudElementSettings::isBackground),
-			Codec.INT.fieldOf("background_color").forGetter(HudElementSettings::getBackgroundColor)
+			Codec.BOOL.optionalFieldOf("background", false).forGetter(HudElementSettings::isBackground),
+			Codec.INT.optionalFieldOf("background_color", 0xFFFFFFFF).forGetter(HudElementSettings::getBackgroundColor)
 	).apply(instance, HudElementSettings::new));
 
 	@Setter
