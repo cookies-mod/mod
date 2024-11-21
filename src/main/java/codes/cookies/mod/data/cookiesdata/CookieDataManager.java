@@ -22,7 +22,7 @@ public class CookieDataManager {
 			ExceptionHandler.tryCatch(() -> Files.createDirectories(MOD_DATA_FOLDER));
 		}
 
-		for (Field declaredField : CookiesDataInstances.class.getDeclaredFields()) {
+		for (Field declaredField : CookieDataInstances.class.getDeclaredFields()) {
 			ExceptionHandler.tryCatch(() -> load(declaredField));
 		}
 	}

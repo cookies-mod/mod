@@ -1,8 +1,10 @@
 package codes.cookies.mod.features.farming.garden.keybinds;
 
-import codes.cookies.mod.data.cookiesdata.CookiesDataInstances;
+import codes.cookies.mod.data.cookiesdata.CookieDataInstances;
 import codes.cookies.mod.data.farming.GardenKeybindsData;
 import com.google.common.collect.ImmutableList;
+
+import com.mojang.logging.LogUtils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,6 +18,7 @@ import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
@@ -40,11 +43,11 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	private final Screen parent;
-
 	public GardenKeybindsScreen(Screen parent) {
 		super(Text.empty());
 		this.parent = parent;
@@ -62,7 +65,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	protected void initFooter() {
 		this.resetAllButton = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
-			CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.clear();
+			CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.clear();
 			this.controlsList.update();
 		}).build();
 		DirectionalLayoutWidget directionalLayoutWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
@@ -78,7 +81,12 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (this.selectedKeyBinding != null) {
-			this.selectedKeyBinding.setBoundKey(InputUtil.Type.MOUSE.createFromCode(button));
+			var key = InputUtil.Type.MOUSE.createFromCode(button);
+			if(key == selectedKeyBinding.getDefaultKey()) {
+				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), null);
+			} else {
+				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
+			}
 			this.selectedKeyBinding = null;
 			this.controlsList.update();
 			return true;
@@ -90,13 +98,12 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (this.selectedKeyBinding != null) {
-			if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-				this.selectedKeyBinding.setBoundKey(InputUtil.UNKNOWN_KEY);
+			var key = keyCode == GLFW.GLFW_KEY_ESCAPE ? InputUtil.UNKNOWN_KEY : InputUtil.fromKeyCode(keyCode, scanCode);
+			if(key == selectedKeyBinding.getDefaultKey()) {
+				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), null);
 			} else {
-				this.selectedKeyBinding.setBoundKey(InputUtil.fromKeyCode(keyCode, scanCode));
+				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
 			}
-
-			CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.add(new GardenKeybindsData.GardenKeyBindOverride(this.selectedKeyBinding));
 
 			this.selectedKeyBinding = null;
 			this.controlsList.update();
@@ -112,7 +119,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		boolean bl = false;
 
 		for (KeyBinding keyBinding : this.client.options.allKeys) {
-			if (CookiesDataInstances.gardenKeybindsData.gardenKeyBindOverrides.stream().anyMatch(gardenKeyBindOverride -> gardenKeyBindOverride.getKeyBinding().equals(keyBinding))) {
+			if (CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(keyBinding.getTranslationKey()) != null) {
 				bl = true;
 				break;
 			}
@@ -129,9 +136,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		this.initHeader();
 		this.initBody();
 		this.initFooter();
-		this.layout.forEachChild(child -> {
-			this.addDrawableChild(child);
-		});
+		this.layout.forEachChild(this::addDrawableChild);
 		this.refreshWidgetPositions();
 	}
 
@@ -141,7 +146,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	@Override
 	public void removed() {
-		CookiesDataInstances.gardenKeybindsData.save();
+		CookieDataInstances.gardenKeybindsData.save();
 	}
 
 	@Override
@@ -178,12 +183,15 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 					this.maxKeyNameLength = i;
 				}
 
+				if(!CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.containsKey(keyBinding.getTranslationKey())) {
+					CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(keyBinding.getTranslationKey(), null);
+				}
+
 				this.addEntry(new KeyBindingEntry(keyBinding, text));
 			}
 		}
 
 		public void update() {
-			KeyBinding.updateKeysByCode();
 			this.updateChildren();
 		}
 
@@ -278,7 +286,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 						)
 						.build();
 				this.resetButton = ButtonWidget.builder(RESET_TEXT, button -> {
-					binding.setBoundKey(binding.getDefaultKey());
+					CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(binding.getTranslationKey(), null);
 					update();
 				}).dimensions(0, 0, 50, 20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", bindingName)).build();
 				this.update();
@@ -295,7 +303,6 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 				this.editButton.render(context, mouseX, mouseY, tickDelta);
 				context.drawTextWithShadow(client.textRenderer, this.bindingName, x, y + entryHeight / 2 - 9 / 2, Colors.WHITE);
 				if (this.duplicate) {
-					int l = 3;
 					int m = this.editButton.getX() - 6;
 					context.fill(m, y - 1, m + 3, y + entryHeight, -65536);
 				}
@@ -313,12 +320,30 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 			@Override
 			protected void update() {
-				this.editButton.setMessage(this.binding.getBoundKeyLocalizedText());
+				Text message;
+				if (CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null) {
+					message = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()).key().getLocalizedText();
+				} else {
+					message = this.binding.getBoundKeyLocalizedText();
+				}
+				this.editButton.setMessage(message);
+				this.resetButton.active = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null;
+
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
 				if (!this.binding.isUnbound()) {
 					for (KeyBinding keyBinding : client.options.allKeys) {
-						if (keyBinding != this.binding && this.binding.equals(keyBinding)) {
+						var keybindOverride = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey());
+						if(keyBinding == this.binding || keybindOverride == null) {
+							continue;
+						}
+						var overridingKey = keybindOverride.key();
+
+						LogUtils.getLogger().error("non-Duplicate keybinds: " + Text.translatable(keyBinding.getTranslationKey()).getString() + " and " + Text.translatable(this.binding.getTranslationKey()).getString());
+						LogUtils.getLogger().error("non-Duplicate keybinds2: " + Text.translatable(keyBinding.boundKey.getTranslationKey()).getString() + " and " + Text.translatable(overridingKey.getTranslationKey()).getString());
+
+						if(keyBinding.boundKey.getTranslationKey().equals(overridingKey.getTranslationKey())) {
+							LogUtils.getLogger().error("Duplicate keybinds: " + keyBinding.getTranslationKey() + " and " + this.binding.getTranslationKey());
 							if (this.duplicate) {
 								mutableText.append(", ");
 							}

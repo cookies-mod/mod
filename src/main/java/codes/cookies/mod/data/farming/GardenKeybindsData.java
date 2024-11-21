@@ -2,19 +2,20 @@ package codes.cookies.mod.data.farming;
 
 import codes.cookies.mod.data.cookiesdata.CookiesModData;
 import codes.cookies.mod.utils.json.JsonUtils;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sun.jna.platform.win32.Netapi32Util;
 import lombok.Getter;
 
 
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class GardenKeybindsData implements CookiesModData
@@ -32,25 +33,22 @@ public class GardenKeybindsData implements CookiesModData
 
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
 
+		Type mapType = new TypeToken<HashMap<String, GardenKeyBindOverride>>(){}.getType();
+
 		gardenKeyBindOverrides.clear();
-		gardenKeyBindOverrides.addAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject, List.class));
+		gardenKeyBindOverrides.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.getAsString(), mapType));
 	}
 
-	public List<GardenKeyBindOverride> gardenKeyBindOverrides = new ArrayList<>();
+	public Map<String, GardenKeyBindOverride> gardenKeyBindOverrides = new HashMap<>();
 
-	@Getter
-	public static final class GardenKeyBindOverride {
-		private final KeyBinding keyBinding;
-
-		public GardenKeyBindOverride(KeyBinding keyBinding)
-		{
-			this.keyBinding = keyBinding;
-		}
+	public record GardenKeyBindOverride(InputUtil.Key key) {
 	}
 
 	@Override
 	public JsonElement write() {
-		return JsonUtils.CLEAN_GSON.toJsonTree(gardenKeyBindOverrides);
+		JsonObject jsonObject = new JsonObject();
+
+		return JsonUtils.CLEAN_GSON.toJsonTree(this.gardenKeyBindOverrides);
 	}
 
 }
