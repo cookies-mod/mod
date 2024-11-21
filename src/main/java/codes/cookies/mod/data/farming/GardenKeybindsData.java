@@ -5,7 +5,6 @@ import codes.cookies.mod.utils.json.JsonUtils;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.jna.platform.win32.Netapi32Util;
 import lombok.Getter;
 
 
@@ -30,7 +29,6 @@ public class GardenKeybindsData implements CookiesModData
 		if (!jsonElement.isJsonObject() || jsonElement.getAsJsonObject().isEmpty()) {
 			return;
 		}
-
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
 
 		Type mapType = new TypeToken<HashMap<String, GardenKeyBindOverride>>(){}.getType();
@@ -39,7 +37,7 @@ public class GardenKeybindsData implements CookiesModData
 		gardenKeyBindOverrides.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.getAsString(), mapType));
 	}
 
-	public Map<String, GardenKeyBindOverride> gardenKeyBindOverrides = new HashMap<>();
+	private final Map<String, GardenKeyBindOverride> gardenKeyBindOverrides = new HashMap<>();
 
 	public record GardenKeyBindOverride(InputUtil.Key key) {
 	}

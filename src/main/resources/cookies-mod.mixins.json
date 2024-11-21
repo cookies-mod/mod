@@ -2,6 +2,7 @@
   "package": "codes.cookies.mod.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "KeybindingMixin",
     "render.ArmorFeatureRenderMixin",
     "render.EntityRenderDispatcherMixin",
     "render.HeadFeatureRenderMixin",

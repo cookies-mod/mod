@@ -43,7 +43,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 
 public class GardenKeybindsScreen extends Screen implements TranslationKeys {
@@ -65,7 +64,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	protected void initFooter() {
 		this.resetAllButton = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
-			CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.clear();
+			CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().clear();
 			this.controlsList.update();
 		}).build();
 		DirectionalLayoutWidget directionalLayoutWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
@@ -83,9 +82,9 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		if (this.selectedKeyBinding != null) {
 			var key = InputUtil.Type.MOUSE.createFromCode(button);
 			if(key == selectedKeyBinding.getDefaultKey()) {
-				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), null);
+				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), null);
 			} else {
-				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
+				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
 			}
 			this.selectedKeyBinding = null;
 			this.controlsList.update();
@@ -100,9 +99,9 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		if (this.selectedKeyBinding != null) {
 			var key = keyCode == GLFW.GLFW_KEY_ESCAPE ? InputUtil.UNKNOWN_KEY : InputUtil.fromKeyCode(keyCode, scanCode);
 			if(key == selectedKeyBinding.getDefaultKey()) {
-				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), null);
+				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), null);
 			} else {
-				CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
+				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
 			}
 
 			this.selectedKeyBinding = null;
@@ -119,7 +118,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		boolean bl = false;
 
 		for (KeyBinding keyBinding : this.client.options.allKeys) {
-			if (CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(keyBinding.getTranslationKey()) != null) {
+			if (CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(keyBinding.getTranslationKey()) != null) {
 				bl = true;
 				break;
 			}
@@ -183,8 +182,8 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 					this.maxKeyNameLength = i;
 				}
 
-				if(!CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.containsKey(keyBinding.getTranslationKey())) {
-					CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(keyBinding.getTranslationKey(), null);
+				if(!CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().containsKey(keyBinding.getTranslationKey())) {
+					CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(keyBinding.getTranslationKey(), null);
 				}
 
 				this.addEntry(new KeyBindingEntry(keyBinding, text));
@@ -286,7 +285,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 						)
 						.build();
 				this.resetButton = ButtonWidget.builder(RESET_TEXT, button -> {
-					CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.put(binding.getTranslationKey(), null);
+					CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(binding.getTranslationKey(), null);
 					ControlsListWidget.this.update();
 				}).dimensions(0, 0, 50, 20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", bindingName)).build();
 				this.update();
@@ -322,25 +321,25 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 			protected void update() {
 				KeyBinding.updateKeysByCode();
 				Text message;
-				if (CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null) {
-					message = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()).key().getLocalizedText();
+				if (CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()) != null) {
+					message = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()).key().getLocalizedText();
 				} else {
 					message = this.binding.getBoundKeyLocalizedText();
 				}
 				this.editButton.setMessage(message);
 
-				this.resetButton.active = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey()) != null;
+				this.resetButton.active = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()) != null;
 
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
 
-				var thisOverride = CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.get(this.binding.getTranslationKey());
+				var thisOverride = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey());
 				if(thisOverride == null)
 				{
 					thisOverride = new GardenKeybindsData.GardenKeyBindOverride(this.binding.boundKey);
 				}
 
-				for (var otherKeyOverride : CookieDataInstances.gardenKeybindsData.gardenKeyBindOverrides.entrySet()) {
+				for (var otherKeyOverride : CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().entrySet()) {
 					if(otherKeyOverride.getKey().equals(this.binding.getTranslationKey())) {
 						continue;
 					}
