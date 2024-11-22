@@ -2,9 +2,8 @@ package codes.cookies.mod.features.farming.garden.keybinds;
 
 import codes.cookies.mod.data.cookiesdata.CookieDataInstances;
 import codes.cookies.mod.data.farming.GardenKeybindsData;
+import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import com.google.common.collect.ImmutableList;
-
-import com.mojang.logging.LogUtils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
@@ -64,7 +62,10 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 
 	protected void initFooter() {
 		this.resetAllButton = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
-			CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().clear();
+			for (KeyBinding keyBinding : client.options.allKeys) {
+				KeyBindingAccessor.toAccessor(keyBinding).cookies$setGardenKey(null);
+			}
+
 			this.controlsList.update();
 		}).build();
 		DirectionalLayoutWidget directionalLayoutWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
@@ -82,9 +83,9 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		if (this.selectedKeyBinding != null) {
 			var key = InputUtil.Type.MOUSE.createFromCode(button);
 			if(key == selectedKeyBinding.getDefaultKey()) {
-				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), null);
+				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(null);
 			} else {
-				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
+				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(new GardenKeybindsData.GardenKeyBindOverride(key));
 			}
 			this.selectedKeyBinding = null;
 			this.controlsList.update();
@@ -98,10 +99,10 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (this.selectedKeyBinding != null) {
 			var key = keyCode == GLFW.GLFW_KEY_ESCAPE ? InputUtil.UNKNOWN_KEY : InputUtil.fromKeyCode(keyCode, scanCode);
-			if(key == selectedKeyBinding.getDefaultKey()) {
-				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), null);
+			if(key.equals(selectedKeyBinding.getDefaultKey())) {
+				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(null);
 			} else {
-				CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(selectedKeyBinding.getTranslationKey(), new GardenKeybindsData.GardenKeyBindOverride(key));
+				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(new GardenKeybindsData.GardenKeyBindOverride(key));
 			}
 
 			this.selectedKeyBinding = null;
@@ -118,7 +119,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 		boolean bl = false;
 
 		for (KeyBinding keyBinding : this.client.options.allKeys) {
-			if (CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(keyBinding.getTranslationKey()) != null) {
+			if (KeyBindingAccessor.toAccessor(keyBinding).cookies$getGardenKey()  != null) {
 				bl = true;
 				break;
 			}
@@ -180,10 +181,6 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 				int i = client.textRenderer.getWidth(text);
 				if (i > this.maxKeyNameLength) {
 					this.maxKeyNameLength = i;
-				}
-
-				if(!CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().containsKey(keyBinding.getTranslationKey())) {
-					CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(keyBinding.getTranslationKey(), null);
 				}
 
 				this.addEntry(new KeyBindingEntry(keyBinding, text));
@@ -269,9 +266,11 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 			private final ButtonWidget editButton;
 			private final ButtonWidget resetButton;
 			private boolean duplicate = false;
+			private final KeyBindingAccessor gardenKey;
 
 			public KeyBindingEntry(final KeyBinding binding, final Text bindingName) {
 				this.binding = binding;
+				this.gardenKey = KeyBindingAccessor.toAccessor(binding);
 				this.bindingName = bindingName;
 				this.editButton = ButtonWidget.builder(bindingName, button -> {
 							parent.selectedKeyBinding = binding;
@@ -285,7 +284,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 						)
 						.build();
 				this.resetButton = ButtonWidget.builder(RESET_TEXT, button -> {
-					CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().put(binding.getTranslationKey(), null);
+					this.gardenKey.cookies$setGardenKey(null);
 					ControlsListWidget.this.update();
 				}).dimensions(0, 0, 50, 20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", bindingName)).build();
 				this.update();
@@ -321,32 +320,34 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 			protected void update() {
 				KeyBinding.updateKeysByCode();
 				Text message;
-				if (CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()) != null) {
-					message = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()).key().getLocalizedText();
+				if (KeyBindingAccessor.toAccessor(this.binding).cookies$getGardenKey() != null) {
+					message = KeyBindingAccessor.toAccessor(this.binding).cookies$getGardenKey().key().getLocalizedText();
 				} else {
 					message = this.binding.getBoundKeyLocalizedText();
 				}
 				this.editButton.setMessage(message);
 
-				this.resetButton.active = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey()) != null;
+				this.resetButton.active = this.gardenKey.cookies$getGardenKey() != null;
 
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
 
-				var thisOverride = CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().get(this.binding.getTranslationKey());
+				//todo: optimize
+				var thisOverride = this.gardenKey.cookies$getGardenKey();
 				if(thisOverride == null)
 				{
 					thisOverride = new GardenKeybindsData.GardenKeyBindOverride(this.binding.boundKey);
 				}
 
-				for (var otherKeyOverride : CookieDataInstances.gardenKeybindsData.getGardenKeyBindOverrides().entrySet()) {
-					if(otherKeyOverride.getKey().equals(this.binding.getTranslationKey())) {
+				for (KeyBinding keyBinding : ControlsListWidget.this.client.options.allKeys) {
+					var otherKey = KeyBindingAccessor.toAccessor(keyBinding).cookies$getGardenKey();
+
+					if(keyBinding.getTranslationKey().equals(this.binding.getTranslationKey())) {
 						continue;
 					}
 
-					var otherKey = otherKeyOverride.getValue();
 					if(otherKey == null) {
-						otherKey = new GardenKeybindsData.GardenKeyBindOverride(KeyBinding.KEYS_BY_ID.get(otherKeyOverride.getKey()).boundKey);
+						otherKey = new GardenKeybindsData.GardenKeyBindOverride(keyBinding.boundKey);
 					}
 
 					if(otherKey.key().equals(thisOverride.key()) && !thisOverride.key().equals(InputUtil.UNKNOWN_KEY)) {
@@ -355,10 +356,9 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 						}
 
 						this.duplicate = true;
-						mutableText.append(Text.translatable(KeyBinding.KEYS_BY_ID.get(otherKeyOverride.getKey()).getTranslationKey()));
+						mutableText.append(Text.translatable(keyBinding.getTranslationKey()));
 					}
 				}
-
 
 				if (this.duplicate) {
 					this.editButton.setMessage(Text.literal("[ ").append(this.editButton.getMessage().copy().formatted(Formatting.WHITE)).append(" ]").formatted(Formatting.RED));
