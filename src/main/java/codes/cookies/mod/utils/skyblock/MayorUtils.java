@@ -82,7 +82,9 @@ public class MayorUtils {
 	}
 
 	private static void addPerk(String name) {
-		activePerks.add(name.replaceAll(" ", "_").replaceAll("[^\\w_]", ""));
+		final String s = name.replaceAll(" ", "_").replaceAll("-","_").replaceAll("[^\\w_]", "").toLowerCase();
+		activePerks.add(s);
+		System.out.println(s);
 	}
 
 	public static boolean isPerkActive(String perkId) {
