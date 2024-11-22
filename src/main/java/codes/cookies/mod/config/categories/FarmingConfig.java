@@ -2,11 +2,9 @@ package codes.cookies.mod.config.categories;
 
 import javax.swing.*;
 
-import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.data.CodecData;
 import codes.cookies.mod.config.data.RancherSpeedConfig;
 import codes.cookies.mod.config.data.SqueakyMousematOption;
-import codes.cookies.mod.config.screen.ConfigScreen;
 import codes.cookies.mod.config.system.Category;
 import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.HudSetting;
@@ -17,7 +15,6 @@ import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
-import codes.cookies.mod.data.cookiesdata.CookieDataManager;
 import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindsScreen;
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;

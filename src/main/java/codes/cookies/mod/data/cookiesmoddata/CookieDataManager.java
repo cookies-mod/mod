@@ -1,4 +1,4 @@
-package codes.cookies.mod.data.cookiesdata;
+package codes.cookies.mod.data.cookiesmoddata;
 
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import com.google.gson.JsonElement;

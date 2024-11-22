@@ -1,6 +1,6 @@
 package codes.cookies.mod.data.farming;
 
-import codes.cookies.mod.data.cookiesdata.CookiesModData;
+import codes.cookies.mod.data.cookiesmoddata.CookiesModData;
 import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import codes.cookies.mod.utils.json.JsonUtils;
 import com.google.common.reflect.TypeToken;
@@ -35,8 +35,11 @@ public class GardenKeybindsData implements CookiesModData
 
 		Map<String, GardenKeyBindOverride> jsonMap = JsonUtils.CLEAN_GSON.fromJson(jsonObject.getAsString(), mapType);
 
-		for (KeyBinding keyBinding : KeyBinding.KEYS_BY_ID.values()) {
-			KeyBindingAccessor.toAccessor(keyBinding).cookies$setGardenKey(jsonMap.getOrDefault(keyBinding.getTranslationKey(), null));
+		for (var entry : jsonMap.entrySet()) {
+			if (entry.getValue() != null) {
+				var keyBinding = KeyBindingAccessor.toAccessor(KeyBinding.KEYS_BY_ID.get(entry.getKey()));
+				keyBinding.cookies$setGardenKey(entry.getValue());
+			}
 		}
 	}
 

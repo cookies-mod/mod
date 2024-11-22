@@ -9,7 +9,7 @@ import codes.cookies.mod.commands.dev.DevCommand;
 import codes.cookies.mod.commands.system.CommandManager;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.screen.ConfigScreen;
-import codes.cookies.mod.data.cookiesdata.CookieDataManager;
+import codes.cookies.mod.data.cookiesmoddata.CookieDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
 import codes.cookies.mod.features.Features;

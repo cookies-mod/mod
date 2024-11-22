@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.farming.garden.keybinds;
 
-import codes.cookies.mod.data.cookiesdata.CookieDataInstances;
+import codes.cookies.mod.data.cookiesmoddata.CookieDataInstances;
 import codes.cookies.mod.data.farming.GardenKeybindsData;
 import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import com.google.common.collect.ImmutableList;
