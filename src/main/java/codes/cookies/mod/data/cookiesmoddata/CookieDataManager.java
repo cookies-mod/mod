@@ -65,7 +65,8 @@ public class CookieDataManager {
 
 		final String fileContent = new String(bytes, StandardCharsets.UTF_8);
 		final JsonElement fileElement = JsonParser.parseString(fileContent);
-		data.read(fileElement.getAsJsonObject());
+		if(fileElement.isJsonObject())
+			data.read(fileElement.getAsJsonObject());
 	}
 
 	private static byte[] readFile(Path filePath) throws IOException {

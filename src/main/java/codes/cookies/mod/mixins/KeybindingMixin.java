@@ -11,12 +11,14 @@ import net.minecraft.client.option.KeyBinding;
 
 import net.minecraft.client.util.InputUtil;
 
-import org.spongepowered.asm.mixin.Debug;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +28,12 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Unique
 	private GardenKeybindsData.GardenKeyBindOverride cookies$gardenKey;
 
-
 	@Unique
 	private static final Map<InputUtil.Key, KeyBindingAccessor> GARDEN_KEY_TO_BINDINGS = new HashMap<>();
+
+	@Final
+	@Shadow
+	private static Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS;
 
 	@Override
 	public GardenKeybindsData.GardenKeyBindOverride cookies$getGardenKey() {
@@ -71,8 +76,9 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 		if(LocationUtils.Island.GARDEN.isActive()) {
 			KeyBinding keyBinding = (KeyBinding)GARDEN_KEY_TO_BINDINGS.get(key);
 			if (keyBinding != null) {
-				LogUtils.getLogger().error("Garden key set pressed: {} to {}", keyBinding.boundKey, pressed);
 				keyBinding.setPressed(pressed);
+				ci.cancel();
+			} else if ((KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) && accessor.cookies$getGardenKey() != null) {
 				ci.cancel();
 			}
 		}
@@ -83,9 +89,30 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 		if(LocationUtils.Island.GARDEN.isActive()) {
 			KeyBinding keyBinding = (KeyBinding)GARDEN_KEY_TO_BINDINGS.get(key);
 			if (keyBinding != null) {
-				LogUtils.getLogger().error("Garden key timesPressed: {}", keyBinding.boundKey);
 				keyBinding.timesPressed++;
 				ci.cancel();
+			} else if ((KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) && accessor.cookies$getGardenKey() != null) {
+				ci.cancel();
+			}
+		}
+	}
+
+	@Inject(method = "matchesKey", at = @At(value = "HEAD"), cancellable = true)
+	private void cookies$matchesKey(int keyCode, int scanCode, CallbackInfoReturnable<Boolean> cir)
+	{
+		if (LocationUtils.Island.GARDEN.isActive()) {
+			if (this.cookies$getGardenKey() != null) {
+				cir.setReturnValue(keyCode == InputUtil.UNKNOWN_KEY.getCode()
+						? this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.SCANCODE && this.cookies$getGardenKey().key().getCode() == scanCode
+						: this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.KEYSYM && this.cookies$getGardenKey().key().getCode() == keyCode);
+			}
+		}
+	}
+	@Inject(method = "matchesMouse", at = @At(value = "HEAD"), cancellable = true)
+	public void matchesMouse(int code, CallbackInfoReturnable<Boolean> cir) {
+		if (LocationUtils.Island.GARDEN.isActive()) {
+			if (this.cookies$getGardenKey() != null) {
+				cir.setReturnValue(this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.MOUSE && this.cookies$getGardenKey().key().getCode() == code);
 			}
 		}
 	}
