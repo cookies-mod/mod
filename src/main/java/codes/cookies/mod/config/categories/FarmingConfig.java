@@ -39,6 +39,11 @@ public class FarmingConfig extends Category {
 	public PestFoldable pestFoldable = new PestFoldable();
 
 	@Parent
+	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
+
+	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(MinecraftClient.getInstance().currentScreen)), CONFIG_FARMING_OPEN_KEYBIND_TEXT);
+
+	@Parent
 	public TextDisplayOption ranchers = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_RANCHERS);
 
 	public BooleanOption showRancherSpeed = new BooleanOption(CONFIG_FARMING_SHOW_RANCHER_SPEED, false);
@@ -75,11 +80,6 @@ public class FarmingConfig extends Category {
 
 	public BooleanOption highlightUnclaimedJacobContests =
 			new BooleanOption(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS, false);
-
-	@Parent
-	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
-
-	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(MinecraftClient.getInstance().currentScreen)), CONFIG_FARMING_OPEN_KEYBIND_TEXT);
 
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
