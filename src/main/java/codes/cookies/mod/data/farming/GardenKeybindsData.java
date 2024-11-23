@@ -21,8 +21,7 @@ import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable<Map<String, GardenKeybindsData.GardenKeyBindOverride>>
-{
+public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable<Map<String, GardenKeybindsData.GardenKeyBindOverride>> {
 	private static final Codec<Map<String, GardenKeyBindOverride>> CODEC = Codec.unboundedMap(Codec.STRING, GardenKeyBindOverride.CODEC);
 
 	@Override
