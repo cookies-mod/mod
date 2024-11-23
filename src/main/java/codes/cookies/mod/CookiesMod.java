@@ -13,6 +13,7 @@ import codes.cookies.mod.data.cookiesmoddata.CookieDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
 import codes.cookies.mod.features.Features;
+import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindPredicate;
 import codes.cookies.mod.render.hud.HudEditScreen;
 import codes.cookies.mod.render.hud.HudManager;
 import codes.cookies.mod.repository.Repository;
@@ -24,6 +25,8 @@ import codes.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import codes.cookies.mod.utils.cookies.CookiesUtils;
+import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
 import lombok.Getter;
@@ -39,6 +42,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
+
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -46,7 +51,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class CookiesMod implements ClientModInitializer {
 	public static KeyBinding chestSearch;
-
+	private static KeyBinding useGardenKeybinds;
 	@Getter
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
@@ -91,11 +96,19 @@ public class CookiesMod implements ClientModInitializer {
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_O,
                 "cookies.mod.keybinds"));
+		useGardenKeybinds = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.garden.keybind_switch",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_K,
+				"cookies.mod.keybinds"));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (chestSearch.isPressed()) {
                 openScreen(new ItemSearchScreen());
             }
+			while(useGardenKeybinds.wasPressed() && LocationUtils.Island.GARDEN.isActive()) {
+				GardenKeybindPredicate.keyBindToggle = !GardenKeybindPredicate.keyBindToggle;
+				CookiesUtils.sendMessage(Text.translatable("cookies.mod.garden.keybinds." + (GardenKeybindPredicate.keyBindToggle ? "enabled" : "disabled")), false);
+			}
         });
     }
 

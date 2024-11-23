@@ -1,5 +1,7 @@
 package codes.cookies.mod.mixins;
 
+import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingConfig;
 import codes.cookies.mod.data.farming.GardenKeybindsData;
 import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
@@ -61,7 +63,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "updatePressedStates", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$updatePressedStates(CallbackInfo ci) {
-		if(LocationUtils.Island.GARDEN.isActive()) {
+		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			for (var keyBinding : GARDEN_KEY_TO_BINDINGS.values()) {
 				if (keyBinding.cookies$getGardenKey().key().getCategory() == InputUtil.Type.KEYSYM && keyBinding.cookies$getGardenKey().key().getCode() != InputUtil.UNKNOWN_KEY.getCode()) {
 					((KeyBinding)keyBinding).setPressed(InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyBinding.cookies$getGardenKey().key().getCode()));
@@ -73,7 +75,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "setKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$setKeyPressed(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-		if(LocationUtils.Island.GARDEN.isActive()) {
+		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
 				if (accessor.cookies$getGardenKey() != null) {
 					((KeyBinding) accessor).setPressed(pressed);
@@ -89,7 +91,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "onKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$onKeyPressed(InputUtil.Key key, CallbackInfo ci) {
-		if(LocationUtils.Island.GARDEN.isActive()) {
+		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
 				if (accessor.cookies$getGardenKey() != null) {
 					((KeyBinding) accessor).timesPressed++;
@@ -106,7 +108,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Inject(method = "matchesKey", at = @At(value = "HEAD"), cancellable = true)
 	private void cookies$matchesKey(int keyCode, int scanCode, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (LocationUtils.Island.GARDEN.isActive()) {
+		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (this.cookies$getGardenKey() != null) {
 				cir.setReturnValue(keyCode == InputUtil.UNKNOWN_KEY.getCode()
 						? this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.SCANCODE && this.cookies$getGardenKey().key().getCode() == scanCode
@@ -116,7 +118,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	}
 	@Inject(method = "matchesMouse", at = @At(value = "HEAD"), cancellable = true)
 	public void matchesMouse(int code, CallbackInfoReturnable<Boolean> cir) {
-		if (LocationUtils.Island.GARDEN.isActive()) {
+		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (this.cookies$getGardenKey() != null) {
 				cir.setReturnValue(this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.MOUSE && this.cookies$getGardenKey().key().getCode() == code);
 			}

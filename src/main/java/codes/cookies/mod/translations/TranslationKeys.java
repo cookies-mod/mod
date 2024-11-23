@@ -258,6 +258,8 @@ public interface TranslationKeys {
 	String CONFIG_FARMING_OPEN_KEYBIND_TEXT = CONFIG_FARMING_OPEN_KEYBIND_MENU + ".text";
 	String CONFIG_FARMING_KEYBIND_MENU_TITLE = CONFIG_FARMING + ".keybind_menu_title";
 
+	String CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE = CONFIG_FARMING + ".garden_keybind_predicate";
+
 	//</editor-fold>
 	//<editor-fold desc="Config/Helpers">
 	String CONFIG_HELPERS = CONFIG + ".helpers";
