@@ -7,8 +7,7 @@ public interface CookiesModData extends JsonSerializable {
 	String getFileLocation();
 
 	@SneakyThrows
-	default void save()
-	{
+	default void save() {
 		CookieDataManager.save(this);
 	}
 }
