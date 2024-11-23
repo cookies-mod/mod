@@ -16,13 +16,13 @@ import lombok.ToString;
 public class SqueakyMousematEntry {
 
 	public static final Codec<SqueakyMousematEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-					Codec.INT.fieldOf("yaw").forGetter(SqueakyMousematEntry::getYaw),
-					Codec.INT.fieldOf("pitch").forGetter(SqueakyMousematEntry::getPitch))
+					Codec.DOUBLE.fieldOf("yaw").forGetter(SqueakyMousematEntry::getYaw),
+					Codec.DOUBLE.fieldOf("pitch").forGetter(SqueakyMousematEntry::getPitch))
 			.apply(instance, SqueakyMousematEntry::new));
 	public static final SqueakyMousematEntry EMPTY = new SqueakyMousematEntry(0, 0);
 
-	private int yaw;
-	private int pitch;
+	private double yaw;
+	private double pitch;
 
 	public String get() {
 		return this.yaw + " / " + this.pitch;
