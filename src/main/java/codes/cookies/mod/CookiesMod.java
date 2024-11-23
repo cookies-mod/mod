@@ -45,7 +45,6 @@ import org.lwjgl.glfw.GLFW;
  */
 public class CookiesMod implements ClientModInitializer {
 	public static KeyBinding chestSearch;
-	public static KeyBinding gardenReload;
 
 	@Getter
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
@@ -90,19 +89,11 @@ public class CookiesMod implements ClientModInitializer {
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_O,
                 "cookies.mod.keybinds"));
-		gardenReload = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.garden_reload",
-				InputUtil.Type.KEYSYM,
-				GLFW.GLFW_KEY_K,
-				"cookies.mod.keybinds"));
-
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (chestSearch.isPressed()) {
                 openScreen(new ItemSearchScreen());
             }
-			if (gardenReload.isPressed()) {
-				CookieDataManager.load();
-			}
         });
     }
 
