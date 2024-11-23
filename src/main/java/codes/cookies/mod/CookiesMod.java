@@ -18,13 +18,14 @@ import codes.cookies.mod.render.hud.HudManager;
 import codes.cookies.mod.repository.Repository;
 import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.screen.search.ItemSearchScreen;
+import codes.cookies.mod.services.mining.CrystalStatusService;
 import codes.cookies.mod.utils.UpdateChecker;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import codes.cookies.mod.utils.skyblock.MayorUtils;
-import codes.cookies.mod.utils.skyblock.tab.PlayerListUtils;
+import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -81,6 +82,7 @@ public class CookiesMod implements ClientModInitializer {
         UpdateChecker.init();
 		PlayerListUtils.init();
 		HudManager.load();
+		CrystalStatusService.register();
         this.registerKeyBindings();
     }
 

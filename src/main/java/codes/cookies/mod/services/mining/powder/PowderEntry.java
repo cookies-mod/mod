@@ -1,4 +1,4 @@
-package codes.cookies.mod.services.powder;
+package codes.cookies.mod.services.mining.powder;
 
 import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
 import codes.cookies.mod.utils.cookies.PauseableTime;
