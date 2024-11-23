@@ -61,7 +61,7 @@ public class SqueakyMousematOverlay {
 		}
 		final SqueakyMousematEntry intReference = this.indexToReference(this.editing);
 		if (intReference != null) {
-			final int newNumber = Integer.parseInt(this.editingValue);
+			final double newNumber = Double.parseDouble(this.editingValue);
 			if (this.isEditingYaw) {
 				intReference.setYaw(newNumber);
 			} else {
@@ -111,7 +111,8 @@ public class SqueakyMousematOverlay {
 	}
 
 	private boolean isRancherBootsScreen(SignEditScreen screen) {
-		return screen.messages[1].trim().equals("Set Yaw Above!") && screen.messages[2].trim().equals("Set Pitch Below!");
+		return screen.messages[1].trim().equals("Set Yaw Above!") && screen.messages[2].trim()
+				.equals("Set Pitch Below!");
 	}
 
 	private void evaluateSpeeds() {
@@ -188,7 +189,8 @@ public class SqueakyMousematOverlay {
 	private void toggleUseProfile() {
 		ProfileStorage.getCurrentProfile().ifPresent(profileData -> {
 			final UUID uuid = profileData.getProfileUuid();
-			final List<UUID> uuids = ConfigManager.getConfig().farmingConfig.squeakyMousematOption.getValue().useProfileData();
+			final List<UUID> uuids = ConfigManager.getConfig().farmingConfig.squeakyMousematOption.getValue()
+					.useProfileData();
 			if (this.useProfile) {
 				uuids.remove(uuid);
 			} else {
@@ -212,11 +214,17 @@ public class SqueakyMousematOverlay {
 			this.editingValue = "-";
 			return false;
 		}
+		if (this.editingValue.indexOf('.') == -1 && c == '.') {
+			this.editingValue += ".";
+			return false;
+		}
 		if (c < '0' || c > '9') {
 			return false;
 		}
-		if ((!this.editingValue.startsWith("-") || this.editingValue.length() >= 4) && this.editingValue.length() >= 3) {
-			return false;
+		if (!this.editingValue.contains(".")) {
+			if ((!this.editingValue.startsWith("-") || this.editingValue.length() >= 4) && this.editingValue.length() >= 3) {
+				return false;
+			}
 		}
 
 		this.editingValue += c;
