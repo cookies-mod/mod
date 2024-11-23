@@ -332,31 +332,32 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 				this.duplicate = false;
 				MutableText mutableText = Text.empty();
 
-				//todo: optimize
-				var thisOverride = this.gardenKey.cookies$getGardenKey();
-				if(thisOverride == null)
+				var thisKey = this.binding.boundKey;
+				if(this.gardenKey.cookies$getGardenKey() != null)
 				{
-					thisOverride = new GardenKeybindsData.GardenKeyBindOverride(this.binding.boundKey);
+					thisKey = this.gardenKey.cookies$getGardenKey().key();
 				}
 
-				for (KeyBinding keyBinding : ControlsListWidget.this.client.options.allKeys) {
-					var otherKey = KeyBindingAccessor.toAccessor(keyBinding).cookies$getGardenKey();
+				if(!thisKey.equals(InputUtil.UNKNOWN_KEY)) {
+					for (KeyBinding keyBinding : ControlsListWidget.this.client.options.allKeys) {
+						var otherKey = keyBinding.boundKey;
 
-					if(keyBinding.getTranslationKey().equals(this.binding.getTranslationKey())) {
-						continue;
-					}
-
-					if(otherKey == null) {
-						otherKey = new GardenKeybindsData.GardenKeyBindOverride(keyBinding.boundKey);
-					}
-
-					if(otherKey.key().equals(thisOverride.key()) && !thisOverride.key().equals(InputUtil.UNKNOWN_KEY)) {
-						if (this.duplicate) {
-							mutableText.append(", ");
+						if (keyBinding.getTranslationKey().equals(this.binding.getTranslationKey())) {
+							continue;
 						}
 
-						this.duplicate = true;
-						mutableText.append(Text.translatable(keyBinding.getTranslationKey()));
+						if (KeyBindingAccessor.toAccessor(keyBinding).cookies$getGardenKey() != null) {
+							otherKey = KeyBindingAccessor.toAccessor(keyBinding).cookies$getGardenKey().key();
+						}
+
+						if (otherKey.equals(thisKey)) {
+							if (this.duplicate) {
+								mutableText.append(", ");
+							}
+
+							this.duplicate = true;
+							mutableText.append(Text.translatable(keyBinding.getTranslationKey()));
+						}
 					}
 				}
 

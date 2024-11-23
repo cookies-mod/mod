@@ -16,12 +16,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
-import net.minecraft.text.Text;
-
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,11 +30,6 @@ public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable
 		return "garden_keybinds.json";
 	}
 
-	public record GardenKeyBindOverride(InputUtil.Key key) {
-		private static final Codec<GardenKeyBindOverride> CODEC = Codec.STRING.xmap(
-				s -> new GardenKeyBindOverride(InputUtil.fromTranslationKey(s)),
-				gardenKeyBindOverride -> gardenKeyBindOverride.key.getTranslationKey());
-	}
 
 	@Override
 	public Codec<Map<String, GardenKeyBindOverride>> getCodec() {
@@ -65,11 +56,18 @@ public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable
 			}
 		}
 
-		return JsonUtils.CLEAN_GSON.toJsonTree(gardenOverrides);
+		return gardenOverrides;
 	}
 
 	@Override
 	public Logger getLogger() {
 		return LogUtils.getLogger();
 	}
+
+	public record GardenKeyBindOverride(InputUtil.Key key) {
+		private static final Codec<GardenKeyBindOverride> CODEC = Codec.STRING.xmap(
+				s -> new GardenKeyBindOverride(InputUtil.fromTranslationKey(s)),
+				gardenKeyBindOverride -> gardenKeyBindOverride.key.getTranslationKey());
+	}
+
 }

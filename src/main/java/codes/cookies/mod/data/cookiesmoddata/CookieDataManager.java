@@ -13,8 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class CookieDataManager {
-	private static final String LOGGING_KEY = "modData";
-
 	public static final Path MOD_DATA_FOLDER = Path.of("config/cookiesmod/data");
 
 	public static void load() {

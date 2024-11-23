@@ -62,11 +62,11 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Inject(method = "updatePressedStates", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$updatePressedStates(CallbackInfo ci) {
 		if(LocationUtils.Island.GARDEN.isActive()) {
-				for (var keyBinding : GARDEN_KEY_TO_BINDINGS.values()) {
-					if (keyBinding.cookies$getGardenKey().key().getCategory() == InputUtil.Type.KEYSYM && keyBinding.cookies$getGardenKey().key().getCode() != InputUtil.UNKNOWN_KEY.getCode()) {
-						((KeyBinding)keyBinding).setPressed(InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyBinding.cookies$getGardenKey().key().getCode()));
-					}
+			for (var keyBinding : GARDEN_KEY_TO_BINDINGS.values()) {
+				if (keyBinding.cookies$getGardenKey().key().getCategory() == InputUtil.Type.KEYSYM && keyBinding.cookies$getGardenKey().key().getCode() != InputUtil.UNKNOWN_KEY.getCode()) {
+					((KeyBinding)keyBinding).setPressed(InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyBinding.cookies$getGardenKey().key().getCode()));
 				}
+			}
 			ci.cancel();
 		}
 	}
@@ -74,11 +74,14 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Inject(method = "setKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$setKeyPressed(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
 		if(LocationUtils.Island.GARDEN.isActive()) {
-			KeyBinding keyBinding = (KeyBinding)GARDEN_KEY_TO_BINDINGS.get(key);
-			if (keyBinding != null) {
-				keyBinding.setPressed(pressed);
+			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
+				if (accessor.cookies$getGardenKey() != null) {
+					((KeyBinding) accessor).setPressed(pressed);
+				}
+
 				ci.cancel();
-			} else if ((KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) && accessor.cookies$getGardenKey() != null) {
+			}
+			if(KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
 				ci.cancel();
 			}
 		}
@@ -87,11 +90,14 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Inject(method = "onKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$onKeyPressed(InputUtil.Key key, CallbackInfo ci) {
 		if(LocationUtils.Island.GARDEN.isActive()) {
-			KeyBinding keyBinding = (KeyBinding)GARDEN_KEY_TO_BINDINGS.get(key);
-			if (keyBinding != null) {
-				keyBinding.timesPressed++;
+			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
+				if (accessor.cookies$getGardenKey() != null) {
+					((KeyBinding) accessor).timesPressed++;
+				}
+
 				ci.cancel();
-			} else if ((KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) && accessor.cookies$getGardenKey() != null) {
+			}
+			if(KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
 				ci.cancel();
 			}
 		}
