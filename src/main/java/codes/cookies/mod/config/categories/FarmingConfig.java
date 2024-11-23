@@ -10,7 +10,6 @@ import codes.cookies.mod.config.system.Foldable;
 import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
-import codes.cookies.mod.config.system.element.DropdownElement;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
@@ -45,7 +44,7 @@ public class FarmingConfig extends Category {
 
 	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(MinecraftClient.getInstance().currentScreen)), CONFIG_FARMING_OPEN_KEYBIND_TEXT);
 
-	public EnumCycleOption<GardenKeybindPredicate> gardenKeybindPredicate = new EnumCycleOption<>(CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE, GardenKeybindPredicate.OnGarden)
+	public EnumCycleOption<GardenKeybindPredicate> gardenKeybindPredicate = new EnumCycleOption<>(CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE, GardenKeybindPredicate.ON_GARDEN)
 			.withSupplier(value -> Text.literal(value.getName()));
 
 

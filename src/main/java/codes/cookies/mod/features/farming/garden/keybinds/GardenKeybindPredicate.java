@@ -10,10 +10,10 @@ import java.util.function.Supplier;
 
 @Getter
 public enum GardenKeybindPredicate {
-	OnGarden("On Garden", LocationUtils.Island.GARDEN::isActive),
-	IfKeybindEnabled("If Keybind Pressed", () -> false),
-	HoldingFarmingTool("Holding Farming Tool", () -> {
-		if(!OnGarden.shouldBeEnabled.get()) {
+	ON_GARDEN("On Garden", LocationUtils.Island.GARDEN::isActive),
+	IF_KEYBIND_ENABLED("If Keybind Pressed", () -> false),
+	HOLDING_FARMING_TOOL("Holding Farming Tool", () -> {
+		if(!ON_GARDEN.shouldBeEnabled.get()) {
 			return false;
 		}
 		var player = MinecraftClient.getInstance().player;
@@ -52,7 +52,7 @@ public enum GardenKeybindPredicate {
 	public static boolean keyBindToggle = false;
 
 	static {
-		IfKeybindEnabled.shouldBeEnabled = () -> keyBindToggle && OnGarden.shouldBeEnabled.get();
+		IF_KEYBIND_ENABLED.shouldBeEnabled = () -> keyBindToggle && ON_GARDEN.shouldBeEnabled.get();
 	}
 
 
