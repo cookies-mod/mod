@@ -25,7 +25,7 @@ public class CookieDataManager {
 		}
 	}
 
-	public static void save(CookiesModData modData) throws IOException {
+	public static void save(CookiesModData modData) {
 		final Path dataLocation = MOD_DATA_FOLDER.resolve(modData.getFileLocation());
 		final JsonElement jsonElement = modData.write();
 		final byte[] content = jsonElement.toString().getBytes(StandardCharsets.UTF_8);
