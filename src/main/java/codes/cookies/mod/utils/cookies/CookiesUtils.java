@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import codes.cookies.mod.utils.ColorUtils;
+import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,17 +179,22 @@ public class CookiesUtils {
 	 * @return Whether the two strings match.
 	 */
 	public static boolean match(String string, String search) {
-		String withoutPrefix;
-		if (search.startsWith("cookies-")) {
-			withoutPrefix = search.substring(search.indexOf(':') + 1);
-		} else {
-			withoutPrefix = search;
+		try {
+			String withoutPrefix;
+			if (search.startsWith("cookies-")) {
+				withoutPrefix = search.substring(search.indexOf(':') + 1);
+			} else {
+				withoutPrefix = search;
+			}
+			return switch (search.split(":")[0]) {
+				case "cookies-regex" -> string.matches(withoutPrefix);
+				case "cookies-equals" -> string.equals(withoutPrefix);
+				default -> string.equalsIgnoreCase(search);
+			};
+		} catch (Exception e) {
+			ExceptionHandler.handleException(e);
+			return false;
 		}
-		return switch (search.split(":")[0]) {
-			case "cookies-regex" -> string.matches(withoutPrefix);
-			case "cookies-equals" -> string.equals(withoutPrefix);
-			default -> string.equalsIgnoreCase(search);
-		};
 	}
 
 	public static Vector2i mapToXZ(Vec3d vec3d) {

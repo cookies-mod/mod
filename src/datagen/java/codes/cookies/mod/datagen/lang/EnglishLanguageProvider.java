@@ -297,6 +297,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Show rancher overlay",
 				"Show optimal speeds in the rancher's boots.");
 
+		translationBuilder.add(CONFIG_FARMING_CATEGORIES_VISITORS, "Visitors");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION,
+				"Visitor rare drop protection",
+				"Prevents rejecting visitors with rare drops");
+
 		translationBuilder.add(CONFIG_FARMING_SQUEAKY_MOUSEMAT, "Squeaky Mousemat");
 		translationBuilder.addConfig(
 				CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY,
