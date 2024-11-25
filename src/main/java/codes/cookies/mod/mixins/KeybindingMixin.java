@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(value = KeyBinding.class, remap = false)
+@Mixin(value = KeyBinding.class)
 public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Unique
 	private GardenKeybindsData.GardenKeyBindOverride cookies$gardenKey;
