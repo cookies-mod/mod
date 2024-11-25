@@ -25,6 +25,7 @@ import codes.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
@@ -107,6 +108,10 @@ public class CookiesMod implements ClientModInitializer {
             }
 			while(useGardenKeybinds.wasPressed() && LocationUtils.Island.GARDEN.isActive()) {
 				GardenKeybindPredicate.keyBindToggle = !GardenKeybindPredicate.keyBindToggle;
+				for (var keybind : KeyBinding.KEYS_BY_ID.values()) {
+					keybind.setPressed(false);
+					keybind.timesPressed = 0;
+				}
 				CookiesUtils.sendMessage(Text.translatable("cookies.mod.garden.keybinds." + (GardenKeybindPredicate.keyBindToggle ? "enabled" : "disabled")), false);
 			}
         });
