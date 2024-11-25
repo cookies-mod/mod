@@ -41,8 +41,7 @@ public class VisitorDropProtection {
 
 	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing()).setName(Text.of("Refusing temporarily disabled due to rare drop")).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
 
-	private void handleRejectButton(ItemStack rejectButton, boolean visitorItemLore)
-	{
+	private void handleRejectButton(ItemStack rejectButton, boolean visitorItemLore) {
 		if(rejectButton.isEmpty() || !rejectButton.isOf(Items.RED_TERRACOTTA) || !visitorItemLore) {
 			return;
 		}
@@ -62,16 +61,14 @@ public class VisitorDropProtection {
 		);
 	}
 
-	private boolean handleAcceptItem(ItemStack visitorItem)
-	{
+	private boolean handleAcceptItem(ItemStack visitorItem) {
 		if(visitorItem == null || visitorItem.isEmpty() || !visitorItem.isOf(Items.GREEN_TERRACOTTA) || !visitorItem.contains(DataComponentTypes.LORE)) {
 			return false;
 		}
 		var lore = String.join("\n", visitorItem.get(DataComponentTypes.LORE).lines().stream().map(Text::getString).toArray(String[]::new));
 		Pattern pattern = Pattern.compile("Rewards:([\\S\\s]*)(?:Click|Missing)");
 		Matcher matcher = pattern.matcher(lore);
-		if (!matcher.find())
-		{
+		if (!matcher.find()) {
 			return false;
 		}
 
