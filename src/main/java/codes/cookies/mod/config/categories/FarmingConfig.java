@@ -12,6 +12,8 @@ import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
+import codes.cookies.mod.config.system.options.SliderOption;
+import codes.cookies.mod.config.system.options.StringInputOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
@@ -47,7 +49,12 @@ public class FarmingConfig extends Category {
 	@Parent
 	public TextDisplayOption visitors = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITORS);
 
-	public BooleanOption visitorDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_DROP_PROTECTION, false);
+	public BooleanOption visitorRareDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_DROP_PROTECTION, true);
+
+	public BooleanOption visitorNotAsRareDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION, false).onlyIf(visitorRareDropProtection);
+
+	//todo:
+	//public SliderOption<Integer> visitorDropProtectionDelay =  SliderOption.integerOption(CONFIG_FARMING_VISITOR_DROP_PROTECTION_DELAY, 5).withMin(1).withMax(10).withStep(1).onlyIf(visitorRareDropProtection);
 
 	@Parent
 	public TextDisplayOption mousemat = new TextDisplayOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT);

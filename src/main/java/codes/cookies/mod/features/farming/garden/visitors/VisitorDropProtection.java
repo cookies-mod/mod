@@ -39,7 +39,6 @@ public class VisitorDropProtection {
 		}
 
 		CookiesUtils.sendMessage("Rejecting visitor drop protection");
-
 		rejectButton.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 		new java.util.Timer().schedule(
 				new java.util.TimerTask() {
@@ -49,6 +48,7 @@ public class VisitorDropProtection {
 						rejectButton.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
 					}
 				},
+				//ConfigManager.getConfig().farmingConfig.visitorDropProtectionDelay.getValue()
 				5000
 		);
 	}
@@ -69,6 +69,14 @@ public class VisitorDropProtection {
 					}
 				}
 
+				if(ConfigManager.getConfig().farmingConfig.visitorNotAsRareDropProtection.getValue()) {
+					for (String commonDrop : commonDrops) {
+						if (text.getString().contains(commonDrop)) {
+							return true;
+						}
+					}
+				}
+
             }
         }
 
@@ -78,25 +86,28 @@ public class VisitorDropProtection {
 	private static final String[] rareDrops = new String[] {
 			"Bandana",
 			"Music",
-			"Candy",
-			"Biofuel", //
 			"Dedication",
 			"Jungle Key",
+			"Soul",
+			"Space",
+			"Harbinger",
+			"Overgrown Grass",
+	};
+
+	private static final String[] commonDrops = new String[] {
+			"Candy",
+			"Biofuel", //
 			"Pet Cake", //
 			"Fine Flour",
 			"Pelt",
-			"Soul",
-			"Space",
-			"Harbringer",
 			"Velvet",
 			"Cashmere",
 			"Satin",
 			"Oxford",
-			"Overgrown Grass",
 			"Powder",
 	};
 
 	public static void init() {
-		InventoryEvents.beforeInit("cookies-regex:.*", inv -> LocationUtils.Island.GARDEN.isActive() && ConfigManager.getConfig().farmingConfig.visitorDropProtection.getValue(), VisitorDropProtection::new);
+		InventoryEvents.beforeInit("cookies-regex:.*", inv -> LocationUtils.Island.GARDEN.isActive() && ConfigManager.getConfig().farmingConfig.visitorRareDropProtection.getValue(), VisitorDropProtection::new);
 	}
 }

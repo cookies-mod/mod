@@ -300,8 +300,16 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CONFIG_FARMING_CATEGORIES_VISITORS, "Visitors");
 
 		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION,
-				"Visitor rare drop protection",
+				"Rare drop protection",
 				"Prevents rejecting visitors with rare drops");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION,
+				"Common drop protection",
+				"Prevents rejecting visitors with drops that are not as rare as the ones in the rare drop protection.");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION_DELAY,
+				"Drop protection delay",
+				"Delay in seconds before the visitor drop protection is removed.");
 
 		translationBuilder.add(CONFIG_FARMING_SQUEAKY_MOUSEMAT, "Squeaky Mousemat");
 		translationBuilder.addConfig(
