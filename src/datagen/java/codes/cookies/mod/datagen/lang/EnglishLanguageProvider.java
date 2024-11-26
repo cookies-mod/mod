@@ -304,7 +304,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION,
 				"Rare drop protection",
-				"Prevents rejecting visitors with rare drops");
+				"Prevents rejecting visitors with rare drops for 5s");
 
 		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION,
 				"Common drop protection",

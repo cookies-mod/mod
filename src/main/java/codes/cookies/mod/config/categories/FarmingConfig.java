@@ -66,9 +66,6 @@ public class FarmingConfig extends Category {
 
 	public BooleanOption visitorNotAsRareDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION, false).onlyIf(visitorRareDropProtection);
 
-	//todo:
-	//public SliderOption<Integer> visitorDropProtectionDelay =  SliderOption.integerOption(CONFIG_FARMING_VISITOR_DROP_PROTECTION_DELAY, 5).withMin(1).withMax(10).withStep(1).onlyIf(visitorRareDropProtection);
-
 	@Parent
 	public TextDisplayOption mousemat = new TextDisplayOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT);
 

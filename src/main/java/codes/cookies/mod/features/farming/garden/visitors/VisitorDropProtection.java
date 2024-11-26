@@ -56,7 +56,6 @@ public class VisitorDropProtection {
 						rejectButton.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
 					}
 				},
-				//ConfigManager.getConfig().farmingConfig.visitorDropProtectionDelay.getValue()
 				5000
 		);
 	}

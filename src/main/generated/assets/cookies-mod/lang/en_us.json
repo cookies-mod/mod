@@ -217,7 +217,7 @@
   "cookies.config.farming.squeaky_mouse_mat.overlay.tooltip": "Enables an overlay for the squeaky mousemat where you can save yaw/pitch for every crop.",
   "cookies.config.farming.tooltip": "Farming related settings.",
   "cookies.config.farming.visitor_drop_protection.name": "Rare drop protection",
-  "cookies.config.farming.visitor_drop_protection.tooltip": "Prevents rejecting visitors with rare drops",
+  "cookies.config.farming.visitor_drop_protection.tooltip": "Prevents rejecting visitors with rare drops for 5s",
   "cookies.config.farming.visitor_drop_protection_delay.name": "Drop protection delay",
   "cookies.config.farming.visitor_drop_protection_delay.tooltip": "Delay in seconds before the visitor drop protection is removed.",
   "cookies.config.farming.visitor_material_helper.name": "Show visitor materials",
