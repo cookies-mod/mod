@@ -37,7 +37,7 @@ public interface CodecJsonSerializable<T> extends JsonSerializable {
 				this.load(parse.getOrThrow());
 			} else {
 				this.getLogger()
-						.warn("Failed to load island chest data, trying to load partial. {}",
+						.warn("Failed to load data from a CodecJsonSerializable, trying to load partial. {}",
 								parse.error().get().message());
 				try {
 					this.load(parse.getOrThrow());

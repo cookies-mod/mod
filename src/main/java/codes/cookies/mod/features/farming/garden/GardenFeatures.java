@@ -14,5 +14,4 @@ public class GardenFeatures {
         //Loader.load("VisitorHelper", VisitorHelper::new);
 		Loader.load("VisitorDropProtection", VisitorDropProtection::init);
     }
-
 }

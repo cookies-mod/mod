@@ -2,14 +2,15 @@
   "package": "codes.cookies.mod.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "KeybindingMixin",
     "render.ArmorFeatureRenderMixin",
+    "render.EntityRenderDispatcherMixin",
     "render.HeadFeatureRenderMixin",
     "render.HideLightningBoltMixin",
-    "render.EntityRenderDispatcherMixin",
-    "ui.PotionEffectMixin",
+    "render.TextFieldWidgetMixin",
     "ui.InGameHudMixin",
     "ui.ParentElementMixin",
-    "ui.ScrollableTooltipMixin",
-    "render.TextFieldWidgetMixin"
+    "ui.PotionEffectMixin",
+    "ui.ScrollableTooltipMixin"
   ]
 }

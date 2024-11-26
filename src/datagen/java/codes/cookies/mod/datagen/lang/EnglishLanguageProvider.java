@@ -49,6 +49,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(ITEM_SOURCE_BACKPACK, "Backpack");
 		translationBuilder.add("cookies.mod.keybinds", "Cookies Mod");
 		translationBuilder.add("cookies.mod.search", "Item Search");
+		translationBuilder.add("cookies.mod.garden.keybind_switch", "Garden Keybinds Switcher");
+		translationBuilder.add("cookies.mod.garden.keybinds.enabled", "Garden Keybinds Enabled");
+		translationBuilder.add("cookies.mod.garden.keybinds.disabled", "Garden Keybinds Disabled");
 
 		this.addItemStats(translationBuilder);
 		this.addMisc(translationBuilder);
@@ -336,6 +339,13 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS,
 				"Highlight unclaimed",
 				"Highlight unclaimed jacob contests in his inventory.");
+
+		translationBuilder.add(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS, "Garden Keybinds");
+		translationBuilder.addConfig(CONFIG_FARMING_OPEN_KEYBIND_MENU, "Open Keybind Menu", "Opens the garden keybind menu.");
+
+		translationBuilder.add(CONFIG_FARMING_OPEN_KEYBIND_TEXT, "Click Here!");
+		translationBuilder.add(CONFIG_FARMING_KEYBIND_MENU_TITLE, "Garden Keybinds");
+		translationBuilder.addConfig(CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE, "Predicate: ", "When to enable garden keybinds.");
 
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST, "Pest Warnings" ,"Warns you 10s before pests can spawn!");
 		translationBuilder.addConfig(CONFIG_MISC_NOTIFICATIONS_PEST_ORDER, "Pest timer", """

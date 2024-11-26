@@ -9,7 +9,7 @@ import codes.cookies.mod.render.hud.elements.HudElement;
 import codes.cookies.mod.render.hud.internal.Action;
 import codes.cookies.mod.render.hud.internal.BoundingBox;
 import codes.cookies.mod.render.hud.internal.HudEditAction;
-import codes.cookies.mod.render.hud.internal.HudPosition;
+import codes.cookies.mod.render.hud.internal.HudElementSettings;
 import codes.cookies.mod.render.hud.settings.HudElementSetting;
 import codes.cookies.mod.render.hud.settings.HudElementSettingBuilder;
 import codes.cookies.mod.utils.RenderUtils;
@@ -131,10 +131,12 @@ public class HudEditScreen extends Screen {
 		context.cm$withMatrix(stack -> {
 			stack.translate(elementX, elementY, 0);
 			stack.scale(hudElement.getScale(), hudElement.getScale(), 0);
-			if (currentlyHovered == hudElement) {
-				hudElement.getNormalizedBoundingBox().fill(context, 0xFFABABAB);
-			} else {
-				hudElement.getNormalizedBoundingBox().fill(context, 0xAB000000);
+			if (!hudElement.getPosition().isBackground()) {
+				if (currentlyHovered == hudElement) {
+					hudElement.getNormalizedBoundingBox().fill(context, 0xFFABABAB);
+				} else {
+					hudElement.getNormalizedBoundingBox().fill(context, 0xAB000000);
+				}
 			}
 			hudElement.renderChecks(
 					context,
@@ -180,7 +182,7 @@ public class HudEditScreen extends Screen {
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (action == Action.MOVE && currentlyHovered != null) {
-			final HudPosition position = currentlyHovered.getPosition();
+			final HudElementSettings position = currentlyHovered.getPosition();
 			final float relativeDeltaX = (float) (deltaX / width);
 			final float relativeDeltaY = (float) (deltaY / height);
 			position.applyDelta(relativeDeltaX, relativeDeltaY);

@@ -19,6 +19,7 @@ public abstract class TextHudElement extends HudElement {
 
 	@Override
 	public void render(DrawContext drawContext, TextRenderer textRenderer, float ticks) {
+		this.renderBackground(drawContext);
 		drawContext.drawText(textRenderer, this.getDisplayText(), 1,1, -1, false);
 	}
 

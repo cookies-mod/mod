@@ -256,6 +256,15 @@ public interface TranslationKeys {
 
 	String CONFIG_FARMING_CATEGORIES_JACOBS = CONFIG_FARMING + CATEGORIES_PART + ".jacobs";
 	String CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS = CONFIG_FARMING + ".highlight_unclaimed_jacobs_contents";
+
+	String CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS = CONFIG_FARMING + CATEGORIES_PART + ".garden_keybinds";
+
+	String CONFIG_FARMING_OPEN_KEYBIND_MENU = CONFIG_FARMING + ".open_keybind_menu";
+	String CONFIG_FARMING_OPEN_KEYBIND_TEXT = CONFIG_FARMING_OPEN_KEYBIND_MENU + ".text";
+	String CONFIG_FARMING_KEYBIND_MENU_TITLE = CONFIG_FARMING + ".keybind_menu_title";
+
+	String CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE = CONFIG_FARMING + ".garden_keybind_predicate";
+
 	//</editor-fold>
 	//<editor-fold desc="Config/Helpers">
 	String CONFIG_HELPERS = CONFIG + ".helpers";

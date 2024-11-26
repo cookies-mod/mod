@@ -87,7 +87,8 @@ public class DungeonMapHud extends HudElement {
 
 	@Override
 	public void buildSettings(HudElementSettingBuilder builder) {
-		super.buildSettings(builder);
+		addBasicSetting(builder);
+		addConfigSetting(builder);
 	}
 
 	public DungeonInstance getMockInstance() {
