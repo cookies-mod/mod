@@ -126,11 +126,15 @@ public class PestTimer extends Timer {
 				}
 			}
 		}
+
+		final double sprayedPlotReduction;
 		if (MayorUtils.isPerkActive("pest_eradicator")) {
 			if (stringBuilder != null) {
 				stringBuilder.append("Finnegan perk (50%)");
 			}
-			baseTime *= 0.5;
+			sprayedPlotReduction = 0.25;
+		} else {
+			sprayedPlotReduction = 0.5;
 		}
 		final var value = ConfigManager.getConfig().farmingConfig.pestFoldable.timerType.getValue();
 		switch (value) {
@@ -143,7 +147,7 @@ public class PestTimer extends Timer {
 					if (stringBuilder != null) {
 						stringBuilder.append("One plot sprayed (50%)\n");
 					}
-					baseTime *= 0.5;
+					baseTime *= sprayedPlotReduction;
 				}
 			}
 			case CURRENT -> {
@@ -159,7 +163,7 @@ public class PestTimer extends Timer {
 						if (stringBuilder != null) {
 							stringBuilder.append("Current plot sprayed (50%)\n");
 						}
-						baseTime *= 0.5;
+						baseTime *= sprayedPlotReduction;
 					}
 				}
 			}
