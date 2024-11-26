@@ -11,12 +11,16 @@ import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
+import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
+import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindPredicate;
+import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindsScreen;
 import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.misc.timer.NotificationManager;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -34,6 +38,15 @@ public class FarmingConfig extends Category {
 	public BooleanOption yawPitchDisplay = new BooleanOption(CONFIG_FARMING_YAW_PITCH_DISPLAY, false);
 
 	public PestFoldable pestFoldable = new PestFoldable();
+
+	@Parent
+	public TextDisplayOption keybindsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS);
+
+	public ButtonOption openKeybindMenu = new ButtonOption(CONFIG_FARMING_OPEN_KEYBIND_MENU, () -> MinecraftClient.getInstance().setScreen(new GardenKeybindsScreen(MinecraftClient.getInstance().currentScreen)), CONFIG_FARMING_OPEN_KEYBIND_TEXT);
+
+	public EnumCycleOption<GardenKeybindPredicate> gardenKeybindPredicate = new EnumCycleOption<>(CONFIG_FARMING_GARDEN_KEYBIND_PREDICATE, GardenKeybindPredicate.ON_GARDEN)
+			.withSupplier(value -> Text.literal(value.getName()));
+
 
 	@Parent
 	public TextDisplayOption ranchers = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_RANCHERS);
