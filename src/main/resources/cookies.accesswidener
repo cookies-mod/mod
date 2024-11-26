@@ -20,3 +20,7 @@ accessible method net/minecraft/text/MutableText <init> (Lnet/minecraft/text/Tex
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/screen/slot/Slot;
 accessible field net/minecraft/client/gui/hud/PlayerListHud footer Lnet/minecraft/text/Text;
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
+mutable field net/minecraft/client/gui/screen/Screen title Lnet/minecraft/text/Text;
+accessible field net/minecraft/client/option/KeyBinding boundKey Lnet/minecraft/client/util/InputUtil$Key;
+accessible field net/minecraft/client/option/KeyBinding KEYS_BY_ID Ljava/util/Map;
+accessible field net/minecraft/client/option/KeyBinding timesPressed I
