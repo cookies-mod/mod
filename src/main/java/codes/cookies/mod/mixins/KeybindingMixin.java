@@ -80,10 +80,9 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 				if (accessor.cookies$getGardenKey() != null) {
 					((KeyBinding) accessor).setPressed(pressed);
 				}
-
 				ci.cancel();
 			}
-			if(KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
+			if (KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
 				ci.cancel();
 			}
 		}

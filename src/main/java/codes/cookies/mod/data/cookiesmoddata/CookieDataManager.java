@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.SneakyThrows;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class CookieDataManager {
-	public static final Path MOD_DATA_FOLDER = Path.of("config/cookiesmod/data");
+	public static final Path MOD_DATA_FOLDER = Path.of(FabricLoader.getInstance().getConfigDir().toString(), "cookiesmod/data");
 
 	public static void load() {
 		if(!Files.exists(MOD_DATA_FOLDER)) {
@@ -21,7 +23,7 @@ public class CookieDataManager {
 		}
 
 		for (Field declaredField : CookieDataInstances.class.getDeclaredFields()) {
-			ExceptionHandler.tryCatch(() -> load(declaredField));
+			ExceptionHandler.tryCatch(() -> loadField(declaredField));
 		}
 	}
 
@@ -35,7 +37,7 @@ public class CookieDataManager {
 		});
 	}
 
-	private static void load(Field declaredField) {
+	private static void loadField(Field declaredField) {
 		declaredField.setAccessible(true);
 
 		final Object instance;
