@@ -1,7 +1,7 @@
 package codes.cookies.mod.render.hud.settings;
 
 /**
- * The different types of settings a hud element can have.
+ * The types of settings a hud element can have.
  */
 public enum HudElementSettingType {
 
