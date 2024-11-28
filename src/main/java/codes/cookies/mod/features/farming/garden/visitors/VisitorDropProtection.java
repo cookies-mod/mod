@@ -41,7 +41,7 @@ public class VisitorDropProtection {
 
 	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing()).setName(Text.of("Refusing temporarily disabled due to rare drop")).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
 
-	private void handleRejectButton(ItemStack rejectButton, boolean visitorItemLore) {
+	private void handleRejectButton(ItemStack rejectStack, boolean applyProtection) {
 		if(rejectButton == null || rejectButton.isEmpty() || !rejectButton.isOf(Items.RED_TERRACOTTA) || !visitorItemLore) {
 			return;
 		}
