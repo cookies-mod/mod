@@ -77,7 +77,7 @@ public class VisitorDropProtection {
 			}
 		}
 
-		if(ConfigManager.getConfig().farmingConfig.visitorNotAsRareDropProtection.getValue()) {
+		if (ConfigManager.getConfig().farmingConfig.visitorNotAsRareDropProtection.getValue()) {
 			for (String commonDrop : commonDrops) {
 				if (StringUtils.containsIgnoreCase(lore, commonDrop)) {
 					return true;
