@@ -97,12 +97,13 @@ public class VisitorDropProtection {
 			"Space",
 			"Harbinger",
 			"Overgrown Grass",
+			"Dye",
 	};
 
 	private static final String[] commonDrops = new String[] {
 			"Candy",
-			"Biofuel", //
-			"Pet Cake", //
+			"Biofuel",
+			"Pet Cake",
 			"Fine Flour",
 			"Pelt",
 			"Velvet",
