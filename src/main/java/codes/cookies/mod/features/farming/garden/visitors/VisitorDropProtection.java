@@ -42,18 +42,18 @@ public class VisitorDropProtection {
 	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing()).setName(Text.of("Refusing temporarily disabled due to rare drop")).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
 
 	private void handleRejectButton(ItemStack rejectStack, boolean applyProtection) {
-		if(rejectButton == null || rejectButton.isEmpty() || !rejectButton.isOf(Items.RED_TERRACOTTA) || !visitorItemLore) {
+		if(rejectStack == null || rejectStack.isEmpty() || !rejectStack.isOf(Items.RED_TERRACOTTA) || !applyProtection) {
 			return;
 		}
 
-		rejectButton.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
-		rejectButton.set(CookiesDataComponentTypes.OVERRIDE_ITEM, disabledItem);
+		rejectStack.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
+		rejectStack.set(CookiesDataComponentTypes.OVERRIDE_ITEM, disabledItem);
 		new java.util.Timer().schedule(
 				new java.util.TimerTask() {
 					@Override
 					public void run() {
-						rejectButton.remove(CookiesDataComponentTypes.OVERRIDE_ITEM);
-						rejectButton.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
+						rejectStack.remove(CookiesDataComponentTypes.OVERRIDE_ITEM);
+						rejectStack.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
 					}
 				},
 				5000
