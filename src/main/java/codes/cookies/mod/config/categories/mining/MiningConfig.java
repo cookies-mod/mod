@@ -8,6 +8,7 @@ import codes.cookies.mod.config.system.HudSetting;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
+import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 import codes.cookies.mod.features.mining.hollows.CrystalRunHud;
 import codes.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
@@ -29,6 +30,9 @@ public class MiningConfig extends Category {
     public BooleanOption puzzlerSolver = new BooleanOption(CONFIG_MINING_PUZZLER_SOLVER, false);
     public BooleanOption modHelper = new BooleanOption(CONFIG_MINING_MOD_HELPER, false)
 			.withCallback(MinesOfDivanHelper::reset);
+	public BooleanOption enableCustomMist = new BooleanOption(CONFIG_MINING_CUSTOM_MIST, false);
+	public EnumCycleOption<CustomMistColor> mistColor = new EnumCycleOption<>(CONFIG_MINING_CUSTOM_MIST_COLOR, CustomMistColor.BLACK)
+			.onlyIf(enableCustomMist);
 
 	public ShaftConfig shaftConfig = new ShaftConfig();
 	public PowderTrackerHudFoldable powderTrackerHud = new PowderTrackerHudFoldable();

@@ -404,6 +404,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MINING_MOD_HELPER,
 				"Mod Helper",
 				"Enables the mines of divan chest helper.");
+		translationBuilder.addConfig(CONFIG_MINING_CUSTOM_MIST, "Custom Mist", "Allows you to switch the color of the glass in the mist.");
+		translationBuilder.addConfig(CONFIG_MINING_CUSTOM_MIST_COLOR, "Mist Color", "Changes the color of the glass in the mist to the selected color.");
 		translationBuilder.addConfig(
 				CONFIG_MINING_MOD_CRYSTAL_HUD,
 				"Crystal Hud",

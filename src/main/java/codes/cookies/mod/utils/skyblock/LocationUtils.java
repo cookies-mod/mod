@@ -1,7 +1,7 @@
 package codes.cookies.mod.utils.skyblock;
 
-import codes.cookies.mod.data.profile.ProfileStorage;
-import codes.cookies.mod.events.IslandChangeEvent;
+import codes.cookies.mod.events.locations.IslandChangeEvent;
+import codes.cookies.mod.events.locations.RegionChangeCallback;
 import codes.cookies.mod.events.profile.ServerSwapEvent;
 import codes.cookies.mod.generated.Regions;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
@@ -146,7 +146,8 @@ public class LocationUtils {
 
 		if (location == null) {
 			lastUpdated = System.currentTimeMillis();
-			LocationUtils.region = Regions.UNKNOWN;
+			region = Regions.UNKNOWN;
+			RegionChangeCallback.CALLBACK.invoker().accept(region);
 			return region;
 		}
 
@@ -156,13 +157,15 @@ public class LocationUtils {
 			}
 			if ((value.regex && location.matches(value.scoreboard)) || location.equals(value.scoreboard)) {
 				lastUpdated = System.currentTimeMillis();
-				LocationUtils.region = value;
+				region = value;
+				RegionChangeCallback.CALLBACK.invoker().accept(region);
 				return region;
 			}
 		}
 
 		lastUpdated = System.currentTimeMillis();
-		LocationUtils.region = Regions.UNKNOWN;
+		region = Regions.UNKNOWN;
+		RegionChangeCallback.CALLBACK.invoker().accept(region);
 		return region;
 	}
 

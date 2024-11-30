@@ -6,7 +6,7 @@ import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
 import codes.cookies.mod.events.ChatMessageEvents;
-import codes.cookies.mod.events.IslandChangeEvent;
+import codes.cookies.mod.events.locations.IslandChangeEvent;
 import codes.cookies.mod.events.WebsocketEvent;
 import codes.cookies.mod.features.dungeons.map.DungeonPhase;
 import codes.cookies.mod.features.dungeons.map.DungeonRoom;

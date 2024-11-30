@@ -1,7 +1,7 @@
 package codes.cookies.mod.features.mining.shafts;
 
 import codes.cookies.mod.config.categories.mining.MiningConfig;
-import codes.cookies.mod.events.IslandChangeEvent;
+import codes.cookies.mod.events.locations.IslandChangeEvent;
 import codes.cookies.mod.events.ScoreboardUpdateEvent;
 import codes.cookies.mod.events.mining.MineshaftEvents;
 import codes.cookies.mod.repository.constants.mining.ShaftCorpseLocations;

@@ -1,4 +1,4 @@
-package codes.cookies.mod.events;
+package codes.cookies.mod.events.locations;
 
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 
