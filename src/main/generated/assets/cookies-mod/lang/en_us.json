@@ -256,6 +256,8 @@
   "cookies.config.mining.categories.hotm": "HOTM",
   "cookies.config.mining.crystal_hud.name": "Crystal Hud",
   "cookies.config.mining.crystal_hud.tooltip": "Enables the crystal hud, shows information about current crystal status, parts available and tools available.\n\n§cRequires the crystal player list widget to be active!",
+  "cookies.config.mining.glossy_gemstone_message.name": "Glossy gemstone message",
+  "cookies.config.mining.glossy_gemstone_message.tooltip": "Adds messages when you drop a glossy gemstone",
   "cookies.config.mining.highlight_disabled_hotm_perks.name": "Highlight disabled",
   "cookies.config.mining.highlight_disabled_hotm_perks.tooltip": "Change disabled perks to redstone.",
   "cookies.config.mining.mod_helper.name": "Mod Helper",

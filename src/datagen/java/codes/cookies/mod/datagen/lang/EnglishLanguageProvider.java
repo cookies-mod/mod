@@ -414,6 +414,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				CONFIG_MINING_MOD_CRYSTAL_HUD,
 				"Crystal Hud",
 				"Enables the crystal hud, shows information about current crystal status, parts available and tools available.\n\n§cRequires the crystal player list widget to be active!");
+		translationBuilder.addConfig(CONFIG_MINING_GLOSSY_GEMSTONE_MESSAGE, "Glossy gemstone message", "Adds messages when you drop a glossy gemstone");
 		translationBuilder.addConfig(CONFIG_MINING_PUZZLER_SOLVER,
 				"Puzzler solver",
 				"Highlight the correct block for the puzzler.");
