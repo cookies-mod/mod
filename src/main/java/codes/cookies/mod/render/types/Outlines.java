@@ -1,5 +1,6 @@
 package codes.cookies.mod.render.types;
 
+import codes.cookies.mod.render.utils.RenderHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import codes.cookies.mod.render.Renderable;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -91,11 +92,11 @@ public record Outlines(Vec3d start, Vec3d end, float red, float green, float blu
         this(
             start,
             end,
-            (color & 0xFF) / 255f,
-            ((color >> 8) & 0xFF) / 255f,
-            ((color >> 16) & 0xFF) / 255f,
-            ((color >> 24) & 0xFF) / 255f,
-            lineWidth, throughWalls
+			RenderHelper.getRed(color) / 255f,
+			RenderHelper.getGreen(color) / 255f,
+			RenderHelper.getBlue(color) / 255f,
+			RenderHelper.getAlpha(color) / 255f,
+			lineWidth, throughWalls
         );
     }
 

@@ -326,6 +326,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Highlight unclaimed",
 				"Highlight unclaimed jacob contests in his inventory.");
 
+		translationBuilder.add(CONFIG_FARMING_RENDER, "Render");
+		translationBuilder.addConfig(
+				CONFIG_FARMING_RENDER_HIGHLIGHT_GLOWING_MUSHROOMS,
+				"Highlight glowing mushrooms",
+				"Highlights glowing mushrooms by drawing an outline around them.");
+
 		translationBuilder.add(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS, "Garden Keybinds");
 		translationBuilder.addConfig(CONFIG_FARMING_OPEN_KEYBIND_MENU, "Open Keybind Menu", "Opens the garden keybind menu.");
 
