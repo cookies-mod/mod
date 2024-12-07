@@ -2,6 +2,8 @@ package codes.cookies.mod.features.mining;
 
 import codes.cookies.mod.features.Loader;
 import codes.cookies.mod.features.mining.commissions.CommissionCompletionHighlighter;
+import codes.cookies.mod.features.mining.fiesta.MiningFiesta;
+import codes.cookies.mod.features.mining.fiesta.MiningFiestaTracker;
 import codes.cookies.mod.features.mining.hollows.CrystalRunHud;
 import codes.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
 import codes.cookies.mod.features.mining.shafts.CorpseWaypoints;
@@ -29,6 +31,8 @@ public interface MiningFeatures {
 		Loader.load("MineshaftCorpseMessages", MineshaftAnnouncements::register);
 		Loader.load("CrystalRunHud", CrystalRunHud::new);
 		Loader.load("GlossyGemstoneMessage", GlossyGemstoneMessage::register);
+		Loader.load("MiningFiesta", MiningFiesta::register);
+		Loader.load("MiningFiestaTracker", MiningFiestaTracker::register);
     }
 
 }

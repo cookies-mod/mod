@@ -1,5 +1,6 @@
 package codes.cookies.mod.commands.dev;
 
+import codes.cookies.mod.commands.dev.debug.FiestaDebugCommand;
 import codes.cookies.mod.commands.dev.debug.HudEditScreenDebugCommand;
 import codes.cookies.mod.commands.dev.debug.PrintCorpseLocationsDebugCommand;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -49,7 +50,8 @@ public class DebugSubCommand extends ClientCommand {
 				new GetRepoItemDebugCommand(),
 				new PrintModStuffDebugCommand(),
 				new HudEditScreenDebugCommand(),
-				new PrintCorpseLocationsDebugCommand()
+				new PrintCorpseLocationsDebugCommand(),
+				new FiestaDebugCommand()
 		};
 
 		for (ClientCommand clientCommand : clientCommands) {
