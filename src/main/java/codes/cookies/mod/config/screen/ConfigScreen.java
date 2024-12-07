@@ -159,7 +159,7 @@ public class ConfigScreen extends ScrollbarScreen implements InventoryConfigScre
 		if (hasBeenConsumed.get()) {
 			return true;
 		}
-		if (MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
+		if (!searchField.isFocused() && MinecraftClient.getInstance().options.inventoryKey.matchesKey(keyCode, scanCode)) {
 			this.close();
 			return true;
 		}
