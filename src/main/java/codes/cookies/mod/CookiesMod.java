@@ -25,8 +25,8 @@ import codes.cookies.mod.utils.UpdateChecker;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
+import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
@@ -90,6 +90,7 @@ public class CookiesMod implements ClientModInitializer {
 		HudManager.load();
 		CrystalStatusService.register();
         this.registerKeyBindings();
+		DevUtils.registerDebugs();
     }
 
     private void registerKeyBindings() {

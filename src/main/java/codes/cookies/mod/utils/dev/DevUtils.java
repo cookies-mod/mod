@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import codes.cookies.mod.utils.dev.debug.ParticleDebugMode;
 import lombok.Getter;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -35,6 +36,10 @@ public class DevUtils {
 	private static final Identifier EXTRA_LOGGING = createIdentifier("extra_logging");
 	@Getter
 	private static final List<String> enabledExtraLogging = new LinkedList<>();
+
+	public static void registerDebugs() {
+		ParticleDebugMode.register();
+	}
 
 	/**
 	 * Whether the mod is currently logging debug messages or not.
