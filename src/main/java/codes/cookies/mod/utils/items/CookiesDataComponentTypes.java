@@ -54,7 +54,7 @@ public class CookiesDataComponentTypes {
 	public static final ComponentType<Integer> RARITY_UPGRADES;
 	@GenerateAccessor
 	public static final ComponentType<Map<String, Integer>> RUNES;
-	@GenerateAccessor
+	@GenerateAccessor // stars
 	public static final ComponentType<Integer> UPGRADE_LEVEL;
 	@GenerateAccessor
 	public static final ComponentType<Integer> STACKING_ENCHANT_XP;

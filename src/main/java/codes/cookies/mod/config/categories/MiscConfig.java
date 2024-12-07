@@ -98,6 +98,8 @@ public class MiscConfig extends Category {
 	public BooleanOption showPetRarityInLevelText =
 			new BooleanOption(CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT, false).onlyIf(this.showPetLevelAsStackSize);
 
+	public BooleanOption showItemUpgrades = new BooleanOption(CONFIG_MISC_SHOW_ITEM_UPGRADES, false);
+
 	@Expose
 	public BooleanOption showForgeRecipeStack = new BooleanOption(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK, true);
 
