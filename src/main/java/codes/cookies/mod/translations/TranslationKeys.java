@@ -346,6 +346,7 @@ public interface TranslationKeys {
 	String CONFIG_MISC_CATEGORIES_RENDER_INVENTORY = CONFIG_MISC + CATEGORIES_PART + ".render_inventory";
 	String CONFIG_MISC_SHOW_PET_LEVEL = CONFIG_MISC + ".show_pet_level";
 	String CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT = CONFIG_MISC + ".show_pet_rarity_in_level_text";
+	String CONFIG_MISC_SHOW_ITEM_UPGRADES = CONFIG_MISC + ".show_item_upgrades";
 	String CONFIG_MISC_SHOW_FORGE_RECIPE_STACK = CONFIG_MISC + ".show_forge_recipe_stack";
 
 	String CONFIG_MISC_NOTIFICATIONS = CONFIG_MISC + ".notifications";
