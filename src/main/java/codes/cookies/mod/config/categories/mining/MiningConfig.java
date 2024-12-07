@@ -34,6 +34,7 @@ public class MiningConfig extends Category {
 	public PowderTrackerHudFoldable powderTrackerHud = new PowderTrackerHudFoldable();
 	@HudSetting(CrystalRunHud.class)
 	public BooleanOption crystalHud = new BooleanOption(CONFIG_MINING_MOD_CRYSTAL_HUD, true);
+	public BooleanOption glossyGemstoneMessages = new BooleanOption(CONFIG_MINING_GLOSSY_GEMSTONE_MESSAGE, true);
 
     @Parent
     public TextDisplayOption hotmParentDisplay = new TextDisplayOption(CONFIG_MINING_CATEGORIES_HOTM);
