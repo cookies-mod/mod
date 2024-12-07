@@ -5,7 +5,6 @@
     "ItemStackMixin",
     "HandledScreenMixin",
     "SlotMixin",
-    "ReplaceRenderedItem",
     "DrawContextMixin",
     "spam.ClientPlayNetworkHandlerMixin",
     "spam.YggdrasilServicesKeyInfoMixin",
