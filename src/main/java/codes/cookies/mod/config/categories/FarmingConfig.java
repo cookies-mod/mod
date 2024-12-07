@@ -86,6 +86,11 @@ public class FarmingConfig extends Category {
 	public BooleanOption highlightUnclaimedJacobContests =
 			new BooleanOption(CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS, false);
 
+	@Parent
+	public TextDisplayOption renderText = new TextDisplayOption(CONFIG_FARMING_RENDER);
+
+	public BooleanOption highlightGlowingMushrooms  = new BooleanOption(CONFIG_FARMING_RENDER_HIGHLIGHT_GLOWING_MUSHROOMS, false);
+
 	public FarmingConfig() {
 		super(new ItemStack(Items.WHEAT), CONFIG_FARMING);
 	}

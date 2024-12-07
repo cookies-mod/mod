@@ -1,11 +1,12 @@
 {
   "package": "codes.cookies.mod.events.mixins",
   "client": [
+    "AbstractSignEditScreenMixin",
     "InventoryContentUpdateMixin",
     "ItemBackgroundRenderMixin",
+    "ParticleManager",
+    "PlayerListMixin",
     "ScreenMixin",
-    "AbstractSignEditScreenMixin",
-    "TeamMixin",
-    "PlayerListMixin"
+    "TeamMixin"
   ]
 }
