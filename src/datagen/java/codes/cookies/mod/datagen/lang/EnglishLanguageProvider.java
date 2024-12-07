@@ -513,6 +513,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT,
 				"Show rarity in level",
 				"Shows the pet level in the color of the rarity");
+		translationBuilder.addConfig(
+				CONFIG_MISC_SHOW_ITEM_UPGRADES,
+				"Show item stars",
+				"Shows the amount of stars that are applied to an item in the slot text.");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK,
 				"Show forge recipes",
 				"Shows forge recipes in the recipe book");

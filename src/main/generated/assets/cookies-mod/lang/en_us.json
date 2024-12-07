@@ -351,6 +351,8 @@
   "cookies.config.misc.show_item_creation_date.tooltip": "Shows the creation dates of items.",
   "cookies.config.misc.show_item_npc_value.name": "NPC Value",
   "cookies.config.misc.show_item_npc_value.tooltip": "Show the npc value of items.",
+  "cookies.config.misc.show_item_upgrades.name": "Show item stars",
+  "cookies.config.misc.show_item_upgrades.tooltip": "Shows the amount of stars that are applied to an item in the slot text.",
   "cookies.config.misc.show_museum_armor_sets.name": "Show museum armor sets",
   "cookies.config.misc.show_museum_armor_sets.tooltip": "Shows the components of an armor set in the description.",
   "cookies.config.misc.show_pet_level.name": "Show pet level",
