@@ -1,8 +1,10 @@
 package codes.cookies.mod.features.farming.garden.visitors;
 
+import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
+import codes.cookies.mod.translations.TranslationKeys;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -16,17 +18,20 @@ import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VisitorDropProtection {
+public class VisitorDropProtection implements TranslationKeys {
 
 	private VisitorDropProtection(HandledScreen<?> handledScreen) {
 		InventoryContentUpdateEvent.registerSlot(handledScreen.getScreenHandler(),
@@ -34,30 +39,26 @@ public class VisitorDropProtection {
 	}
 
 	private void updateSlots(Slot slot) {
-		if(slot.id == 33) {
+		if (slot.id == 33) {
 			handleRejectButton(slot.getStack(), handleAcceptItem(slot.inventory.getStack(29)));
 		}
 	}
 
-	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing()).setName(Text.of("Refusing temporarily disabled due to rare drop")).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
+	@SuppressWarnings("DataFlowIssue")
+	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing())
+			.setName(Text.translatable(DROP_PROTECTION_MESSAGE).setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false).withBold(true))).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
 
 	private void handleRejectButton(ItemStack rejectStack, boolean applyProtection) {
-		if(rejectStack == null || rejectStack.isEmpty() || !rejectStack.isOf(Items.RED_TERRACOTTA) || !applyProtection) {
+		if (!applyProtection || rejectStack == null || rejectStack.isEmpty() || !rejectStack.isOf(Items.RED_TERRACOTTA)) {
 			return;
 		}
 
 		rejectStack.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 		rejectStack.set(CookiesDataComponentTypes.OVERRIDE_ITEM, disabledItem);
-		new java.util.Timer().schedule(
-				new java.util.TimerTask() {
-					@Override
-					public void run() {
-						rejectStack.remove(CookiesDataComponentTypes.OVERRIDE_ITEM);
-						rejectStack.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
-					}
-				},
-				5000
-		);
+		CookiesMod.getExecutorService().schedule(() -> {
+			rejectStack.remove(CookiesDataComponentTypes.OVERRIDE_ITEM);
+			rejectStack.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
+		}, 5, TimeUnit.SECONDS);
 	}
 
 	private boolean handleAcceptItem(ItemStack visitorItem) {
@@ -98,6 +99,7 @@ public class VisitorDropProtection {
 			"Harbinger",
 			"Overgrown Grass",
 			"Dye",
+			"Copper",
 	};
 
 	private static final String[] commonDrops = new String[] {

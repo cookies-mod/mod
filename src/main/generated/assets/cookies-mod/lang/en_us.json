@@ -374,6 +374,7 @@
   "cookies.craft_helper.line1": "Set the recipe as the selected",
   "cookies.craft_helper.line2": "craft helper item!",
   "cookies.craft_helper.placement": "Example Inventory",
+  "cookies.dropprotectionmessage": "Refusing temporarily disabled due to rare drop",
   "cookies.go_back": "Go Back",
   "cookies.hotm_utils.cost_next_10": "Cost (10)",
   "cookies.hotm_utils.cost_total": "Cost (Total)",

@@ -100,6 +100,8 @@ public interface TranslationKeys {
 	String RANCHER_BOOTS_FARMING_SPEEDS = RANCHER_BOOTS + ".farming_speeds";
 	//</editor-fold>
 
+	String DROP_PROTECTION_MESSAGE = MOD + ".dropprotectionmessage";
+
 	String COMMANDS = MOD + ".commands";
 
 	//<editor-fold desc="Screen Forge">

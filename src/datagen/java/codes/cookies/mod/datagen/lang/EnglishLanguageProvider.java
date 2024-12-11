@@ -94,6 +94,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(RANCHER_BOOTS_RESET_TO_DEFAULT, "Reset to default");
 		translationBuilder.add(RANCHER_BOOTS_FARMING_SPEEDS, "Farming Speeds");
 
+		translationBuilder.add(DROP_PROTECTION_MESSAGE, "Refusing temporarily disabled due to rare drop");
+
 		translationBuilder.add(BLOCK_XYZ, "(%s, %s, %s)");
 		translationBuilder.add(PAGE, "Page");
 		translationBuilder.add(PAGE_WITH_NUMBER, "Page %s");
