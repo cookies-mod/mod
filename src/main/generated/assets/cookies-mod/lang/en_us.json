@@ -329,6 +329,8 @@
   "cookies.config.misc.notifications.sound.tooltip": "Plays a sound when sending the notification",
   "cookies.config.misc.notifications.type.name": "Notification type",
   "cookies.config.misc.notifications.type.tooltip": "Changes how you get the notifications.\n\nChat -> Simple chat message\nToast -> Popup in the top right of your screen\nBoth -> Chat message + popup",
+  "cookies.config.misc.reforge_tooltip.name": "Show reforge tooltip",
+  "cookies.config.misc.reforge_tooltip.tooltip": "Shows the current reforge on the tooltip of an item in the reforge menu",
   "cookies.config.misc.scroll_tooltips.name": "Scrollable Tooltips",
   "cookies.config.misc.scroll_tooltips.tooltip": "Allows you to scroll through tooltips\n\nCTRL + Scroll -> move horizontal\nSHIFT + Scroll -> chop tooltips",
   "cookies.config.misc.show_dye_armor.name": "Show armor if dyed",
