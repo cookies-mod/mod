@@ -342,6 +342,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Highlight unclaimed",
 				"Highlight unclaimed jacob contests in his inventory.");
 
+		translationBuilder.add(CONFIG_FARMING_RENDER, "Render");
+		translationBuilder.addConfig(
+				CONFIG_FARMING_RENDER_HIGHLIGHT_GLOWING_MUSHROOMS,
+				"Highlight glowing mushrooms",
+				"Highlights glowing mushrooms by drawing an outline around them.");
+
 		translationBuilder.add(CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS, "Garden Keybinds");
 		translationBuilder.addConfig(CONFIG_FARMING_OPEN_KEYBIND_MENU, "Open Keybind Menu", "Opens the garden keybind menu.");
 
@@ -424,6 +430,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				CONFIG_MINING_MOD_CRYSTAL_HUD,
 				"Crystal Hud",
 				"Enables the crystal hud, shows information about current crystal status, parts available and tools available.\n\n§cRequires the crystal player list widget to be active!");
+		translationBuilder.addConfig(CONFIG_MINING_GLOSSY_GEMSTONE_MESSAGE, "Glossy gemstone message", "Adds messages when you drop a glossy gemstone");
 		translationBuilder.addConfig(CONFIG_MINING_PUZZLER_SOLVER,
 				"Puzzler solver",
 				"Highlight the correct block for the puzzler.");
@@ -522,6 +529,10 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT,
 				"Show rarity in level",
 				"Shows the pet level in the color of the rarity");
+		translationBuilder.addConfig(
+				CONFIG_MISC_SHOW_ITEM_UPGRADES,
+				"Show item stars",
+				"Shows the amount of stars that are applied to an item in the slot text.");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_FORGE_RECIPE_STACK,
 				"Show forge recipes",
 				"Shows forge recipes in the recipe book");

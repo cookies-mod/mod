@@ -7,6 +7,7 @@ import codes.cookies.mod.features.mining.hollows.MinesOfDivanHelper;
 import codes.cookies.mod.features.mining.shafts.CorpseWaypoints;
 import codes.cookies.mod.features.mining.shafts.MineshaftAnnouncements;
 import codes.cookies.mod.features.mining.shafts.ShaftFeatures;
+import codes.cookies.mod.features.mining.utils.GlossyGemstoneMessage;
 import codes.cookies.mod.features.mining.utils.HotmUtils;
 
 /**
@@ -27,6 +28,7 @@ public interface MiningFeatures {
 		Loader.load("ShaftFeatures", ShaftFeatures::load);
 		Loader.load("MineshaftCorpseMessages", MineshaftAnnouncements::register);
 		Loader.load("CrystalRunHud", CrystalRunHud::new);
+		Loader.load("GlossyGemstoneMessage", GlossyGemstoneMessage::register);
     }
 
 }

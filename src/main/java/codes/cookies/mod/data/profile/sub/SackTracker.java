@@ -1,5 +1,6 @@
 package codes.cookies.mod.data.profile.sub;
 
+import codes.cookies.mod.events.SackContentsChangeCallback;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import codes.cookies.mod.repository.RepositoryItem;
@@ -38,9 +39,7 @@ public class SackTracker implements JsonSerializable {
     public @NotNull JsonElement write() {
         JsonObject jsonObject = new JsonObject();
 
-        this.items.forEach((repositoryItem, integer) -> {
-            jsonObject.addProperty(repositoryItem.getInternalId(), integer);
-        });
+        this.items.forEach((repositoryItem, integer) -> jsonObject.addProperty(repositoryItem.getInternalId(), integer));
 
         return jsonObject;
     }
@@ -52,7 +51,12 @@ public class SackTracker implements JsonSerializable {
      * @param value The amount of the item.
      */
     public void set(RepositoryItem item, int value) {
-        items.put(item, value);
+		final Integer previous = items.get(item);
+		if (previous != null) {
+			SackContentsChangeCallback.DELTA_CALLBACK.invoker().accept(item, value - previous);
+		}
+		items.put(item, value);
+		SackContentsChangeCallback.CALLBACK.invoker().accept(item, value);
     }
 
     /**
@@ -62,7 +66,9 @@ public class SackTracker implements JsonSerializable {
      * @param value The value.
      */
     public void modify(RepositoryItem item, int value) {
+		SackContentsChangeCallback.DELTA_CALLBACK.invoker().accept(item, value);
         items.compute(item, (key, oldValue) -> Math.max(oldValue == null ? value : oldValue + value, 0));
+		SackContentsChangeCallback.CALLBACK.invoker().accept(item, items.get(item));
     }
 
     public void clear() {

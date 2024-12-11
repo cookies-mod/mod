@@ -1,5 +1,6 @@
 package codes.cookies.mod.render.types;
 
+import codes.cookies.mod.render.utils.RenderHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import codes.cookies.mod.render.Renderable;
 import org.lwjgl.opengl.GL11;
@@ -104,10 +105,10 @@ public record Outlines(
 			Vec3d start, Vec3d end, int color, int lineWidth, boolean throughWalls) {
 		this(
 				new Box(start.x, start.y, start.z, end.x, end.y, end.z),
-				(color & 0xFF) / 255f,
-				((color >> 8) & 0xFF) / 255f,
-				((color >> 16) & 0xFF) / 255f,
-				((color >> 24) & 0xFF) / 255f,
+				RenderHelper.getRed(color) / 255f,
+				RenderHelper.getGreen(color) / 255f,
+				RenderHelper.getBlue(color) / 255f,
+				RenderHelper.getAlpha(color) / 255f,
 				lineWidth,
 				throughWalls);
 	}

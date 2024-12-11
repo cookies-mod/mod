@@ -24,3 +24,4 @@ mutable field net/minecraft/client/gui/screen/Screen title Lnet/minecraft/text/T
 accessible field net/minecraft/client/option/KeyBinding boundKey Lnet/minecraft/client/util/InputUtil$Key;
 accessible field net/minecraft/client/option/KeyBinding KEYS_BY_ID Ljava/util/Map;
 accessible field net/minecraft/client/option/KeyBinding timesPressed I
+accessible field net/minecraft/client/particle/Particle world Lnet/minecraft/client/world/ClientWorld;

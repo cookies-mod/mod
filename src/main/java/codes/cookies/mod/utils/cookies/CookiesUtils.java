@@ -7,6 +7,9 @@ import java.util.Random;
 
 import codes.cookies.mod.utils.ColorUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
+
+import net.minecraft.util.math.BlockPos;
+
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,5 +252,9 @@ public class CookiesUtils {
 	public static void sendCommand(String command) {
 		Optional.ofNullable(MinecraftClient.getInstance().player)
 				.ifPresent(player -> player.networkHandler.sendCommand(command));
+	}
+
+	public static BlockPos mapToBlockPos(Vec3d vec3d) {
+		return new BlockPos((int) Math.floor(vec3d.x), (int) Math.floor(vec3d.y), (int) Math.floor(vec3d.z));
 	}
 }

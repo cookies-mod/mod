@@ -259,6 +259,9 @@ public interface TranslationKeys {
 	String CONFIG_FARMING_CATEGORIES_JACOBS = CONFIG_FARMING + CATEGORIES_PART + ".jacobs";
 	String CONFIG_FARMING_HIGHLIGHT_UNCLAIMED_JACOB_CONTENTS = CONFIG_FARMING + ".highlight_unclaimed_jacobs_contents";
 
+	String CONFIG_FARMING_RENDER = CONFIG_FARMING + CATEGORIES_PART + ".render";
+	String CONFIG_FARMING_RENDER_HIGHLIGHT_GLOWING_MUSHROOMS = CONFIG_FARMING + ".highlight_glowing_mushrooms";
+
 	String CONFIG_FARMING_CATEGORIES_GARDEN_KEYBINDS = CONFIG_FARMING + CATEGORIES_PART + ".garden_keybinds";
 
 	String CONFIG_FARMING_OPEN_KEYBIND_MENU = CONFIG_FARMING + ".open_keybind_menu";
@@ -299,6 +302,7 @@ public interface TranslationKeys {
 	String CONFIG_MINING_PUZZLER_SOLVER = CONFIG_MINING + ".puzzler_solver";
 	String CONFIG_MINING_MOD_HELPER = CONFIG_MINING + ".mod_helper";
 	String CONFIG_MINING_MOD_CRYSTAL_HUD = CONFIG_MINING + ".crystal_hud";
+	String CONFIG_MINING_GLOSSY_GEMSTONE_MESSAGE = CONFIG_MINING + ".glossy_gemstone_message";
 	String CONFIG_MINING_CATEGORIES_HOTM = CONFIG_MINING + CATEGORIES_PART + ".hotm";
 	String CONFIG_MINING_SHOW_HOTM_PERK_LEVEL_AS_STACK_SIZE = CONFIG_MINING + ".show_hotm_perk_level_as_stack_size";
 	String CONFIG_MINING_HIGHLIGHT_DISABLED_HOTM_PERKS = CONFIG_MINING + ".highlight_disabled_hotm_perks";
@@ -349,6 +353,7 @@ public interface TranslationKeys {
 	String CONFIG_MISC_CATEGORIES_RENDER_INVENTORY = CONFIG_MISC + CATEGORIES_PART + ".render_inventory";
 	String CONFIG_MISC_SHOW_PET_LEVEL = CONFIG_MISC + ".show_pet_level";
 	String CONFIG_MISC_SHOW_PET_RARITY_IN_LEVEL_TEXT = CONFIG_MISC + ".show_pet_rarity_in_level_text";
+	String CONFIG_MISC_SHOW_ITEM_UPGRADES = CONFIG_MISC + ".show_item_upgrades";
 	String CONFIG_MISC_SHOW_FORGE_RECIPE_STACK = CONFIG_MISC + ".show_forge_recipe_stack";
 
 	String CONFIG_MISC_NOTIFICATIONS = CONFIG_MISC + ".notifications";

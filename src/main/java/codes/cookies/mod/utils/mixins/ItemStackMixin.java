@@ -1,5 +1,6 @@
 package codes.cookies.mod.utils.mixins;
 
+import codes.cookies.mod.config.categories.MiscConfig;
 import codes.cookies.mod.utils.items.PetInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -102,6 +103,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
         }
 
         this.cookies$setPetLevel(nbtCompound, componentMapImpl);
+		this.cookies$setStars();
 
         final LoreComponent loreComponent = componentMapImpl.get(DataComponentTypes.LORE);
         if (loreComponent == null || loreComponent.lines() == null || loreComponent.lines().isEmpty()) {
@@ -128,7 +130,38 @@ public abstract class ItemStackMixin implements ComponentHolder {
         }
     }
 
-    @Unique
+	@Unique
+	private void cookies$setStars() {
+		if (!ConfigManager.getConfig().miscConfig.showItemUpgrades.getValue()) {
+			return;
+		}
+
+		if (!contains(CookiesDataComponentTypes.UPGRADE_LEVEL)) {
+			return;
+		}
+
+		final Integer i = get(CookiesDataComponentTypes.UPGRADE_LEVEL);
+		if (i == null) {
+			return;
+		}
+
+
+		final String slotText;
+		if (i == 10) {
+			slotText = "§4" + i;
+		} else if (i > 5) {
+			slotText = "§c" + i;
+		} else if (i == 5) {
+			slotText = "§6" + i;
+		} else if (i >= 1) {
+			slotText = "§e" + i;
+		} else {
+			return;
+		}
+		set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, slotText);
+	}
+
+	@Unique
     private void cookies$setComponents() {
         if (((CustomComponentMapAccessor) (Object) this.components).cookies$getMergedComponentMap() == null) {
             ((CustomComponentMapAccessor) (Object) this.components).cookies$setMergedComponentMap(new MergedComponentMap(
@@ -180,7 +213,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
             tier = Formatting.WHITE;
         }
 
-        set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, tier.toString() + level);
+        set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, tier.toString() + level.replaceAll("\\D", ""));
     }
 
     @Unique
