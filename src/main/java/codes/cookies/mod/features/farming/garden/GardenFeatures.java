@@ -11,7 +11,6 @@ public class GardenFeatures {
     public static void load() {
         Loader.load("PlotPriceBreakdown", PlotPriceBreakdown::new);
         Loader.load("CompostUpgrades", CompostUpgrades::new);
-        //Loader.load("VisitorHelper", VisitorHelper::new);
 		Loader.load("VisitorDropProtection", VisitorDropProtection::init);
     }
 }
