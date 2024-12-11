@@ -66,7 +66,8 @@ public class VisitorDropProtection implements TranslationKeys {
 		}
 		var lore = String.join("\n", visitorItem.get(DataComponentTypes.LORE).lines().stream().map(Text::getString).toArray(String[]::new));
 
-		if (!lore.matches("Rewards:([\\S\\s]*)(?:Click|Missing)")) {
+		if (!lore.matches("[\\S\\s]*Rewards:([\\S\\s]*)(?:Click|Missing)[\\S\\s]*")) {
+			CookiesUtils.sendMessage("Invalid lore: " + lore);
 			return false;
 		}
 
