@@ -5,16 +5,13 @@ import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.translations.TranslationKeys;
-import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.inventories.ItemBuilder;
 import com.google.common.util.concurrent.Runnables;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
@@ -26,12 +23,13 @@ import net.minecraft.util.Rarity;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VisitorDropProtection implements TranslationKeys {
+
+	private static final Pattern rewardsPattern = Pattern.compile("Rewards:([\\S\\s]*)(?:Click|Missing)");
 
 	private VisitorDropProtection(HandledScreen<?> handledScreen) {
 		InventoryContentUpdateEvent.registerSlot(handledScreen.getScreenHandler(),
@@ -66,8 +64,9 @@ public class VisitorDropProtection implements TranslationKeys {
 		}
 		var lore = String.join("\n", visitorItem.get(DataComponentTypes.LORE).lines().stream().map(Text::getString).toArray(String[]::new));
 
-		if (!lore.matches("[\\S\\s]*Rewards:([\\S\\s]*)(?:Click|Missing)[\\S\\s]*")) {
-			CookiesUtils.sendMessage("Invalid lore: " + lore);
+		Matcher matcher = rewardsPattern.matcher(lore);
+
+		if (!matcher.find()) {
 			return false;
 		}
 
@@ -98,7 +97,6 @@ public class VisitorDropProtection implements TranslationKeys {
 			"Harbinger",
 			"Overgrown Grass",
 			"Dye",
-			"Copper",
 	};
 
 	private static final String[] commonDrops = new String[] {
