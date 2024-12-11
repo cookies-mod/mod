@@ -11,15 +11,11 @@ repositories {
 }
 
 dependencies {
-    implementation(project.libs.fabric.loom)
-    implementation("org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r")
-    //implementation(project.libs.quilt.parsers.json)
-    //implementation(project.libs.yumi.gradle.licenser)
+    implementation("org.eclipse.jgit:org.eclipse.jgit:7.1.0.202411261347-r")
 
     implementation("com.google.code.gson:gson:2.11.0")
 
     implementation("com.github.javaparser:javaparser-symbol-solver-core:3.26.2")
-    implementation("com.github.johnrengelman:shadow:8.1.1")
 }
 
 tasks.withType<JavaCompile> {
