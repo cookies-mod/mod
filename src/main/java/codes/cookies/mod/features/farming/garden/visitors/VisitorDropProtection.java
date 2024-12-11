@@ -116,6 +116,6 @@ public class VisitorDropProtection implements TranslationKeys {
 	};
 
 	public static void init() {
-		InventoryEvents.beforeInit("cookies-regex:.*", inv -> LocationUtils.Island.GARDEN.isActive() && ConfigManager.getConfig().farmingConfig.visitorRareDropProtection.getValue(), VisitorDropProtection::new);
+		InventoryEvents.beforeInit("cookies-behaviour:always", inv -> LocationUtils.Island.GARDEN.isActive() && ConfigManager.getConfig().farmingConfig.visitorRareDropProtection.getValue(), VisitorDropProtection::new);
 	}
 }
