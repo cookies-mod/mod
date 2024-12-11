@@ -66,9 +66,8 @@ public class VisitorDropProtection implements TranslationKeys {
 			return false;
 		}
 		var lore = String.join("\n", visitorItem.get(DataComponentTypes.LORE).lines().stream().map(Text::getString).toArray(String[]::new));
-		Pattern pattern = Pattern.compile("Rewards:([\\S\\s]*)(?:Click|Missing)");
-		Matcher matcher = pattern.matcher(lore);
-		if (!matcher.find()) {
+
+		if (!lore.matches("Rewards:([\\S\\s]*)(?:Click|Missing)")) {
 			return false;
 		}
 
