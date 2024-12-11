@@ -333,7 +333,6 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING, "Descending");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_UNSORTED, "Unsorted");
 
-		translationBuilder.add(CONFIG_FARMING_CATEGORIES_VISITOR, "Visitors");
 		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_MATERIAL_HELPER,
 				"Show visitor materials",
 				"Shows the amount of items a visitor needs down to the actual crop.");
