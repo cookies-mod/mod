@@ -44,8 +44,7 @@ public class VisitorDropProtection implements TranslationKeys {
 		}
 	}
 
-	@SuppressWarnings("DataFlowIssue")
-	protected final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing())
+	protected static final ItemStack disabledItem = new ItemBuilder(Items.BARRIER).hideAdditionalTooltips().set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing())
 			.setName(Text.translatable(DROP_PROTECTION_MESSAGE).setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false).withBold(true))).set(DataComponentTypes.RARITY, Rarity.COMMON).build();
 
 	private void handleRejectButton(ItemStack rejectStack, boolean applyProtection) {
