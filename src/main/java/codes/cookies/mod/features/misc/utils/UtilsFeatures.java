@@ -16,6 +16,7 @@ public class UtilsFeatures {
         Loader.load("AnvilHelper", AnvilHelper::new);
         Loader.load("ForgeRecipes", ForgeRecipes::new);
 		Loader.load("StatsTracker", StatsTracker::init);
+		Loader.load("ReforgeHelper", ReforgeHelper::init);
     }
 
 }

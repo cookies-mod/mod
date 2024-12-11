@@ -453,6 +453,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MISC, "Misc Config", "Miscellaneous settings");
 		translationBuilder.addConfig(CONFIG_MISC_EDIT_HUD, "To edit hud", "Opens a screen where you can edit the hud elements!");
+		translationBuilder.addConfig(CONFIG_MISC_REFORGE_TOOLTIP, "Show reforge tooltip", "Shows the current reforge on the tooltip of an item in the reforge menu");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, "Show museum armor sets", "Shows the components of an armor set in the description.");
 		translationBuilder.addConfig(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, "Scrollable Tooltips", """
 				Allows you to scroll through tooltips

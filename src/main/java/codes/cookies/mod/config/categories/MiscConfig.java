@@ -32,6 +32,7 @@ public class MiscConfig extends Category {
 	@Expose
 	public BooleanOption enableScrollableTooltips = new BooleanOption(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, true);
 
+
 	@Expose
 	public BooleanOption signEditEnterSubmits = new BooleanOption(CONFIG_MISC_SIGN_EDIT_ENTER_SUBMITS, false);
 
@@ -40,6 +41,9 @@ public class MiscConfig extends Category {
 
 	@Expose
 	public BooleanOption showPing = new BooleanOption(CONFIG_MISC_SHOW_PING, false);
+
+	@Expose
+	public BooleanOption enableReforgeTooltip = new BooleanOption(CONFIG_MISC_REFORGE_TOOLTIP, false);
 
 	@Expose
 	public BooleanOption showMuseumArmorSets = new BooleanOption(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, true);
