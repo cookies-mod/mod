@@ -215,7 +215,7 @@ public class DungeonMapRenderer {
 		}
 		drawContext.getMatrices().push();
 		if (DungeonConfig.getInstance().showPlayerSkulls.getValue() && player.getPlayer() != null) {
-			if(DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+			if (DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
 				drawContext.getMatrices()
 						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
 			}
@@ -226,7 +226,7 @@ public class DungeonMapRenderer {
 
 			this.drawPlayerHead(drawContext, player);
 
-			if(!DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+			if (!DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
 				drawContext.getMatrices().push();
 				drawContext.getMatrices().translate(4, 4, 0);
 				drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));

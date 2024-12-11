@@ -13,6 +13,8 @@ import codes.cookies.mod.config.system.Row;
 import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.config.system.options.ButtonOption;
 import codes.cookies.mod.config.system.options.EnumCycleOption;
+import codes.cookies.mod.config.system.options.SliderOption;
+import codes.cookies.mod.config.system.options.StringInputOption;
 import codes.cookies.mod.config.system.options.TextDisplayOption;
 
 import codes.cookies.mod.features.farming.garden.keybinds.GardenKeybindPredicate;
@@ -58,6 +60,13 @@ public class FarmingConfig extends Category {
 	public RancherSpeedConfig rancherSpeed = new RancherSpeedConfig();
 
 	@Parent
+	public TextDisplayOption visitors = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_VISITORS);
+
+	public BooleanOption visitorRareDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_DROP_PROTECTION, true);
+
+	public BooleanOption visitorNotAsRareDropProtection = new BooleanOption(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION, false).onlyIf(visitorRareDropProtection);
+
+	@Parent
 	public TextDisplayOption mousemat = new TextDisplayOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT);
 
 	public BooleanOption showSqueakyMousematOverlay = new BooleanOption(CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY, false);
@@ -78,7 +87,6 @@ public class FarmingConfig extends Category {
 		case ASCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_ASCENDING;
 		case DESCENDING -> CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING;
 	})).onlyIf(showCompostPriceBreakdown);
-
 
 	@Parent
 	public TextDisplayOption jacobsText = new TextDisplayOption(CONFIG_FARMING_CATEGORIES_JACOBS);

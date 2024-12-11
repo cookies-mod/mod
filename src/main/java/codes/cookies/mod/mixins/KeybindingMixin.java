@@ -45,7 +45,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Override
 	public void cookies$setGardenKey(GardenKeybindsData.GardenKeyBindOverride key) {
 		cookies$gardenKey = key;
-		if(key != null) {
+		if (key != null) {
 			GARDEN_KEY_TO_BINDINGS.put(key.key(), this);
 		}
 	}
@@ -63,7 +63,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "updatePressedStates", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$updatePressedStates(CallbackInfo ci) {
-		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
+		if (ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			for (var keyBinding : GARDEN_KEY_TO_BINDINGS.values()) {
 				if (keyBinding.cookies$getGardenKey().key().getCategory() == InputUtil.Type.KEYSYM && keyBinding.cookies$getGardenKey().key().getCode() != InputUtil.UNKNOWN_KEY.getCode()) {
 					((KeyBinding)keyBinding).setPressed(InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyBinding.cookies$getGardenKey().key().getCode()));
@@ -75,7 +75,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "setKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$setKeyPressed(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
+		if (ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
 				if (accessor.cookies$getGardenKey() != null) {
 					((KeyBinding) accessor).setPressed(pressed);
@@ -90,7 +90,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 	@Inject(method = "onKeyPressed", at = @At(value = "HEAD"), cancellable = true)
 	private static void cookies$onKeyPressed(InputUtil.Key key, CallbackInfo ci) {
-		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
+		if (ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (GARDEN_KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor) {
 				if (accessor.cookies$getGardenKey() != null) {
 					((KeyBinding) accessor).timesPressed++;
@@ -98,7 +98,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 
 				ci.cancel();
 			}
-			if(KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
+			if (KEY_TO_BINDINGS.get(key) instanceof KeyBindingAccessor accessor && accessor.cookies$getGardenKey() != null) {
 				ci.cancel();
 			}
 		}
@@ -107,7 +107,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	@Inject(method = "matchesKey", at = @At(value = "HEAD"), cancellable = true)
 	private void cookies$matchesKey(int keyCode, int scanCode, CallbackInfoReturnable<Boolean> cir)
 	{
-		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
+		if (ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (this.cookies$getGardenKey() != null) {
 				cir.setReturnValue(keyCode == InputUtil.UNKNOWN_KEY.getCode()
 						? this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.SCANCODE && this.cookies$getGardenKey().key().getCode() == scanCode
@@ -117,7 +117,7 @@ public abstract class KeybindingMixin implements KeyBindingAccessor {
 	}
 	@Inject(method = "matchesMouse", at = @At(value = "HEAD"), cancellable = true)
 	public void matchesMouse(int code, CallbackInfoReturnable<Boolean> cir) {
-		if(ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
+		if (ConfigManager.getConfig().farmingConfig.gardenKeybindPredicate.getValue().getShouldBeEnabled().get()) {
 			if (this.cookies$getGardenKey() != null) {
 				cir.setReturnValue(this.cookies$getGardenKey().key().getCategory() == InputUtil.Type.MOUSE && this.cookies$getGardenKey().key().getCode() == code);
 			}

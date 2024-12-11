@@ -82,7 +82,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (this.selectedKeyBinding != null) {
 			var key = InputUtil.Type.MOUSE.createFromCode(button);
-			if(key == selectedKeyBinding.getDefaultKey()) {
+			if (key == selectedKeyBinding.getDefaultKey()) {
 				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(null);
 			} else {
 				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(new GardenKeybindsData.GardenKeyBindOverride(key));
@@ -99,7 +99,7 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (this.selectedKeyBinding != null) {
 			var key = keyCode == GLFW.GLFW_KEY_ESCAPE ? InputUtil.UNKNOWN_KEY : InputUtil.fromKeyCode(keyCode, scanCode);
-			if(key.equals(selectedKeyBinding.getDefaultKey())) {
+			if (key.equals(selectedKeyBinding.getDefaultKey())) {
 				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(null);
 			} else {
 				KeyBindingAccessor.toAccessor(selectedKeyBinding).cookies$setGardenKey(new GardenKeybindsData.GardenKeyBindOverride(key));
@@ -333,12 +333,12 @@ public class GardenKeybindsScreen extends Screen implements TranslationKeys {
 				MutableText mutableText = Text.empty();
 
 				var thisKey = this.binding.boundKey;
-				if(this.gardenKey.cookies$getGardenKey() != null)
+				if (this.gardenKey.cookies$getGardenKey() != null)
 				{
 					thisKey = this.gardenKey.cookies$getGardenKey().key();
 				}
 
-				if(!thisKey.equals(InputUtil.UNKNOWN_KEY)) {
+				if (!thisKey.equals(InputUtil.UNKNOWN_KEY)) {
 					for (KeyBinding keyBinding : ControlsListWidget.this.client.options.allKeys) {
 						var otherKey = keyBinding.boundKey;
 

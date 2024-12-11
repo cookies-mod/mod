@@ -18,7 +18,7 @@ public class CookieDataManager {
 	public static final Path MOD_DATA_FOLDER = Path.of(FabricLoader.getInstance().getConfigDir().toString(), "cookiesmod/data");
 
 	public static void load() {
-		if(!Files.exists(MOD_DATA_FOLDER)) {
+		if (!Files.exists(MOD_DATA_FOLDER)) {
 			ExceptionHandler.tryCatch(() -> Files.createDirectories(MOD_DATA_FOLDER));
 		}
 
@@ -65,7 +65,7 @@ public class CookieDataManager {
 
 		final String fileContent = new String(bytes, StandardCharsets.UTF_8);
 		final JsonElement fileElement = JsonParser.parseString(fileContent);
-		if(fileElement.isJsonObject())
+		if (fileElement.isJsonObject())
 			data.read(fileElement.getAsJsonObject());
 	}
 

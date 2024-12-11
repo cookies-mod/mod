@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import codes.cookies.mod.utils.ColorUtils;
+import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 
 import net.minecraft.util.math.BlockPos;
 
@@ -173,6 +174,8 @@ public class CookiesUtils {
 	 * match instead of a default string comparison.<br><br>
 	 * If the search prefixed with {@code cookies-equals:} it will invoke a check with {@link String#equals(Object)}
 	 * .<br><br>
+	 * If the search is prefixed with {@code cookies-behaviour:} it will use always(true) or never(false) as the search.
+	 * <br><br>
 	 * If the search isn't prefixed with any of the above it will invoke a {@link String#equalsIgnoreCase(String)}
 	 * check.
 	 *
@@ -181,17 +184,27 @@ public class CookiesUtils {
 	 * @return Whether the two strings match.
 	 */
 	public static boolean match(String string, String search) {
-		String withoutPrefix;
-		if (search.startsWith("cookies-")) {
-			withoutPrefix = search.substring(search.indexOf(':') + 1);
-		} else {
-			withoutPrefix = search;
+		try {
+			String withoutPrefix;
+			if (search.startsWith("cookies-")) {
+				withoutPrefix = search.substring(search.indexOf(':') + 1);
+			} else {
+				withoutPrefix = search;
+			}
+			return switch (search.split(":")[0]) {
+				case "cookies-regex" -> string.matches(withoutPrefix);
+				case "cookies-equals" -> string.equals(withoutPrefix);
+				case "cookies-behaviour" -> switch (withoutPrefix) {
+					case "always" -> true;
+					case "never" -> false;
+					default -> throw new IllegalArgumentException("Unknown behaviour: " + withoutPrefix);
+				};
+				default -> string.equalsIgnoreCase(search);
+			};
+		} catch (Exception e) {
+			ExceptionHandler.handleException(e);
+			return false;
 		}
-		return switch (search.split(":")[0]) {
-			case "cookies-regex" -> string.matches(withoutPrefix);
-			case "cookies-equals" -> string.equals(withoutPrefix);
-			default -> string.equalsIgnoreCase(search);
-		};
 	}
 
 	public static Vector2i mapToXZ(Vec3d vec3d) {
