@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
  * Allows for cancellation of armor rendering.
  */
 @Mixin(ArmorFeatureRenderer.class)
-@Debug(export = true)
 public class ArmorFeatureRenderMixin {
 
 	@Unique

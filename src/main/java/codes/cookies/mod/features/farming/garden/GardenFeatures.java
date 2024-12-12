@@ -13,5 +13,4 @@ public class GardenFeatures {
         Loader.load("CompostUpgrades", CompostUpgrades::new);
         //Loader.load("VisitorHelper", VisitorHelper::new);
     }
-
 }
