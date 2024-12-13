@@ -1,12 +1,9 @@
 package codes.cookies.mod.data.farming;
 
+import codes.cookies.mod.data.cookiesmoddata.ClientInitializationCallback;
 import codes.cookies.mod.data.cookiesmoddata.CookiesModData;
 import codes.cookies.mod.utils.accessors.KeyBindingAccessor;
 import codes.cookies.mod.utils.json.CodecJsonSerializable;
-import codes.cookies.mod.utils.json.JsonUtils;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 
 import com.mojang.logging.LogUtils;
@@ -20,9 +17,14 @@ import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable<Map<String, GardenKeybindsData.GardenKeyBindOverride>> {
-	private static final Codec<Map<String, GardenKeyBindOverride>> CODEC = Codec.unboundedMap(Codec.STRING, GardenKeyBindOverride.CODEC);
+public class GardenKeybindsData
+		implements CookiesModData, ClientInitializationCallback, CodecJsonSerializable<Map<String, GardenKeybindsData.GardenKeyBindOverride>> {
+	private static final Codec<Map<String, GardenKeyBindOverride>> CODEC = Codec.unboundedMap(
+			Codec.STRING,
+			GardenKeyBindOverride.CODEC);
+	private final CompletableFuture<Map<String, GardenKeyBindOverride>> future = new CompletableFuture<>();
 
 	@Override
 	public String getFileLocation() {
@@ -36,13 +38,25 @@ public class GardenKeybindsData implements CookiesModData, CodecJsonSerializable
 	}
 
 	@Override
-	public void load(Map<String, GardenKeyBindOverride> value) {
-		for (var entry : value.entrySet()) {
-			if (entry.getValue() != null) {
-				var keyBinding = KeyBindingAccessor.toAccessor(KeyBinding.KEYS_BY_ID.get(entry.getKey()));
-				keyBinding.cookies$setGardenKey(entry.getValue());
+	public void gameInitialized() {
+		future.whenComplete((map, error) -> {
+			if (error != null) {
+				logger.error("An error occurred while loading the garden keybinds!", error);
+				return;
 			}
-		}
+
+			for (var entry : map.entrySet()) {
+				if (entry.getValue() != null) {
+					var keyBinding = KeyBindingAccessor.toAccessor(KeyBinding.KEYS_BY_ID.get(entry.getKey()));
+					keyBinding.cookies$setGardenKey(entry.getValue());
+				}
+			}
+		});
+	}
+
+	@Override
+	public void load(Map<String, GardenKeyBindOverride> value) {
+		future.complete(value);
 	}
 
 	@Override
