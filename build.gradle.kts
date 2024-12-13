@@ -1,7 +1,7 @@
 import org.gradle.jvm.tasks.Jar
 
 plugins {
-	id("fabric-loom")
+	id("fabric-loom") version "1.6-SNAPSHOT"
 	id("maven-publish")
 	id("dev.morazzer.cookies.internal.classified-jars")
 }
