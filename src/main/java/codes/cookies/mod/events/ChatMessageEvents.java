@@ -52,7 +52,7 @@ public interface ChatMessageEvents {
 			return;
 		}
 		final String string = text.getString();
-		EVENT.invoker().onMessage(string);
+		EVENT.invoker().onMessage(CookiesUtils.stripColor(string));
 	}
 
 	/**
