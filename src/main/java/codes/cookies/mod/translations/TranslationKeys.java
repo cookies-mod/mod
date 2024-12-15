@@ -100,6 +100,8 @@ public interface TranslationKeys {
 	String RANCHER_BOOTS_FARMING_SPEEDS = RANCHER_BOOTS + ".farming_speeds";
 	//</editor-fold>
 
+	String DROP_PROTECTION_MESSAGE = MOD + ".dropprotectionmessage";
+
 	String COMMANDS = MOD + ".commands";
 
 	//<editor-fold desc="Screen Forge">
@@ -233,6 +235,11 @@ public interface TranslationKeys {
 	String CONFIG_FARMING_SHOW_RANCHER_SPEED = CONFIG_FARMING + ".show_rancher_speed";
 	String CONFIG_FARMING_SHOW_RANCHER_OPTIMAL_SPEED = CONFIG_FARMING + ".show_rancher_optimal_speeds";
 
+	String CONFIG_FARMING_CATEGORIES_VISITORS = CONFIG_FARMING + CATEGORIES_PART + ".visitors";
+	String CONFIG_FARMING_VISITOR_DROP_PROTECTION = CONFIG_FARMING + ".visitor_drop_protection";
+	String CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION = CONFIG_FARMING + ".visitor_not_as_rare_drop_protection";
+	String CONFIG_FARMING_VISITOR_DROP_PROTECTION_DELAY = CONFIG_FARMING + ".visitor_drop_protection_delay";
+
 	String CONFIG_FARMING_SQUEAKY_MOUSEMAT = CONFIG_FARMING + ".squeaky_mouse_mat";
 	String CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY = CONFIG_FARMING_SQUEAKY_MOUSEMAT + ".overlay";
 
@@ -246,7 +253,6 @@ public interface TranslationKeys {
 	String CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_UNSORTED =
 			CONFIG_FARMING_COMPOST_SORT_ORDER + VALUES_SUFFIX + ".unsorted";
 
-	String CONFIG_FARMING_CATEGORIES_VISITOR = CONFIG_FARMING + CATEGORIES_PART + ".visitor";
 	String CONFIG_FARMING_VISITOR_MATERIAL_HELPER = CONFIG_FARMING + ".visitor_material_helper";
 
 	String CONFIG_FARMING_CATEGORIES_JACOBS = CONFIG_FARMING + CATEGORIES_PART + ".jacobs";

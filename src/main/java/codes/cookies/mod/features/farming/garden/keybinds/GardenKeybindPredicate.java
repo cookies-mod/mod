@@ -25,7 +25,7 @@ public enum GardenKeybindPredicate {
 		HOLDING_FARMING_TOOL.shouldBeEnabled = () ->
 			{
 				var holdingFarmingTool = getHoldingFarmingTool();
-				if(heldFarmingTool != holdingFarmingTool) {
+				if (heldFarmingTool != holdingFarmingTool) {
 					for (var keybind : KeyBinding.KEYS_BY_ID.values()) {
 						keybind.setPressed(false);
 						keybind.timesPressed = 0;

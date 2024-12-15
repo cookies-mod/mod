@@ -62,7 +62,7 @@ public class LocationUtils {
 	}
 
 	private static void onJoinHypixel(ClientboundHelloPacket clientboundHelloPacket) {
-		if(clientboundHelloPacket.getEnvironment() ==  Environment.BETA) {
+		if (clientboundHelloPacket.getEnvironment() ==  Environment.BETA) {
 			isOnHypixelAlpha = true;
 			CookiesUtils.sendFailedMessage("You are on Hypixel Alpha, profile data will not be saved!");
 		} else {
