@@ -94,6 +94,8 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(RANCHER_BOOTS_RESET_TO_DEFAULT, "Reset to default");
 		translationBuilder.add(RANCHER_BOOTS_FARMING_SPEEDS, "Farming Speeds");
 
+		translationBuilder.add(DROP_PROTECTION_MESSAGE, "Refusing temporarily disabled due to rare drop");
+
 		translationBuilder.add(BLOCK_XYZ, "(%s, %s, %s)");
 		translationBuilder.add(PAGE, "Page");
 		translationBuilder.add(PAGE_WITH_NUMBER, "Page %s");
@@ -300,6 +302,20 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 				"Show rancher overlay",
 				"Show optimal speeds in the rancher's boots.");
 
+		translationBuilder.add(CONFIG_FARMING_CATEGORIES_VISITORS, "Visitors");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION,
+				"Rare drop protection",
+				"Prevents rejecting visitors with rare drops for 5s");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_NOT_AS_RARE_DROP_PROTECTION,
+				"Common drop protection",
+				"Prevents rejecting visitors with drops that are not as rare as the ones in the rare drop protection.");
+
+		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_DROP_PROTECTION_DELAY,
+				"Drop protection delay",
+				"Delay in seconds before the visitor drop protection is removed.");
+
 		translationBuilder.add(CONFIG_FARMING_SQUEAKY_MOUSEMAT, "Squeaky Mousemat");
 		translationBuilder.addConfig(
 				CONFIG_FARMING_SQUEAKY_MOUSEMAT_OVERLAY,
@@ -317,7 +333,6 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_DESCENDING, "Descending");
 		translationBuilder.add(CONFIG_FARMING_COMPOST_SORT_ORDER_VALUES_UNSORTED, "Unsorted");
 
-		translationBuilder.add(CONFIG_FARMING_CATEGORIES_VISITOR, "Visitors");
 		translationBuilder.addConfig(CONFIG_FARMING_VISITOR_MATERIAL_HELPER,
 				"Show visitor materials",
 				"Shows the amount of items a visitor needs down to the actual crop.");
