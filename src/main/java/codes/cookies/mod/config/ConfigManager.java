@@ -1,5 +1,6 @@
 package codes.cookies.mod.config;
 
+import codes.cookies.mod.config.system.yacl.YaclConfigReader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -62,7 +63,7 @@ public class ConfigManager {
     public static void processConfig() {
         config = new CookiesConfig();
         reload();
-        configReader = new ConfigReader();
+        configReader = new YaclConfigReader();
         ConfigProcessor.processConfig(config, configReader);
     }
 

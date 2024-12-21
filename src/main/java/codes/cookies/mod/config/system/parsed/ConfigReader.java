@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Config reader to correctly parse a config from its source.
  */
-public class ConfigReader {
+public abstract class ConfigReader {
     private static final Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
     @Getter
@@ -70,19 +70,19 @@ public class ConfigReader {
      *
      * @param foldable The foldable to open.
      */
-    public void beginFoldable(Foldable foldable) {
-        //noinspection rawtypes
-
-        ProcessedOption processedOption = new ProcessedOption<>(new FoldableOption(
-            foldable,
-            foldableId.incrementAndGet()
-        ));
-        if (!this.foldableStack.isEmpty()) {
+    public FoldableOption beginFoldable(Foldable foldable) {
+		final FoldableOption foldableOption = new FoldableOption(
+				foldable,
+				foldableId.incrementAndGet()
+		);
+		ProcessedOption<?, FoldableOption> processedOption = new ProcessedOption<>(foldableOption);
+		if (!this.foldableStack.isEmpty()) {
             processedOption.setFoldable(this.foldableStack.peek());
         }
         this.currentCategory.addOption(processedOption);
         this.foldableStack.push(this.foldableId.get());
-    }
+    	return foldableOption;
+	}
 
     /**
      * Ends a foldable.
