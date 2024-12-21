@@ -9,6 +9,7 @@ import codes.cookies.mod.commands.dev.DevCommand;
 import codes.cookies.mod.commands.system.CommandManager;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.screen.ConfigScreen;
+import codes.cookies.mod.config.system.yacl.YaclConfigReader;
 import codes.cookies.mod.data.cookiesmoddata.CookieDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
@@ -22,6 +23,7 @@ import codes.cookies.mod.screen.search.ItemSearchScreen;
 import codes.cookies.mod.services.mining.CrystalStatusService;
 import codes.cookies.mod.utils.UpdateChecker;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -30,6 +32,7 @@ import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
+import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -60,6 +63,16 @@ public class CookiesMod implements ClientModInitializer {
      * Opens the config screen.
      */
     public static void openConfig() {
+		if (ConfigManager.getConfigReader() instanceof YaclConfigReader yaclConfigReader) {
+			final CompletableFuture<YetAnotherConfigLib.Builder> finalConfig = yaclConfigReader.getFinalConfig();
+			if (finalConfig.isDone()) {
+				final YetAnotherConfigLib join = finalConfig.join().build();
+				final Screen screen = join.generateScreen(MinecraftClient.getInstance().currentScreen);
+				openScreen(screen);
+				return;
+			}
+		}
+
         openScreen(new ConfigScreen(ConfigManager.getConfigReader()));
     }
 

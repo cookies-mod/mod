@@ -15,6 +15,7 @@ repositories {
 	maven("https://repo.hypixel.net/repository/Hypixel/")
 	maven("https://repo.cookies.codes/releases")
 	maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+	maven("https://maven.isxander.dev/releases")
 }
 
 fabricApi {
@@ -49,6 +50,8 @@ dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
+
+	modImplementation("dev.isxander:yet-another-config-lib:3.6.1+1.21.2-fabric")
 }
 
 tasks.withType<Jar>().configureEach {
