@@ -73,10 +73,6 @@ public class CookiesMod implements ClientModInitializer {
         MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(screen));
     }
 
-	public static void pasteCommand() {
-
-	}
-
 	@Override
     public void onInitializeClient() {
         CommandManager.initialize();
