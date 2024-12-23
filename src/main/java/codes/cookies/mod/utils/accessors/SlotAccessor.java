@@ -97,4 +97,14 @@ public interface SlotAccessor {
     @SuppressWarnings("MissingJavadoc")
     ItemStack cookies$getOverrideItem();
 
+	static boolean getInteractionLocked(Slot slot) {
+		return getAccessor(slot).cookies$getInteractionLocked();
+	}
+
+	static void setInteractionLocked(Slot slot, boolean locked) {
+		getAccessor(slot).cookies$setInteractionLocked(locked);
+	}
+
+	boolean cookies$getInteractionLocked();
+	void cookies$setInteractionLocked(boolean locked);
 }

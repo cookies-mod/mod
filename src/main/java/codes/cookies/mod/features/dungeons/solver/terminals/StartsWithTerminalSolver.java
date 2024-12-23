@@ -29,7 +29,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 	public StartsWithTerminalSolver() {
 		InventoryEvents.beforeInit(
 				"cookies-regex:What starts with: '.'\\?",
-				super.getFloorPredicate().or(super.getDebugPredicate()),
+				getFloorPredicate().or(getDebugPredicate()),
 				this::modify);
 	}
 

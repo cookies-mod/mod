@@ -53,6 +53,7 @@ import org.lwjgl.glfw.GLFW;
 public class CookiesMod implements ClientModInitializer {
 	public static KeyBinding chestSearch;
 	private static KeyBinding useGardenKeybinds;
+	public static KeyBinding pasteCommandFromClipboard;
 	@Getter
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
@@ -72,7 +73,11 @@ public class CookiesMod implements ClientModInitializer {
         MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(screen));
     }
 
-    @Override
+	public static void pasteCommand() {
+
+	}
+
+	@Override
     public void onInitializeClient() {
         CommandManager.initialize();
 		CookieDataManager.load();
@@ -85,7 +90,8 @@ public class CookiesMod implements ClientModInitializer {
         Features.load();
         CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
         CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));
-        UpdateChecker.init();
+
+		UpdateChecker.init();
 		PlayerListUtils.init();
 		HudManager.load();
 		CrystalStatusService.register();
@@ -102,6 +108,10 @@ public class CookiesMod implements ClientModInitializer {
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_K,
 				"cookies.mod.keybinds"));
+		pasteCommandFromClipboard = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.paste_command",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_UNKNOWN,
+				"cookies.mod.keybinds"));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (chestSearch.isPressed()) {
@@ -114,6 +124,13 @@ public class CookiesMod implements ClientModInitializer {
 					keybind.timesPressed = 0;
 				}
 				CookiesUtils.sendMessage(Text.translatable("cookies.mod.garden.keybinds." + (GardenKeybindPredicate.keyBindToggle ? "enabled" : "disabled")), false);
+			}
+			while (pasteCommandFromClipboard.wasPressed()) {
+				var message = client.keyboard.getClipboard();
+
+				if (message != null && message.startsWith("/")) {
+					CookiesUtils.getPlayer().map(player -> player.networkHandler.sendCommand(message.substring(1)));
+				}
 			}
         });
     }
