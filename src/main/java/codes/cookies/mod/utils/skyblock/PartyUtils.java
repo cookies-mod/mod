@@ -34,8 +34,9 @@ public class PartyUtils {
 		HypixelModAPI.getInstance().createHandler(ClientboundPartyInfoPacket.class, PartyUtils::handle);
 		HypixelModAPI.getInstance().createHandler(ClientboundHelloPacket.class, packet -> request());
 		CookiesMod.getExecutorService().scheduleAtFixedRate(() -> {
-			if (LocationUtils.isInSkyblock())
+			if (LocationUtils.isInSkyblock()) {
 				request();
+			}
 		}, 0, 10, java.util.concurrent.TimeUnit.SECONDS);
 	}
 
