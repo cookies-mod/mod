@@ -68,7 +68,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 	}
 
 	private void update(int slot, ItemStack stack, String letter, Set<Integer> clickedSlots) {
-		if (slot > 53) {
+		if (slot > 44) {
 			return;
 		}
 		if (slot == 0) {
@@ -86,7 +86,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 				copy.set(CookiesDataComponentTypes.ON_ITEM_CLICK_RUNNABLE, () -> clickedSlots.add(slot));
 				stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, copy);
 			}
-		} else if (slot == 53) {
+		} else if (slot == 44) {
 			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_TOGGLE, Unit.INSTANCE);
 			if (this.localToggle) {
 				stack.set(CookiesDataComponentTypes.OVERRIDE_ITEM, this.toggleOff);
