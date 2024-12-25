@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
+import codes.cookies.mod.utils.skyblock.ChatUtils;
 import com.google.common.base.Predicates;
 import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.events.InventoryEvents;
@@ -273,7 +274,7 @@ public class SpiritLeapOverlay {
 					player.location.y,
 					player.location.width,
 					player.location.height)) {
-				clickedPlayer(player.slot);
+				clickedPlayer(player.slot, player.dungeonPlayer());
 				break;
 			}
 		}
@@ -381,13 +382,22 @@ public class SpiritLeapOverlay {
 		}
 	}
 
-	public void clickedPlayer(Slot slot) {
+	public void clickedPlayer(Slot slot, @Nullable DungeonPlayer player) {
 		MinecraftClient.getInstance().interactionManager.clickSlot(
 				this.handledScreen.getScreenHandler().syncId,
 				slot.id,
 				0,
 				SlotActionType.PICKUP,
 				MinecraftClient.getInstance().player);
+		if (player != null && DungeonConfig.getInstance().spiritLeapFoldable.announceLeaps.getValue()) {
+			StringBuilder message = new StringBuilder("Leaped to ");
+			message.append(player.getName());
+			if (player.getPlayer() != null && DungeonConfig.getInstance().spiritLeapFoldable.announceLeapCoords.getValue()) {
+				message.append(" at coords ").append(player.getPlayer().getBlockPos().toCenterPos().toString());
+			}
+			message.append("!");
+			ChatUtils.sendPartyMessage(message.toString());
+		}
 	}
 
 	private boolean modifyNormalIfAvailable() {
@@ -430,7 +440,7 @@ public class SpiritLeapOverlay {
 									handledScreen.close();
 									CookiesUtils.sendFailedMessage("Can't leap to yourself!");
 								} else {
-									clickedPlayer(leapPlayer.slot);
+									clickedPlayer(leapPlayer.slot, dungeonPlayer);
 								}
 							});
 

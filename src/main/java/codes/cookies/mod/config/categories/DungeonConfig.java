@@ -1,12 +1,18 @@
 package codes.cookies.mod.config.categories;
 
 import codes.cookies.mod.config.system.HudSetting;
+import codes.cookies.mod.config.system.Option;
 import codes.cookies.mod.config.system.Parent;
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.render.hud.HudEditScreen;
 import codes.cookies.mod.utils.cookies.Constants;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
@@ -46,6 +52,7 @@ public class DungeonConfig extends Category {
 	public PuzzleFoldable puzzleFoldable = new PuzzleFoldable();
 	public ClassColorFoldable classColorFoldable = new ClassColorFoldable();
 	public BooleanOption glowClassColor = new BooleanOption(CONFIG_DUNGEON_GLOW_CLASS_COLOR, true);
+	public PartyChatCommandsFoldable partyChatCommandsFoldable = new PartyChatCommandsFoldable();
 
 	public TextDisplayOption render = new TextDisplayOption(CONFIG_DUNGEON_RENDER);
 	public ButtonOption repositionMap = new ButtonOption(CONFIG_DUNGEON_RENDER_MAP_REPOSITION,
@@ -110,6 +117,8 @@ public class DungeonConfig extends Category {
 	public static class SpiritLeapFoldable extends Foldable {
 
 		public BooleanOption colorInClassColor = new BooleanOption(CONFIG_DUNGEON_SPIRIT_LEAP_USE_CLASS_COLOR, false);
+		public BooleanOption announceLeaps = new BooleanOption(CONFIG_DUNGEON_ANNOUNCE_LEAPS, true);
+		public BooleanOption announceLeapCoords = new BooleanOption(CONFIG_DUNGEON_ANNOUNCE_LEAP_COORDS, false).onlyIf(announceLeaps);
 
 		@Parent
 		public TextDisplayOption vanillaUi = new TextDisplayOption(CONFIG_DUNGEON_SPIRIT_LEAP_VANILLA);
@@ -158,6 +167,8 @@ public class DungeonConfig extends Category {
 				new BooleanOption(CONFIG_DUNGEON_TERMINAL_SELECT_ALL_COLORS, true);
 		public BooleanOption startsWithTerminal = new BooleanOption(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
 				true);
+		public BooleanOption melodyNotifier = new BooleanOption(CONFIG_DUNGEON_TERMINAL_MELODY_NOTIFIER, true);
+
 
 		@Override
 		public String getName() {
@@ -165,4 +176,18 @@ public class DungeonConfig extends Category {
 		}
 	}
 
+	public static class PartyChatCommandsFoldable extends Foldable {
+		public BooleanOption ptMe = new BooleanOption(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_PT_ME, true);
+		public BooleanOption warp = new BooleanOption(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_WARP, true);
+		public BooleanOption joinInstance = new BooleanOption(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_JOIN_INSTANCE, true);
+		public BooleanOption downTime = new BooleanOption(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_DOWN_TIME, true);
+		public BooleanOption coinFlip = new BooleanOption(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_COIN_FLIP, true);
+
+		public Map<String, BooleanOption> partyChatCommands = Map.of("ptme", ptMe, "warp", warp, "joininstance", joinInstance, "dt", downTime, "cf", coinFlip);
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_PARTY_CHAT_COMMANDS;
+		}
+	}
 }

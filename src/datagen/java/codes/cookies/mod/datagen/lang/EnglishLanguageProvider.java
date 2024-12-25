@@ -630,6 +630,12 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_GLOW_CLASS_COLOR,
 				"Class based glow color",//"Glow teammates by class colors",
 				"Overrides the default hypixel glowing by rank to glow by class color.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_ANNOUNCE_LEAPS,
+				"Announce leaps",
+				"Announce who you leap to and their coords when you leap to a player using the custom leap ui.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_ANNOUNCE_LEAP_COORDS,
+				"Announce coords",
+				"Announce the coords of the player you leap to as well.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_CLASS_COLOR,
 				"Class colors",
 				"The colors used for every class");
@@ -667,6 +673,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
 				"Starts with",
 				"Enables the starts with solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_MELODY_NOTIFIER,
+				"Melody notifier",
+				"Enables chat messages that are sent when you begin melody, when you complete each row, and when you finish.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE, "Puzzles", "All settings related to puzzles.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_PUZZLE_CREEPER_BEAMS_SOLVER,
 				"Creeper Beams",
@@ -688,5 +697,24 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 						Furthermore thank you to drek1984, Jade and bonsai
 						which where helping Desco1 with the original
 						and as well skytils for parts of the original solver.""");
+
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS, "Chat Commands", "All of the party chat commands.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_PT_ME,
+				"Party Transfer",
+				"Enables the !ptme command that transfers the party to the player that ran the command.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_WARP,
+				"Party Warp",
+				"Enables the !warp command, running /p warp.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_JOIN_INSTANCE,
+				"Join Instance",
+				"""
+						Enables the joininstance command, which is run using !f/!m or !t, followed by the floor/kuudra tier number. ex: !f7.
+						Runs /joininstance based on the provided floor/kuudra tier, if you are not in an existing instance.""");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_DOWN_TIME,
+				"Downtime",
+				"Enables the !dt command, allowing players to request downtime at the end of a run.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_COIN_FLIP,
+				"Coin flip",
+				"Enables the !cf command, allowing players to flip a coin, sends heads or tails to party chat.");
 	}
 }

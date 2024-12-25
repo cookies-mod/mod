@@ -19,6 +19,7 @@ public interface MiscFeatures {
         Loader.load("PingDisplay", PingDisplay::load);
 		Loader.load("TimerFeatures", NotificationManager::register);
 		Loader.load("GlowingMushroomHighlight", GlowingMushroomHighlights::register);
+		Loader.load("PartyCommands", PartyCommandsFeature::register);
     }
 
 

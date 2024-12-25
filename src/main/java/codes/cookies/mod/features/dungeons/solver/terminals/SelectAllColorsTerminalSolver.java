@@ -19,7 +19,7 @@ public class SelectAllColorsTerminalSolver extends TerminalSolver {
 	public SelectAllColorsTerminalSolver() {
 		InventoryEvents.beforeInit(
 				"cookies-regex:Select all the .*? items!",
-				super.getFloorPredicate().or(super.getDebugPredicate()),
+				getFloorPredicate().or(getDebugPredicate()),
 				this::modify);
 	}
 

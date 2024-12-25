@@ -24,6 +24,7 @@ import codes.cookies.mod.utils.items.ItemTooltipComponent;
 import codes.cookies.mod.utils.items.ItemUtils;
 import codes.cookies.mod.utils.items.ScrollableTooltipHandler;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -85,7 +86,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	@SuppressWarnings("MissingJavadoc")
 	public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (DevUtils.isEnabled(ALLOW_SCREEN_SAVING) && keyCode == 83) {
+		if (DevUtils.isEnabled(ALLOW_SCREEN_SAVING) && keyCode == GLFW.GLFW_KEY_S) {
 			try {
 				final Path path =
 						DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
@@ -262,11 +263,17 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 		if (slot == null) {
 			return;
 		}
+		if (SlotAccessor.getInteractionLocked(slot)) {
+			cir.setReturnValue(true);
+			return;
+		}
+
 		if (SlotAccessor.getOnClick(slot) != null) {
 			SlotAccessor.getOnClick(slot).accept(button);
 			cir.setReturnValue(true);
 			return;
 		}
+
 		if (SlotAccessor.getRunnable(slot) != null) {
 			SlotAccessor.getRunnable(slot).run();
 			cir.setReturnValue(true);

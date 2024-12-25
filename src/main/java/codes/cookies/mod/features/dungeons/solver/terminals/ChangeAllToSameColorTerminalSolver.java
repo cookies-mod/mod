@@ -28,7 +28,7 @@ public class ChangeAllToSameColorTerminalSolver extends TerminalSolver {
 
 	public ChangeAllToSameColorTerminalSolver() {
 		InventoryEvents.beforeInit("Change all to same color!",
-				super.getFloorPredicate().or(super.getDebugPredicate()),
+				getFloorPredicate().or(getDebugPredicate()),
 				this::modify);
 	}
 

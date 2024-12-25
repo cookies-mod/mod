@@ -15,7 +15,7 @@ public class CorrectAllThePanesTerminalSolver extends TerminalSolver {
 
 	public CorrectAllThePanesTerminalSolver() {
 		InventoryEvents.beforeInit("Correct all the panes!",
-				super.getFloorPredicate().or(super.getDebugPredicate()),
+				getFloorPredicate().or(getDebugPredicate()),
 				this::modify);
 	}
 
@@ -36,6 +36,7 @@ public class CorrectAllThePanesTerminalSolver extends TerminalSolver {
 			this.items.clear();
 		}
 		this.items.add(stack);
+
 		if (slot == 44) {
 			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_TOGGLE, Unit.INSTANCE);
 			if (this.localToggle) {
