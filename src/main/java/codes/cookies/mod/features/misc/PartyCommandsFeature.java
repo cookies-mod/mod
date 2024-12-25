@@ -77,7 +77,7 @@ public class PartyCommandsFeature {
 
                 CookiesUtils.sendCommand(joinInstanceCommand.toString());
             })),
-            entry(command -> command.startsWith("dt"), new DownTimeCommand(() -> PartyCommandsFeature.shouldRunCommand("dt"), null)),
+            entry(command -> command.startsWith("dt"), new DownTimeCommand(() -> PartyCommandsFeature.shouldRunCommand("dt"))),
             entry(command -> command.equals("cf"), new PartyCommand(() -> PartyCommandsFeature.shouldRunCommand("cf"), (command, message) -> {
                 if (random.nextBoolean()) {
                     ChatUtils.sendPartyMessage("HEADS!");
