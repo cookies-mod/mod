@@ -1,6 +1,5 @@
 package codes.cookies.mod.mixins;
 
-import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.config.categories.FarmingConfig;
 import codes.cookies.mod.data.farming.GardenKeybindsData;
