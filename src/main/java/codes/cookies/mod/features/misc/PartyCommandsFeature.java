@@ -142,8 +142,8 @@ public class PartyCommandsFeature {
     public static class DownTimeCommand extends PartyCommand {
         private final ArrayList<DownTimeAction> downTimesThisInstance = new ArrayList<>();
 
-        public DownTimeCommand(Supplier<Boolean> predicate, BiConsumer<String, String> action) {
-            super(predicate, action);
+        public DownTimeCommand(Supplier<Boolean> predicate) {
+            super(predicate, null);
             ChatMessageEvents.BEFORE_MODIFY.register((text, b) -> {
                 if (b) return;
                 var message = CookiesUtils.stripColor(text.getString());
