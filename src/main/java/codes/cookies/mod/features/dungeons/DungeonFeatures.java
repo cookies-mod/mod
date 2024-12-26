@@ -1,5 +1,6 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.features.dungeons.chests.CroesusChestHelper;
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.render.hud.HudManager;
 import com.google.common.cache.Cache;
@@ -74,6 +75,8 @@ public class DungeonFeatures {
 		new CorrectAllThePanesTerminalSolver();
 		new ChangeAllToSameColorTerminalSolver();
 		SpiritLeapOverlay.init(this);
+		CroesusHelper.init();
+		CroesusChestHelper.init();
 		HudManager.register(DungeonMapHud.getInstance());
 	}
 

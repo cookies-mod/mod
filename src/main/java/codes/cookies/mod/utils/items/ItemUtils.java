@@ -2,13 +2,22 @@ package codes.cookies.mod.utils.items;
 
 import codes.cookies.mod.data.profile.items.Item;
 
+import codes.cookies.mod.utils.cookies.CookiesUtils;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Item related utility methods.
@@ -80,5 +89,15 @@ public class ItemUtils {
 			return null;
 		}
 		return item.itemStack().get(CookiesDataComponentTypes.SKYBLOCK_ID);
+	}
+
+	public static Optional<List<String>> getLore(ItemStack stack) {
+		return Optional.ofNullable(stack.get(DataComponentTypes.LORE))
+				.map(LoreComponent::lines)
+				.map(ItemUtils::mapTextListToString);
+	}
+
+	private static List<String> mapTextListToString(@NotNull List<Text> texts) {
+		return texts.stream().map(Text::getString).map(CookiesUtils::stripColor).collect(Collectors.toList());
 	}
 }
