@@ -2,7 +2,6 @@ package codes.cookies.mod.features.farming.jacob;
 
 import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
-import codes.cookies.mod.utils.cookies.Constants;
 import codes.cookies.mod.utils.SkyblockUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.items.ItemUtils;
@@ -11,6 +10,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 
 /**
@@ -58,6 +58,6 @@ public class HighlightUnclaimedJacobsContest {
             return;
         }
 
-        itemStack.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, Constants.MAIN_COLOR);
+        itemStack.set(CookiesDataComponentTypes.BACKGROUND_ITEM, Items.LIME_STAINED_GLASS_PANE.getDefaultStack());
     }
 }
