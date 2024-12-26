@@ -51,6 +51,15 @@ public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
         if (stack == null) {
             return;
         }
+		if (stack.contains(CookiesDataComponentTypes.BACKGROUND_ITEM)) {
+			final ItemStack itemStack = stack.get(CookiesDataComponentTypes.BACKGROUND_ITEM);
+			context.getMatrices().push();
+			context.getMatrices().translate(0,0,-100);
+			context.drawItem(itemStack, slot.x, slot.y);
+			context.getMatrices().pop();
+			return;
+		}
+
         final Integer data = ItemUtils.getData(stack, CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR);
         if (data == null) {
             return;
@@ -63,6 +72,25 @@ public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
             data
         );
     }
+
+	@Inject(
+			method = "drawSlot",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/gui/DrawContext;drawItem(Lnet/minecraft/item/ItemStack;III)V",
+					shift = At.Shift.AFTER
+			)
+	)
+	private void renderForeground(DrawContext context, Slot slot, CallbackInfo ci) {
+		final ItemStack stack = slot.getStack();
+		if (stack == null) {
+			return;
+		}
+		if (stack.contains(CookiesDataComponentTypes.FOREGROUND_ITEM)) {
+			final ItemStack itemStack = stack.get(CookiesDataComponentTypes.FOREGROUND_ITEM);
+			context.drawItem(itemStack, slot.x, slot.y);
+		}
+	}
 
     /**
      * Called when a screen is opened or resized.

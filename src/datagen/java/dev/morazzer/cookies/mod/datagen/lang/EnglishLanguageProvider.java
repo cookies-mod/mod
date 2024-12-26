@@ -688,5 +688,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 						Furthermore thank you to drek1984, Jade and bonsai
 						which where helping Desco1 with the original
 						and as well skytils for parts of the original solver.""");
+
+		translationBuilder.addConfig(CONFIG_DUNGEON_CROESUS, "Croesus", "Adds features to the croesus npc.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CROESUS_HIGHLIGHT_UNCLAIMED, "Highlight unclaimed", "Highlights unclaimed chests in the croesus npc.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_CROESUS_REPLACE_ITEM, "Replace chest item", "Replaces the chest item with the highest rarity item in the chest, this MAY not be the most valuable item in the chest.");
 	}
 }
