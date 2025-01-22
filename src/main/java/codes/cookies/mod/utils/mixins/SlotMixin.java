@@ -26,8 +26,20 @@ public abstract class SlotMixin implements SlotAccessor {
     private Runnable cookies$runnable;
     @Unique
     private Consumer<Integer> cookies$clicked;
+	@Unique
+	private boolean cookies$InteractionLocked;
 
-    @Override
+	@Override
+	public boolean cookies$getInteractionLocked() {
+		return cookies$InteractionLocked;
+	}
+
+	@Override
+	public void cookies$setInteractionLocked(boolean locked) {
+		cookies$InteractionLocked = locked;
+	}
+
+	@Override
     public void cookies$setOnClick(Consumer<Integer> onClick) {
         this.cookies$clicked = onClick;
     }

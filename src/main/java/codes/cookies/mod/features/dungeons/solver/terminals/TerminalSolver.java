@@ -81,14 +81,14 @@ public abstract class TerminalSolver {
 		}
 	}
 
-	protected Predicate<HandledScreen<?>> getFloorPredicate() {
+	protected static Predicate<HandledScreen<?>> getFloorPredicate() {
 		return Predicates.<HandledScreen<?>>alwaysTrue()
 				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().isPresent())
 				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().map(DungeonInstance::floor).orElse(-1) == 7)
 				.and(o -> DungeonFeatures.getInstance().getCurrentInstance().map(DungeonInstance::getPhase).orElse(null) == DungeonPhase.BOSS);
 	}
 
-	protected Predicate<HandledScreen<?>> getDebugPredicate() {
+	protected static Predicate<HandledScreen<?>> getDebugPredicate() {
 		return t -> DevUtils.isEnabled(TerminalSolver.DEBUG);
 	}
 

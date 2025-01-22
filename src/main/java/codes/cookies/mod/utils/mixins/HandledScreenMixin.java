@@ -13,13 +13,16 @@ import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.items.ItemTooltipComponent;
 import codes.cookies.mod.utils.items.ItemUtils;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import codes.cookies.mod.utils.items.ScrollableTooltipHandler;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -84,7 +87,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	@SuppressWarnings("MissingJavadoc")
 	public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (DevUtils.isEnabled(ALLOW_SCREEN_SAVING) && keyCode == 83) {
+		if (DevUtils.isEnabled(ALLOW_SCREEN_SAVING) && keyCode == GLFW.GLFW_KEY_S) {
 			try {
 				final Path path =
 						DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
@@ -212,6 +215,11 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 		if (slot == null) {
 			return;
 		}
+		if (SlotAccessor.getInteractionLocked(slot)) {
+			cir.setReturnValue(true);
+			return;
+		}
+
 		if (SlotAccessor.getOnClick(slot) != null) {
 			SlotAccessor.getOnClick(slot).accept(button);
 			cir.setReturnValue(true);

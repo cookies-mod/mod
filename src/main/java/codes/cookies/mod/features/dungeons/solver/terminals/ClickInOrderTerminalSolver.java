@@ -25,7 +25,7 @@ public class ClickInOrderTerminalSolver extends TerminalSolver {
 
 	public ClickInOrderTerminalSolver() {
 		InventoryEvents.beforeInit("Click in order!",
-				super.getFloorPredicate().or(super.getDebugPredicate()),
+				getFloorPredicate().or(getDebugPredicate()),
 				this::modify);
 	}
 
@@ -67,7 +67,7 @@ public class ClickInOrderTerminalSolver extends TerminalSolver {
 			return;
 		}
 
-		if (!(stack.getItem() == Items.RED_STAINED_GLASS_PANE)) {
+		if (stack.getItem() != Items.RED_STAINED_GLASS_PANE) {
 			stack.set(MiscDataComponentTypes.TERMINAL_SOLVER_MODIFIED, this.doneItem);
 			return;
 		}
