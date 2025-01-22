@@ -2,6 +2,7 @@ package codes.cookies.mod.features.dungeons;
 
 import codes.cookies.mod.features.dungeons.chests.CroesusChestHelper;
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
+import codes.cookies.mod.features.dungeons.solver.terminals.MelodyTerminalSolver;
 import codes.cookies.mod.render.hud.HudManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -74,6 +75,7 @@ public class DungeonFeatures {
 		new ClickInOrderTerminalSolver();
 		new CorrectAllThePanesTerminalSolver();
 		new ChangeAllToSameColorTerminalSolver();
+		new MelodyTerminalSolver();
 		SpiritLeapOverlay.init(this);
 		CroesusHelper.init();
 		CroesusChestHelper.init();
