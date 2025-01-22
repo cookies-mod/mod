@@ -51,6 +51,7 @@ public class DungeonConfig extends Category {
 	public SpiritLeapFoldable spiritLeapFoldable = new SpiritLeapFoldable();
 	public PuzzleFoldable puzzleFoldable = new PuzzleFoldable();
 	public ClassColorFoldable classColorFoldable = new ClassColorFoldable();
+	public CroesusFoldable croesusFoldable = new CroesusFoldable();
 	public BooleanOption glowClassColor = new BooleanOption(CONFIG_DUNGEON_GLOW_CLASS_COLOR, true);
 	public PartyChatCommandsFoldable partyChatCommandsFoldable = new PartyChatCommandsFoldable();
 
@@ -188,6 +189,16 @@ public class DungeonConfig extends Category {
 		@Override
 		public String getName() {
 			return CONFIG_DUNGEON_PARTY_CHAT_COMMANDS;
+		}
+	}
+	public static class CroesusFoldable extends Foldable {
+
+		public BooleanOption highlightUnclaimedChests = new BooleanOption(CONFIG_DUNGEON_CROESUS_HIGHLIGHT_UNCLAIMED, false);
+		public BooleanOption replaceChestItemWithHighestRarityItem = new BooleanOption(CONFIG_DUNGEON_CROESUS_REPLACE_ITEM, false);
+
+		@Override
+		public String getName() {
+			return CONFIG_DUNGEON_CROESUS;
 		}
 	}
 }

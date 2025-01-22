@@ -1,5 +1,6 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.features.dungeons.chests.CroesusChestHelper;
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.features.dungeons.solver.terminals.MelodyTerminalSolver;
 import codes.cookies.mod.render.hud.HudManager;
@@ -76,7 +77,8 @@ public class DungeonFeatures {
 		new ChangeAllToSameColorTerminalSolver();
 		new MelodyTerminalSolver();
 		SpiritLeapOverlay.init(this);
-
+		CroesusHelper.init();
+		CroesusChestHelper.init();
 		HudManager.register(DungeonMapHud.getInstance());
 	}
 

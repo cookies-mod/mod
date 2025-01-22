@@ -78,6 +78,8 @@ public class CookiesDataComponentTypes {
 	public static final ComponentType<Integer> ITEM_BACKGROUND_COLOR;
 	public static final ComponentType<List<Text>> CUSTOM_LORE;
 	public static final ComponentType<ItemTooltipComponent> LORE_ITEMS;
+	public static final ComponentType<ItemStack> BACKGROUND_ITEM;
+	public static final ComponentType<ItemStack> FOREGROUND_ITEM;
 
 	private static final List<ComponentType<?>> list = new ArrayList<>();
 	@Getter
@@ -216,6 +218,8 @@ public class CookiesDataComponentTypes {
 		ITEM_BACKGROUND_COLOR = new CookiesDataComponent<>(Identifier.of("cookies:item_background_color"));
 		CUSTOM_LORE = new CookiesDataComponent<>(Identifier.of("cookies:custom_lore"));
 		LORE_ITEMS = new CookiesDataComponent<>(Identifier.of("cookies:lore_items"));
+		BACKGROUND_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:background_item"));
+		FOREGROUND_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:foreground_item"));
 		ON_ITEM_CLICK_RUNNABLE = new CookiesDataComponent<>(Identifier.of("cookies:on_item_click_runnable"));
 	}
 
