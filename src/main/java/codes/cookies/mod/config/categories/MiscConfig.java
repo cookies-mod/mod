@@ -43,7 +43,7 @@ public class MiscConfig extends Category {
 	public BooleanOption showPing = new BooleanOption(CONFIG_MISC_SHOW_PING, false);
 
 	@Expose
-	public BooleanOption enableReforgeTooltip = new BooleanOption(CONFIG_MISC_REFORGE_TOOLTIP, false);
+	public BooleanOption enableReforgeTooltip = new BooleanOption(CONFIG_MISC_REFORGE_TOOLTIP, true);
 
 	@Expose
 	public BooleanOption showMuseumArmorSets = new BooleanOption(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, true);

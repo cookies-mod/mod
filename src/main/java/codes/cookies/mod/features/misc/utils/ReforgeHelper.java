@@ -40,10 +40,8 @@ public class ReforgeHelper {
 						return;
 					}
 
-					var reforge = itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getString("modifier");
-
 					var lore = new ArrayList<Text>();
-					lore.add(Text.literal("Last Reforge: " + reforge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+					lore.add(Text.literal("Last Reforge: " + itemStack.get(CookiesDataComponentTypes.MODIFIER)).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
 					lore.addAll(reforgeButton.get(DataComponentTypes.LORE).styledLines());
 
 					reforgeButton.set(CookiesDataComponentTypes.CUSTOM_LORE, lore);
