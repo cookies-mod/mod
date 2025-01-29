@@ -24,7 +24,7 @@ public abstract class TeamMixin {
         if (!this.getName().startsWith("team_")) {
             return;
         }
-        ScoreboardUpdateEvent.EVENT.invoker().update(Integer.parseInt(this.getName().substring(5)), this.cookies$getText());
+        //ScoreboardUpdateEvent.EVENT.invoker().update(Integer.parseInt(this.getName().substring(5)), this.cookies$getText());
     }
 
     @Inject(method = "setSuffix", at = @At("RETURN"))
