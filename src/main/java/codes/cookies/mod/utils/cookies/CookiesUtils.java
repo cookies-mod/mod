@@ -257,4 +257,16 @@ public class CookiesUtils {
 	public static BlockPos mapToBlockPos(Vec3d vec3d) {
 		return new BlockPos((int) Math.floor(vec3d.x), (int) Math.floor(vec3d.y), (int) Math.floor(vec3d.z));
 	}
+
+	public static int parseIntSafe(String powderAmount) {
+		return parseIntSafe(powderAmount, 0);
+	}
+
+	public static int parseIntSafe(String powderAmount, int defaultValue) {
+		try {
+			return Integer.parseInt(powderAmount);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
 }
