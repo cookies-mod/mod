@@ -1,17 +1,17 @@
 package codes.cookies.mod.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import codes.cookies.mod.config.system.parsed.ConfigProcessor;
-import codes.cookies.mod.config.system.parsed.ConfigReader;
-import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import lombok.Getter;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.teamresourceful.resourcefulconfig.api.loader.Configurator;
+import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.common.loader.Loader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,118 +19,67 @@ import org.slf4j.LoggerFactory;
  * Manager to do various config related actions.
  */
 public class ConfigManager {
-    private static final Logger log = LoggerFactory.getLogger(ConfigManager.class);
+	public static final Configurator CONFIGURATOR = new Configurator("cookies-mod");
+	private static final Logger log = LoggerFactory.getLogger(ConfigManager.class);
 
-    @Getter
-    private static final Gson gson = new GsonBuilder()
-        .setPrettyPrinting()
-        .excludeFieldsWithoutExposeAnnotation()
-        .serializeSpecialFloatingPointValues()
-        .enableComplexMapKeySerialization()
-        .create();
+	private static final Path configFolder = Path.of("config/cookiesmod");
+	private static final Path configFile = configFolder.resolve("config.json");
 
-    @Getter
-    private static final Path configFolder = Path.of("config/cookiesmod");
-    private static final Path configFile = configFolder.resolve("config.json");
-    private static CookiesConfig config;
-    @Getter
-    private static ConfigReader configReader;
+	private static boolean hasBeenLoaded = false;
 
-    /**
-     * Gets the config instance or process it if it's not available.
-     *
-     * @return The config.
-     */
-    public static CookiesConfig getConfig() {
-        if (config == null) {
-            processConfig();
-        }
+	/**
+	 * @return Whether the config is loader or not.
+	 */
+	public static boolean isLoaded() {
+		return hasBeenLoaded;
+	}
 
-        return config;
-    }
+	/**
+	 * Processes the config.
+	 */
+	public static void load() {
+		CookiesOptions.register();
+		CONFIGURATOR.register(CookiesConfig.class, ConfigManager::registerMigrations);
+		migrateToNewConfigSystemIfRequired();
+		hasBeenLoaded = true;
+	}
 
-    /**
-     * @return Whether the config is loader or not.
-     */
-    public static boolean isLoaded() {
-        return config != null;
-    }
+	public static void saveConfig(String reason) {
+		log.info("Saving config: {}", reason);
+		save();
+	}
 
-    /**
-     * Processes the config.
-     */
-    public static void processConfig() {
-        config = new CookiesConfig();
-        reload();
-        configReader = new ConfigReader();
-        ConfigProcessor.processConfig(config, configReader);
-    }
+	public static void save() {
+		CONFIGURATOR.saveConfig(CookiesConfig.class);
+	}
 
-    /**
-     * Reloads the config from the file.
-     */
-    public static void reload() {
-        config.load(loadConfig());
-    }
+	private static void migrateToNewConfigSystemIfRequired() {
+		if (!Files.exists(configFile)) {
+			return;
+		}
+		log.info("Detected old config file, migrating to new system!");
 
-    /**
-     * Loads or creates the config file if it's not available.
-     *
-     * @return The config as {@linkplain JsonObject}.
-     */
-    private static JsonObject loadConfig() {
-        if (Files.exists(configFile)) {
-            return gson.fromJson(
-                ExceptionHandler.removeThrows(() -> Files.readString(configFile), "{}"),
-                JsonObject.class
-            );
-        } else {
-            saveConfig(false, "first-save");
-        }
+		final JsonObject configObject;
+		try (InputStream stream = Files.newInputStream(configFile)) {
+			final byte[] bytes = stream.readAllBytes();
+			configObject = JsonParser.parseString(new String(bytes, StandardCharsets.UTF_8)).getAsJsonObject();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-        return new JsonObject();
-    }
+		final JsonObject jsonObject = ConfigMigrator.migrateToNewConfig(configObject);
+		final ResourcefulConfig config = CONFIGURATOR.getConfig(CookiesConfig.class);
+		Loader.loadConfig(config, jsonObject);
+		config.save();
 
-    /**
-     * Saves the current state of the config.
-     *
-     * @param createBackup Whether there should be a backup of the old config.
-     * @param reason       The reason why the save was called.
-     */
-    public static void saveConfig(boolean createBackup, String reason) {
-        if (!Files.exists(configFolder)) {
-            try {
-                Files.createDirectories(configFolder);
-            } catch (IOException e) {
-                ExceptionHandler.handleException(e);
-            }
-        }
+		try {
+			Files.delete(configFile);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-        if (createBackup) {
-            try {
-                Files.copy(
-                    configFile,
-                    configFile.resolveSibling("config.backup.json"),
-                    StandardCopyOption.REPLACE_EXISTING
-                );
-            } catch (IOException exception) {
-				// we just log a failed config backup and move on!
-				log.error("Failed to save config", exception);
-            }
-        }
-
-        try {
-            Files.writeString(
-                configFile,
-                gson.toJson(config.save()),
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING
-            );
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
-        log.info("Saving config with with reason: {}", reason);
-    }
-
+	public static void registerMigrations(ConfigPatchEvent configPatchEvent) {
+	}
 }
 

@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.farming;
 
-import codes.cookies.mod.config.ConfigKeys;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.utils.SkyblockUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.items.ItemUtils;
@@ -33,7 +33,7 @@ public class YawPitchDisplay {
 		if (!SkyblockUtils.isCurrentlyInSkyblock()) {
 			return;
 		}
-		if (!ConfigKeys.FARMING_YAW_PITCH.get()) {
+		if (!FarmingCategory.yawPitchDisplay) {
 			return;
 		}
 		if (ItemUtils.getMainHand().skyblockId().get() == null) {

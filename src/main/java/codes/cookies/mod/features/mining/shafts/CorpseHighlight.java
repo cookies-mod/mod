@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.shafts;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
+import codes.cookies.mod.config.categories.mining.ShaftCategory;
 import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.types.BeaconBeam;
 import codes.cookies.mod.render.types.Box;
@@ -24,17 +24,17 @@ public record CorpseHighlight(BlockPos blockPos, BeaconBeam beam, Box box, int c
 
 	@Override
 	public void render(WorldRenderContext context) {
-		if (!MiningConfig.getInstance().shaftConfig.enable.getValue()) {
+		if (!ShaftCategory.enabled) {
 			return;
 		}
 		CookiesUtils.getPlayer().ifPresent(player -> {
-			if (MiningConfig.getInstance().shaftConfig.beam.getValue()) {
+			if (ShaftCategory.beam) {
 				this.beam.render(context);
 			}
-			if (MiningConfig.getInstance().shaftConfig.box.getValue()) {
+			if (ShaftCategory.box) {
 				this.box.render(context);
 			}
-			if (!MiningConfig.getInstance().shaftConfig.text.getValue()) {
+			if (!ShaftCategory.text) {
 				return;
 			}
 

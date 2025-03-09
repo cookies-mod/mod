@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.hollows;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
 import codes.cookies.mod.events.profile.ServerSwapEvent;
 import codes.cookies.mod.generated.Regions;
 import codes.cookies.mod.render.Renderable;
@@ -58,6 +58,10 @@ public class MinesOfDivanHelper {
 		ServerSwapEvent.SERVER_SWAP.register(MinesOfDivanHelper::reset);
 	}
 
+	private static void reset() {
+		reset(false, false);
+	}
+
 	public static void clickEntity(Entity entity) {
 		if (isNotInMinesOfDivan()) {
 			return;
@@ -66,14 +70,14 @@ public class MinesOfDivanHelper {
 	}
 
 	public static boolean isEnabled() {
-		return MiningConfig.getInstance().modHelper.getValue();
+		return MiningCategory.modHelper.get();
 	}
 
 	public static boolean isNotInMinesOfDivan() {
 		return !LocationUtils.Island.CRYSTAL_HOLLOWS.isActive() || LocationUtils.getRegion() != Regions.MINES_OF_DIVAN;
 	}
 
-	public static void reset() {
+	public static void reset(boolean ignored1, boolean ignored2) {
 		removeRenderables();
 		centerPos = null;
 		lastEntityClicked = null;

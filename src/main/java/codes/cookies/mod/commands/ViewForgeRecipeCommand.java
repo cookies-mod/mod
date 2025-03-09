@@ -1,5 +1,6 @@
 package codes.cookies.mod.commands;
 
+import codes.cookies.mod.config.categories.MiscCategory;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -7,7 +8,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.commands.system.ClientCommand;
-import codes.cookies.mod.config.ConfigKeys;
 import codes.cookies.mod.repository.Ingredient;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.repository.recipes.ForgeRecipe;
@@ -45,7 +45,7 @@ public class ViewForgeRecipeCommand extends ClientCommand {
     }
 
     private void open(CommandContext<FabricClientCommandSource> context) {
-        if (!ConfigKeys.MISC_FORGE_RECIPE.get()) {
+        if (!MiscCategory.showForgeRecipes) {
             sendFailedMessage("Forge recipes aren't enabled, to use this command enable them in the config! (/cookie:config)");
             return;
         }

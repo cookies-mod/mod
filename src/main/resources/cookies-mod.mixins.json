@@ -3,6 +3,13 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "KeybindingMixin",
+    "config.EntryDataMixin",
+    "config.JavaConfigParserMixin",
+    "config.LoaderMixin",
+    "config.OptionItemMixin",
+    "config.OptionsMixin",
+    "config.ParsedButtonMixin",
+    "config.WriterMixin",
     "render.ArmorFeatureRenderMixin",
     "render.EntityRenderDispatcherMixin",
     "render.HeadFeatureRenderMixin",

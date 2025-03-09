@@ -13,11 +13,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import codes.cookies.mod.config.categories.ItemSearchCategory;
 import codes.cookies.mod.generated.utils.ItemAccessor;
 import com.google.common.base.Predicates;
 import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.config.categories.ItemSearchConfig;
-import codes.cookies.mod.config.screen.TabConstants;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.data.profile.items.Item;
@@ -88,7 +87,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 
 	public ItemSearchScreen() {
 		super(Text.translatable(TranslationKeys.SCREEN_ITEM_SEARCH), 163);
-		if (!ItemSearchConfig.getInstance().persistSearch.getValue()) {
+		if (!ItemSearchCategory.persistSearch) {
 			lastSearch = "";
 		}
 		this.searchField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 0, 18, Text.of(""));
@@ -114,7 +113,7 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 					itemCompound.itemStack().get(CookiesDataComponentTypes.REPOSITORY_ITEM);
 			return this.itemMap.containsKey(repositoryItem) && this.itemMap.get(repositoryItem).size() > 1;
 		});
-		if (!ItemSearchConfig.getInstance().enableCraftableItems.getValue()) {
+		if (!ItemSearchCategory.enableCraftableItems) {
 			this.items.removeIf(itemCompound -> itemCompound.type() == ItemCompound.CompoundType.CRAFTABLE);
 		}
 		this.itemMap = null;

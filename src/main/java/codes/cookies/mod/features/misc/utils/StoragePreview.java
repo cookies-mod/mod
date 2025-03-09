@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.utils;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.data.profile.sub.StorageData;
@@ -35,7 +35,7 @@ public class StoragePreview {
             if (!SkyblockUtils.isCurrentlyInSkyblock()) {
                 return;
             }
-            if (!ConfigManager.getConfig().miscConfig.enableStoragePreview.getValue()) {
+            if (!MiscCategory.enableStoragePreview) {
                 return;
             }
             if (!genericContainerScreen.getTitle().getString().equals("Storage")) {

@@ -1,6 +1,7 @@
 package codes.cookies.mod.utils.json;
 
 import com.google.gson.JsonElement;
+import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncElement;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,5 +29,9 @@ public interface JsonSerializable {
      * @return The json element.
      */
     JsonElement write();
+
+	default JsoncElement writeAsJsonc() {
+		return JsonUtils.toJsonc(write());
+	}
 
 }

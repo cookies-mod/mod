@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.render;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.utils.ColorUtils;
 import codes.cookies.mod.utils.cookies.Constants;
 import codes.cookies.mod.utils.SkyblockUtils;
@@ -23,7 +23,7 @@ public interface PingDisplay {
             return text;
         }
 
-        if (!ConfigManager.getConfig().miscConfig.showPing.getValue()) {
+        if (!MiscCategory.showPing) {
             return text;
         }
         final long lastPing = SkyblockUtils.getLastPing();

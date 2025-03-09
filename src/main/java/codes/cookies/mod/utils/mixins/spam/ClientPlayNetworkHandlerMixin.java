@@ -1,8 +1,8 @@
 package codes.cookies.mod.utils.mixins.spam;
 
+import codes.cookies.mod.config.categories.DevCategory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import codes.cookies.mod.config.ConfigKeys;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 
@@ -36,7 +36,7 @@ public class ClientPlayNetworkHandlerMixin {
 			)
 	)
 	public void onPlayerList(Logger instance, String string, Object o, Object o2, Operation<Void> original) {
-		if (!ConfigKeys.DEV_HIDE_SPAM.get()) {
+		if (!DevCategory.hideConsoleSpam) {
 			original.call(instance, string, o, o2);
 		}
 	}

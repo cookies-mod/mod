@@ -9,11 +9,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
-import com.google.common.base.Predicates;
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.SpiritLeapCategory;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
+import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.features.dungeons.map.DungeonMapRenderer;
 import codes.cookies.mod.screen.CookiesScreen;
 import codes.cookies.mod.utils.Result;
@@ -22,6 +21,7 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.inventories.ItemBuilder;
+import com.google.common.base.Predicates;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -78,6 +78,33 @@ public class SpiritLeapOverlay {
 		ScreenKeyboardEvents.allowKeyPress(handledScreen).register(this::allowKey);
 		ScreenKeyboardEvents.allowKeyRelease(handledScreen).register((screen, key, scancode, modifiers) -> false);
 		ScreenEvents.remove(handledScreen).register(screen -> isOpen = false);
+	}
+
+	/**
+	 * Initializes the feature.
+	 *
+	 * @param features The dungeon features.
+	 */
+	public static void init(DungeonFeatures features) {
+		SpiritLeapOverlay.features = features;
+		InventoryEvents.beforeInit(
+				"Spirit Leap",
+				Predicates.<HandledScreen<?>>alwaysTrue()
+						.and(o -> DungeonFeatures.getInstance().getCurrentInstance().isPresent())
+						.or(o -> DevUtils.isEnabled(DEBUG)),
+				SpiritLeapOverlay::open);
+	}
+
+	/**
+	 * Handles the creation of the spirit leap ui.
+	 *
+	 * @param handledScreen The screen to modify.
+	 */
+	private static void open(HandledScreen<?> handledScreen) {
+		if (!SpiritLeapCategory.modifyNormalIfPossible && !SpiritLeapCategory.spiritLeapUi) {
+			return;
+		}
+		new SpiritLeapOverlay(handledScreen);
 	}
 
 	/**
@@ -175,7 +202,7 @@ public class SpiritLeapOverlay {
 			}
 		}
 
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.showMap.getValue()) {
+		if (!SpiritLeapCategory.showMap) {
 			return;
 		}
 		@Nullable final DungeonMapRenderer mapRenderer;
@@ -313,15 +340,15 @@ public class SpiritLeapOverlay {
 	}
 
 	private int getColor(Player player) {
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
-			return DungeonConfig.getInstance().spiritLeapFoldable.colorOption.getColorValue();
+		if (!SpiritLeapCategory.colorInClassColor) {
+			return SpiritLeapCategory.colorOption;
 		}
 
 		return Optional.ofNullable(player)
 				.map(Player::dungeonPlayer)
 				.map(DungeonPlayer::getColor)
 				.orElseGet(OptionalInt::empty)
-				.orElseGet(DungeonConfig.getInstance().spiritLeapFoldable.colorOption::getColorValue);
+				.orElseGet(() -> SpiritLeapCategory.colorOption);
 	}
 
 	private void setPlayers() {
@@ -360,20 +387,21 @@ public class SpiritLeapOverlay {
 				}
 			}
 		}
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.spiritLeapUi.getValue()) {
+		if (!SpiritLeapCategory.spiritLeapUi) {
 			enableCustomLeap = false;
 			return;
 		}
-		if (DungeonConfig.getInstance().spiritLeapFoldable.sortByClassName.getValue()) {
+		if (SpiritLeapCategory.sortByClassName) {
 			System.arraycopy(this.actualPlayers, 0, this.players, 0, this.actualPlayers.length);
 			return;
 		}
 		enableCustomLeap = true;
 		final List<Player> players = Arrays.stream(this.actualPlayers)
 				.filter(Objects::nonNull)
-				.sorted(Comparator.comparing(player -> Optional.ofNullable(player.dungeonPlayer())
-						.map(DungeonPlayer::getDungeonClass)
-						.orElse(""), String::compareToIgnoreCase))
+				.sorted(Comparator.comparing(
+						player -> Optional.ofNullable(player.dungeonPlayer())
+								.map(DungeonPlayer::getDungeonClass)
+								.orElse(""), String::compareToIgnoreCase))
 				.toList();
 		for (int i = 0; i < players.size(); i++) {
 			final Player player = players.get(i);
@@ -391,8 +419,8 @@ public class SpiritLeapOverlay {
 	}
 
 	private boolean modifyNormalIfAvailable() {
-		return DungeonConfig.getInstance().spiritLeapFoldable.modifyNormalIfAvailable.getValue() &&
-			   amountOfPlayers == 4;
+		return SpiritLeapCategory.modifyNormalIfPossible &&
+				amountOfPlayers == 4;
 	}
 
 	private Result<Runnable, String> setClass(
@@ -416,12 +444,13 @@ public class SpiritLeapOverlay {
 
 		return Result.success(() -> {
 			final Result<ItemBuilder, String> item =
-					dungeonPlayer.getItem(DungeonConfig.getInstance().spiritLeapFoldable.usePlayerHeadsInsteadOfClassItems.getValue());
+					dungeonPlayer.getItem(SpiritLeapCategory.usePlayerHeadsInsteadOfClassItems);
 			final ItemBuilder itemBuilder =
 					item.getResult()
 							.orElseGet(() -> new ItemBuilder(Items.RED_DYE))
 							.setName("Leap to " + name)
-							.setLore(TextUtils.literal("Left-click to leap to the " + name, Formatting.YELLOW),
+							.setLore(
+									TextUtils.literal("Left-click to leap to the " + name, Formatting.YELLOW),
 									Text.empty(),
 									TextUtils.literal(name + ": " + dungeonPlayer.getName(), Formatting.GRAY))
 							.setGlint(isSelf)
@@ -435,13 +464,14 @@ public class SpiritLeapOverlay {
 							});
 
 			if (DevUtils.isEnabled(DEBUG)) {
-				itemBuilder.appendLore(Text.literal("Leap player: " + Optional.ofNullable(leapPlayer)
-						.map(Player::dungeonPlayer)
-						.map(DungeonPlayer::getName)
-						.orElse("<empty>")), Text.literal("Dungeon Player: " + dungeonPlayer.getName()));
+				itemBuilder.appendLore(
+						Text.literal("Leap player: " + Optional.ofNullable(leapPlayer)
+								.map(Player::dungeonPlayer)
+								.map(DungeonPlayer::getName)
+								.orElse("<empty>")), Text.literal("Dungeon Player: " + dungeonPlayer.getName()));
 			}
 
-			if (DungeonConfig.getInstance().spiritLeapFoldable.colorInClassColor.getValue()) {
+			if (SpiritLeapCategory.colorInClassColor) {
 				itemBuilder.set(CookiesDataComponentTypes.ITEM_BACKGROUND_COLOR, dungeonPlayer.getColor().orElse(0));
 			}
 
@@ -453,34 +483,6 @@ public class SpiritLeapOverlay {
 
 			slot.getStack().set(CookiesDataComponentTypes.OVERRIDE_ITEM, itemBuilder.build());
 		});
-	}
-
-	/**
-	 * Initializes the feature.
-	 *
-	 * @param features The dungeon features.
-	 */
-	public static void init(DungeonFeatures features) {
-		SpiritLeapOverlay.features = features;
-		InventoryEvents.beforeInit(
-				"Spirit Leap",
-				Predicates.<HandledScreen<?>>alwaysTrue()
-						.and(o -> DungeonFeatures.getInstance().getCurrentInstance().isPresent())
-						.or(o -> DevUtils.isEnabled(DEBUG)),
-				SpiritLeapOverlay::open);
-	}
-
-	/**
-	 * Handles the creation of the spirit leap ui.
-	 *
-	 * @param handledScreen The screen to modify.
-	 */
-	private static void open(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().spiritLeapFoldable.spiritLeapUi.getValue() &&
-			!DungeonConfig.getInstance().spiritLeapFoldable.modifyNormalIfAvailable.getValue()) {
-			return;
-		}
-		new SpiritLeapOverlay(handledScreen);
 	}
 
 	/**

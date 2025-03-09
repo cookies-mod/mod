@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.utils;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
@@ -58,14 +58,13 @@ public class HotmUtils {
 	private void updateInventory(int i, ItemStack itemStack) {
 		this.setBaseComponents(itemStack);
 
-		if (ConfigManager.getConfig().miningConfig.showHotmPerkLevelAsStackSize.getValue()) {
+		if (MiningCategory.showHotmPerkLevelAsStackSize) {
 			this.setPerkLevelAsStackSize(itemStack);
 		}
-		if (ConfigManager.getConfig().miningConfig.highlightDisabledHotmPerks.getValue()) {
+		if (MiningCategory.highlightDisabledHotmPerks) {
 			this.setBackgroundColor(itemStack);
 		}
-		if (ConfigManager.getConfig().miningConfig.showNext10Cost.getValue() ||
-			ConfigManager.getConfig().miningConfig.showTotalCost.getValue()) {
+		if (MiningCategory.showNext10Cost || MiningCategory.showTotalCost) {
 			this.setCost(itemStack);
 		}
 	}
@@ -155,7 +154,7 @@ public class HotmUtils {
 			}
 			index += 2;
 
-			if (ConfigManager.getConfig().miningConfig.showNext10Cost.getValue()) {
+			if (MiningCategory.showNext10Cost) {
 				lines.add(index++, Text.empty());
 				lines.add(index++,
 						Text.translatable(TranslationKeys.HOTM_UTILS_COST_NEXT_10).formatted(Formatting.GRAY));
@@ -163,14 +162,17 @@ public class HotmUtils {
 				if (perk == null) {
 					return;
 				}
-				int amount = perk.calculateNextN(10, perkLevel);
-				lines.add(index++,
-						Text.literal("%s ".formatted(numberFormat.format(amount)))
-								.append(perk.powderType().getName())
-								.formatted(perk.powderType().getFormatting()));
+				if (!perk.isOverMax(perkLevel + 10)) {
+					int amount = perk.calculateNextN(10, perkLevel);
+					lines.add(
+							index++,
+							Text.literal("%s ".formatted(numberFormat.format(amount)))
+									.append(perk.powderType().getName())
+									.formatted(perk.powderType().getFormatting()));
+				}
 			}
 
-			if (ConfigManager.getConfig().miningConfig.showTotalCost.getValue()) {
+			if (MiningCategory.showTotalCost) {
 				lines.add(index++, Text.empty());
 				lines.add(index++,
 						Text.translatable(TranslationKeys.HOTM_UTILS_COST_TOTAL).formatted(Formatting.GRAY));

@@ -1,8 +1,8 @@
 package codes.cookies.mod.features.dungeons.solver.terminals;
 
+import codes.cookies.mod.config.categories.dungeons.TerminalCategory;
 import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Runnables;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.features.dungeons.DungeonFeatures;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.map.DungeonPhase;
@@ -39,7 +39,7 @@ public abstract class TerminalSolver {
 
 
 	public void openNewTerminal() {
-		if (DungeonConfig.getInstance().terminalFoldable.preventMissclicks.getValue()) {
+		if (TerminalCategory.preventMissclicks) {
 			this.doneItem.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 		} else {
 			this.doneItem.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);

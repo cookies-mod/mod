@@ -1,11 +1,11 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonJoinPacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonLeavePacket;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonSyncPlayerLocation;
 import codes.cookies.mod.api.ws.WebsocketConnection;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.events.dungeon.DungeonEvents;
 import codes.cookies.mod.features.dungeons.map.DungeonMap;
 import codes.cookies.mod.features.dungeons.map.DungeonMapRenderer;
@@ -98,7 +98,7 @@ public final class DungeonInstance {
 			this.debugInstance = true;
 		} else {
 			this.debugInstance = false;
-			this.relayToBackend = this.partyLeader != null && DungeonConfig.getInstance().relayToBackend.getValue();
+			this.relayToBackend = this.partyLeader != null && DungeonCategory.relayToBackend;
 		}
 		this.timeStarted = System.currentTimeMillis();
 		this.puzzleSolverInstance = new PuzzleSolverInstance(this);

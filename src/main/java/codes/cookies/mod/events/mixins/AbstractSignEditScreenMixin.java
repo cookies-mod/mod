@@ -1,6 +1,6 @@
 package codes.cookies.mod.events.mixins;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.events.api.ScreenKeyEvents;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -36,7 +36,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen {
 
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (ConfigManager.getConfig().miscConfig.signEditEnterSubmits.getValue() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && !Screen.hasShiftDown()) {
+		if (MiscCategory.signEditEnterSubmits && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && !Screen.hasShiftDown()) {
 			this.finishEditing();
 			cir.setReturnValue(true);
 		}

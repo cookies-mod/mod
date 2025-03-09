@@ -4,14 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.data.profile.sub.EquipmentData;
 import codes.cookies.mod.data.profile.sub.PlotData;
-import codes.cookies.mod.features.farming.garden.PestTimerHud;
 import codes.cookies.mod.features.farming.garden.Plot;
-import codes.cookies.mod.render.hud.HudManager;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
@@ -37,8 +35,7 @@ public class PestTimer extends Timer {
 	private String debug;
 
 	public PestTimer() {
-		super(ConfigManager.getConfig().farmingConfig.pestFoldable, "pest");
-		HudManager.register(new PestTimerHud(this));
+		super(FarmingCategory.pestTimer, "pest");
 	}
 
 	@Override
@@ -136,7 +133,7 @@ public class PestTimer extends Timer {
 		} else {
 			sprayedPlotReduction = 0.5;
 		}
-		final var value = ConfigManager.getConfig().farmingConfig.pestFoldable.timerType.getValue();
+		final var value = FarmingCategory.pestTimer.timerType;
 		switch (value) {
 			case FIRST -> {
 				final boolean apply = ProfileStorage.getCurrentProfile()

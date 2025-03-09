@@ -1,6 +1,7 @@
 package codes.cookies.mod.mixins.ui;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
+
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +22,7 @@ public class InGameHudMixin {
     private static void renderArmor(DrawContext context, PlayerEntity player, int i, int j, int k, int x,
                                     CallbackInfo ci) {
 
-        if (ConfigManager.getConfig().miscConfig.hideArmor.getValue()) {
+        if (MiscCategory.hideArmour) {
             ci.cancel();
         }
     }
@@ -39,14 +40,14 @@ public class InGameHudMixin {
                                  int absorption,
                                  boolean blinking,
                                  CallbackInfo ci) {
-        if (ConfigManager.getConfig().miscConfig.hideHealth.getValue()) {
+        if (MiscCategory.hideHealth) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderFood", cancellable = true, at = @At("HEAD"))
     private void renderFood(DrawContext context, PlayerEntity player, int top, int right, CallbackInfo ci) {
-        if (ConfigManager.getConfig().miscConfig.hideFood.getValue()) {
+        if (MiscCategory.hideFood) {
             ci.cancel();
         }
     }

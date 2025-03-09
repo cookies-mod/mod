@@ -3,6 +3,7 @@ package codes.cookies.mod.features.misc.utils.crafthelper;
 import java.util.ArrayList;
 
 import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.CraftHelperCategory;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.translations.TranslationKeys;
 import codes.cookies.mod.utils.cookies.Constants;
@@ -25,7 +26,7 @@ public class CraftHelperPlacement extends ClientSideInventory {
 	public CraftHelperPlacement() {
 		super(Text.translatable(TranslationKeys.CRAFT_HELPER_PLACEMENT), 6);
 		this.getContents().fill(new ItemBuilder(Items.BLACK_STAINED_GLASS_PANE).hideTooltips().build());
-		this.selected = ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.getValue();
+		this.selected = CraftHelperCategory.location.get();
 		this.defaultInstance = new CraftHelperInstance(RepositoryItem.of("TERMINATOR"), 1, new ArrayList<>());
 	}
 
@@ -80,7 +81,7 @@ public class CraftHelperPlacement extends ClientSideInventory {
 			if (this.selected == craftHelperLocation) {
 				return;
 			}
-			ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.setValue(craftHelperLocation);
+			CraftHelperCategory.location.accept(craftHelperLocation);
 			field.setShouldRender(false);
 			final PressableField previous = this.getField(this.selected);
 			previous.setColor(UNSELECTED_COLOR);
@@ -100,6 +101,6 @@ public class CraftHelperPlacement extends ClientSideInventory {
 		if (this.removeItemAfterwards) {
 			CraftHelperManager.remove();
 		}
-		ConfigManager.saveConfig(true, "edit-craft-helper-location");
+		ConfigManager.saveConfig("edit-craft-helper-location");
 	}
 }

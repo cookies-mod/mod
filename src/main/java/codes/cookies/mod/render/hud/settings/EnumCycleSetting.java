@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import codes.cookies.mod.config.system.options.EnumCycleOption;
 import codes.cookies.mod.screen.CookiesScreen;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +34,6 @@ public class EnumCycleSetting<T extends Enum<T>> extends HudElementSetting {
 
 	public EnumCycleSetting(Text name, Text description, Supplier<T> getter, Consumer<T> setter) {
 		this(name, description, getter, setter, HudElementSettingType.CUSTOM);
-	}
-
-	public EnumCycleSetting(EnumCycleOption<T> option) {
-		this(option.getName(), option.getDescription(), option::getValue, option::setValue);
-		this.textSupplier = enumValue -> option.getTextSupplier().supplyText(enumValue);
 	}
 
 	public EnumCycleSetting(

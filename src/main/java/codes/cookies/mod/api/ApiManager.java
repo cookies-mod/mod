@@ -1,5 +1,6 @@
 package codes.cookies.mod.api;
 
+import codes.cookies.mod.config.categories.DevCategory;
 import codes.cookies.mod.generated.BuildInfo;
 import dev.morazzer.cookies.entities.misc.BackendVersion;
 import dev.morazzer.cookies.entities.websocket.Packet;
@@ -7,7 +8,6 @@ import dev.morazzer.cookies.entities.websocket.packets.HandshakePacket;
 import dev.morazzer.cookies.entities.websocket.packets.WrongProtocolVersionPacket;
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.api.ws.WebsocketConnection;
-import codes.cookies.mod.config.categories.DevConfig;
 
 import codes.cookies.mod.events.WebsocketEvent;
 import codes.cookies.mod.translations.TranslationKeys;
@@ -163,7 +163,7 @@ public class ApiManager {
 	 * will be reused, if not a new token will be requested.
 	 */
 	private static void connectApi() {
-		if (!DevConfig.getInstance().connectToBackend.getValue()) {
+		if (!DevCategory.connectToBackend.get()) {
 			return;
 		}
 		if (isAuthenticated) {
@@ -274,7 +274,7 @@ public class ApiManager {
 	 * @return The api url.
 	 */
 	public static String getApiUrl() {
-		final String value = DevConfig.getInstance().backendUrl.getValue();
+		final String value = DevCategory.backendUrl;
 		final String apiUrl;
 
 		if (value.lastIndexOf("/") == value.length() - 1) {
@@ -283,7 +283,7 @@ public class ApiManager {
 			apiUrl = value + "/";
 		}
 
-		if (DevConfig.getInstance().useVersionSuffix.getValue()) {
+		if (DevCategory.useVersionSuffix) {
 			return apiUrl + BackendVersion.CURRENT_VERSION_STRING + "/";
 		}
 		return apiUrl;

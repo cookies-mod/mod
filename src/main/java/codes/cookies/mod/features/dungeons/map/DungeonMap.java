@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.DungeonPlayer;
 import codes.cookies.mod.features.dungeons.DungeonPosition;
@@ -215,7 +215,7 @@ public class DungeonMap {
 		for (DungeonDoor door : this.doors) {
 			if (door.x() == x && door.y() == y && door.left() == left) {
 				DungeonDoor.Type existing = door.type();
-				if (DungeonConfig.getInstance().keepWitherDoor.getValue()) {
+				if (DungeonCategory.keepWitherDoors) {
 					if (((existing == DungeonDoor.Type.UNKNOWN && doorType != DungeonDoor.Type.UNKNOWN) ||
 						 (existing == DungeonDoor.Type.WITHER && doorType == DungeonDoor.Type.FAIRY))) {
 						door.setType(doorType);

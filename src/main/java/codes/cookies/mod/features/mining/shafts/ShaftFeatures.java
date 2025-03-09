@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.shafts;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
+import codes.cookies.mod.config.categories.mining.ShaftCategory;
 import codes.cookies.mod.events.IslandChangeEvent;
 import codes.cookies.mod.events.ScoreboardUpdateEvent;
 import codes.cookies.mod.events.mining.MineshaftEvents;
@@ -41,7 +41,7 @@ public class ShaftFeatures {
 	}
 
 	private static void updateLine(int index, String line) {
-		if (!MiningConfig.getInstance().shaftConfig.enable.getValue()) {
+		if (!ShaftCategory.enabled) {
 			return;
 		}
 		if (!isInShaft) {

@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.farming.inventory;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.utils.SkyblockUtils;
@@ -27,7 +27,7 @@ public class RancherBootsNumbers {
             if (!SkyblockUtils.isCurrentlyInSkyblock()) {
                 return;
             }
-            if (!ConfigManager.getConfig().farmingConfig.showRancherSpeed.getValue()) {
+            if (!FarmingCategory.showRancherSpeed) {
                 return;
             }
 

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.TerminalCategory;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.features.dungeons.DungeonFeatures;
@@ -34,7 +34,7 @@ public class StartsWithTerminalSolver extends TerminalSolver {
 	}
 
 	private void modify(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().terminalFoldable.startsWithTerminal.getValue()) {
+		if (!TerminalCategory.startWithTerminal) {
 			return;
 		}
 		final String string = handledScreen.getTitle().getString();

@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.items;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.generated.utils.ItemAccessor;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.translations.TranslationKeys;
@@ -51,23 +51,21 @@ public class ItemStats {
         final RepositoryItem repositoryItem = ItemUtils.getData(itemStack, CookiesDataComponentTypes.REPOSITORY_ITEM);
 
         final Instant time;
-        if (
-            ConfigManager.getConfig().miscConfig.showItemCreationDate.getValue()
-            && (time = ItemUtils.getData(itemStack, CookiesDataComponentTypes.TIMESTAMP)) != null
-        ) {
+        if (MiscCategory.showItemCreationDate
+				&& (time = ItemUtils.getData(itemStack, CookiesDataComponentTypes.TIMESTAMP)) != null) {
             list.add(Text.translatable(TranslationKeys.ITEM_STATS_OBTAINED).append(": %s".formatted(dateTimeFormatter.format(time))).formatted(
                 Formatting.LIGHT_PURPLE));
         }
 
         if (
-            ConfigManager.getConfig().miscConfig.showItemNpcValue.getValue()
+            MiscCategory.showItemNpcValue
             && repositoryItem != null && repositoryItem.getValue() > 0
         ) {
             addValue(itemStack, repositoryItem.getValue(), list, TranslationKeys.ITEM_STATS_VALUE_COINS);
         }
 
         if (
-            ConfigManager.getConfig().miscConfig.showItemNpcValue.getValue()
+           MiscCategory.showItemNpcValue
             && repositoryItem != null && repositoryItem.getMotesValue() > 0
         ) {
             addValue(itemStack, repositoryItem.getMotesValue(), list, TranslationKeys.ITEM_STATS_VALUE_MOTES);

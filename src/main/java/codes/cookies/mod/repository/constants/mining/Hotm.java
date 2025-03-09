@@ -86,6 +86,10 @@ public class Hotm {
             }
             return amount;
         }
-    }
+
+		public boolean isOverMax(int i) {
+			return levels.length < i;
+		}
+	}
 
 }

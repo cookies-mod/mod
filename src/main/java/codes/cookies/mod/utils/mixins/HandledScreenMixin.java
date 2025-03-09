@@ -7,11 +7,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import codes.cookies.mod.config.categories.MiscCategory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.properties.Property;
-import codes.cookies.mod.config.ConfigKeys;
 import codes.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import codes.cookies.mod.utils.accessors.InventoryScreenAccessor;
 import codes.cookies.mod.utils.accessors.SlotAccessor;
@@ -212,7 +212,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 			@Local(argsOnly = true, ordinal = 2) double horizontalAmount,
 			@Local(argsOnly = true, ordinal = 3) double verticalAmount
 	) {
-		if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
+		if (!MiscCategory.enableScrollableTooltips) {
 			return;
 		}
 		if (((Object) this) instanceof HandledScreen<?> handledScreen) {

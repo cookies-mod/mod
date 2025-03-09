@@ -8,7 +8,7 @@ import codes.cookies.mod.commands.WarpCommand;
 import codes.cookies.mod.commands.dev.DevCommand;
 import codes.cookies.mod.commands.system.CommandManager;
 import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.screen.ConfigScreen;
+import codes.cookies.mod.config.CookiesConfig;
 import codes.cookies.mod.data.cookiesmoddata.CookieDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
@@ -30,6 +30,7 @@ import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
+import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -60,7 +61,7 @@ public class CookiesMod implements ClientModInitializer {
      * Opens the config screen.
      */
     public static void openConfig() {
-        openScreen(new ConfigScreen(ConfigManager.getConfigReader()));
+        openScreen(new ConfigScreen(MinecraftClient.getInstance().currentScreen, ConfigManager.CONFIGURATOR.getConfig(CookiesConfig.class)));
     }
 
     /**
@@ -74,6 +75,7 @@ public class CookiesMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+		ConfigManager.load();
         CommandManager.initialize();
 		CookieDataManager.load();
         ProfileStorage.register();

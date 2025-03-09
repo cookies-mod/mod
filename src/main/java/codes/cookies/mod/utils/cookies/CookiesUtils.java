@@ -8,6 +8,7 @@ import java.util.Random;
 import codes.cookies.mod.utils.ColorUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import org.joml.Vector2i;
@@ -268,5 +269,9 @@ public class CookiesUtils {
 		} catch (NumberFormatException e) {
 			return defaultValue;
 		}
+	}
+
+	public static Identifier id(String path) {
+		return Identifier.of("cookies-mod", path);
 	}
 }

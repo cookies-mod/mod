@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.solver.puzzle;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.PuzzleCategory;
 import codes.cookies.mod.features.dungeons.map.DungeonRoom;
 
 import codes.cookies.mod.render.types.BlockHighlight;
@@ -37,7 +37,7 @@ public class ThreeWeirdosPuzzleSolver extends PuzzleSolver {
 	private final Set<String> solved = new HashSet<>();
 
 	public ThreeWeirdosPuzzleSolver() {
-		super(DungeonConfig.getInstance().puzzleFoldable.threeWeirdos);
+		super(PuzzleCategory.threeWeirdos);
 	}
 
 	@Override

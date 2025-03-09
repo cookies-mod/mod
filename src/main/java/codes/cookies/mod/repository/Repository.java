@@ -1,9 +1,9 @@
 package codes.cookies.mod.repository;
 
+import codes.cookies.mod.config.categories.DevCategory;
 import codes.cookies.mod.generated.BuildInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import codes.cookies.mod.config.categories.DevConfig;
 import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.repository.recipes.Recipe;
 import codes.cookies.mod.utils.UpdateChecker;
@@ -68,9 +68,8 @@ public class Repository {
 	}
 
 	private static String getLocation() {
-		final DevConfig instance = DevConfig.getInstance();
-		final String branch = instance.dataRepoBranch.getValue();
-		final String owner_repo = instance.dataRepo.getValue();
+		final String branch = DevCategory.dataRepoBranch;
+		final String owner_repo = DevCategory.dataRepo;
 		return "https://raw.githubusercontent.com/%s/%s".formatted(owner_repo, branch);
 	}
 

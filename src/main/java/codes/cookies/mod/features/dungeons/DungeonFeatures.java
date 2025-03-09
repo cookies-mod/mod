@@ -1,12 +1,12 @@
 package codes.cookies.mod.features.dungeons;
 
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.features.dungeons.chests.CroesusChestHelper;
 import codes.cookies.mod.features.dungeons.map.DungeonMapHud;
 import codes.cookies.mod.render.hud.HudManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.events.ChatMessageEvents;
 import codes.cookies.mod.features.dungeons.map.DungeonType;
 import codes.cookies.mod.features.dungeons.solver.terminals.ChangeAllToSameColorTerminalSolver;
@@ -86,7 +86,7 @@ public class DungeonFeatures {
 	 * @param string The chat message.
 	 */
 	private void onDungeonJoin(String string) {
-		if (!DungeonConfig.getInstance().useDungeonFeatures.getValue()) {
+		if (!DungeonCategory.useDungeonFeatures) {
 			return;
 		}
 		final String entered = string.split("entered ")[1].split("\n")[0];

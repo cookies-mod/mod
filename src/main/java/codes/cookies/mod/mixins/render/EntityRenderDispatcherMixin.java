@@ -1,6 +1,7 @@
 package codes.cookies.mod.mixins.render;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
+
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.state.EntityRenderState;
@@ -26,7 +27,7 @@ public class EntityRenderDispatcherMixin {
 			EntityRenderState renderState,
 			Quaternionf rotation,
 			CallbackInfo ci) {
-        if (ConfigManager.getConfig().miscConfig.hideFireOnEntities.getValue()) {
+        if (MiscCategory.hideFireOnEntities) {
             ci.cancel();
         }
     }
