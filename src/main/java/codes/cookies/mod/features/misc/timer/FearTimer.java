@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.timer;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 
@@ -18,7 +18,7 @@ public class FearTimer extends Timer {
 	private long lastFearSpawnedAt = -1;
 
 	public FearTimer() {
-		super(ConfigManager.getConfig().miscConfig.notificationFoldable, "fear");
+		super(MiscCategory.primalFear, "fear");
 	}
 
 	@Override

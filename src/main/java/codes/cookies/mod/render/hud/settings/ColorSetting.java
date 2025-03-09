@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import codes.cookies.mod.config.system.options.ColorOption;
 import codes.cookies.mod.render.widgets.ColorInputWidget;
 import codes.cookies.mod.screen.CookiesScreen;
 import org.lwjgl.glfw.GLFW;
@@ -49,16 +48,6 @@ public class ColorSetting extends HudElementSetting {
 			boolean canHaveAlpha
 	) {
 		this(name, description, getter, setter, canHaveAlpha, HudElementSettingType.CUSTOM);
-	}
-
-	public ColorSetting(ColorOption option) {
-		this(
-				option.getName(),
-				option.getDescription(),
-				option::getValue,
-				option::setValue,
-				option.isAllowAlpha(),
-				HudElementSettingType.CUSTOM);
 	}
 
 	@Override

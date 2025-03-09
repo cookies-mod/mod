@@ -1,9 +1,10 @@
 package codes.cookies.mod.features.farming.inventory;
 
+import codes.cookies.mod.config.categories.FarmingCategory;
 import com.google.common.collect.Lists;
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.data.ListData;
+
 import codes.cookies.mod.config.data.RancherSpeedConfig;
 import codes.cookies.mod.data.farming.RancherSpeeds;
 import codes.cookies.mod.data.profile.ProfileData;
@@ -84,7 +85,7 @@ public class RancherBootsOverlay {
         if (!SkyblockUtils.isCurrentlyInSkyblock()) {
             return;
         }
-        if (!ConfigManager.getConfig().farmingConfig.showRancherOptimalSpeeds.getValue()) {
+        if (!FarmingCategory.showRancherOptimalSpeed) {
             return;
         }
         if (!DevUtils.isEnabled(SKIP_RANCHER_BOOTS_CHECK) && !this.isRancherBootsScreen((SignEditScreen) screen)) {
@@ -106,7 +107,7 @@ public class RancherBootsOverlay {
     }
 
     private void evaluateSpeeds() {
-        final RancherSpeedConfig rancherSpeed = ConfigManager.getConfig().farmingConfig.rancherSpeed;
+        final RancherSpeedConfig rancherSpeed = FarmingCategory.rancherSpeed.getValue();
 
         final ProfileData profile = ProfileStorage.getCurrentProfile().orElse(null);
 
@@ -120,7 +121,7 @@ public class RancherBootsOverlay {
             rancherSpeeds = profile.getRancherSpeeds().asData();
             this.save = ProfileStorage::saveCurrentProfile;
         } else {
-            rancherSpeeds = ConfigManager.getConfig().farmingConfig.rancherSpeed.asData();
+            rancherSpeeds = FarmingCategory.rancherSpeed.getValue().asData();
             this.save = this::saveConfig;
         }
 
@@ -178,13 +179,13 @@ public class RancherBootsOverlay {
     }
 
     private void saveConfig() {
-        ConfigManager.saveConfig(true, "ranchers-boots-speed");
+        ConfigManager.saveConfig("ranchers-boots-speed");
     }
 
     private void toggleUseProfile() {
         ProfileStorage.getCurrentProfile().ifPresent(profileData -> {
             final String uuid = profileData.getProfileUuid().toString();
-            final ListData<String> uuids = ConfigManager.getConfig().farmingConfig.rancherSpeed.useProfileSettings;
+            final List<String> uuids = FarmingCategory.rancherSpeed.getValue().useProfileSettings;
             if (this.useProfile) {
                 uuids.remove(uuid);
             } else {

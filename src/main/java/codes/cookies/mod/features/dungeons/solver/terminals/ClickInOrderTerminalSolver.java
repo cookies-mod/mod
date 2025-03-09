@@ -1,7 +1,7 @@
 package codes.cookies.mod.features.dungeons.solver.terminals;
 
+import codes.cookies.mod.config.categories.dungeons.TerminalCategory;
 import com.google.common.util.concurrent.Runnables;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -30,11 +30,11 @@ public class ClickInOrderTerminalSolver extends TerminalSolver {
 	}
 
 	private void modify(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().terminalFoldable.clickInOrderTerminal.getValue()) {
+		if (!TerminalCategory.clickInOrderTerminal) {
 			return;
 		}
 		super.openNewTerminal();
-		if (DungeonConfig.getInstance().terminalFoldable.preventMissclicks.getValue()) {
+		if (TerminalCategory.preventMissclicks) {
 			this.todo.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 			this.thirdItem.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 		} else {

@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.farming.garden;
 
-import codes.cookies.mod.config.ConfigKeys;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.events.ItemLoreEvent;
 import codes.cookies.mod.repository.Ingredient;
 import codes.cookies.mod.repository.RepositoryItem;
@@ -44,7 +44,7 @@ public class CompostUpgrades {
         if (!LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
-        if (!ConfigKeys.FARMING_COMPOST_UPGRADE.get()) {
+        if (!FarmingCategory.showCompostPriceBreakdown) {
             return;
         }
         if (!(screen instanceof HandledScreen<?>)) {
@@ -73,7 +73,7 @@ public class CompostUpgrades {
         if (ItemUtils.getData(itemStack, DataComponentTypes.CUSTOM_NAME) == null) {
             return;
         }
-        if (!ConfigKeys.FARMING_COMPOST_UPGRADE.get()) {
+        if (!FarmingCategory.showCompostPriceBreakdown) {
             return;
         }
 
@@ -145,7 +145,7 @@ public class CompostUpgrades {
 
 
                 Stream<Ingredient> stream = Ingredient.mergeToList(subListIngredients).stream();
-                switch (ConfigKeys.FARMING_COMPOST_UPGRADE_ORDER.get()) {
+                switch (FarmingCategory.sortOrder) {
                     case DESCENDING -> stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount)
                                                                         .reversed());
                     case ASCENDING -> stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount));

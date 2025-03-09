@@ -1,8 +1,8 @@
 package codes.cookies.mod.mixins.ui;
 
+import codes.cookies.mod.config.categories.MiscCategory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import codes.cookies.mod.config.ConfigKeys;
 import codes.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.items.ItemUtils;
@@ -47,7 +47,7 @@ public class ScrollableTooltipMixin implements FocusedSlotAccessor {
 			int y,
 			@Nullable Identifier texture,
 			Operation<Void> original) {
-        if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
+        if (!MiscCategory.enableScrollableTooltips) {
             original.call(instance, textRenderer, text, data, x, y, texture);
             return;
         }

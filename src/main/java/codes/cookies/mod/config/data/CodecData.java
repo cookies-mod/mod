@@ -2,8 +2,10 @@ package codes.cookies.mod.config.data;
 
 import codes.cookies.mod.utils.json.CodecJsonSerializable;
 import com.mojang.serialization.Codec;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
 import org.slf4j.Logger;
 
+@ConfigObject
 public class CodecData<T> implements CodecJsonSerializable<T> {
 	public CodecData(T defaultValue, Codec<T> codec) {
 		this.value = defaultValue;

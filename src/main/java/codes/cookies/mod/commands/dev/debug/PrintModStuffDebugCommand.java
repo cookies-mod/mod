@@ -9,6 +9,7 @@ import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.utils.cookies.Constants;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.json.JsonUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.text.ClickEvent;

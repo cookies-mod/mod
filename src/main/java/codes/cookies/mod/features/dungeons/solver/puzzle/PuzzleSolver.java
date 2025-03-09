@@ -1,7 +1,5 @@
 package codes.cookies.mod.features.dungeons.solver.puzzle;
 
-import codes.cookies.mod.config.system.options.BooleanOption;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +8,8 @@ import codes.cookies.mod.features.dungeons.map.DungeonRoom;
 import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.WorldRender;
 import codes.cookies.mod.utils.dev.DevUtils;
+
+import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -25,14 +25,14 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
  */
 public abstract class PuzzleSolver {
 	protected static final Identifier DEBUG = DevUtils.createIdentifier("dungeon/puzzles/debug");
-	private final BooleanOption option;
+	private final Observable<Boolean> option;
 	private List<Renderable> debugRenderables = null;
 	private final List<Renderable> renderables = new ArrayList<>();
 	boolean isLoaded = false;
 
-	public PuzzleSolver(BooleanOption option) {
+	public PuzzleSolver(Observable<Boolean> option) {
 		this.option = option;
-		this.option.withCallback(this::toggle);
+		this.option.addListener(this::toggle);
 		if (isDebugEnabled()) {
 			this.debugRenderables = new ArrayList<>();
 		}
@@ -59,7 +59,7 @@ public abstract class PuzzleSolver {
 	}
 	
 	public boolean isDisabled() {
-		return !this.option.getValue();
+		return !this.option.get();
 	}
 
 	public void beforeRender(float tickDelta) {}

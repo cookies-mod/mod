@@ -8,7 +8,7 @@ import codes.cookies.mod.commands.WarpCommand;
 import codes.cookies.mod.commands.dev.DevCommand;
 import codes.cookies.mod.commands.system.CommandManager;
 import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.screen.ConfigScreen;
+import codes.cookies.mod.config.CookiesConfig;
 import codes.cookies.mod.data.cookiesmoddata.CookieDataManager;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.events.EventLoader;
@@ -31,6 +31,7 @@ import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
 import codes.cookies.mod.utils.skyblock.PartyUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
+import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import lombok.Getter;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -57,47 +58,45 @@ public class CookiesMod implements ClientModInitializer {
 	private static KeyBinding useGardenKeybinds;
 	public static KeyBinding pasteCommandFromClipboard;
 	@Getter
-	private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
+    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
-	/**
-	 * Opens the config screen.
-	 */
-	public static void openConfig() {
-		openScreen(new ConfigScreen(ConfigManager.getConfigReader()));
-	}
+    /**
+     * Opens the config screen.
+     */
+    public static void openConfig() {
+        openScreen(new ConfigScreen(MinecraftClient.getInstance().currentScreen, ConfigManager.CONFIGURATOR.getConfig(CookiesConfig.class)));
+    }
 
-	/**
-	 * Opens the provided screen.
-	 *
-	 * @param screen The screen to open.
-	 */
-	public static void openScreen(Screen screen) {
-		MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(screen));
-	}
+    /**
+     * Opens the provided screen.
+     *
+     * @param screen The screen to open.
+     */
+    public static void openScreen(Screen screen) {
+        MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(screen));
+    }
 
-	@Override
-	public void onInitializeClient() {
-		CommandManager.initialize();
+    @Override
+    public void onInitializeClient() {
+		ConfigManager.load();
+        CommandManager.initialize();
 		CookieDataManager.load();
-		ProfileStorage.register();
-		Repository.loadRepository();
+        ProfileStorage.register();
+        Repository.loadRepository();
 		HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
 		MayorUtils.load();
-		EventLoader.load();
+        EventLoader.load();
 		ApiManager.initialize();
-		Features.load();
-		CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
-		CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));
-
-		UpdateChecker.init();
+        Features.load();
+        CommandManager.addCommands(new OpenConfigCommand(), new DevCommand(), new CookieCommand(), new ViewForgeRecipeCommand());
+        CommandManager.addCommands(RepositoryConstants.warps.getWarps().entrySet().stream().map(WarpCommand::new).toArray(WarpCommand[]::new));
+        UpdateChecker.init();
 		PlayerListUtils.init();
 		HudManager.load();
 		CrystalStatusService.register();
 		this.registerKeyBindings();
 		DevUtils.registerDebugs();
-
-
-	}
+    }
 
 	private void registerKeyBindings() {
 		chestSearch = KeyBindingHelper.registerKeyBinding(new KeyBinding("cookies.mod.search",

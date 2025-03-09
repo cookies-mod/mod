@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.cleanup;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.CleanupCategory;
 import codes.cookies.mod.events.ItemLoreEvent;
 import codes.cookies.mod.utils.SkyblockUtils;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ public class CoopCleanupFeature {
             return;
         }
 
-        switch (ConfigManager.getConfig().cleanupConfig.coopCleanupOption.getValue()) {
+        switch (CleanupCategory.coopCleanup) {
             case ALL -> this.removeAll(texts);
             case EMPTY -> this.removeEmpty(texts);
             case OTHER -> this.removeOther(texts);

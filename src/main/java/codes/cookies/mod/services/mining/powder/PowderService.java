@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
-import codes.cookies.mod.config.categories.mining.powder.ShaftTrackingType;
 import codes.cookies.mod.data.mining.PowderType;
 import codes.cookies.mod.events.ChatMessageEvents;
 import codes.cookies.mod.events.mining.MineshaftEvents;
@@ -47,17 +45,17 @@ public class PowderService {
 		if ("You uncovered a treasure chest!".equalsIgnoreCase(literalText)) {
 			powderEntries.get(PowderType.GEMSTONE).updateOther(1);
 		} else if ("WOW! You found a Glacite Mineshaft portal!".equalsIgnoreCase(literalText)) {
-			if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.FIND) {
-				powderEntries.get(PowderType.GLACITE).updateOther(1);
-			}
+		//	if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.FIND) {
+		//		powderEntries.get(PowderType.GLACITE).updateOther(1);
+		//	}
 			MineshaftEvents.FIND.invoker().run();
 		}
 	}
 
 	private static void countShaftJoin() {
-		if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.ENTER) {
-			powderEntries.get(PowderType.GLACITE).updateOther(1);
-		}
+		//if (PowderTrackerHudFoldable.getConfig().trackingType.getValue() == ShaftTrackingType.ENTER) {
+		//	powderEntries.get(PowderType.GLACITE).updateOther(1);
+		//}
 	}
 
 	private static void track(PowderType powderType, int amount, int delta) {
@@ -86,9 +84,9 @@ public class PowderService {
 	}
 
 	public static void invalidateOutdated(Map<Long, Integer> list) {
-		list.keySet()
-				.removeIf(timeAdded -> timeAdded + PowderTrackerHudFoldable.getConfig()
-						.getTimeoutTime() < System.currentTimeMillis());
+		//list.keySet()
+		//		.removeIf(timeAdded -> timeAdded + PowderTrackerHudFoldable.getConfig()
+		//				.getTimeoutTime() < System.currentTimeMillis());
 	}
 
 }

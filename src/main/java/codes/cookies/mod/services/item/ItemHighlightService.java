@@ -7,9 +7,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import codes.cookies.mod.config.categories.ItemSearchCategory;
 import com.google.common.base.Predicates;
 import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.config.categories.ItemSearchConfig;
 import codes.cookies.mod.data.profile.items.Item;
 import codes.cookies.mod.data.profile.items.ItemSources;
 import codes.cookies.mod.data.profile.profile.IslandChestStorage;
@@ -124,7 +124,7 @@ public class ItemHighlightService {
 		ItemHighlightService.itemHighlight = itemHighlight;
 		CookiesMod.getExecutorService().schedule(
 				() -> ItemHighlightService.removeHighlight(itemHighlight),
-				ItemSearchConfig.getInstance().highlightTime.getValue().getTime(),
+				ItemSearchCategory.highlightTime,
 				TimeUnit.SECONDS);
 	}
 

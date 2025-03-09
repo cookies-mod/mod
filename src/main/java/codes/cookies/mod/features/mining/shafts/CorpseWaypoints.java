@@ -3,7 +3,7 @@ package codes.cookies.mod.features.mining.shafts;
 import java.util.HashMap;
 import java.util.Map;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
+import codes.cookies.mod.config.categories.mining.ShaftCategory;
 import codes.cookies.mod.events.mining.MineshaftEvents;
 import codes.cookies.mod.render.Renderable;
 import codes.cookies.mod.render.WorldRender;
@@ -43,7 +43,7 @@ public class CorpseWaypoints {
 			Entity entity,
 			@Nullable EntityHitResult entityHitResult
 	) {
-		if (!MiningConfig.getInstance().shaftConfig.enable.getValue()) {
+		if (!ShaftCategory.enabled) {
 			return ActionResult.PASS;
 		}
 		if (!(entity instanceof ArmorStandEntity)) {
@@ -72,9 +72,7 @@ public class CorpseWaypoints {
 
 	private static void setupRenderables(ShaftCorpseLocations.ShaftLocations shaftLocations) {
 		for (BlockPos blockPos : shaftLocations.corpseLocations()) {
-			final CorpseHighlight box = new CorpseHighlight(
-					blockPos,
-					MiningConfig.getInstance().shaftConfig.color.getColorValue());
+			final CorpseHighlight box = new CorpseHighlight(blockPos, ShaftCategory.color);
 			renderables.put(blockPos, box);
 			WorldRender.addRenderable(box);
 		}

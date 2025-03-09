@@ -2,7 +2,7 @@ package codes.cookies.mod.features.misc.utils.crafthelper;
 
 import java.util.List;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.CraftHelperCategory;
 import codes.cookies.mod.data.profile.items.ItemSources;
 import codes.cookies.mod.features.misc.utils.crafthelper.tooltips.CraftHelperComponent;
 import codes.cookies.mod.features.misc.utils.crafthelper.tooltips.DebugComponent;
@@ -21,7 +21,7 @@ public class CraftHelperFormatter {
 	public List<CraftHelperComponent> format(RecipeCalculationResult result, CraftHelperInstance instance) {
 		final CraftHelperContext craftHelperContext = CraftHelperContext.create(
 				result,
-				ConfigManager.getConfig().helpersConfig.craftHelper.getSources().toArray(ItemSources[]::new));
+				CraftHelperCategory.getSources().toArray(ItemSources[]::new));
 		append(craftHelperContext, instance);
 		craftHelperContext.components().forEach(CraftHelperComponent::init);
 		return craftHelperContext.components();

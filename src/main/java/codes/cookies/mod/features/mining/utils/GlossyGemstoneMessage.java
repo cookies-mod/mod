@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.utils;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
 import codes.cookies.mod.events.SackContentsChangeCallback;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
@@ -12,7 +12,7 @@ public class GlossyGemstoneMessage {
 	}
 
 	public static void update(RepositoryItem repositoryItem, Integer integer) {
-		if (!MiningConfig.getInstance().glossyGemstoneMessages.getValue()) {
+		if (!MiningCategory.glossyGemstoneMessage) {
 			return;
 		}
 

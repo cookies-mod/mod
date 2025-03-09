@@ -2,7 +2,7 @@ package codes.cookies.mod.features.misc.timer;
 
 import java.util.Optional;
 
-import codes.cookies.mod.config.categories.MiscConfig;
+import codes.cookies.mod.config.categories.objects.TimerObjects;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.minecraft.SoundUtils;
@@ -14,26 +14,26 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public abstract class Timer {
-	private final MiscConfig.NotificationFoldable.TimerConfig timerFoldable;
+	private final TimerObjects timerFoldable;
 	private final Identifier debug;
 	@Getter
 	boolean hasBeenAlerted = true;
 
-	public Timer(MiscConfig.NotificationFoldable.TimerConfig timerFoldable, String id) {
+	public Timer(TimerObjects timerFoldable, String id) {
 		this.timerFoldable = timerFoldable;
 		this.debug = DevUtils.createIdentifier("timer/" + id);
 	}
 
 	boolean isDeactivated() {
-		return !timerFoldable.enabled();
+		return !timerFoldable.enabled;
 	}
 
 	NotificationManager.NotificationType getNotificationType() {
-		return timerFoldable.notificationType();
+		return timerFoldable.type;
 	}
 
 	boolean playSound() {
-		return timerFoldable.enableSound();
+		return timerFoldable.enableSound;
 	}
 
 	boolean showNotification() {

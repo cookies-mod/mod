@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import dev.morazzer.cookies.entities.websocket.packets.DungeonUpdateRoomSecrets;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.DungeonPosition;
 import codes.cookies.mod.render.Renderable;
@@ -292,7 +292,7 @@ public class DungeonRoom {
 	 * @return The text color of the room, this may be different based on room type.
 	 */
 	public int getRoomTextColor() {
-		if (!DungeonConfig.getInstance().showRoomStatusAsTextColor.getValue()) {
+		if (!DungeonCategory.showRoomStatusAsTextColor) {
 			return -1;
 		}
 
@@ -310,7 +310,7 @@ public class DungeonRoom {
 		}
 		return switch (this.checkmark) {
 			case OPENED -> {
-				if (DungeonConfig.getInstance().showTrapAsCleared.getValue() && this.roomType == RoomType.TRAP) {
+				if (DungeonCategory.showTrapAsCleared && this.roomType == RoomType.TRAP) {
 					yield -1;
 				}
 				yield Constants.FAIL_COLOR;

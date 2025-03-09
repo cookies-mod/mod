@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.farming.jacob;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.utils.cookies.Constants;
 import codes.cookies.mod.utils.SkyblockUtils;
@@ -27,7 +27,7 @@ public class HighlightUnclaimedJacobsContest {
             if (!SkyblockUtils.isCurrentlyInSkyblock()) {
                 return;
             }
-            if (!ConfigManager.getConfig().farmingConfig.highlightUnclaimedJacobContests.getValue()) {
+            if (!FarmingCategory.highlightUnclaimedJacobContests) {
                 return;
             }
             if (!handledScreen.getTitle().getString().equals("Your Contests")) {

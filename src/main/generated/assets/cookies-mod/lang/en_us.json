@@ -338,7 +338,7 @@
   "cookies.config.misc.categories.render_inventory": "Render - Inventory",
   "cookies.config.misc.categories.render_ui": "Render - UI",
   "cookies.config.misc.categoriesrender": "Render",
-  "cookies.config.misc.edit_hud.name": "To edit hud",
+  "cookies.config.misc.edit_hud.name": "Edit hud",
   "cookies.config.misc.edit_hud.tooltip": "Opens a screen where you can edit the hud elements!",
   "cookies.config.misc.hide_armor.name": "Hide armor bar",
   "cookies.config.misc.hide_armor.tooltip": "Hide armor bar from ui.",

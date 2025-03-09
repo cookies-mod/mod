@@ -1,6 +1,6 @@
 package codes.cookies.mod.mixins.ui;
 
-import codes.cookies.mod.config.ConfigKeys;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.events.api.ScreenKeyEvents;
 import codes.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import codes.cookies.mod.utils.items.types.ScrollableDataComponentTypes;
@@ -25,7 +25,7 @@ public interface ParentElementMixin extends ParentElement {
 
     @Inject(method = "keyReleased", at = @At("HEAD"), cancellable = true)
     private void keyReleased(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
+        if (!MiscCategory.enableScrollableTooltips) {
             return;
         }
         if (((Object) this) instanceof HandledScreen<? extends ScreenHandler> handledScreen) {

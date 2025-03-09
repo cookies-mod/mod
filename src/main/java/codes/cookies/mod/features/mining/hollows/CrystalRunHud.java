@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import codes.cookies.mod.config.categories.mining.MiningConfig;
 import codes.cookies.mod.data.mining.crystal.CrystalStatus;
 import codes.cookies.mod.data.mining.crystal.CrystalType;
 import codes.cookies.mod.data.profile.ProfileStorage;
@@ -33,6 +32,7 @@ import net.minecraft.util.Identifier;
  * Hud to display current crystal status while in the crystal hollows.<br>
  * Also displays information about the available robot parts and available tools in their respective area.
  */
+@Deprecated
 public class CrystalRunHud extends MultiLineTextHudElement {
 
 	private long lastUpdate;
@@ -146,9 +146,6 @@ public class CrystalRunHud extends MultiLineTextHudElement {
 	public boolean shouldRender() {
 		if (this.hudEditAction == HudEditAction.SHOW_ALL) {
 			return true;
-		}
-		if (!MiningConfig.getInstance().crystalHud.getValue()) {
-			return false;
 		}
 		if (this.hudEditAction == HudEditAction.ALL_ENABLED) {
 			return true;

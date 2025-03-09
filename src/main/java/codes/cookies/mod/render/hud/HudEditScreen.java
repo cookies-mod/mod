@@ -121,7 +121,7 @@ public class HudEditScreen extends Screen {
 	public void close() {
 		super.close();
 		this.getElements().forEach(hudElement -> hudElement.setHudEditAction(HudEditAction.NONE));
-		ConfigManager.saveConfig(true, "hud-edit-screen");
+		ConfigManager.saveConfig("hud-edit-screen");
 	}
 
 	private void renderElement(DrawContext context, HudElement hudElement, float delta) {
