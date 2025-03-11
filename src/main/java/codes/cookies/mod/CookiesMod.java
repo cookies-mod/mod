@@ -29,7 +29,6 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.dev.DevUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
 import codes.cookies.mod.utils.skyblock.MayorUtils;
-import codes.cookies.mod.utils.skyblock.PartyUtils;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListUtils;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import lombok.Getter;

@@ -30,5 +30,11 @@ public class TerminalCategory {
 	@CookiesOptions.Translatable(TranslationKeys.CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL)
 	@ConfigEntry(id = "starts_with")
 	public static boolean startWithTerminal = true;
+	@CookiesOptions.Translatable(TranslationKeys.CONFIG_DUNGEON_TERMINAL_MELODY)
+	@ConfigEntry(id = "melody")
+	public static boolean melodyTerminal = true;
+	@CookiesOptions.Translatable(TranslationKeys.CONFIG_DUNGEON_TERMINAL_MELODY_NOTIFIER)
+	@ConfigEntry(id = "melody_notifier")
+	public static boolean melodyNotifier = true;
 
 }

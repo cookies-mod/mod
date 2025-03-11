@@ -8,7 +8,7 @@ import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 
-@Category("misc_config")
+@Category(value = "misc_config", categories = PartyCommands.class)
 @ConfigInfo(title = "Misc Config", description = "Random stuff")
 public class MiscCategory {
 
