@@ -115,6 +115,7 @@ public class RepositoryItem {
 	private Tier tier;
 	private double value;
 	@SerializedName("motes_value")
+
 	private double motesValue;
 	private SoulBoundType soulboundtype;
 	private boolean museumable;

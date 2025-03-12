@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.map;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.features.dungeons.DungeonFeatures;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.DungeonPlayer;
@@ -39,6 +39,22 @@ public class DungeonMapRenderer {
 	}
 
 	/**
+	 * Draws an arrow.
+	 *
+	 * @param drawContext The draw context.
+	 * @param player      The player the arrow belongs to.
+	 */
+	private static void drawPlayerArrow(DrawContext drawContext, DungeonPlayer player) {
+		Identifier texture;
+		if (player.getPlayer() instanceof ClientPlayerEntity) {
+			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
+		} else {
+			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
+		}
+		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0, 0, 8, 8, 8, 8, 8, 8);
+	}
+
+	/**
 	 * Render the dungeon map at {0,0}, to reposition use the matrix stack.
 	 *
 	 * @param drawContext The draw context
@@ -54,7 +70,7 @@ public class DungeonMapRenderer {
 				}
 			}
 		}
-		if (!DungeonConfig.getInstance().renderMap.getValue()) {
+		if (!DungeonCategory.renderMap) {
 			return;
 		}
 		if (this.dungeonMap.getTopLeftPixel() == null) {
@@ -64,13 +80,13 @@ public class DungeonMapRenderer {
 			this.dungeonInstance.getPhase() == DungeonPhase.AFTER) {
 			return;
 		}
-		if (DungeonConfig.getInstance().showMapBackground.getValue()) {
-			drawContext.fill(0,
-					0,
-					6 * TOTAL_SIZE - HALLWAY_SIZE,
-					6 * TOTAL_SIZE - HALLWAY_SIZE,
-					DungeonConfig.getInstance().mapBackgroundColor.getColorValue());
-		}
+		drawContext.fill(
+				0,
+				0,
+				6 * TOTAL_SIZE - HALLWAY_SIZE,
+				6 * TOTAL_SIZE - HALLWAY_SIZE,
+				DungeonCategory.mapBackgroundColor);
+
 		drawContext.getMatrices().push();
 		final int max = Math.max(this.dungeonMap.getRoomsInY(), this.dungeonMap.getRoomsInX());
 		drawContext.getMatrices().scale(6f / max, 6f / max, 1);
@@ -198,12 +214,14 @@ public class DungeonMapRenderer {
 			return;
 		}
 		final int max = Math.max(this.dungeonMap.getRoomsInY(), this.dungeonMap.getRoomsInX());
-		int x = (int) (MathHelper.clampedMap(player.getInterpolatedX(),
+		int x = (int) (MathHelper.clampedMap(
+				player.getInterpolatedX(),
 				this.dungeonMap.getTopLeftPixel().x,
 				this.dungeonMap.getBottomRightPixel().x,
 				0,
 				(6 * TOTAL_SIZE) * (((float) this.dungeonMap.getRoomsInX()) / max))) - 2;
-		int y = (int) (MathHelper.clampedMap(player.getInterpolatedY(),
+		int y = (int) (MathHelper.clampedMap(
+				player.getInterpolatedY(),
 				this.dungeonMap.getTopLeftPixel().y,
 				this.dungeonMap.getBottomRightPixel().y,
 				0,
@@ -211,26 +229,26 @@ public class DungeonMapRenderer {
 
 		drawContext.getMatrices().push();
 		drawContext.getMatrices().translate(x, y, 0);
-		if (DungeonConfig.getInstance().renderOverRoomText.getValue()) {
+		if (DungeonCategory.renderOverRoomText) {
 			drawContext.getMatrices().translate(0, 0, 1000);
 		}
 		drawContext.getMatrices().push();
-		if (DungeonConfig.getInstance().showPlayerSkulls.getValue() && player.getPlayer() != null) {
-			if (DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+		if (DungeonCategory.showPlayerSkulls && player.getPlayer() != null) {
+			if (DungeonCategory.rotatePlayerHeads) {
 				drawContext.getMatrices()
 						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
-			}
-			else {
+			} else {
 				drawContext.getMatrices()
 						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
 			}
 
 			this.drawPlayerHead(drawContext, player);
 
-			if (!DungeonConfig.getInstance().rotatePlayerHeads.getValue()) {
+			if (!DungeonCategory.rotatePlayerHeads) {
 				drawContext.getMatrices().push();
 				drawContext.getMatrices().translate(4, 4, 0);
-				drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
+				drawContext.getMatrices()
+						.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) (player.getRotation().getValue())));
 
 				drawPlayerArrow(drawContext, player);
 				drawContext.getMatrices().pop();
@@ -241,8 +259,9 @@ public class DungeonMapRenderer {
 			drawPlayerArrow(drawContext, player);
 		}
 		drawContext.getMatrices().pop();
-		if (DungeonConfig.getInstance().showPlayerNames.getValue()) {
-			RenderUtils.renderTextCenteredScaled(drawContext,
+		if (DungeonCategory.showPlayerNames) {
+			RenderUtils.renderTextCenteredScaled(
+					drawContext,
 					Text.literal(player.getName()),
 					0.5f,
 					0,
@@ -250,22 +269,6 @@ public class DungeonMapRenderer {
 					player.isUsingMod() ? Constants.SUCCESS_COLOR : Constants.FAIL_COLOR);
 		}
 		drawContext.getMatrices().pop();
-	}
-
-	/**
-	 * Draws an arrow.
-	 *
-	 * @param drawContext The draw context.
-	 * @param player      The player the arrow belongs to.
-	 */
-	private static void drawPlayerArrow(DrawContext drawContext, DungeonPlayer player) {
-		Identifier texture;
-		if (player.getPlayer() instanceof ClientPlayerEntity) {
-			texture = Identifier.ofVanilla("textures/map/decorations/frame.png");
-		} else {
-			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
-		}
-		drawContext.drawTexture(texture, -4, -4, 8, 8, 0, 0, 8, 8, 8, 8);
 	}
 
 	/**
@@ -280,7 +283,7 @@ public class DungeonMapRenderer {
 		drawContext.getMatrices().push();
 		drawContext.getMatrices().translate(0, 0, 100);
 		if (roomAt.getRoomType() == RoomType.PUZZLE) {
-			if (!DungeonConfig.getInstance().showPuzzleName.getValue()) {
+			if (!DungeonCategory.showPuzzleName) {
 				drawContext.getMatrices().pop();
 				this.drawRoomCheckmark(drawContext, roomAt.getCheckmark(), locationX, locationY);
 				return;
@@ -310,7 +313,8 @@ public class DungeonMapRenderer {
 			}
 			for (int i = 0; i < lines.length; i++) {
 				drawContext.getMatrices().push();
-				drawContext.getMatrices().translate((locationX + (float) ROOM_SIZE / 2),
+				drawContext.getMatrices().translate(
+						(locationX + (float) ROOM_SIZE / 2),
 						locationY + (((float) ROOM_SIZE / 2)) - offsetY * scale + (i * textRenderer.fontHeight) * scale,
 						0);
 				if (scale != 1) {
@@ -325,7 +329,7 @@ public class DungeonMapRenderer {
 		}
 
 		final String secretString = roomAt.getSecretString();
-		if (secretString == null || !DungeonConfig.getInstance().showSecrets.getValue()) {
+		if (secretString == null || !DungeonCategory.showSecrets) {
 			drawContext.getMatrices().pop();
 			this.drawRoomCheckmark(drawContext, roomAt.getCheckmark(), locationX, locationY);
 		} else {
@@ -378,7 +382,8 @@ public class DungeonMapRenderer {
 		} else {
 			offset = 0;
 		}
-		drawContext.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer,
+		drawContext.drawCenteredTextWithShadow(
+				MinecraftClient.getInstance().textRenderer,
 				secretString,
 				x + ROOM_SIZE / 2 + offset,
 				y + ROOM_SIZE / 2 - 4,

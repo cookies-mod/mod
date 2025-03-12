@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.commissions;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.utils.SkyblockUtils;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
@@ -31,7 +31,7 @@ public class CommissionCompletionHighlighter {
 			if (!SkyblockUtils.isCurrentlyInSkyblock()) {
 				return;
 			}
-			if (!ConfigManager.getConfig().miningConfig.modifyCommissions.getValue()) {
+			if (!MiningCategory.modifyCommissions) {
 				return;
 			}
 			if (!genericContainerScreen.getTitle().getString().equals("Commissions")) {

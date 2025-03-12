@@ -12,9 +12,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import codes.cookies.mod.config.categories.dungeons.PuzzleCategory;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import codes.cookies.mod.config.categories.DungeonConfig;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.map.DungeonRoom;
 import codes.cookies.mod.render.Renderable;
@@ -66,7 +66,7 @@ public class WaterBoardPuzzleSolver extends PuzzleSolver {
 	private Vec3d leverPos;
 
 	public WaterBoardPuzzleSolver(DungeonInstance dungeon) {
-		super(DungeonConfig.getInstance().puzzleFoldable.waterBoard);
+		super(PuzzleCategory.waterBoard);
 		this.dungeon = dungeon;
 	}
 

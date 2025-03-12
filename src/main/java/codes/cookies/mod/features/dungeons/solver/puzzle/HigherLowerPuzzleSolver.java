@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.solver.puzzle;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.PuzzleCategory;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +39,7 @@ public class HigherLowerPuzzleSolver extends PuzzleSolver {
 	private long startedBlaze = 1;
 
 	public HigherLowerPuzzleSolver() {
-		super(DungeonConfig.getInstance().puzzleFoldable.higherLower);
+		super(PuzzleCategory.higherLower);
 	}
 
 	@Override

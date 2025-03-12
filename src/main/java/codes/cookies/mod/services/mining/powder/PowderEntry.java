@@ -1,6 +1,5 @@
 package codes.cookies.mod.services.mining.powder;
 
-import codes.cookies.mod.config.categories.mining.powder.PowderTrackerHudFoldable;
 import codes.cookies.mod.utils.cookies.PauseableTime;
 
 public final class PowderEntry {
@@ -30,10 +29,7 @@ public final class PowderEntry {
 	public void update(int delta) {
 		if (delta < 0) {
 			return;
-		}
-		if (this.lastUpdate + PowderTrackerHudFoldable.getConfig().getTimeoutTime() < System.currentTimeMillis()) {
-			this.reset();
-		}
+		}//if (this.lastUpdate + PowderTrackerHudFoldable.getConfig().getTimeoutTime() < System.currentTimeMillis()) {//this.reset();//}
 
 		powderGained += delta;
 		this.lastUpdate = System.currentTimeMillis();
@@ -49,9 +45,7 @@ public final class PowderEntry {
 	}
 
 	public void pauseIfInactive() {
-		if (this.lastUpdate + PowderTrackerHudFoldable.getConfig().getPauseTime() < System.currentTimeMillis()) {
-			this.pause();
-		}
+
 	}
 
 	public long getGained() {
@@ -61,9 +55,9 @@ public final class PowderEntry {
 
 	public int getMillisecondsActive() {
 		this.pauseIfInactive();
-		if (!PowderTrackerHudFoldable.getConfig().showMs.getValue()) {
-			return (int) ((this.pauseableTime.getTimePassed() / 1000) * 1000);
-		}
+		//f (!PowderTrackerHudFoldable.getConfig().showMs.getValue()) {
+		//	return (int) ((this.pauseableTime.getTimePassed() / 1000) * 1000);
+		//
 		return (int) (this.pauseableTime.getTimePassed());
 	}
 

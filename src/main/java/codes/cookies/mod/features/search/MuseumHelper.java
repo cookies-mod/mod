@@ -1,5 +1,7 @@
 package codes.cookies.mod.features.search;
 
+import codes.cookies.mod.config.categories.ItemSearchCategory;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.services.item.ItemSearchService;
 import codes.cookies.mod.services.item.ItemServices;
 import codes.cookies.mod.utils.exceptions.ExceptionHandler;
@@ -15,8 +17,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.config.ConfigManager;
-import codes.cookies.mod.config.categories.ItemSearchConfig;
 import codes.cookies.mod.data.profile.items.Item;
 import codes.cookies.mod.data.profile.items.ItemCompound;
 import codes.cookies.mod.data.profile.items.ItemSources;
@@ -70,11 +70,11 @@ public class MuseumHelper {
 	}
 
 	private static boolean showItemSearch() {
-		return ItemSearchConfig.getInstance().showInMuseum.getValue();
+		return ItemSearchCategory.showInMuseum;
 	}
 
 	private static boolean showArmorSets() {
-		return ConfigManager.getConfig().miscConfig.showMuseumArmorSets.getValue();
+		return MiscCategory.showMuseumArmorSets;
 	}
 
 	private void update(int slot, ItemStack itemStack) {

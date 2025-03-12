@@ -13,10 +13,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import codes.cookies.mod.config.categories.ItemSearchCategory;
 import com.google.common.base.Predicates;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import codes.cookies.mod.config.categories.ItemSearchConfig;
 import codes.cookies.mod.services.IsSameResult;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -102,7 +102,7 @@ public class SearchQueryMatcher implements ItemSearchFilter {
 
 	@Override
 	public int getColor() {
-		return 0xFF << 24 | (ItemSearchConfig.getInstance().highlightColor.getColorValue() & 0xFFFFFF);
+		return 0xFF << 24 | (ItemSearchCategory.highlightColor & 0xFFFFFF);
 	}
 
 	@Override

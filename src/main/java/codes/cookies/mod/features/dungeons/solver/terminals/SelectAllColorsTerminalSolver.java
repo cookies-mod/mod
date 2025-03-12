@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.solver.terminals;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.TerminalCategory;
 import codes.cookies.mod.events.InventoryEvents;
 
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
@@ -24,7 +24,7 @@ public class SelectAllColorsTerminalSolver extends TerminalSolver {
 	}
 
 	private void modify(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().terminalFoldable.selectAllColorsTerminal.getValue()) {
+		if (!TerminalCategory.selectAllColorsTerminal) {
 			return;
 		}
 		super.openNewTerminal();

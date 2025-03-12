@@ -1,5 +1,13 @@
 package codes.cookies.mod.utils.mixins;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import codes.cookies.mod.config.categories.MiscCategory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -202,7 +210,52 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 				list.add(tooltipComponent);
 			}
 		}
-		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE);
+		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE, null);
+	}
+
+	@Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+	public void onScroll(
+			CallbackInfoReturnable<Boolean> cir,
+			@Local(argsOnly = true, ordinal = 2) double horizontalAmount,
+			@Local(argsOnly = true, ordinal = 3) double verticalAmount
+	) {
+		if (!MiscCategory.enableScrollableTooltips) {
+			return;
+		}
+		if (((Object) this) instanceof HandledScreen<?> handledScreen) {
+			Slot focusedSlot = FocusedSlotAccessor.getFocusedSlot(handledScreen);
+			if (handledScreen.getScreenHandler().getCursorStack().isEmpty() && focusedSlot != null &&
+					focusedSlot.hasStack()) {
+				final ItemStack stack = focusedSlot.getStack();
+				ScrollableTooltipHandler.scroll(stack, horizontalAmount, verticalAmount);
+				cir.setReturnValue(true);
+			}
+		}
+	}
+
+	@Override
+	public int cookies$getBackgroundWidth() {
+		return this.backgroundWidth;
+	}
+
+	@Override
+	public int cookies$getBackgroundHeight() {
+		return this.backgroundHeight;
+	}
+
+	@Override
+	public int cookies$getX() {
+		return this.x;
+	}
+
+	@Override
+	public int cookies$getY() {
+		return this.y;
+	}
+
+	@Override
+	public List<Disabled> cookies$getDisabled() {
+		return this.cookies$disabled;
 	}
 
 	@Inject(

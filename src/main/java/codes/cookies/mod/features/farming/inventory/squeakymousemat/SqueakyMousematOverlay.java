@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import codes.cookies.mod.CookiesMod;
 import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.config.data.SqueakyMousematOption;
 import codes.cookies.mod.data.farming.squeakymousemat.SqueakyMousematData;
 import codes.cookies.mod.data.farming.squeakymousemat.SqueakyMousematEntry;
@@ -94,7 +95,7 @@ public class SqueakyMousematOverlay {
 		if (!SkyblockUtils.isCurrentlyInSkyblock()) {
 			return;
 		}
-		if (!ConfigManager.getConfig().farmingConfig.showSqueakyMousematOverlay.getValue()) {
+		if (!FarmingCategory.mousematOverlay) {
 			return;
 		}
 		if (!DevUtils.isEnabled(SKIP_RANCHER_BOOTS_CHECK) && !this.isRancherBootsScreen((SignEditScreen) screen)) {
@@ -116,7 +117,7 @@ public class SqueakyMousematOverlay {
 	}
 
 	private void evaluateSpeeds() {
-		final SqueakyMousematOption mousematOption = ConfigManager.getConfig().farmingConfig.squeakyMousematOption.getValue();
+		final SqueakyMousematOption mousematOption = FarmingCategory.squeakyMousematOption.getValue();
 
 		final ProfileData profile = ProfileStorage.getCurrentProfile().orElse(null);
 
@@ -183,14 +184,13 @@ public class SqueakyMousematOverlay {
 	}
 
 	private void saveConfig() {
-		ConfigManager.saveConfig(true, "squeaky-mousemat-overlay");
+		ConfigManager.saveConfig("squeaky-mousemat-overlay");
 	}
 
 	private void toggleUseProfile() {
 		ProfileStorage.getCurrentProfile().ifPresent(profileData -> {
 			final UUID uuid = profileData.getProfileUuid();
-			final List<UUID> uuids = ConfigManager.getConfig().farmingConfig.squeakyMousematOption.getValue()
-					.useProfileData();
+			final List<UUID> uuids = FarmingCategory.squeakyMousematOption.getValue().useProfileData();
 			if (this.useProfile) {
 				uuids.remove(uuid);
 			} else {

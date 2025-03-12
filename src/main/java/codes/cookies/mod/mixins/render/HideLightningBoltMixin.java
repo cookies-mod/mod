@@ -1,6 +1,6 @@
 package codes.cookies.mod.mixins.render;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.LightningEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,7 +16,7 @@ public class HideLightningBoltMixin {
     @Inject(method = "render(Lnet/minecraft/entity/LightningEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
     public void lightning(LightningEntity lightningEntity, float f, float g, MatrixStack matrixStack,
                           VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (ConfigManager.getConfig().miscConfig.hideLightningBolt.getValue()) {
+        if (MiscCategory.hideLightningBolt) {
             ci.cancel();
         }
     }

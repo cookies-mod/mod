@@ -1,48 +1,38 @@
 package codes.cookies.mod.config;
 
-import com.google.gson.annotations.Expose;
-import codes.cookies.mod.config.categories.CleanupConfig;
-import codes.cookies.mod.config.categories.DevConfig;
-import codes.cookies.mod.config.categories.DungeonConfig;
-import codes.cookies.mod.config.categories.FarmingConfig;
-import codes.cookies.mod.config.categories.HelpersConfig;
-import codes.cookies.mod.config.categories.ItemSearchConfig;
-import codes.cookies.mod.config.categories.mining.MiningConfig;
-import codes.cookies.mod.config.categories.MiscConfig;
-import codes.cookies.mod.config.system.Config;
-import codes.cookies.mod.config.system.SearchCategory;
-import codes.cookies.mod.config.system.ToggledCategory;
-import net.minecraft.text.Text;
+import codes.cookies.mod.CookiesMod;
+import codes.cookies.mod.config.categories.CleanupCategory;
+import codes.cookies.mod.config.categories.DevCategory;
+import codes.cookies.mod.config.categories.FarmingCategory;
+import codes.cookies.mod.config.categories.HelpersCategory;
+import codes.cookies.mod.config.categories.ItemSearchCategory;
+import codes.cookies.mod.config.categories.MiscCategory;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
+import codes.cookies.mod.translations.TranslationKeys;
+import com.teamresourceful.resourcefulconfig.api.annotations.Config;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo;
 
-/**
- * Main config for the whole mod.
- */
-@SuppressWarnings({"MissingJavadoc", "unused"})
-public class CookiesConfig extends Config<CookiesConfig> {
+@Config(value = "cookies-mod", categories = {
+		MiscCategory.class,
+		ItemSearchCategory.class,
+		HelpersCategory.class,
+		MiningCategory.class,
+		FarmingCategory.class,
+		DungeonCategory.class,
+		CleanupCategory.class,
+		DevCategory.class
+})
+@ConfigInfo(
+		title = "Cookies Mod Config",
+		icon = "cookie",
+		description = "test"
+)
+public class CookiesConfig {
 
-    @Expose
-    public MiscConfig miscConfig = new MiscConfig();
-    @Expose
-    public FarmingConfig farmingConfig = new FarmingConfig();
-    @Expose
-    public MiningConfig miningConfig = new MiningConfig();
-    @Expose
-    public HelpersConfig helpersConfig = new HelpersConfig();
-    @Expose
-    public CleanupConfig cleanupConfig = new CleanupConfig();
-	@Expose
-	public DungeonConfig dungeonConfig = new DungeonConfig();
-	@Expose
-	public ItemSearchConfig itemSearchConfig = new ItemSearchConfig();
+	@CookiesOptions.Button(value = TranslationKeys.CONFIG_MISC_EDIT_HUD, buttonText = TranslationKeys.CLICK_TO_EDIT)
+	@ConfigButton(text = "")
+	public static final Runnable openHud = CookiesMod::openHudScreen;
 
-    @Expose
-    public DevConfig devConfig = new DevConfig();
-    public SearchCategory searchCategory = new SearchCategory();
-    public ToggledCategory toggledCategory = new ToggledCategory();
-
-
-    @Override
-    public Text getTitle() {
-        return Text.empty();
-    }
 }

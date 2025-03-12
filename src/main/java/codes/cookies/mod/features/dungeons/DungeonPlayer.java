@@ -3,7 +3,8 @@ package codes.cookies.mod.features.dungeons;
 import java.util.OptionalInt;
 import java.util.UUID;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.ClassColorCategory;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.utils.Result;
 import codes.cookies.mod.utils.accessors.GlowingEntityAccessor;
 import codes.cookies.mod.utils.cookies.CookiesBackendUtils;
@@ -84,7 +85,7 @@ public class DungeonPlayer {
 	}
 
 	private void updateGlowColor() {
-		if (player != null && DungeonConfig.getInstance().glowClassColor.getValue() && this.getColor().isPresent()) {
+		if (player != null && DungeonCategory.glowInClassColor && this.getColor().isPresent()) {
 			GlowingEntityAccessor.setGlowing(this.player, true);
 			GlowingEntityAccessor.setGlowColor(this.player, this.getColor().getAsInt());
 		}
@@ -174,11 +175,11 @@ public class DungeonPlayer {
 			return OptionalInt.empty();
 		}
 		return switch (dungeonClass.toLowerCase().toCharArray()[0]) {
-			case 'h' -> OptionalInt.of(DungeonConfig.getInstance().classColorFoldable.healer.getValue().getRGB());
-			case 'm' -> OptionalInt.of(DungeonConfig.getInstance().classColorFoldable.mage.getValue().getRGB());
-			case 'b' -> OptionalInt.of(DungeonConfig.getInstance().classColorFoldable.bers.getValue().getRGB());
-			case 'a' -> OptionalInt.of(DungeonConfig.getInstance().classColorFoldable.arch.getValue().getRGB());
-			case 't' -> OptionalInt.of(DungeonConfig.getInstance().classColorFoldable.tank.getValue().getRGB());
+			case 'h' -> OptionalInt.of(ClassColorCategory.healer);
+			case 'm' -> OptionalInt.of(ClassColorCategory.mage);
+			case 'b' -> OptionalInt.of(ClassColorCategory.bers);
+			case 'a' -> OptionalInt.of(ClassColorCategory.arch);
+			case 't' -> OptionalInt.of(ClassColorCategory.tank);
 			default -> OptionalInt.empty();
 		};
 	}

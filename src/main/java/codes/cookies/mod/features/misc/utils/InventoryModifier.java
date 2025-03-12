@@ -1,8 +1,8 @@
 package codes.cookies.mod.features.misc.utils;
 
-import codes.cookies.mod.config.ConfigKey;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
+import codes.cookies.mod.utils.dev.BackedReference;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.items.ItemUtils;
 import codes.cookies.mod.utils.skyblock.InventoryUtils;
@@ -22,13 +22,12 @@ import net.minecraft.screen.slot.Slot;
 public abstract class InventoryModifier {
 
     private final ItemStack stack;
-    private final ConfigKey<Boolean> toggleEntry;
-    private final ConfigKey<Integer> slotEntry;
+    private final BackedReference<Boolean> toggleEntry;
+    private final BackedReference<Integer> slotEntry;
     private final BooleanBooleanMutablePair couldPlace = new BooleanBooleanMutablePair(false, false);
 
-
     public InventoryModifier(
-        ItemStack stack, String screenName, ConfigKey<Boolean> toggleEntry, ConfigKey<Integer> slotEntry) {
+        ItemStack stack, String screenName, BackedReference<Boolean> toggleEntry, BackedReference<Integer> slotEntry) {
         this.stack = stack;
         this.toggleEntry = toggleEntry;
         this.slotEntry = slotEntry;

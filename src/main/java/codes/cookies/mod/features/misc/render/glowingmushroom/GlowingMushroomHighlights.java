@@ -2,7 +2,7 @@ package codes.cookies.mod.features.misc.render.glowingmushroom;
 
 import java.util.concurrent.TimeUnit;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.events.world.ParticleEmitEvent;
 import codes.cookies.mod.render.WorldRender;
 import codes.cookies.mod.render.types.Outlines;
@@ -34,7 +34,7 @@ public class GlowingMushroomHighlights {
 			return;
 		}
 
-		if (!ConfigManager.getConfig().farmingConfig.highlightGlowingMushrooms.getValue()) {
+		if (!FarmingCategory.highlightGlowingMushrooms) {
 			return;
 		}
 

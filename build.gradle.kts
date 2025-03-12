@@ -16,6 +16,7 @@ repositories {
 	maven("https://repo.hypixel.net/repository/Hypixel/")
 	maven("https://repo.cookies.codes/releases")
 	maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+	maven("https://maven.teamresourceful.com/repository/maven-public/")
 }
 
 fabricApi {
@@ -48,6 +49,8 @@ dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
+
+	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.properties["minecraft_version"]}:${project.properties["rconfig_version"]}")
 }
 
 tasks.withType<Jar>().configureEach {

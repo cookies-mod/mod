@@ -1,8 +1,9 @@
 package codes.cookies.mod.features.cleanup.dungeon;
 
-import codes.cookies.mod.config.ConfigKeys;
+import codes.cookies.mod.config.categories.CleanupCategory;
 import codes.cookies.mod.utils.SkyblockUtils;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
+
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 
@@ -29,18 +30,17 @@ public class DungeonMessagesCleanup {
 
         final String content = text.getString().trim();
 
-        if (ConfigKeys.CLEANUP_HIDE_WATCHER_MESSAGE.get() && content.contains(":")) {
+        if (CleanupCategory.hideWatcherMessages && content.contains(":")) {
             return !content.startsWith("[BOSS] The Watcher: ");
         }
 
-        if (ConfigKeys.CLEANUP_HIDE_POTION_EFFECTS.get()
-            && content.equals(
+        if (CleanupCategory.hidPotionEffectMessage && content.equals(
             "Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! " +
             "You are not allowed to use existing Potion Effects while in Dungeons.")) {
             return false;
         }
 
-        if (ConfigKeys.CLEANUP_HIDE_CLASS_MESSAGES.get()) {
+        if (CleanupCategory.hideClassMessages) {
             if (content.startsWith("Your ") &&
                 content.endsWith("stats are doubled because you are the only player using this class!")) {
                 return false;
@@ -51,7 +51,7 @@ public class DungeonMessagesCleanup {
             }
         }
 
-        if (ConfigKeys.CLEANUP_HIDE_BLESSING.get() && (content.startsWith("A Blessing of ") ||
+        if (CleanupCategory.hideBlessingMessages && (content.startsWith("A Blessing of ") ||
                                                        (content.contains("has obtained Blessing of ") &&
                                                         content.endsWith("!")) ||
                                                        content.startsWith("DUNGEON BUFF! A Blessing of ") ||
@@ -61,18 +61,18 @@ public class DungeonMessagesCleanup {
             return false;
         }
 
-        if (ConfigKeys.CLEANUP_HIDE_SILVERFISH_MESSAGE.get()
+        if (CleanupCategory.hideSilverfishMessage
             && content.equals("You cannot hit the silverfish while it's moving!")) {
             return false;
         }
 
-        if (ConfigKeys.CLEANUP_HIDE_DUNGEON_KEY_MESSAGE.get() &&
+        if (CleanupCategory.hideDungeonKeyMessage &&
             (content.equals("RIGHT CLICK on the BLOOD DOOR to open it. This key can only be used to open 1 door!")
              || content.equals("RIGHT CLICK on a WITHER door to open it. This key can only be used to open 1 door!"))) {
             return false;
         }
 
-        return !(ConfigKeys.CLEANUP_HIDE_ULTIMATE_READY.get() &&
+        return !(CleanupCategory.hideUltimateReady &&
                  content.endsWith(" is ready to use! Press DROP to activate it!"));
     }
 

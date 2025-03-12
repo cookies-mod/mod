@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.mining.MiningCategory;
 import codes.cookies.mod.events.profile.ServerSwapEvent;
 import codes.cookies.mod.generated.Regions;
 import codes.cookies.mod.render.Renderable;
@@ -42,7 +42,7 @@ public class PuzzlerSolver {
         if (LocationUtils.getRegion() != Regions.DWARVEN_MINES) {
             return;
         }
-        if (!ConfigManager.getConfig().miningConfig.puzzlerSolver.getValue()) {
+        if (!MiningCategory.puzzlerSolver) {
             return;
         }
 

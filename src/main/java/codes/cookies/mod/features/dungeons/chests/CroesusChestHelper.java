@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.chests;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.repository.RepositoryItem;
@@ -76,7 +76,7 @@ public class CroesusChestHelper {
 	}
 
 	private static void open(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().croesusFoldable.replaceChestItemWithHighestRarityItem.getValue()) {
+		if (!DungeonCategory.replaceChestItemWithHighestRarityItem) {
 			return;
 		}
 		new CroesusChestHelper(handledScreen);

@@ -2,7 +2,7 @@ package codes.cookies.mod.features.dungeons.map;
 
 import java.util.Optional;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.features.dungeons.DungeonFeatures;
 import codes.cookies.mod.features.dungeons.DungeonInstance;
 import codes.cookies.mod.features.dungeons.DungeonPlayer;
@@ -59,7 +59,7 @@ public class DungeonMapHud extends HudElement {
 			return true;
 		}
 
-		if (!DungeonConfig.getInstance().renderMap.getValue()) {
+		if (!DungeonCategory.renderMap) {
 			return false;
 		}
 

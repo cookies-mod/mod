@@ -1,13 +1,12 @@
 package codes.cookies.mod.features.dungeons.solver.puzzle;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
-
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import codes.cookies.mod.config.categories.dungeons.PuzzleCategory;
 import codes.cookies.mod.features.dungeons.map.DungeonRoom;
 import codes.cookies.mod.render.types.Line;
 import codes.cookies.mod.utils.cookies.Constants;
@@ -26,7 +25,7 @@ public class CreeperBeamPuzzleSolver extends PuzzleSolver {
 	private static final int[] COLORS = {Constants.SUCCESS_COLOR, 0xFFBED2FE, 0xFFFDFD96, 0xFF6EB5FF};
 
 	public CreeperBeamPuzzleSolver() {
-		super(DungeonConfig.getInstance().puzzleFoldable.creeperBeams);
+		super(PuzzleCategory.creeperBeams);
 	}
 
 	@Override

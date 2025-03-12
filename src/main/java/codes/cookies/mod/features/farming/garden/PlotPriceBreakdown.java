@@ -1,8 +1,8 @@
 package codes.cookies.mod.features.farming.garden;
 
+import codes.cookies.mod.config.categories.CraftHelperCategory;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import com.google.common.collect.Lists;
-import codes.cookies.mod.config.ConfigKeys;
-import codes.cookies.mod.config.ConfigManager;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.features.misc.utils.crafthelper.CraftHelperLocation;
 import codes.cookies.mod.repository.constants.PlotPrice;
@@ -59,7 +59,7 @@ public class PlotPriceBreakdown {
         if (!LocationUtils.Island.GARDEN.isActive()) {
             return;
         }
-        if (!ConfigKeys.FARMING_PLOT_PRICE.get()) {
+        if (!FarmingCategory.showPlotPriceBreakdown) {
             return;
         }
         if (!(screen instanceof HandledScreen<?> handledScreen)) {
@@ -71,7 +71,7 @@ public class PlotPriceBreakdown {
         if (RepositoryConstants.plotPrice == null) {
             return;
         }
-        final CraftHelperLocation value = ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.getValue();
+        final CraftHelperLocation value = CraftHelperCategory.location.get();
         if (value == CraftHelperLocation.LEFT_INVENTORY || value == CraftHelperLocation.LEFT) {
             InventoryScreenAccessor.setDisabled(screen, InventoryScreenAccessor.Disabled.CRAFT_HELPER);
         }
