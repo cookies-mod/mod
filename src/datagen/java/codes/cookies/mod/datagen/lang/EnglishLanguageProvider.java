@@ -484,7 +484,7 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 
 	private void addMiscConfig(CookiesTranslationBuilder translationBuilder) {
 		translationBuilder.addConfig(CONFIG_MISC, "Misc Config", "Miscellaneous settings");
-		translationBuilder.addConfig(CONFIG_MISC_EDIT_HUD, "To edit hud", "Opens a screen where you can edit the hud elements!");
+		translationBuilder.addConfig(CONFIG_MISC_EDIT_HUD, "Edit hud", "Opens a screen where you can edit the hud elements!");
 		translationBuilder.addConfig(CONFIG_MISC_SHOW_MUSEUM_ARMOR_SETS, "Show museum armor sets", "Shows the components of an armor set in the description.");
 		translationBuilder.addConfig(CONFIG_MISC_ENABLE_SCROLL_TOOLTIPS, "Scrollable Tooltips", """
 				Allows you to scroll through tooltips
@@ -673,6 +673,9 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_STARTS_WITH_TERMINAL,
 				"Starts with",
 				"Enables the starts with solver.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_MELODY,
+				"Melody helper",
+				"Changes the melody terminal to have a barrier if its not the correct moment to press.");
 		translationBuilder.addConfig(CONFIG_DUNGEON_TERMINAL_MELODY_NOTIFIER,
 				"Melody notifier",
 				"Enables chat messages that are sent when you begin melody, when you complete each row, and when you finish.");
@@ -712,6 +715,13 @@ public class EnglishLanguageProvider extends CookiesLanguageProvider {
 		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_DOWN_TIME,
 				"Downtime",
 				"Enables the !dt command, allowing players to request downtime at the end of a run.");
+		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_DOWN_TIME_PARTY_MESSAGE,
+				"Send downtime messages",
+				"""
+						Automatically sends the downtime message in party chat.
+						
+						§cThis §lwill §csend text of others, use at your own risk!
+						""");
 		translationBuilder.addConfig(CONFIG_DUNGEON_PARTY_CHAT_COMMANDS_COIN_FLIP,
 				"Coin flip",
 				"Enables the !cf command, allowing players to flip a coin, sends heads or tails to party chat.");

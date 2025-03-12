@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.solver.puzzle;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.PuzzleCategory;
 import codes.cookies.mod.repository.constants.dungeons.DungeonConstants;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class QuizPuzzleSolver extends PuzzleSolver {
 	private Direction puzzleDirection;
 
 	public QuizPuzzleSolver() {
-		super(DungeonConfig.getInstance().puzzleFoldable.quiz);
+		super(PuzzleCategory.quiz);
 	}
 
 	@Override

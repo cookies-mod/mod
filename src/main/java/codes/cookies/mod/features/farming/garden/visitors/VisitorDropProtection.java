@@ -1,7 +1,7 @@
 package codes.cookies.mod.features.farming.garden.visitors;
 
 import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.FarmingCategory;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.translations.TranslationKeys;
@@ -76,7 +76,7 @@ public class VisitorDropProtection implements TranslationKeys {
 			}
 		}
 
-		if (ConfigManager.getConfig().farmingConfig.visitorNotAsRareDropProtection.getValue()) {
+		if (FarmingCategory.visitorCommonDropProtection) {
 			for (String commonDrop : commonDrops) {
 				if (StringUtils.containsIgnoreCase(lore, commonDrop)) {
 					return true;
@@ -113,6 +113,6 @@ public class VisitorDropProtection implements TranslationKeys {
 	};
 
 	public static void init() {
-		InventoryEvents.beforeInit("cookies-behaviour:always", inv -> LocationUtils.Island.GARDEN.isActive() && ConfigManager.getConfig().farmingConfig.visitorRareDropProtection.getValue(), VisitorDropProtection::new);
+		InventoryEvents.beforeInit("cookies-behaviour:always", inv -> LocationUtils.Island.GARDEN.isActive() && FarmingCategory.visitorRareDropProtection, VisitorDropProtection::new);
 	}
 }

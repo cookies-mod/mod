@@ -2,6 +2,7 @@ package codes.cookies.mod.features.farming.garden.keybinds;
 
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.skyblock.LocationUtils;
+import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import lombok.Getter;
 
 import net.minecraft.client.MinecraftClient;
@@ -10,7 +11,7 @@ import net.minecraft.client.option.KeyBinding;
 import java.util.function.Supplier;
 
 @Getter
-public enum GardenKeybindPredicate {
+public enum GardenKeybindPredicate implements Translatable {
 	ON_GARDEN("On Garden", LocationUtils.Island.GARDEN::isActive),
 	IF_KEYBIND_ENABLED("If Keybind Pressed", null),
 	HOLDING_FARMING_TOOL("Holding Farming Tool", null),
@@ -79,5 +80,10 @@ public enum GardenKeybindPredicate {
 		}
 
 		return false;
+	}
+
+	@Override
+	public String getTranslationKey() {
+		return name;
 	}
 }

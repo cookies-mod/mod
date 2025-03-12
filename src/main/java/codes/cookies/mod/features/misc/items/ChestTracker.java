@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.items;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.HelpersCategory;
 import codes.cookies.mod.data.profile.ProfileData;
 import codes.cookies.mod.data.profile.ProfileStorage;
 import codes.cookies.mod.data.profile.profile.GlobalProfileData;
@@ -60,7 +60,7 @@ public class ChestTracker {
 			PlayerEntity playerEntity, World world, Hand hand, BlockHitResult blockHitResult) {
 		this.resetCoords();
 
-		if (!ConfigManager.getConfig().helpersConfig.itemChestTracker.getValue()) {
+		if (!HelpersCategory.chestTracker) {
 			return ActionResult.PASS;
 		}
 
@@ -139,7 +139,7 @@ public class ChestTracker {
 			return;
 		}
 
-		if (!ConfigManager.getConfig().helpersConfig.itemChestTracker.getValue()) {
+		if (!HelpersCategory.chestTracker) {
 			return;
 		}
 

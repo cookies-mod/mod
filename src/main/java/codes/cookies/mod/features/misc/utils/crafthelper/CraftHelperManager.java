@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.CraftHelperCategory;
 import codes.cookies.mod.events.api.ScreenKeyEvents;
 import codes.cookies.mod.repository.RepositoryItem;
 import codes.cookies.mod.utils.SkyblockUtils;
@@ -32,8 +32,8 @@ public class CraftHelperManager {
 	private static CraftHelperLocation location;
 
 	public static void init() {
-		location = ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.getValue();
-		ConfigManager.getConfig().helpersConfig.craftHelper.craftHelperLocation.withCallback((oldValue, newValue) -> location = newValue);
+		location = CraftHelperCategory.location.get();
+		CraftHelperCategory.location.addListener((oldValue, newValue) -> location = newValue);
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			if (!(screen instanceof InventoryScreenAccessor)) {
 				return;
@@ -41,7 +41,7 @@ public class CraftHelperManager {
 			if (!SkyblockUtils.isCurrentlyInSkyblock()) {
 				return;
 			}
-			if (!ConfigManager.getConfig().helpersConfig.craftHelper.craftHelper.getValue()) {
+			if (!CraftHelperCategory.enable) {
 				return;
 			}
 			if (!active.equals(CraftHelperInstance.EMPTY)) {

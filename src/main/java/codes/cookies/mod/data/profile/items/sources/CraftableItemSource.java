@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import codes.cookies.mod.config.categories.ItemSearchConfig;
+import codes.cookies.mod.config.categories.ItemSearchCategory;
 import codes.cookies.mod.data.profile.items.Item;
 import codes.cookies.mod.data.profile.items.ItemSource;
 import codes.cookies.mod.data.profile.items.ItemSources;
@@ -84,7 +84,7 @@ public class CraftableItemSource implements ItemSource<CraftableItemSource.Data>
 				map.put(ingredient, ingredientData);
 			}
 
-			if (!ItemSearchConfig.getInstance().enableNotCraftableItems.getValue() && !hasAllIngredients) {
+			if (!ItemSearchCategory.enableNonCraftableItems && !hasAllIngredients) {
 				continue;
 			}
 
@@ -137,7 +137,7 @@ public class CraftableItemSource implements ItemSource<CraftableItemSource.Data>
 		public static IngredientData EMPTY = new IngredientData(Collections.emptyList(), 0, 0, false, false);
 
 		public boolean shouldBeIncluded() {
-			if (ItemSearchConfig.getInstance().showOnlyMissingItems.getValue()) {
+			if (ItemSearchCategory.showOnlyMissingItems) {
 				return hasAllItems && !canSupercraft;
 			}
 			return true;

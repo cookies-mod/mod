@@ -1,59 +1,111 @@
 package codes.cookies.mod.config.data;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import codes.cookies.mod.config.system.SaveLoadHelper;
+import java.util.ArrayList;
+import java.util.List;
+
 import codes.cookies.mod.data.farming.RancherSpeeds;
 import codes.cookies.mod.utils.IntReference;
-import codes.cookies.mod.utils.json.JsonSerializable;
-import java.util.ArrayList;
-import org.jetbrains.annotations.NotNull;
+import codes.cookies.mod.utils.json.CodecJsonSerializable;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import net.minecraft.util.dynamic.Codecs;
+
+import org.slf4j.Logger;
 
 /**
  * Profile specific rancher boot speeds.
  */
 @SuppressWarnings("MissingJavadoc")
-public class RancherSpeedConfig implements JsonSerializable, SaveLoadHelper {
-    public static RancherSpeeds DEFAULT = new RancherSpeedConfig().asData();
+@Getter
+@Setter
+@ConfigObject
+@AllArgsConstructor
+public class RancherSpeedConfig implements CodecJsonSerializable<RancherSpeedConfig> {
+	public static RancherSpeeds DEFAULT = new RancherSpeedConfig().asData();
 
-    public ListData<String> useProfileSettings = new ListData<>(
-        new ArrayList<>(),
-        JsonElement::getAsString,
-        JsonPrimitive::new);
+	public static final Codec<RancherSpeedConfig> CODEC =  RecordCodecBuilder.create(instance -> instance.group(
+			Codec.STRING.listOf().fieldOf("uuids").forGetter(RancherSpeedConfig::getUseProfileSettings),
+					Codecs.rangedInt(0, 1000).fieldOf("wheat").forGetter(RancherSpeedConfig::getWheat),
+					Codecs.rangedInt(0, 1000).fieldOf("carrot").forGetter(RancherSpeedConfig::getCarrot),
+					Codecs.rangedInt(0, 1000).fieldOf("potato").forGetter(RancherSpeedConfig::getPotato),
+					Codecs.rangedInt(0, 1000).fieldOf("nether_wart").forGetter(RancherSpeedConfig::getNetherWart),
+					Codecs.rangedInt(0, 1000).fieldOf("pumpkin").forGetter(RancherSpeedConfig::getPumpkin),
+					Codecs.rangedInt(0, 1000).fieldOf("melon").forGetter(RancherSpeedConfig::getMelon),
+					Codecs.rangedInt(0, 1000).fieldOf("cocoa_beans").forGetter(RancherSpeedConfig::getCocoaBeans),
+					Codecs.rangedInt(0, 1000).fieldOf("sugar_cane").forGetter(RancherSpeedConfig::getSugarCane),
+					Codecs.rangedInt(0, 1000).fieldOf("cactus").forGetter(RancherSpeedConfig::getCactus),
+					Codecs.rangedInt(0, 1000).fieldOf("mushroom").forGetter(RancherSpeedConfig::getMushroom))
+			.apply(instance, RancherSpeedConfig::of));
 
-    public IntegerData wheat = new IntegerData(93);
-    public IntegerData carrot = new IntegerData(93);
-    public IntegerData potato = new IntegerData(93);
-    public IntegerData netherWart = new IntegerData(93);
-    public IntegerData pumpkin = new IntegerData(258);
-    public IntegerData melon = new IntegerData(258);
-    public IntegerData cocoaBeans = new IntegerData(155);
-    public IntegerData sugarCane = new IntegerData(327);
-    public IntegerData cactus = new IntegerData(400);
-    public IntegerData mushroom = new IntegerData(200);
+	private static RancherSpeedConfig of(
+			List<String> uuids,
+			Integer wheat,
+			Integer carrot,
+			Integer potato,
+			Integer netherWart,
+			Integer pumpkin,
+			Integer melon,
+			Integer cocoaBeans,
+			Integer sugarCane,
+			Integer cactus,
+			Integer mushroom
+	) {
+		return new RancherSpeedConfig(uuids, wheat, carrot, potato, netherWart, pumpkin, melon, cocoaBeans, sugarCane, cactus, mushroom);
+	}
 
-    public RancherSpeeds asData() {
-        return new RancherSpeeds(
-            new IntReference(wheat::getValue, wheat::setValue),
-            new IntReference(carrot::getValue, carrot::setValue),
-            new IntReference(potato::getValue, potato::setValue),
-            new IntReference(netherWart::getValue, netherWart::setValue),
-            new IntReference(pumpkin::getValue, pumpkin::setValue),
-            new IntReference(melon::getValue, melon::setValue),
-            new IntReference(cocoaBeans::getValue, cocoaBeans::setValue),
-            new IntReference(sugarCane::getValue, sugarCane::setValue),
-            new IntReference(cactus::getValue, cactus::setValue),
-            new IntReference(mushroom::getValue, mushroom::setValue)
-        );
-    }
+	public RancherSpeedConfig() {}
 
-    @Override
-    public void read(@NotNull JsonElement jsonElement) {
-        load_(jsonElement);
-    }
+	public List<String> useProfileSettings = new ArrayList<>();
 
-    @Override
-    public @NotNull JsonElement write() {
-        return save_();
-    }
+	public int wheat = 93;
+	public int carrot = 93;
+	public int potato = 93;
+	public int netherWart = 93;
+	public int pumpkin = 258;
+	public int melon = 258;
+	public int cocoaBeans = 155;
+	public int sugarCane = 327;
+	public int cactus = 400;
+	public int mushroom = 200;
+
+	public RancherSpeeds asData() {
+		return new RancherSpeeds(
+				new IntReference(this::getWheat, this::setWheat),
+				new IntReference(this::getCarrot, this::setCarrot),
+				new IntReference(this::getPotato, this::setPotato),
+				new IntReference(this::getNetherWart, this::setNetherWart),
+				new IntReference(this::getPumpkin, this::setPumpkin),
+				new IntReference(this::getMelon, this::setMelon),
+				new IntReference(this::getCocoaBeans, this::setCocoaBeans),
+				new IntReference(this::getSugarCane, this::setSugarCane),
+				new IntReference(this::getCactus, this::setCactus),
+				new IntReference(this::getMushroom, this::setMushroom)
+		);
+	}
+
+
+	@Override
+	public Codec<RancherSpeedConfig> getCodec() {
+		return CODEC;
+	}
+
+	@Override
+	public void load(RancherSpeedConfig value) {
+
+	}
+
+	@Override
+	public RancherSpeedConfig getValue() {
+		return this;
+	}
+
+	@Override
+	public Logger getLogger() {
+		return logger;
+	}
 }

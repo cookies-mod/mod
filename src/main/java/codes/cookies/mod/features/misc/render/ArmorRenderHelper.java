@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.render;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.utils.accessors.PlayerEntityRenderStateAccessor;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 
@@ -32,16 +32,15 @@ public interface ArmorRenderHelper {
 	}
 
 	static boolean shouldHideOtherArmor() {
-		return ConfigManager.getConfig().miscConfig.hideOtherArmor.getValue();
+		return MiscCategory.hideOtherArmour;
 	}
 
 	static boolean shouldHideOwnArmor() {
-		return ConfigManager.getConfig().miscConfig.hideOwnArmor.getValue();
+		return MiscCategory.hideOwnArmour;
 	}
 
 	static boolean showDyedArmor(final ItemStack itemStack) {
-		return ConfigManager.getConfig().miscConfig.showDyeArmor.getValue() &&
-				itemStack.contains(CookiesDataComponentTypes.DYE);
+		return MiscCategory.showDyedArmor && itemStack.contains(CookiesDataComponentTypes.DYE);
 	}
 
 }

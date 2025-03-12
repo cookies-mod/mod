@@ -1,7 +1,7 @@
 package codes.cookies.mod.screen.inventory;
 
 import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.CraftHelperCategory;
 import codes.cookies.mod.features.misc.utils.ModifyRecipeScreen;
 import codes.cookies.mod.features.misc.utils.crafthelper.CraftHelperManager;
 import codes.cookies.mod.repository.Ingredient;
@@ -54,7 +54,7 @@ public class ForgeRecipeScreen extends ClientSideInventory {
                 TextUtils.literal("      Result item ", Formatting.YELLOW)
                     .append(TextUtils.literal(" -->", Formatting.WHITE))).build());
 
-        if (ConfigManager.getConfig().helpersConfig.craftHelper.craftHelper.getValue()) {
+        if (CraftHelperCategory.enable) {
             final ItemStack craftHelperSelect = ModifyRecipeScreen.CRAFT_HELPER_SELECT.copy();
             craftHelperSelect.set(
                 CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE,

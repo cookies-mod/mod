@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.dungeons.solver.terminals;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.TerminalCategory;
 import codes.cookies.mod.events.InventoryEvents;
 
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
@@ -16,15 +16,11 @@ import com.google.common.util.concurrent.Runnables;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.texture.TextureStitcher;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Unit;
 
-import java.util.ArrayList;
 
 public class MelodyTerminalSolver extends TerminalSolver {
 	private final ItemStack blockedInput = this.doneItem.copy().withItem(Items.BARRIER);
@@ -40,12 +36,15 @@ public class MelodyTerminalSolver extends TerminalSolver {
 	}
 
 	private static void melodyNotify(String message) {
-		if (DungeonConfig.getInstance().terminalFoldable.melodyNotifier.getValue()) {
+		if (TerminalCategory.melodyNotifier) {
 			ChatUtils.sendPartyMessage(message);
 		}
 	}
 
 	private void modify(HandledScreen<?> handledScreen) {
+		if (!TerminalCategory.melodyTerminal) {
+			return;
+		}
 		ScreenEvents.remove(handledScreen).register((screen) -> {
 			if (percentagesAnnounced[3]) {
 				melodyNotify("Melody Terminal complete!");
@@ -75,7 +74,7 @@ public class MelodyTerminalSolver extends TerminalSolver {
 	@Override
 	public void openNewTerminal() {
 		super.openNewTerminal();
-		if (DungeonConfig.getInstance().terminalFoldable.preventMissclicks.getValue()) {
+		if (TerminalCategory.preventMissclicks) {
 			this.blockedInput.set(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE, Runnables.doNothing());
 		} else {
 			this.blockedInput.remove(CookiesDataComponentTypes.ITEM_CLICK_RUNNABLE);
@@ -127,7 +126,7 @@ public class MelodyTerminalSolver extends TerminalSolver {
 				SlotAccessor.setInteractionLocked(selectedSlot, false);
 				SlotAccessor.setItem(selectedSlot, null);
 			} else {
-				if (DungeonConfig.getInstance().terminalFoldable.preventMissclicks.getValue()) {
+				if (TerminalCategory.preventMissclicks) {
 					SlotAccessor.setInteractionLocked(selectedSlot, true);
 				}
 				SlotAccessor.setItem(selectedSlot, this.blockedInput);

@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.mining.shafts;
 
-import codes.cookies.mod.config.categories.mining.shaft.ShaftConfig;
+import codes.cookies.mod.config.categories.mining.ShaftCategory;
 import codes.cookies.mod.events.PlayerListWidgetEvent;
 import codes.cookies.mod.events.mining.MineshaftEvents;
 import codes.cookies.mod.repository.constants.mining.ShaftCorpseLocations;
@@ -73,7 +73,7 @@ public class MineshaftAnnouncements {
 			stringBuilder.append("| ").append(unknown.size()).append(" Unknown");
 		}
 
-        switch (ShaftConfig.getConfig().announcementType.getValue()) {
+        switch (ShaftCategory.type) {
             case CHAT -> CookiesUtils.sendWhiteMessage(stringBuilder.toString());
             case PARTY -> {
                 if (PartyUtils.isInParty()) {

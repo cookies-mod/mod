@@ -1,6 +1,6 @@
 package codes.cookies.mod.features.misc.utils;
 
-import codes.cookies.mod.config.ConfigManager;
+import codes.cookies.mod.config.categories.HelpersCategory;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.utils.SkyblockUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
@@ -29,7 +29,7 @@ public class AnvilHelper {
                 if (!SkyblockUtils.isCurrentlyInSkyblock()) {
                     return;
                 }
-                if (!ConfigManager.getConfig().helpersConfig.anvilHelper.getValue()) {
+                if (!HelpersCategory.anvilHelper) {
                     return;
                 }
                 if (!screen.getTitle().getString().trim().equals("Anvil")) {

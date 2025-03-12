@@ -3,7 +3,7 @@ package codes.cookies.mod.features.dungeons;
 import java.util.List;
 import java.util.Optional;
 
-import codes.cookies.mod.config.categories.DungeonConfig;
+import codes.cookies.mod.config.categories.dungeons.DungeonCategory;
 import codes.cookies.mod.events.InventoryEvents;
 import codes.cookies.mod.events.api.InventoryContentUpdateEvent;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
@@ -32,7 +32,7 @@ public class CroesusHelper {
 	}
 
 	private static void open(HandledScreen<?> handledScreen) {
-		if (!DungeonConfig.getInstance().croesusFoldable.highlightUnclaimedChests.getValue()) {
+		if (!DungeonCategory.highlightUnclaimedChests) {
 			return;
 		}
 		new CroesusHelper(handledScreen);

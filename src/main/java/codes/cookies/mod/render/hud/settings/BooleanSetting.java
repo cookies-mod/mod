@@ -3,7 +3,6 @@ package codes.cookies.mod.render.hud.settings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import codes.cookies.mod.config.system.options.BooleanOption;
 import codes.cookies.mod.screen.CookiesScreen;
 import codes.cookies.mod.utils.minecraft.SoundUtils;
 
@@ -41,10 +40,6 @@ public class BooleanSetting extends HudElementSetting {
 
 	public BooleanSetting(Text name, Text description, Supplier<Boolean> getter, Consumer<Boolean> setter) {
 		this(name, description, getter, setter, HudElementSettingType.CUSTOM);
-	}
-
-	public BooleanSetting(BooleanOption booleanOption) {
-		this(booleanOption.getName(), booleanOption.getDescription(), booleanOption::getValue, booleanOption::setValue);
 	}
 
 	@Override

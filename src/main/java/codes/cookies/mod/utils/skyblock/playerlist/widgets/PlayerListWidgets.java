@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import codes.cookies.mod.utils.skyblock.playerlist.PlayerListReader;
 import codes.cookies.mod.utils.skyblock.playerlist.widgets.corpse.FrozenCorpseWidget;
 import codes.cookies.mod.utils.skyblock.playerlist.widgets.crystal.CrystalWidget;
+import codes.cookies.mod.utils.skyblock.playerlist.widgets.powder.PowderWidget;
 
 public class PlayerListWidgets {
 
@@ -22,6 +23,11 @@ public class PlayerListWidgets {
 			CrystalWidget::doesMatch,
 			CrystalWidget::new,
 			CrystalWidget.class
+	);
+	public static Entry<PowderWidget> POWDER = register(
+			PowderWidget::doesMatch,
+			PowderWidget::new,
+			PowderWidget.class
 	);
 
 	private static <T extends PlayerListWidget> Entry<T> register(

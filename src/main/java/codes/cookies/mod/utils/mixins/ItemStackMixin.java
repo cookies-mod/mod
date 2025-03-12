@@ -1,6 +1,6 @@
 package codes.cookies.mod.utils.mixins;
 
-import codes.cookies.mod.config.categories.MiscConfig;
+import codes.cookies.mod.config.categories.MiscCategory;
 import codes.cookies.mod.utils.items.PetInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -132,7 +132,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
 	@Unique
 	private void cookies$setStars() {
-		if (!ConfigManager.getConfig().miscConfig.showItemUpgrades.getValue()) {
+		if (!MiscCategory.showItemUpgrades) {
 			return;
 		}
 
@@ -189,7 +189,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
         if (nbtCompound == null) {
             return;
         }
-        if (!ConfigManager.getConfig().miscConfig.showPetLevelAsStackSize.getValue()) {
+        if (!MiscCategory.showPetLevelAsStackSize) {
             return;
         }
         if (!nbtCompound.contains("petInfo")) {
@@ -206,7 +206,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
         final String level = text.getString().replaceAll("\\[Lvl (\\d+)].*", "$1");
 
         final Formatting tier;
-        if (ConfigManager.getConfig().miscConfig.showPetRarityInLevelText.getValue()) {
+        if (MiscCategory.showPetRarityInLevelText) {
             JsonObject jsonObject = JsonParser.parseString(nbtCompound.getString("petInfo")).getAsJsonObject();
             tier = RepositoryItem.Tier.valueOf(jsonObject.get("tier").getAsString()).getFormatting();
         } else {
