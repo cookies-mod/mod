@@ -48,7 +48,7 @@ public class BlockEntityRenderDispatcherMixin {
         return defaultValue;
     }
 
-    @ModifyVariable(method = "renderEntity", at = @At(value = "HEAD"), argsOnly = true)
+    @ModifyVariable(method = "render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V", at = @At(value = "HEAD"), argsOnly = true)
     private <E extends BlockEntity> VertexConsumerProvider renderEntityPrivate(
         VertexConsumerProvider value, @Local(argsOnly = true) E entity) {
         return cookies$getProvider(entity, value);
