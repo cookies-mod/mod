@@ -1,5 +1,4 @@
 accessWidener v2 named
-accessible method net/minecraft/client/render/block/entity/BeaconBlockEntityRenderer renderBeam (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;FJIII)V
 accessible method net/minecraft/client/render/WorldRenderer renderEntity (Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V
 accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
