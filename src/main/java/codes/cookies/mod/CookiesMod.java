@@ -20,6 +20,7 @@ import codes.cookies.mod.repository.Repository;
 import codes.cookies.mod.repository.constants.RepositoryConstants;
 import codes.cookies.mod.screen.search.ItemSearchScreen;
 import codes.cookies.mod.services.mining.CrystalStatusService;
+import codes.cookies.mod.services.mining.powder.PowderService;
 import codes.cookies.mod.utils.UpdateChecker;
 
 import java.util.concurrent.Executors;
@@ -77,6 +78,7 @@ public class CookiesMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+		PowderService.initialize();
 		ConfigManager.load();
         CommandManager.initialize();
 		CookieDataManager.load();
