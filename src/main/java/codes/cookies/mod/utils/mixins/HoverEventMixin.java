@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-@Mixin(HoverEvent.class)
+@Mixin(value = {HoverEvent.ShowEntity.class, HoverEvent.ShowItem.class, HoverEvent.ShowText.class})
 public class HoverEventMixin implements HoverEventAccessor {
 
 	@Unique

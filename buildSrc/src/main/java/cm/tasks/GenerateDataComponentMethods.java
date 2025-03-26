@@ -45,7 +45,7 @@ public abstract class GenerateDataComponentMethods extends DefaultTask {
     }
 
     @TaskAction
-    private void generateDataComponent() throws IOException {
+    public void generateDataComponent() throws IOException {
         final CompilationUnit compilationUnit =
             new CompilationUnit("codes.cookies.mod.generated.utils").setStorage(
                 this.getOutputDir().get().getAsFile().toPath()

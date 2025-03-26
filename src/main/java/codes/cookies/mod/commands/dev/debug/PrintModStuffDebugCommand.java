@@ -10,6 +10,8 @@ import codes.cookies.mod.utils.cookies.Constants;
 import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.json.JsonUtils;
 
+import net.minecraft.text.HoverEvent;
+
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.text.ClickEvent;
@@ -34,8 +36,7 @@ public class PrintModStuffDebugCommand extends ClientCommand {
 		}
 		CookiesUtils.sendMessage(CookiesUtils.createPrefix(Constants.SUCCESS_COLOR)
 				.append("Successfully serialized data :D")
-				.styled(style -> style.withClickEvent(new ClickEvent(
-						ClickEvent.Action.COPY_TO_CLIPBOARD,
+				.styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(
 						JsonUtils.GSON.toJson(elements.getOrThrow())))));
 	}
 }

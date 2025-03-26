@@ -92,14 +92,14 @@ public class CookiesDataComponentTypes {
 				"id",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getString(key));
+				(nbtComponent, key) -> nbtComponent.getNbt().getString(key, null));
 		UUID = register(
 				builder -> builder.codec(Uuids.CODEC),
 				"uuid",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
 				(nbtComponent, key) -> {
-					return nbtComponent.getNbt().contains(key) ? java.util.UUID.fromString(nbtComponent.getNbt().getString(key)) : null;
+					return nbtComponent.getNbt().contains(key) ? java.util.UUID.fromString(nbtComponent.getNbt().getString(key, null)) : null;
 				});
 		//noinspection deprecation
 		TIMESTAMP = register(
@@ -107,21 +107,21 @@ public class CookiesDataComponentTypes {
 				"timestamp",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> Instant.ofEpochMilli(nbtComponent.getNbt().getLong(key)));
+				(nbtComponent, key) -> Instant.ofEpochMilli(nbtComponent.getNbt().getLong(key, 0)));
 		//noinspection deprecation
 		MODIFIER = register(
 				builder -> builder.codec(Codec.STRING),
 				"modifier",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getString(key));
+				(nbtComponent, key) -> nbtComponent.getNbt().getString(key, null));
 		//noinspection deprecation
 		DONATED_MUSEUM = register(
 				builder -> builder.codec(Codec.BOOL),
 				"donated_museum",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key) == 1);
+				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key, 0) == 1);
 		ENCHANTMENTS = register(
 				builder -> builder.codec(Codec.unboundedMap(Codec.STRING, Codec.INT)),
 				"enchantments",
@@ -129,11 +129,11 @@ public class CookiesDataComponentTypes {
 				defaultTest(),
 				(nbtComponent, key) -> {
 					//noinspection deprecation
-					final NbtCompound enchantments = nbtComponent.getNbt().getCompound(key);
+					final NbtCompound enchantments = nbtComponent.getNbt().getCompoundOrEmpty(key);
 
 					Map<String, Integer> map = new HashMap<>();
 					for (String elementKey : enchantments.getKeys()) {
-						map.put(elementKey, enchantments.getInt(elementKey));
+						map.put(elementKey, enchantments.getInt(elementKey, 0));
 					}
 					return map;
 				});
@@ -142,13 +142,13 @@ public class CookiesDataComponentTypes {
 				"hot_potato_count",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
+				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key, 0));
 		RARITY_UPGRADES = register(
 				builder -> builder.codec(Codec.INT),
 				"rarity_upgrades",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
+				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key, 0));
 		RUNES = register(
 				builder -> builder.codec(Codec.unboundedMap(Codec.STRING, Codec.INT)),
 				"runes",
@@ -156,11 +156,11 @@ public class CookiesDataComponentTypes {
 				defaultTest(),
 				(nbtComponent, key) -> {
 					//noinspection deprecation
-					final NbtCompound enchantments = nbtComponent.getNbt().getCompound(key);
+					final NbtCompound enchantments = nbtComponent.getNbt().getCompoundOrEmpty(key);
 
 					Map<String, Integer> map = new HashMap<>();
 					for (String elementKey : enchantments.getKeys()) {
-						map.put(elementKey, enchantments.getInt(elementKey));
+						map.put(elementKey, enchantments.getInt(elementKey, 0));
 					}
 					return map;
 				});
@@ -170,11 +170,11 @@ public class CookiesDataComponentTypes {
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
 				(nbtComponent, key) -> {
-					final NbtCompound enchantments = nbtComponent.copyNbt().getCompound(key);
+					final NbtCompound enchantments = nbtComponent.copyNbt().getCompoundOrEmpty(key);
 
 					Map<String, Integer> map = new HashMap<>();
 					for (String elementKey : enchantments.getKeys()) {
-						map.put(elementKey, enchantments.getInt(elementKey));
+						map.put(elementKey, enchantments.getInt(elementKey, 0));
 					}
 					return map;
 				});
@@ -182,13 +182,13 @@ public class CookiesDataComponentTypes {
 				"petInfo",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, s) -> PetInfo.create(nbtComponent.getNbt().getString(s)));
+				(nbtComponent, s) -> PetInfo.create(nbtComponent.getNbt().getString(s, null)));
 		UPGRADE_LEVEL = register(
 				builder -> builder.codec(Codec.INT),
 				"upgrade_level",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key));
+				(nbtComponent, key) -> nbtComponent.getNbt().getInt(key, 0));
 		STACKING_ENCHANT_XP = register(
 				builder -> builder.codec(Codec.INT),
 				new String[] {"stacking_enchantment_xp"},
@@ -206,7 +206,7 @@ public class CookiesDataComponentTypes {
 				"dye_item",
 				DataComponentTypes.CUSTOM_DATA,
 				defaultTest(),
-				(nbtComponent, s) -> nbtComponent.getNbt().getString(s));
+				(nbtComponent, s) -> nbtComponent.getNbt().getString(s, null));
 		ENCHANTMENT_ID = new CookiesDataComponent<>(Identifier.of("cookies:enchantment_id"));
 		CUSTOM_SLOT_TEXT = new CookiesDataComponent<>(Identifier.of("cookies:custom_slot_text"));
 		OVERRIDE_RENDER_ITEM = new CookiesDataComponent<>(Identifier.of("cookies:override_render_item"));

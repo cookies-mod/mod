@@ -28,7 +28,7 @@ public class TextBuilder {
 	}
 
 	public TextBuilder setRunnable(Runnable runnable) {
-		final ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ":C");
+		final ClickEvent clickEvent = new ClickEvent.SuggestCommand(":C");
 		ClickEventAccessor.setRunnable(clickEvent, runnable);
 		this.style = this.style.withClickEvent(clickEvent);
 		return this;
@@ -45,14 +45,14 @@ public class TextBuilder {
 	}
 
 	public TextBuilder onHover(List<Text> event) {
-		final HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(":c"));
+		final HoverEvent hoverEvent = new HoverEvent.ShowText(Text.literal(":c"));
 		HoverEventAccessor.setText(hoverEvent, event);
 		this.style = this.style.withHoverEvent(hoverEvent);
 		return this;
 	}
 
 	public TextBuilder onHover(Text event) {
-		this.style = this.style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, event));
+		this.style = this.style.withHoverEvent(new HoverEvent.ShowText(event));
 		return this;
 	}
 

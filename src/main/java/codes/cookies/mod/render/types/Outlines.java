@@ -3,13 +3,14 @@ package codes.cookies.mod.render.types;
 import codes.cookies.mod.render.utils.RenderHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import codes.cookies.mod.render.Renderable;
+import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.render.debug.DebugRenderer;
+
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
@@ -117,34 +118,24 @@ public record Outlines(
 	@Override
 	public void render(WorldRenderContext context) {
 		final MatrixStack matrixStack = context.matrixStack();
-		RenderSystem.setShader(RenderSystem.setShader(ShaderProgramKeys.RENDERTYPE_LINES));
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		RenderSystem.lineWidth(this.lineWidth);
-		RenderSystem.disableCull();
-		RenderSystem.enableDepthTest();
-		RenderSystem.depthFunc(this.throughWalls ? GL11.GL_ALWAYS : GL11.GL_LEQUAL);
-
-		final Tessellator tessellator = RenderSystem.renderThreadTesselator();
-		final BufferBuilder begin = tessellator.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
-		VertexRendering.drawBox(
-				matrixStack,
-				begin,
-				this.box.minX,
-				this.box.minY,
-				this.box.minZ,
-				this.box.maxX,
-				this.box.maxY,
-				this.box.maxZ,
-				this.red,
-				this.green,
-				this.blue,
-				this.alpha);
-		BufferRenderer.drawWithGlobalProgram(begin.end());
+		//
+		// VertexRendering.drawBox(//
+		// matrixStack, //
+		// begin, //
+		// this.box.minX, //
+		// this.box.minY, //
+		// this.box.minZ, //
+		// this.box.maxX, //
+		// this.box.maxY, //
+		// this.box.maxZ, //
+		// this.red, //
+		// this.green, //
+		// this.blue, //
+		// this.alpha);
 
 		RenderSystem.lineWidth(1);
-		RenderSystem.enableCull();
-		RenderSystem.disableDepthTest();
-		RenderSystem.depthFunc(GL11.GL_LEQUAL);
 	}
 
 	@Override

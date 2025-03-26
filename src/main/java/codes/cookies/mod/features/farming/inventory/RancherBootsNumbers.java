@@ -45,7 +45,7 @@ public class RancherBootsNumbers {
         if (customData == null || !customData.contains("ranchers_speed")) {
             return;
         }
-        final int ranchersSpeed = customData.getNbt().getInt("ranchers_speed");
+        final int ranchersSpeed = customData.getNbt().getInt("ranchers_speed", 0);
 
         itemStack.set(CookiesDataComponentTypes.CUSTOM_SLOT_TEXT, String.valueOf(ranchersSpeed));
     }

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -16,6 +17,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+import codes.cookies.mod.repository.recipes.Recipe;
+import codes.cookies.mod.utils.dev.FunctionUtils;
+import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
@@ -26,17 +30,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import codes.cookies.mod.repository.recipes.Recipe;
-import codes.cookies.mod.utils.dev.FunctionUtils;
-import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-
-import net.minecraft.component.type.NbtComponent;
-
-import net.minecraft.nbt.NbtCompound;
-
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +40,11 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -145,10 +144,11 @@ public class RepositoryItem {
 				repositoryItem.setRecipes(new HashSet<>());
 				repositoryItem.setUsedInRecipeAsIngredient(new HashSet<>());
 				repositoryItem.museumable = false;
-				final RepositoryItem put = itemMap.put(repositoryItem.internalId.toLowerCase(Locale.ROOT)
-						.replace(":", "/")
-						.replace("-", "/")
-						.replace(";", "/"), repositoryItem);
+				final RepositoryItem put = itemMap.put(
+						repositoryItem.internalId.toLowerCase(Locale.ROOT)
+								.replace(":", "/")
+								.replace("-", "/")
+								.replace(";", "/"), repositoryItem);
 				if (put != null) {
 					LOGGER.warn("Duplicate id detected {}", repositoryItem.internalId);
 				}
@@ -175,6 +175,7 @@ public class RepositoryItem {
 
 	/**
 	 * Gets the item or creates an "empty" item.
+	 *
 	 * @param id The item id to get.
 	 * @return The item, or a non-null empty item.
 	 */
@@ -343,7 +344,34 @@ public class RepositoryItem {
 		itemStack.set(DataComponentTypes.PROFILE, component);
 		itemStack.set(DataComponentTypes.LORE, new LoreComponent(this.lore, this.lore));
 		itemStack.set(CookiesDataComponentTypes.SKYBLOCK_ID, this.internalId);
-		itemStack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(color, false));
+		itemStack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(color));
+		itemStack.set(
+				DataComponentTypes.TOOLTIP_DISPLAY,
+				new TooltipDisplayComponent(
+						false,
+						new LinkedHashSet<>(List.of(
+								DataComponentTypes.TROPICAL_FISH_PATTERN,
+								DataComponentTypes.INSTRUMENT,
+								DataComponentTypes.MAP_ID,
+								DataComponentTypes.BEES,
+								DataComponentTypes.CONTAINER_LOOT,
+								DataComponentTypes.CONTAINER,
+								DataComponentTypes.BANNER_PATTERNS,
+								DataComponentTypes.POT_DECORATIONS,
+								DataComponentTypes.WRITTEN_BOOK_CONTENT,
+								DataComponentTypes.CHARGED_PROJECTILES,
+								DataComponentTypes.FIREWORKS,
+								DataComponentTypes.FIREWORK_EXPLOSION,
+								DataComponentTypes.POTION_CONTENTS,
+								DataComponentTypes.JUKEBOX_PLAYABLE,
+								DataComponentTypes.TRIM,
+								DataComponentTypes.STORED_ENCHANTMENTS,
+								DataComponentTypes.ENCHANTMENTS,
+								DataComponentTypes.DYED_COLOR,
+								DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER,
+								DataComponentTypes.SUSPICIOUS_STEW_EFFECTS,
+								DataComponentTypes.BLOCK_STATE
+						))));
 		itemStack.remove(DataComponentTypes.ATTRIBUTE_MODIFIERS);
 		itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(this.createNbt()));
 		return itemStack;

@@ -27,6 +27,8 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -207,7 +209,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
         final Formatting tier;
         if (MiscCategory.showPetRarityInLevelText) {
-            JsonObject jsonObject = JsonParser.parseString(nbtCompound.getString("petInfo")).getAsJsonObject();
+            JsonObject jsonObject = JsonParser.parseString(nbtCompound.getString("petInfo", "{}")).getAsJsonObject();
             tier = RepositoryItem.Tier.valueOf(jsonObject.get("tier").getAsString()).getFormatting();
         } else {
             tier = Formatting.WHITE;
@@ -237,26 +239,21 @@ public abstract class ItemStackMixin implements ComponentHolder {
 	@WrapOperation(
         method = "getTooltip", at = @At(
         value = "INVOKE",
-        target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;" +
-                 "Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;" +
-                 "Lnet/minecraft/item/tooltip/TooltipType;)V",
-        ordinal = 5
+        target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/item/Item$TooltipContext;Lnet/minecraft/component/type/TooltipDisplayComponent;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/tooltip/TooltipType;Ljava/util/function/Consumer;)V"
     )
     )
     private <T> void getLore(
-        ItemStack instance,
-        ComponentType<T> componentType,
-        Item.TooltipContext context,
-        Consumer<Text> textConsumer,
-        TooltipType type,
-        Operation<Void> original) {
-        if (!componentType.equals(DataComponentTypes.LORE)) {
-            return;
-        }
-
+			ItemStack instance,
+			Item.TooltipContext context,
+			TooltipDisplayComponent displayComponent,
+			PlayerEntity player,
+			TooltipType type,
+			Consumer<Text> textConsumer,
+			Operation<Void> original
+	) {
         final List<Text> data = ItemUtils.getData(instance, CookiesDataComponentTypes.CUSTOM_LORE);
         if (data == null) {
-            original.call(instance, componentType, context, textConsumer, type);
+            original.call(instance, context, displayComponent, player, type, textConsumer);
             return;
         }
         data.forEach(textConsumer);

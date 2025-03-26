@@ -7,15 +7,13 @@ import codes.cookies.mod.utils.cookies.CookiesUtils;
 import codes.cookies.mod.utils.json.JsonUtils;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.text.ClickEvent;
 
-import org.jetbrains.annotations.NotNull;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 public class PrintCorpseLocationsDebugCommand extends ClientCommand {
 	@Override
@@ -24,7 +22,9 @@ public class PrintCorpseLocationsDebugCommand extends ClientCommand {
 	}
 
 	private void printCorpseLocations() {
-		final DataResult<JsonElement> elements = ShaftCorpseLocations.CachedShaftLocations.LIST_CODEC.encodeStart(JsonOps.INSTANCE, ShaftCorpseLocations.getCached());
+		final DataResult<JsonElement> elements = ShaftCorpseLocations.CachedShaftLocations.LIST_CODEC.encodeStart(
+				JsonOps.INSTANCE,
+				ShaftCorpseLocations.getCached());
 		if (elements.isError()) {
 			sendFailedMessage("Failed to serialize data: " +
 					elements.error().map(DataResult.Error::message).orElse("<no message>"));
@@ -32,8 +32,7 @@ public class PrintCorpseLocationsDebugCommand extends ClientCommand {
 		}
 		CookiesUtils.sendMessage(CookiesUtils.createPrefix(Constants.SUCCESS_COLOR)
 				.append("Successfully serialized data :D")
-				.styled(style -> style.withClickEvent(new ClickEvent(
-						ClickEvent.Action.COPY_TO_CLIPBOARD,
+				.styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(
 						JsonUtils.GSON.toJson(elements.getOrThrow())))));
 	}
 }

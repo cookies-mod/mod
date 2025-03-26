@@ -73,14 +73,13 @@ public class ExceptionHandler {
                     .translatable(TranslationKeys.INTERNAL_ERROR)
                     .styled(style -> style
                         .withColor(Constants.FAIL_COLOR)
-                        .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
+                        .withHoverEvent(new HoverEvent.ShowText(
                             Text.literal("%s: %s".formatted(
                                 exception.getClass().getName(),
                                 exception.getMessage()
                             ))
                         ))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copy)))), false);
+                        .withClickEvent(new ClickEvent.CopyToClipboard(copy)))), false);
         });
     }
 

@@ -92,8 +92,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 						DevInventoryUtils.saveInventory((HandledScreen<? extends ScreenHandler>) (Object) this);
 				CookiesUtils.sendMessage(CookiesUtils.createPrefix()
 						.append("Saved inventory to file %s".formatted(path.getFileName()))
-						.styled(style -> style.withClickEvent(new ClickEvent(
-								ClickEvent.Action.COPY_TO_CLIPBOARD,
+						.styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(
 								path.getFileName().toString().split("\\.")[0]))));
 				cir.setReturnValue(true);
 			} catch (IOException ioException) {

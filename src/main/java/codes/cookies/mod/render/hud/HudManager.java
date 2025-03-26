@@ -59,7 +59,7 @@ public class HudManager {
 			hudElement.renderChecks(
 					drawContext,
 					getTextRenderer(),
-					renderTickCounter.getTickDelta(true));
+					renderTickCounter.getTickProgress(true));
 		});
 	}
 

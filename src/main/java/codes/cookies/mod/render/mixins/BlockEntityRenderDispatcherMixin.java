@@ -21,9 +21,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class BlockEntityRenderDispatcherMixin {
 
     @ModifyVariable(
-        method = "render(Lnet/minecraft/client/render/block/entity/BlockEntityRenderer;" +
-                 "Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;" +
-                 "Lnet/minecraft/client/render/VertexConsumerProvider;)V", at = @At(value = "HEAD"), argsOnly = true
+        method = "render(Lnet/minecraft/client/render/block/entity/BlockEntityRenderer;Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/util/math/Vec3d;)V", at = @At(value = "HEAD"), argsOnly = true
     )
     private static <E extends BlockEntity> VertexConsumerProvider renderEntity(
         VertexConsumerProvider value, @Local(argsOnly = true) E entity) {
@@ -41,7 +39,6 @@ public class BlockEntityRenderDispatcherMixin {
                 RenderHelper.getGreen(color),
                 RenderHelper.getBlue(color),
                 RenderHelper.getAlpha(color));
-            RenderSystem.disableDepthTest();
             return outlineVertexConsumers;
         }
 

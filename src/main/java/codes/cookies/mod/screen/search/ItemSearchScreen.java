@@ -516,8 +516,8 @@ public class ItemSearchScreen extends ScrollbarScreen implements InventoryScreen
 			if (mouseX > slotX && mouseY > slotY && mouseX < slotX + 16 && mouseY < slotY + 16) {
 				RenderUtils.drawSlotHighlightBack(context, slotX, slotY);
 				RenderUtils.drawSlotHighlightFront(context, slotX, slotY);
-				final List<Text> tooltipFromItem =
-						Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemContext.itemStack());
+				final List<Text> tooltipFromItem =new ArrayList<>(
+						Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemContext.itemStack()));
 				this.appendTooltip(tooltipFromItem, itemContext);
 
 				context.drawTooltip(

@@ -20,6 +20,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.net.URI;
+
 /**
  * Used to check if the mod is up-to-date, if not send a message that notifies the user of the new release.
  */
@@ -46,8 +48,8 @@ public class UpdateChecker {
             CookiesUtils.createPrefix(Constants.FAIL_COLOR).append(Text.translatable(TranslationKeys.UPDATE_AVAILABLE));
 
         final Text secondLine = Text.translatable(TranslationKeys.UPDATE_MODRINTH)
-            .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-                    "https://modrinth.com/mod/Te5vDuHn/version/" + latestVersion))
+            .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+                    URI.create("https://modrinth.com/mod/Te5vDuHn/version/" + latestVersion)))
                 .withColor(Formatting.DARK_GRAY));
 
         CookiesUtils.sendMessage(firstLine.append("\n").append(secondLine));

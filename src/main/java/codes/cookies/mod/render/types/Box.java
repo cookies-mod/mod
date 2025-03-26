@@ -1,8 +1,6 @@
 package codes.cookies.mod.render.types;
 
 import codes.cookies.mod.render.Renderable;
-import codes.cookies.mod.render.utils.CookiesRenderLayers;
-
 import codes.cookies.mod.render.utils.RenderHelper;
 
 import net.minecraft.client.render.RenderLayer;
@@ -60,7 +58,8 @@ public record Box(
 	 * @param throughWalls Whether the box should be visible through walls or not.
 	 */
 	public Box(Vec3d start, Vec3d end, int color, boolean throughWalls) {
-		this(start,
+		this(
+				start,
 				end,
 				RenderHelper.getRed(color) / 255f,
 				RenderHelper.getGreen(color) / 255f,
@@ -70,7 +69,8 @@ public record Box(
 	}
 
 	public Box(BlockPos origin, int color, boolean throughWalls) {
-		this(origin.toCenterPos().subtract(0.5, 0.5, 0.5),
+		this(
+				origin.toCenterPos().subtract(0.5, 0.5, 0.5),
 				origin.toCenterPos().add(0.5, 0.5, 0.5),
 				color,
 				throughWalls);
@@ -81,9 +81,9 @@ public record Box(
 		final MatrixStack matrixStack = context.matrixStack();
 		final VertexConsumerProvider consumers = context.consumers();
 
-		VertexRendering.drawFilledBox(matrixStack,
-				consumers.getBuffer(
-						throughWalls ? CookiesRenderLayers.FILLED_THROUGH_WALLS : RenderLayer.getDebugFilledBox()),
+		VertexRendering.drawFilledBox(
+				matrixStack,
+				consumers.getBuffer(RenderLayer.getDebugFilledBox()),
 				box.minX,
 				box.minY,
 				box.minZ,

@@ -1,9 +1,4 @@
 accessWidener v2 named
-accessible class net/minecraft/client/render/RenderLayer$MultiPhase
-accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
-accessible class net/minecraft/client/render/RenderPhase$Cull
-accessible class net/minecraft/client/render/RenderPhase$DepthTest
-accessible class net/minecraft/client/render/RenderPhase$Transparency
 accessible method net/minecraft/client/render/block/entity/BeaconBlockEntityRenderer renderBeam (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;FJIII)V
 accessible method net/minecraft/client/render/WorldRenderer renderEntity (Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V
 accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z

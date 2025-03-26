@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ItemModelManager.class)
 public class ItemModelManagerMixin {
 
-	@ModifyVariable(method = "update(Lnet/minecraft/client/render/item/ItemRenderState;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)V", at = @At("HEAD"), argsOnly = true)
+	@ModifyVariable(method = "update", at = @At("HEAD"), argsOnly = true)
 	public ItemStack update(ItemStack value) {
 		if (value.contains(CookiesDataComponentTypes.OVERRIDE_RENDER_ITEM)) {
 			return value.get(CookiesDataComponentTypes.OVERRIDE_RENDER_ITEM);

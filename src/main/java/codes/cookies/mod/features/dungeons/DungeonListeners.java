@@ -128,13 +128,13 @@ public class DungeonListeners {
 
 	private static void beforeEntities(WorldRenderContext worldRenderContext) {
 		getInstance().ifPresent(instance -> {
-			worldRenderContext.tickCounter().getTickDelta(false);
+			worldRenderContext.tickCounter().getTickProgress(false);
 
 			instance.getPuzzleSolverInstance()
 					.getCurrent()
 					.map(FunctionUtils.function(PuzzleSolver::beforeRender))
 					.orElseGet(FunctionUtils::noOp)
-					.accept(worldRenderContext.tickCounter().getTickDelta(false));
+					.accept(worldRenderContext.tickCounter().getTickProgress(false));
 		});
 	}
 

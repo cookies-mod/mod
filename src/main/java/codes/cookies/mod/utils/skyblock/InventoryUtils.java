@@ -35,8 +35,7 @@ public class InventoryUtils {
         }
 
         return ItemUtils.getData(itemStack, DataComponentTypes.CUSTOM_NAME) != null &&
-               ItemUtils.getData(itemStack, DataComponentTypes.HIDE_ADDITIONAL_TOOLTIP) != null &&
-               ItemUtils.getData(itemStack, DataComponentTypes.HIDE_TOOLTIP) != null &&
+               ItemUtils.getData(itemStack, DataComponentTypes.TOOLTIP_DISPLAY) != null &&
                Registries.ITEM.getEntry(itemStack.getItem()).getIdAsString().contains("stained_glass_pane");
     }
 

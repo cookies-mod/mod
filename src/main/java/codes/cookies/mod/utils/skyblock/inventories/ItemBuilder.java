@@ -15,10 +15,13 @@ import com.mojang.authlib.properties.Property;
 import codes.cookies.mod.utils.TextUtils;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 
+import it.unimi.dsi.fastutil.objects.ReferenceSortedSets;
+
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
@@ -95,7 +98,7 @@ public class ItemBuilder {
 	 * Hides the tooltips of the item.
 	 */
 	public ItemBuilder hideTooltips() {
-		this.itemStack.set(DataComponentTypes.HIDE_TOOLTIP, Unit.INSTANCE);
+		this.itemStack.set(DataComponentTypes.TOOLTIP_DISPLAY, new TooltipDisplayComponent(true, ReferenceSortedSets.emptySet()));
 		return this;
 	}
 
@@ -103,7 +106,7 @@ public class ItemBuilder {
 	 * Hides the additional tooltips of the item.
 	 */
 	public ItemBuilder hideAdditionalTooltips() {
-		this.itemStack.set(DataComponentTypes.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+		this.itemStack.set(DataComponentTypes.TOOLTIP_DISPLAY, new TooltipDisplayComponent(false, ReferenceSortedSets.emptySet()));
 		return this;
 	}
 

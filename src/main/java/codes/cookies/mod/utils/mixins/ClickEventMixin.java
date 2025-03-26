@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.text.ClickEvent;
 
-@Mixin(ClickEvent.class)
+@Mixin(value = {ClickEvent.ChangePage.class, ClickEvent.CopyToClipboard.class, ClickEvent.OpenFile.class, ClickEvent.OpenUrl.class, ClickEvent.RunCommand.class, ClickEvent.SuggestCommand.class})
 public class ClickEventMixin implements ClickEventAccessor {
 
 	@Unique

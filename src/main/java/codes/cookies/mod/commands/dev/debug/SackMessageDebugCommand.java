@@ -54,8 +54,7 @@ public class SackMessageDebugCommand extends ClientCommand {
 		MutableText remove = Text.literal("remove").formatted(Formatting.RED);
 
 
-		remove.styled(style -> style.withHoverEvent(new HoverEvent(
-				HoverEvent.Action.SHOW_TEXT,
+		remove.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(
 				Text.empty()
 						.append("Removed items:\n")
 						.append(this.getText("diamond", -2))
@@ -66,8 +65,7 @@ public class SackMessageDebugCommand extends ClientCommand {
 	private Text getAdd() {
 		MutableText add = Text.literal("add").formatted(Formatting.GREEN);
 
-		add.styled(style -> style.withHoverEvent(new HoverEvent(
-				HoverEvent.Action.SHOW_TEXT,
+		add.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(
 				Text.empty()
 						.append("Added items:\n")
 						.append(this.getText("titanium_ore", 2))

@@ -23,11 +23,12 @@ public record BeaconBeam(Vec3d origin, int maxHeight, int color) implements Rend
 		BeaconBlockEntityRenderer.renderBeam(
 				context.matrixStack(),
 				context.consumers(),
-				context.tickCounter().getTickDelta(true),
+				BeaconBlockEntityRenderer.BEAM_TEXTURE,
+				context.tickCounter().getTickProgress(true),
 				0,
-				0,
+				0,0,
 				maxHeight,
-				color);
+				color,0.2f, 0.25f);
 		context.matrixStack().pop();
 	}
 }

@@ -91,7 +91,7 @@ public class MuseumHelper {
 				ItemStack item = switch (error.errorType()) {
 					case NO_ARMOR_FOUND -> {
 						final ItemStack stack = new ItemStack(Items.RED_DYE);
-						stack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(0xFFFF9b9b, false));
+						stack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(0xFFFF9b9b));
 						yield stack;
 					}
 					case ITEM_NOT_FOUND -> itemStack;

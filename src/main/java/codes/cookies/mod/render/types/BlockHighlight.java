@@ -77,7 +77,6 @@ public final class BlockHighlight implements Renderable {
 				RenderHelper.getAlpha(this.color));
 		consumerProvider = entityOutlinesFramebuffer;
 
-		RenderSystem.disableDepthTest();
 		final ClientWorld clientWorld = MinecraftClient.getInstance().player.clientWorld;
 		MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(
 				clientWorld.getBlockState(this.blockPos),
