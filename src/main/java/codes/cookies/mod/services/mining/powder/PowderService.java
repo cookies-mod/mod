@@ -20,7 +20,7 @@ public class PowderService {
 	private static final Map<PowderType, Map<Long, Integer>> powderTimeouts = new HashMap<>();
 	private static final Map<PowderType, PowderEntry> powderEntries = new HashMap<>();
 
-	static {
+	public static void initialize() {
 		PowderUpdateEvent.EVENT.register(PowderService::track);
 		MineshaftEvents.JOIN.register(PowderService::countShaftJoin);
 		ChatMessageEvents.BEFORE_MODIFY.register(PowderService::onMessage);
