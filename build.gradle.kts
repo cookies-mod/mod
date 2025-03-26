@@ -50,7 +50,7 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
 	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
 
-	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.properties["minecraft_version"]}:${project.properties["rconfig_version"]}")
+	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21:${project.properties["rconfig_version"]}")
 }
 
 tasks.withType<Jar>().configureEach {

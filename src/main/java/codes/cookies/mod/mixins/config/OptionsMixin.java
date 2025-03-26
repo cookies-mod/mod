@@ -4,10 +4,11 @@ import codes.cookies.mod.config.CookiesOptions;
 import codes.cookies.mod.translations.TranslationKeys;
 import codes.cookies.mod.utils.accessors.config.OptionItemAccessor;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.client.components.options.OptionItem;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
-import com.teamresourceful.resourcefulconfig.client.components.options.SeparatorItem;
 
 import net.minecraft.util.Formatting;
 
@@ -17,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.text.Text;
+
+import java.util.Collections;
 
 @Mixin(value = Options.class, remap = false)
 public class OptionsMixin {
@@ -40,7 +43,7 @@ public class OptionsMixin {
 				description = Text.empty();
 			}
 
-			final SeparatorItem separatorItem = new SeparatorItem(title, description);
+			final OptionItem separatorItem = new OptionItem(title, description, Collections.emptyList());
 			if (!option.hasDescription()) {
 				OptionItemAccessor.cast(separatorItem).cookies$modifyTitle(title);
 			}

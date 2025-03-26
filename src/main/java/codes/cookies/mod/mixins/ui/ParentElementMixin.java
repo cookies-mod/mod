@@ -29,7 +29,7 @@ public interface ParentElementMixin extends ParentElement {
     private void mouseScrolled(
         double mouseX, double mouseY, double horizontalAmount, double verticalAmount,
         CallbackInfoReturnable<Boolean> cir) {
-        if (!ConfigKeys.MISC_SCROLLABLE_TOOLTIP.get()) {
+        if (!MiscCategory.enableScrollableTooltips) {
             return;
         }
         if (((Object) this) instanceof HandledScreen<?> handledScreen) {

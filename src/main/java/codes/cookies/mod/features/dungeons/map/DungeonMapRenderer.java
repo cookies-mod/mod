@@ -51,7 +51,7 @@ public class DungeonMapRenderer {
 		} else {
 			texture = Identifier.ofVanilla("textures/map/decorations/player.png");
 		}
-		drawContext.drawTexture(RenderLayer::getGuiTextured, texture, -4, -4, 0, 0, 8, 8, 8, 8, 8, 8);
+		drawContext.drawTexture(texture, -4, -4, 0, 0, 8, 8, 8, 8, 8, 8);
 	}
 
 	/**

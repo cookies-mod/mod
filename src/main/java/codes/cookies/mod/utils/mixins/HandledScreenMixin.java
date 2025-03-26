@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import codes.cookies.mod.config.categories.MiscCategory;
+import codes.cookies.mod.utils.accessors.FocusedSlotAccessor;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -21,8 +22,8 @@ import codes.cookies.mod.utils.exceptions.ExceptionHandler;
 import codes.cookies.mod.utils.items.CookiesDataComponentTypes;
 import codes.cookies.mod.utils.items.ItemTooltipComponent;
 import codes.cookies.mod.utils.items.ItemUtils;
-import codes.cookies.mod.utils.items.ScrollableTooltipHandler;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -210,52 +211,7 @@ public abstract class HandledScreenMixin implements InventoryScreenAccessor {
 				list.add(tooltipComponent);
 			}
 		}
-		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE, null);
-	}
-
-	@Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-	public void onScroll(
-			CallbackInfoReturnable<Boolean> cir,
-			@Local(argsOnly = true, ordinal = 2) double horizontalAmount,
-			@Local(argsOnly = true, ordinal = 3) double verticalAmount
-	) {
-		if (!MiscCategory.enableScrollableTooltips) {
-			return;
-		}
-		if (((Object) this) instanceof HandledScreen<?> handledScreen) {
-			Slot focusedSlot = FocusedSlotAccessor.getFocusedSlot(handledScreen);
-			if (handledScreen.getScreenHandler().getCursorStack().isEmpty() && focusedSlot != null &&
-					focusedSlot.hasStack()) {
-				final ItemStack stack = focusedSlot.getStack();
-				ScrollableTooltipHandler.scroll(stack, horizontalAmount, verticalAmount);
-				cir.setReturnValue(true);
-			}
-		}
-	}
-
-	@Override
-	public int cookies$getBackgroundWidth() {
-		return this.backgroundWidth;
-	}
-
-	@Override
-	public int cookies$getBackgroundHeight() {
-		return this.backgroundHeight;
-	}
-
-	@Override
-	public int cookies$getX() {
-		return this.x;
-	}
-
-	@Override
-	public int cookies$getY() {
-		return this.y;
-	}
-
-	@Override
-	public List<Disabled> cookies$getDisabled() {
-		return this.cookies$disabled;
+		instance.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE);
 	}
 
 	@Inject(
