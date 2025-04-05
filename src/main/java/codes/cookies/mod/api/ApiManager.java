@@ -158,11 +158,13 @@ public class ApiManager {
 		}
 	}
 
+	private static void connectApi() {}
+
 	/**
 	 * Connects to the backend api, if the user is still the same as the last time this was invoked, then the token
 	 * will be reused, if not a new token will be requested.
 	 */
-	private static void connectApi() {
+	private static void connectApi_() {
 		if (!DevCategory.connectToBackend.get()) {
 			return;
 		}
