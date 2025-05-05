@@ -15,7 +15,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.11.0")
 
-    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.26.3")
+    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.26.4")
 }
 
 tasks.withType<JavaCompile> {
