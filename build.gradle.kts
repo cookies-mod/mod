@@ -11,6 +11,7 @@ group = project.properties["maven_group"]!!
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 	maven("https://api.modrinth.com/maven")
 	maven("https://repo.hypixel.net/repository/Hypixel/")
 	maven("https://repo.cookies.codes/releases")
