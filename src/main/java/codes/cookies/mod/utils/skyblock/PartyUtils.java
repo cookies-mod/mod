@@ -1,13 +1,10 @@
 package codes.cookies.mod.utils.skyblock;
 
-import codes.cookies.mod.CookiesMod;
-import codes.cookies.mod.api.ApiManager;
-import codes.cookies.mod.utils.cookies.CookiesBackendUtils;
-
 import java.util.Set;
 import java.util.UUID;
 
-import codes.cookies.mod.utils.cookies.CookiesUtils;
+import codes.cookies.mod.CookiesMod;
+import codes.cookies.mod.utils.cookies.CookiesBackendUtils;
 import lombok.Getter;
 import net.hypixel.modapi.HypixelModAPI;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
@@ -37,14 +34,14 @@ public class PartyUtils {
 			if (LocationUtils.isInSkyblock()) {
 				request();
 			}
-		}, 0, 10, java.util.concurrent.TimeUnit.SECONDS);
+		}, 0, 30, java.util.concurrent.TimeUnit.SECONDS);
 	}
 
 	/**
 	 * Requests the current party information.
 	 */
 	public static void request() {
-		if (System.currentTimeMillis() - lastReceived < 2000) {
+		if (System.currentTimeMillis() - lastReceived < 5000) {
 			return;
 		}
 		HypixelModAPI.getInstance().sendPacket(new ServerboundPartyInfoPacket());
